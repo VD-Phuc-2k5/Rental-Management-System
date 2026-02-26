@@ -35,7 +35,10 @@ class PaymentQr extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5.0),
-              child: Image.asset("assets/images/qr-payment.png"),
+              child: Image.asset(
+                "assets/images/qr-payment.png",
+                semanticLabel: "Mã QR để thanh toán",
+              ),
             ),
           ),
           const Text(

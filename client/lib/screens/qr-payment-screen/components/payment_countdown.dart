@@ -29,7 +29,7 @@ class _PaymentCountdownState extends State<PaymentCountdown> {
     final now = DateTime.now();
     final diff = widget.expiresAt.difference(now);
 
-    if (diff.isNegative) {
+    if (diff <= Duration.zero) {
       _timer?.cancel();
       _remaining = Duration.zero;
 

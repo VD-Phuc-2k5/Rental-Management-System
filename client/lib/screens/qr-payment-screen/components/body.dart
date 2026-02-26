@@ -15,11 +15,11 @@ class Body extends StatelessWidget {
       spacing: 24.0,
       children: [
         PaymentHeading(price: price, roomId: roomId),
-        PaymentQr(),
+        const PaymentQr(),
         PaymentCountdown(
           expiresAt: DateTime.now().add(const Duration(minutes: 15)),
         ),
-        DownloadButton(),
+        const DownloadButton(),
       ],
     );
   }

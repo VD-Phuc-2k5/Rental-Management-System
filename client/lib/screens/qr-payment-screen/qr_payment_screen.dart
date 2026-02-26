@@ -12,7 +12,10 @@ class QrPaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.arrow_back, color: AppColors.blue950),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.blue950),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         titleSpacing: 0,
         title: const Padding(
           padding: EdgeInsets.only(right: 56.0),
