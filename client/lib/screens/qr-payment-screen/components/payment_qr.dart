@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/utils/constants.dart';
+import 'package:app/core/constants.dart';
 
 class PaymentQr extends StatelessWidget {
   const PaymentQr({super.key});

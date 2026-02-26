@@ -1,6 +1,6 @@
 import 'package:app/screens/qr-payment-screen/components/body.dart';
 import 'package:flutter/material.dart';
-import 'package:app/utils/constants.dart';
+import 'package:app/core/constants.dart';
 
 class QrPaymentScreen extends StatelessWidget {
   const QrPaymentScreen({super.key, required this.price, required this.roomId});

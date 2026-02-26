@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:app/utils/constants.dart';
+import 'package:app/core/constants.dart';
 
 class PaymentCountdown extends StatefulWidget {
   final DateTime expiresAt;

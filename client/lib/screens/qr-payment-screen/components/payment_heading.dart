@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:app/utils/constants.dart';
+import 'package:app/core/constants.dart';
 
 class PaymentHeading extends StatelessWidget {
   const PaymentHeading({super.key, required this.price, required this.roomId});
