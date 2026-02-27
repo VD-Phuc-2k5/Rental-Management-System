@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 
-class DownloadButton extends StatelessWidget {
-  const DownloadButton({super.key});
+class BackToHomeButton extends StatelessWidget {
+  const BackToHomeButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,23 +23,16 @@ class DownloadButton extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                // TO DO: handle to save QR Image
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
-              child: Row(
-                spacing: 4.0,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.download, color: AppColors.blue700),
-                  const Text(
-                    "Lưu mã QR",
-                    style: TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.blue700,
-                    ),
-                  ),
-                ],
+              child: const Text(
+                "Về trang chủ",
+                style: TextStyle(
+                  fontFamily: "Inter",
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.blue700,
+                ),
               ),
             ),
           ),

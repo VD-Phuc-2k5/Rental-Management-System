@@ -1,28 +1,13 @@
-import 'package:app/screens/qr-payment-screen/components/body.dart';
-import 'package:app/screens/payment-success-screen/payment_success_screen.dart';
+import 'package:app/screens/payment-success-screen/components/body.dart';
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 
-class QrPaymentScreen extends StatelessWidget {
-  const QrPaymentScreen({super.key, required this.price, required this.roomId});
-
-  final double appbarBorderWidth = 1.0;
+class PaymentSuccessScreen extends StatelessWidget {
   final int price;
-  final String roomId;
-
+  final appbarBorderWidth = 1.0;
+  const PaymentSuccessScreen({super.key, required this.price});
   @override
   Widget build(BuildContext context) {
-    bool navigated = false;
-
-    void onSuccess() {
-      if (navigated) return;
-      navigated = true;
-
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => PaymentSuccessScreen(price: price)),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
@@ -32,7 +17,7 @@ class QrPaymentScreen extends StatelessWidget {
         ),
         titleSpacing: 0,
         title: const Padding(
-          padding: EdgeInsets.only(right: 56),
+          padding: EdgeInsets.only(right: 56.0),
           child: Center(
             child: Text(
               "Thanh toán",
@@ -53,13 +38,7 @@ class QrPaymentScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        color: AppColors.white,
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        margin: const EdgeInsets.only(top: 10),
-        child: Body(price: price, roomId: roomId, onSuccess: onSuccess),
-      ),
+      body: Body(price: price),
     );
   }
 }
