@@ -8,25 +8,25 @@ class IntroRoomSection extends StatelessWidget {
     {
       "title": "Phòng trọ 1",
       "address": "123 Đường A, Quận B",
-      "price": "3.000.000 VND/tháng",
+      "price": "3.000.000đ",
       "imageUrl": "https://file4.batdongsan.com.vn/2025/12/23/20251223125240-cf4d_wm.jpg"
     },
     {
       "title": "Phòng trọ 2",
       "address": "456 Đường C, Quận D",
-      "price": "4.500.000 VND/tháng",
+      "price": "4.500.000đ",
       "imageUrl": "https://file4.batdongsan.com.vn/2025/12/23/20251223125240-cf4d_wm.jpg"
     },
     {
       "title": "Phòng trọ 3",
       "address": "789 Đường E, Quận F",
-      "price": "5.000.000 VND/tháng",
+      "price": "5.000.000đ",
       "imageUrl": "https://file4.batdongsan.com.vn/2025/12/23/20251223125240-cf4d_wm.jpg"
     },
     {
       "title": "Phòng trọ 4",
       "address": "101 Đường G, Quận H",
-      "price": "6.000.000 VND/tháng",
+      "price": "6.000.000đ",
       "imageUrl": "https://file4.batdongsan.com.vn/2025/12/23/20251223125240-cf4d_wm.jpg"
     },
   ];
