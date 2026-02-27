@@ -39,13 +39,23 @@ class IntroRoomCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.gray200,
                   borderRadius: BorderRadius.circular(12),
-                  image: imageUrl != null
-                      ? DecorationImage(
-                          image: NetworkImage(imageUrl!),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
                 ),
+                child: imageUrl != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            color: AppColors.gray200,
+                            child: Icon(
+                              Icons.broken_image, 
+                              color: AppColors.gray500
+                            ),
+                          ),
+                        ),
+                      )
+                    : null,
               ),
               SizedBox(width: 12),
               Expanded(
