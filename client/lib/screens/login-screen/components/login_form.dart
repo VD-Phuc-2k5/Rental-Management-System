@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 
 class LoginForm extends StatefulWidget {
-  final VoidCallback? onSubmit;
+  final Future<void> Function(String email, String password)? onSubmit;
   final VoidCallback? onForgotPassword;
 
   const LoginForm({
@@ -31,7 +31,7 @@ class _LoginFormState extends State<LoginForm> {
   String get email => _emailController.text;
   String get password => _passwordController.text;
 
-  void _handleSubmit() async {
+  Future<void> _handleSubmit() async {
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -46,11 +46,24 @@ class _LoginFormState extends State<LoginForm> {
       _isLoading = true;
     });
 
-    widget.onSubmit?.call();
-
-    setState(() {
-      _isLoading = false;
-    });
+    try {
+      await widget.onSubmit?.call(email, password);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Đăng nhập thất bại: $e'),
+            backgroundColor: AppColors.red600,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -129,7 +142,7 @@ class _LoginFormState extends State<LoginForm> {
                   _obscurePassword
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  color: AppColors.gray500,
+                  color: _isLoading ? AppColors.gray300 : AppColors.gray500,
                   size: 20,
                 ),
                 onPressed: () {

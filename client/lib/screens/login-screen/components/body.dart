@@ -9,7 +9,7 @@ import 'package:app/core/constants.dart';
 class LoginScreenBody extends StatelessWidget {
   const LoginScreenBody({super.key});
 
-  void _handleLogin() {
+  Future<void> _handleLogin(String email, String password) async {
     // TODO: Implement login logic
   }
 
