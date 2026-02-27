@@ -7,6 +7,7 @@ class InvoiceHistorySection extends StatelessWidget {
   final InvoiceHistoryState state;
   final List<InvoiceHistoryItemData> items;
   final ValueChanged<String>? onSearchChanged;
+  final ValueChanged<InvoiceHistoryItemData>? onItemTap;
   final String searchHint;
   final Widget? errorWidget;
 
@@ -15,6 +16,7 @@ class InvoiceHistorySection extends StatelessWidget {
     required this.state,
     required this.items,
     this.onSearchChanged,
+    this.onItemTap,
     this.searchHint = 'Tìm kiếm hóa đơn...',
     this.errorWidget,
   });
@@ -113,6 +115,7 @@ class InvoiceHistorySection extends StatelessWidget {
                     amount: item.amount,
                     statusLabel: item.statusLabel,
                     isPaid: item.isPaid,
+                    onTap: onItemTap != null ? () => onItemTap!(item) : null,
                   ),
                 ),
               )

@@ -36,8 +36,10 @@ class InvoiceItem extends StatelessWidget {
       fontSize: 12,
     );
 
-    final Color statusBackground = isPaid ? AppColors.green50 : AppColors.red50;
-    final Color statusColor = isPaid ? AppColors.green600 : AppColors.red600;
+    final Color statusBackground = isPaid
+        ? AppColors.green50
+        : AppColors.yellow50;
+    final Color statusColor = isPaid ? AppColors.green600 : AppColors.yellow800;
     final IconData statusIcon = isPaid
         ? Icons.check_circle_outline
         : Icons.error_outline;

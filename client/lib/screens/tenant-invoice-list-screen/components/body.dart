@@ -9,6 +9,7 @@ class Body extends StatelessWidget {
   final List<InvoiceHistoryItemData> historyItems;
   final VoidCallback? onPayNow;
   final ValueChanged<String>? onSearchChanged;
+  final ValueChanged<InvoiceHistoryItemData>? onHistoryItemTap;
   final Widget? historyErrorWidget;
 
   const Body({
@@ -20,6 +21,13 @@ class Body extends StatelessWidget {
     ),
     this.historyState = InvoiceHistoryState.data,
     this.historyItems = const [
+      InvoiceHistoryItemData(
+        billingMonth: '02/2026',
+        paidAt: 'Hạn: 10/03/2026',
+        amount: 2750000,
+        statusLabel: 'Chờ thanh toán',
+        isPaid: false,
+      ),
       InvoiceHistoryItemData(
         billingMonth: '01/2026',
         paidAt: '10/02/2026 • 14:30',
@@ -37,6 +45,7 @@ class Body extends StatelessWidget {
     ],
     this.onPayNow,
     this.onSearchChanged,
+    this.onHistoryItemTap,
     this.historyErrorWidget,
   });
 
@@ -53,6 +62,7 @@ class Body extends StatelessWidget {
               state: historyState,
               items: historyItems,
               onSearchChanged: onSearchChanged,
+              onItemTap: onHistoryItemTap,
               errorWidget: historyErrorWidget,
             ),
           ],
