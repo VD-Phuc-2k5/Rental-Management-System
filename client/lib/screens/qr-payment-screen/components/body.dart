@@ -5,9 +5,15 @@ import 'package:app/screens/qr-payment-screen/components/payment_qr.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
-  const Body({super.key, required this.price, required this.roomId});
+  const Body({
+    super.key,
+    required this.price,
+    required this.roomId,
+    required this.onSuccess,
+  });
   final int price;
   final String roomId;
+  final VoidCallback onSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +24,7 @@ class Body extends StatelessWidget {
         const PaymentQr(),
         PaymentCountdown(
           expiresAt: DateTime.now().add(const Duration(minutes: 15)),
+          onSuccess: onSuccess,
         ),
         const DownloadButton(),
       ],

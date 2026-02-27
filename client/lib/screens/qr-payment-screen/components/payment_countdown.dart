@@ -5,8 +5,14 @@ import 'package:app/core/constants.dart';
 class PaymentCountdown extends StatefulWidget {
   final DateTime expiresAt;
   final VoidCallback? onExpired;
+  final VoidCallback onSuccess;
 
-  const PaymentCountdown({super.key, required this.expiresAt, this.onExpired});
+  const PaymentCountdown({
+    super.key,
+    required this.expiresAt,
+    this.onExpired,
+    required this.onSuccess,
+  });
 
   @override
   State<PaymentCountdown> createState() => _PaymentCountdownState();
@@ -14,6 +20,7 @@ class PaymentCountdown extends StatefulWidget {
 
 class _PaymentCountdownState extends State<PaymentCountdown> {
   Timer? _timer;
+  Timer? _successTimer;
   Duration _remaining = Duration.zero;
 
   @override
@@ -22,6 +29,10 @@ class _PaymentCountdownState extends State<PaymentCountdown> {
     _updateRemaining();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       _updateRemaining();
+    });
+    _successTimer = Timer(const Duration(seconds: 15), () {
+      if (!mounted) return;
+      widget.onSuccess.call();
     });
   }
 
@@ -46,6 +57,7 @@ class _PaymentCountdownState extends State<PaymentCountdown> {
   @override
   void dispose() {
     _timer?.cancel();
+    _successTimer?.cancel();
     super.dispose();
   }
 

@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:app/core/constants.dart';
+import 'package:app/core/fomat_currency.dart';
 
 class PaymentHeading extends StatelessWidget {
   const PaymentHeading({super.key, required this.price, required this.roomId});
   final int price;
   final String roomId;
-  String formatVND(int price) {
-    return NumberFormat.currency(
-      locale: 'vi_VN',
-      symbol: 'đ',
-      decimalDigits: 0,
-    ).format(price);
-  }
 
   @override
   Widget build(BuildContext context) {

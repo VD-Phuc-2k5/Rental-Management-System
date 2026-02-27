@@ -1,4 +1,5 @@
 import 'package:app/screens/qr-payment-screen/components/body.dart';
+import 'package:app/screens/payment-success-screen/payment_success_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 
@@ -10,8 +11,17 @@ class QrPaymentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void onSucess() {
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (context) => PayentSuccessScreen(price: price),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.blue950),
           onPressed: () => Navigator.of(context).pop(),
@@ -40,10 +50,11 @@ class QrPaymentScreen extends StatelessWidget {
         ),
       ),
       body: Container(
+        color: AppColors.white,
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
         margin: EdgeInsets.only(top: 10.0),
-        child: Body(price: price, roomId: roomId),
+        child: Body(price: price, roomId: roomId, onSuccess: onSucess),
       ),
     );
   }

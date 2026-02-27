@@ -15,6 +15,7 @@ class DownloadButton extends StatelessWidget {
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.white,
                 elevation: 0,
                 side: BorderSide(
                   color: AppColors.blue700.withAlpha(51),
