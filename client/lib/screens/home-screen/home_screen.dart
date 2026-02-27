@@ -57,7 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         color: AppColors.gray25,
         width: double.infinity,
-        height: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+        margin: EdgeInsets.only(top: 10.0),
         child: const Center(
           child: HomeScreenBody()
         ),
