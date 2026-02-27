@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class IntroRoomSection extends StatelessWidget {
   const IntroRoomSection({super.key});
 
-  static final List<Map<String, String>> _rooms = const [
+  static const List<Map<String, String>> _rooms = [
     {
       "title": "Phòng trọ 1",
       "address": "123 Đường A, Quận B",
