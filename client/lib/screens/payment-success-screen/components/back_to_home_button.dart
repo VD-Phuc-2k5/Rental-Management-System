@@ -23,7 +23,7 @@ class BackToHomeButton extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                // TO DO: handle to navigate to home page
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
               child: const Text(
                 "Về trang chủ",

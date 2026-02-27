@@ -2,10 +2,10 @@ import 'package:app/screens/payment-success-screen/components/body.dart';
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 
-class PayentSuccessScreen extends StatelessWidget {
+class PaymentSuccessScreen extends StatelessWidget {
   final int price;
   final appbarBorderWidth = 1.0;
-  const PayentSuccessScreen({super.key, required this.price});
+  const PaymentSuccessScreen({super.key, required this.price});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

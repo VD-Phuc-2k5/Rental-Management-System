@@ -3,7 +3,7 @@ import 'package:app/screens/payment-success-screen/components/heading_title.dart
 import 'package:app/screens/payment-success-screen/components/back_to_home_button.dart';
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
-import 'package:app/core/fomat_currency.dart';
+import 'package:app/core/format_currency.dart';
 
 class Body extends StatelessWidget {
   final int price;

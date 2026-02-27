@@ -5,14 +5,8 @@ import 'package:app/core/constants.dart';
 class PaymentCountdown extends StatefulWidget {
   final DateTime expiresAt;
   final VoidCallback? onExpired;
-  final VoidCallback onSuccess;
 
-  const PaymentCountdown({
-    super.key,
-    required this.expiresAt,
-    this.onExpired,
-    required this.onSuccess,
-  });
+  const PaymentCountdown({super.key, required this.expiresAt, this.onExpired});
 
   @override
   State<PaymentCountdown> createState() => _PaymentCountdownState();
@@ -20,20 +14,18 @@ class PaymentCountdown extends StatefulWidget {
 
 class _PaymentCountdownState extends State<PaymentCountdown> {
   Timer? _timer;
-  Timer? _successTimer;
   Duration _remaining = Duration.zero;
+  bool _expiredCalled = false;
 
   @override
   void initState() {
     super.initState();
     _updateRemaining();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _updateRemaining();
-    });
-    _successTimer = Timer(const Duration(seconds: 15), () {
-      if (!mounted) return;
-      widget.onSuccess.call();
-    });
+
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (_) => _updateRemaining(),
+    );
   }
 
   void _updateRemaining() {
@@ -44,7 +36,10 @@ class _PaymentCountdownState extends State<PaymentCountdown> {
       _timer?.cancel();
       _remaining = Duration.zero;
 
-      widget.onExpired?.call();
+      if (!_expiredCalled) {
+        _expiredCalled = true;
+        widget.onExpired?.call();
+      }
     } else {
       _remaining = diff;
     }
@@ -57,7 +52,6 @@ class _PaymentCountdownState extends State<PaymentCountdown> {
   @override
   void dispose() {
     _timer?.cancel();
-    _successTimer?.cancel();
     super.dispose();
   }
 
@@ -72,9 +66,9 @@ class _PaymentCountdownState extends State<PaymentCountdown> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "Mã hết hạn sau: ",
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: "Inter",
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -87,7 +81,7 @@ class _PaymentCountdownState extends State<PaymentCountdown> {
             fontFamily: "Inter",
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: Colors.red,
+            color: AppColors.red500,
           ),
         ),
       ],
