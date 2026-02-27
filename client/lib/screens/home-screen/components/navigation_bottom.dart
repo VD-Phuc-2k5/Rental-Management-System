@@ -25,7 +25,7 @@ class NavigationBottom extends StatelessWidget {
       label: "Sự cố",
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.chat_outlined),
+      icon: Icon(Icons.receipt_outlined),
       label: "Hóa đơn",
     ),
     BottomNavigationBarItem(
