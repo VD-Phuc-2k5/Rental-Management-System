@@ -31,7 +31,7 @@ class IntroRoomCard extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(12),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: 90,
@@ -59,55 +59,79 @@ class IntroRoomCard extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 14,
-                          color: AppColors.gray500,
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            address,
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontSize: 12,
-                              color: AppColors.gray600,
+                child: SizedBox(
+                  height: 90,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on_outlined,
+                                  size: 14,
+                                  color: AppColors.gray500,
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    address,
+                                    style: TextStyle(
+                                      fontFamily: "Inter",
+                                      fontSize: 12,
+                                      color: AppColors.gray600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      price,
-                      style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.blue700,
                       ),
-                    ),
-                  ],
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: price,
+                              style: TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.blue700,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "/tháng",
+                              style: TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.gray600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

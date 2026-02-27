@@ -44,7 +44,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                 ),
                 Text(
                   "Xem thêm",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppColors.blue600,
                         fontWeight: FontWeight.bold,
                       ),
