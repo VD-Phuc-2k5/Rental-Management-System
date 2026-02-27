@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppColors.gray25,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.gray25,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         leadingWidth: 200,
@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.only(left: 16),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: const Text(
+            child: Text(
               "NhàTrọ+", 
               style: TextStyle(
                 fontSize: 32, 
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: const HomeScreenBody(),
       ),
       bottomNavigationBar: NavigationBottom(

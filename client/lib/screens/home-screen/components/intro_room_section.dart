@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class IntroRoomSection extends StatelessWidget {
   const IntroRoomSection({super.key});
 
-  final List<Map<String, String>> _rooms = const [
+  static final List<Map<String, String>> _rooms = const [
     {
       "title": "Phòng trọ 1",
       "address": "123 Đường A, Quận B",
@@ -33,26 +33,24 @@ class IntroRoomSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var room in _rooms)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: IntroRoomCard(
-                title: room["title"] ?? "Phòng trọ",
-                address: room["address"] ?? "Địa chỉ không xác định",
-                price: room["price"] ?? "Giá không xác định",
-                imageUrl: room["imageUrl"],
-                onTap: () {
-                  // TODO: Navigate đến màn hình chi tiết phòng
-                  
-                },
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var room in _rooms)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: IntroRoomCard(
+              title: room["title"] ?? "Phòng trọ",
+              address: room["address"] ?? "Địa chỉ không xác định",
+              price: room["price"] ?? "Giá không xác định",
+              imageUrl: room["imageUrl"],
+              onTap: () {
+                // TODO: Navigate đến màn hình chi tiết phòng
+                
+              },
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }

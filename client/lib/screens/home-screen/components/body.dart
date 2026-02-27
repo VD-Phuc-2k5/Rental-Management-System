@@ -21,7 +21,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SearchFilter(),
+          const SearchFilter(),
           FilterPrice(
             currentIndex: _selectedFilterIndex,
             onTap: (index) {
@@ -41,9 +41,9 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               ],
             ),
           ),
-          IntroRoomSection()
+          const IntroRoomSection(),
         ]
-      )
+      ),
     );
   }
 }
