@@ -15,14 +15,17 @@ class PaymentCountdown extends StatefulWidget {
 class _PaymentCountdownState extends State<PaymentCountdown> {
   Timer? _timer;
   Duration _remaining = Duration.zero;
+  bool _expiredCalled = false;
 
   @override
   void initState() {
     super.initState();
     _updateRemaining();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _updateRemaining();
-    });
+
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (_) => _updateRemaining(),
+    );
   }
 
   void _updateRemaining() {
@@ -33,7 +36,10 @@ class _PaymentCountdownState extends State<PaymentCountdown> {
       _timer?.cancel();
       _remaining = Duration.zero;
 
-      widget.onExpired?.call();
+      if (!_expiredCalled) {
+        _expiredCalled = true;
+        widget.onExpired?.call();
+      }
     } else {
       _remaining = diff;
     }
@@ -60,9 +66,9 @@ class _PaymentCountdownState extends State<PaymentCountdown> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "Mã hết hạn sau: ",
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: "Inter",
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -75,7 +81,7 @@ class _PaymentCountdownState extends State<PaymentCountdown> {
             fontFamily: "Inter",
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: Colors.red,
+            color: AppColors.red500,
           ),
         ),
       ],
