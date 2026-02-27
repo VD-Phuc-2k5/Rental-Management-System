@@ -1,4 +1,6 @@
+import 'package:app/core/constants.dart';
 import 'package:app/screens/home-screen/components/filter_price.dart';
+import 'package:app/screens/home-screen/components/intro_room_section.dart';
 import 'package:app/screens/home-screen/components/search_filter.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +16,8 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(top: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -30,6 +31,17 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               // TODO: handle lọc theo giá
             },
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 32, bottom: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Phòng nổi bật", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text("Xem thêm", style: TextStyle(fontSize: 14, color: AppColors.blue600, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          IntroRoomSection()
         ]
       )
     );
