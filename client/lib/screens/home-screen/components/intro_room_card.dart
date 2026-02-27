@@ -56,6 +56,7 @@ class IntroRoomCard extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
+                        fontFamily: "Inter",
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors.black87,
@@ -76,6 +77,7 @@ class IntroRoomCard extends StatelessWidget {
                           child: Text(
                             address,
                             style: TextStyle(
+                              fontFamily: "Inter",
                               fontSize: 12,
                               color: AppColors.gray600,
                             ),
@@ -89,6 +91,7 @@ class IntroRoomCard extends StatelessWidget {
                     Text(
                       price,
                       style: TextStyle(
+                        fontFamily: "Inter",
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: AppColors.blue700,
