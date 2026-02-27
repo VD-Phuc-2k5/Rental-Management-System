@@ -57,7 +57,7 @@ class IntroRoomCard extends StatelessWidget {
                       )
                     : null,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -74,15 +74,15 @@ class IntroRoomCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 6),
+                    const SizedBox(height: 6),
                     Row(
                       children: [
                         Icon(
-                          Icons.location_on,
+                          Icons.location_on_outlined,
                           size: 14,
                           color: AppColors.gray500,
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             address,
@@ -97,7 +97,7 @@ class IntroRoomCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 6),
+                    const SizedBox(height: 6),
                     Text(
                       price,
                       style: TextStyle(
