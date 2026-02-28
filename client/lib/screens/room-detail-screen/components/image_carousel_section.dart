@@ -34,6 +34,8 @@ class _ImageCarouselSectionState extends State<ImageCarouselSection> {
   }
 
   void _startAutoSlide() {
+    if (widget.imageUrls.length < 2) return;
+    
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (_currentPage < widget.imageUrls.length - 1) {
         _currentPage++;
@@ -53,6 +55,37 @@ class _ImageCarouselSectionState extends State<ImageCarouselSection> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.imageUrls.isEmpty) {
+      return SizedBox(
+        height: 280,
+        child: Container(
+          color: AppColors.slate200,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.image_outlined,
+                  size: 64,
+                  color: AppColors.slate400,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Chưa có hình ảnh',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.slate500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return SizedBox(
       height: 280,
       child: Stack(
@@ -145,7 +178,7 @@ class _ImageCarouselSectionState extends State<ImageCarouselSection> {
             right: 16,
             child: GestureDetector(
               onTap: () {
-                
+
               },
               child: Container(
                 width: 40,
@@ -169,15 +202,17 @@ class _ImageCarouselSectionState extends State<ImageCarouselSection> {
               ),
             ),
           ),
-          Positioned(
-            bottom: 16,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                widget.imageUrls.length,
-                (index) => GestureDetector(
+          // Only show dots if there are multiple images
+          if (widget.imageUrls.length > 1)
+            Positioned(
+              bottom: 16,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  widget.imageUrls.length,
+                  (index) => GestureDetector(
                   onTap: () {
                     _pageController.animateToPage(
                       index,
