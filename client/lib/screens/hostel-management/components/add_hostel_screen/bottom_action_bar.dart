@@ -24,7 +24,6 @@ class BottomActionBar extends StatelessWidget {
                 elevation: 0,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
               ),
-              // TODO: Lưu thông tin và chuyển qua Screen 13.2
               onPressed: null,
               child: const Text(
                 "Thêm nhà trọ",

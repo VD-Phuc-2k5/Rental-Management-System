@@ -22,9 +22,8 @@ class UpdateBasicInfoSection extends StatelessWidget {
   }
 
   Widget _buildTextField({required String initialText, int maxLines = 1}) {
-    final controller = TextEditingController(text: initialText);
-    return TextField(
-      controller: controller,
+    return TextFormField(
+      initialValue: initialText,
       maxLines: maxLines,
       style: const TextStyle(fontFamily: "Public Sans", fontWeight: FontWeight.w400, fontSize: 16, color: AppColors.slate700),
       decoration: InputDecoration(
@@ -53,8 +52,8 @@ class UpdateBasicInfoSection extends StatelessWidget {
           _buildTextField(initialText: "Khu A, 123 Nguyễn Trãi, Quận 5, thành phố Hồ Chí Minh", maxLines: 3),
           const SizedBox(height: 16),
           _buildLabel("Loại hình"),
-          TextField(
-            controller: TextEditingController(text: "Nhà nguyên căn"),
+          TextFormField(
+            initialValue: "Nhà nguyên căn",
             readOnly: true,
             style: const TextStyle(fontFamily: "Public Sans", color: AppColors.slate900, fontSize: 16),
             decoration: InputDecoration(
