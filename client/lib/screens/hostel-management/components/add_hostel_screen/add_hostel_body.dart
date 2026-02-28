@@ -10,17 +10,23 @@ class AddHostelBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const BasicInfoSection(),
-          Container(height: 8, color: AppColors.slate100),
-          const UtilitiesSection(),
-          Container(height: 8, color: AppColors.slate100),
-          const ImagesSection(),
-          const BottomActionBar(),
-        ],
-      ),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const BasicInfoSection(),
+                Container(height: 8, color: AppColors.slate100),
+                const UtilitiesSection(),
+                Container(height: 8, color: AppColors.slate100),
+                const ImagesSection(),
+              ],
+            ),
+          ),
+        ),
+        const BottomActionBar(),
+      ],
     );
   }
 }
