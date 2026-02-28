@@ -20,6 +20,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/9_screen/apartment.jpg
   fonts:
     - family: Inter
       fonts:
