@@ -8,7 +8,7 @@ class UpdateImagesSection extends StatelessWidget {
     return Expanded(
       child: Container(
         height: 128,
-        decoration: BoxDecoration(color: const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(5.0), border: Border.all(color: AppColors.slate300, width: 2.0, style: BorderStyle.solid)),
+        decoration: BoxDecoration(color: AppColors.slate50, borderRadius: BorderRadius.circular(5.0), border: Border.all(color: AppColors.slate300, width: 2.0, style: BorderStyle.solid)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
