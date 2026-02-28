@@ -59,7 +59,7 @@ class UtilitiesSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionHeader(Icons.grid_view, "Tiện ích chung"), // Đã sửa thành ô vuông
+          _buildSectionHeader(Icons.grid_view, "Tiện ích chung"),
           const SizedBox(height: 16),
           Wrap(
             spacing: 8.0,
