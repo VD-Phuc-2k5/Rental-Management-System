@@ -1,4 +1,3 @@
-import 'package:app/core/constants.dart';
 import 'package:app/screens/room-detail-screen/components/body.dart';
 import 'package:app/screens/room-detail-screen/components/comfirm_book_room.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,7 @@ class RoomDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: RoomDetailBody(),
