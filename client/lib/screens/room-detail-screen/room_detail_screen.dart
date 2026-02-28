@@ -1,5 +1,6 @@
 import 'package:app/screens/room-detail-screen/components/body.dart';
 import 'package:app/screens/room-detail-screen/components/comfirm_book_room.dart';
+import 'package:app/screens/room-detail-screen/components/login_required_modal.dart';
 import 'package:flutter/material.dart';
 
 class RoomDetailScreen extends StatelessWidget {
@@ -17,7 +18,17 @@ class RoomDetailScreen extends StatelessWidget {
       bottomNavigationBar: ComfirmBookRoom(
         price: 2800000,
         onPressed: () {
-          // TODO: Navigate to booking screen
+          LoginRequiredModal.show(
+            context,
+            onLoginPressed: () {
+              // TODO: Navigate to login screen
+              print('Navigate to login');
+            },
+            onRegisterPressed: () {
+              // TODO: Navigate to register screen
+              print('Navigate to register');
+            },
+          );
         },
       ),
     );
