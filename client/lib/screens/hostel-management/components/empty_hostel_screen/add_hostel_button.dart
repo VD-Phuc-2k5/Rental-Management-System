@@ -8,7 +8,7 @@ class AddHostelButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 342,
+      width: double.infinity,
       height: 56,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30.0),
