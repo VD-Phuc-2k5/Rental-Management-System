@@ -1,4 +1,5 @@
 import 'package:app/screens/room-detail-screen/components/image_carousel_section.dart';
+import 'package:app/screens/room-detail-screen/components/room_description_section.dart';
 import 'package:app/screens/room-detail-screen/components/room_heading_detail.dart';
 import 'package:app/screens/room-detail-screen/components/room_info_section.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,10 @@ class RoomDetailBody extends StatelessWidget {
                 area: 25,
                 bedrooms: 1,
                 hasFurniture: true,
-              ),                
+              ),
+              RoomDescriptionSection(
+                description: "Phòng trọ mới xây, sạch sẽ, thoáng mát, an ninh tốt. Gần trường đại học Tôn Đức Thắng, RMIT. Giờ giấc tự do, không chung chủ. Phòng có cửa sổ lớn đón nắng, nội thất đầy đủ: giường, tủ, bàn ghế, máy lạnh, máy giặt. Khu vực yên tĩnh, dân trí cao, nhiều tiện ích xung quanh: siêu thị, chợ, quán ăn, cafe. Phù hợp cho sinh viên hoặc người đi làm."
+              )          
             ],
           ),
         ),
