@@ -1,26 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 
-class UtilitiesSection extends StatelessWidget {
-  const UtilitiesSection({super.key});
-
-  Widget _buildSectionHeader(IconData icon, String title) {
-    return Row(
-      children: [
-        Icon(icon, color: AppColors.blue700, size: 16),
-        const SizedBox(width: 8),
-        Text(
-          title,
-          style: const TextStyle(
-            fontFamily: "Public Sans",
-            fontWeight: FontWeight.w700,
-            fontSize: 16,
-            color: AppColors.blue700,
-          ),
-        ),
-      ],
-    );
-  }
+class UpdateUtilitiesSection extends StatelessWidget {
+  const UpdateUtilitiesSection({super.key});
 
   Widget _buildUtilityChip(IconData icon, String label, bool isActive) {
     return Container(
@@ -28,25 +10,14 @@ class UtilitiesSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: isActive ? AppColors.blue700.withAlpha(26) : AppColors.white,
         borderRadius: BorderRadius.circular(9999),
-        border: Border.all(
-          color: isActive ? AppColors.blue700 : AppColors.slate300,
-          width: 1.0,
-        ),
+        border: Border.all(color: isActive ? AppColors.blue700 : AppColors.slate300, width: 1.0),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: isActive ? AppColors.blue700 : AppColors.slate600),
           const SizedBox(width: 6),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: "Public Sans",
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              color: isActive ? AppColors.blue700 : AppColors.slate600,
-            ),
-          ),
+          Text(label, style: TextStyle(fontFamily: "Public Sans", fontWeight: FontWeight.w500, fontSize: 14, color: isActive ? AppColors.blue700 : AppColors.slate600)),
         ],
       ),
     );
@@ -59,7 +30,13 @@ class UtilitiesSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionHeader(Icons.grid_view, "Tiện ích chung"), // Đã sửa thành ô vuông
+          Row(
+            children: const [
+              Icon(Icons.grid_view, color: AppColors.blue700, size: 16),
+              SizedBox(width: 8),
+              Text("Tiện ích chung", style: TextStyle(fontFamily: "Public Sans", fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.blue700)),
+            ],
+          ),
           const SizedBox(height: 16),
           Wrap(
             spacing: 8.0,
