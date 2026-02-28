@@ -2,6 +2,8 @@ import 'package:app/screens/room-detail-screen/components/image_carousel_section
 import 'package:app/screens/room-detail-screen/components/room_description_section.dart';
 import 'package:app/screens/room-detail-screen/components/room_heading_detail.dart';
 import 'package:app/screens/room-detail-screen/components/room_info_section.dart';
+import 'package:app/screens/room-detail-screen/components/room_owner_section.dart';
+import 'package:app/screens/room-detail-screen/components/room_utility_section.dart';
 import 'package:flutter/material.dart';
 
 List<String> imageUrls = [
@@ -38,7 +40,17 @@ class RoomDetailBody extends StatelessWidget {
               ),
               RoomDescriptionSection(
                 description: "Phòng trọ mới xây, sạch sẽ, thoáng mát, an ninh tốt. Gần trường đại học Tôn Đức Thắng, RMIT. Giờ giấc tự do, không chung chủ. Phòng có cửa sổ lớn đón nắng, nội thất đầy đủ: giường, tủ, bàn ghế, máy lạnh, máy giặt. Khu vực yên tĩnh, dân trí cao, nhiều tiện ích xung quanh: siêu thị, chợ, quán ăn, cafe. Phù hợp cho sinh viên hoặc người đi làm."
-              )          
+              ),
+              SizedBox(height: 12),
+              RoomUtilitySection(),
+              SizedBox(height: 12),
+              RoomOwnerSection(
+                ownerName: 'Nguyễn Văn A',
+                ownerAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80',
+                onCallPressed: () {
+                  // TODO: Implement call functionality
+                },
+              ),
             ],
           ),
         ),
