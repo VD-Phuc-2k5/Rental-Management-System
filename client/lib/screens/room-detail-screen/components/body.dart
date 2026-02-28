@@ -51,6 +51,7 @@ class RoomDetailBody extends StatelessWidget {
                   // TODO: Implement call functionality
                 },
               ),
+              const SizedBox(height: 64),
             ],
           ),
         ),
