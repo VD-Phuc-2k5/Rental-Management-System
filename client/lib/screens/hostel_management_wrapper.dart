@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'empty-hostel-screen/empty_hostel_screen.dart';
-import 'hostel-list-screen/hostel_list_screen.dart';
+import 'package:app/screens/empty-hostel-screen/empty_hostel_screen.dart';
+import 'package:app/screens/hostel-list-screen/hostel_list_screen.dart';
 
 class HostelManagementWrapper extends StatefulWidget {
   const HostelManagementWrapper({super.key});
