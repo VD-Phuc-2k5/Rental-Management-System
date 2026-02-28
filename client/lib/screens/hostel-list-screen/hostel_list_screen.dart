@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
-import 'package:app/screens/hostel-management/add_hostel_screen.dart';
-import 'components/hostel_list_screen/hostel_list_body.dart';
-import 'components/empty_hostel_screen/host_bottom_nav.dart';
+import 'package:app/screens/add-hostel-screen/add_hostel_screen.dart';
+import 'package:app/screens/hostel-list-screen/components/hostel_list_body.dart';
+import 'package:app/screens/empty-hostel-screen//components/host_bottom_nav.dart';
 
 class HostelListScreen extends StatelessWidget {
   const HostelListScreen({super.key});

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
-import 'components/empty_hostel_screen/empty_hostel_body.dart';
-import 'components/empty_hostel_screen/host_bottom_nav.dart';
+import 'package:app/screens/update-hostel-screen/components/update_hostel_body.dart';
 
-class EmptyHostelScreen extends StatelessWidget {
-  const EmptyHostelScreen({super.key});
+class UpdateHostelScreen extends StatelessWidget {
+  const UpdateHostelScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,15 +12,18 @@ class EmptyHostelScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         elevation: 0,
-        titleSpacing: 16.0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.slate900),
+          onPressed: () => Navigator.pop(context),
+        ),
+        titleSpacing: 0,
         title: const Text(
-          "Nhà trọ của tôi",
+          "Cập nhật thông tin khu trọ",
           style: TextStyle(
             color: AppColors.slate900,
-            fontFamily: "Public Sans",
+            fontFamily: "Nunito",
             fontWeight: FontWeight.w700,
-            fontSize: 20,
-            letterSpacing: -0.5,
+            fontSize: 18,
           ),
         ),
         bottom: PreferredSize(
@@ -29,9 +31,7 @@ class EmptyHostelScreen extends StatelessWidget {
           child: Container(color: AppColors.slate200, height: 1.0),
         ),
       ),
-
-      body: const EmptyHostelBody(),
-      bottomNavigationBar: const HostBottomNav(),
+      body: const UpdateHostelBody(),
     );
   }
 }

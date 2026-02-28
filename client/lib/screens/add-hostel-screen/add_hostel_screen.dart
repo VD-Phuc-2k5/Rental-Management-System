@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
-import 'components/add_hostel_screen/add_hostel_body.dart';
+import 'package:app/screens/add-hostel-screen/components/add_hostel_body.dart';
 
 class AddHostelScreen extends StatelessWidget {
   const AddHostelScreen({super.key});

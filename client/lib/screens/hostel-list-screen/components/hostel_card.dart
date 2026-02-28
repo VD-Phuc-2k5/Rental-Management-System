@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:app/screens/update-hostel-screen/update_hostel_screen.dart';
 
 class HostelCard extends StatelessWidget {
   final String title;
@@ -17,29 +18,40 @@ class HostelCard extends StatelessWidget {
     this.greyBlocks = 0,
   });
 
-  Widget _buildUpdateButton() {
-    return Container(
-      height: 30,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.blue700),
-        borderRadius: BorderRadius.circular(24.0),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: const [
-          Text(
-            "Cập nhật",
-            style: TextStyle(
-              fontFamily: 'Noto Sans',
-              fontWeight: FontWeight.w600,
-              fontSize: 12,
-              color: AppColors.blue700,
-            ),
+  Widget _buildUpdateButton(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(24.0),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const UpdateHostelScreen(),
           ),
-          SizedBox(width: 4),
-          Icon(Icons.edit_square, size: 12, color: AppColors.blue700),
-        ],
+        );
+      },
+      child: Container(
+        height: 30,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.blue700),
+          borderRadius: BorderRadius.circular(24.0),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Text(
+              "Cập nhật",
+              style: TextStyle(
+                fontFamily: 'Noto Sans',
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+                color: AppColors.blue700,
+              ),
+            ),
+            SizedBox(width: 4),
+            Icon(Icons.edit_square, size: 12, color: AppColors.blue700),
+          ],
+        ),
       ),
     );
   }
@@ -132,7 +144,7 @@ class HostelCard extends StatelessWidget {
                   color: AppColors.slate500,
                 ),
               ),
-              _buildUpdateButton(),
+              _buildUpdateButton(context),
             ],
           ),
         ],
