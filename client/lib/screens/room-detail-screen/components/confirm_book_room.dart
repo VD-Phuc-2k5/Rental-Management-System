@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 import 'package:app/core/format_currency.dart';
 
-class ComfirmBookRoom extends StatelessWidget {
+class ConfirmBookRoom extends StatelessWidget {
   final double price;
   final VoidCallback? onPressed;
 
-  const ComfirmBookRoom({
+  const ConfirmBookRoom({
     super.key,
     required this.price,
     this.onPressed,

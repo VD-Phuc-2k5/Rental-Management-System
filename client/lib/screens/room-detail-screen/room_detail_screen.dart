@@ -1,5 +1,5 @@
 import 'package:app/screens/room-detail-screen/components/body.dart';
-import 'package:app/screens/room-detail-screen/components/comfirm_book_room.dart';
+import 'package:app/screens/room-detail-screen/components/confirm_book_room.dart';
 import 'package:app/screens/room-detail-screen/components/login_required_modal.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,7 @@ class RoomDetailScreen extends StatelessWidget {
           child: RoomDetailBody(),
         ),
       ),
-      bottomNavigationBar: ComfirmBookRoom(
+      bottomNavigationBar: ConfirmBookRoom(
         price: 2800000,
         onPressed: () {
           LoginRequiredModal.show(
