@@ -17,7 +17,9 @@ class UpdateBottomActionBar extends StatelessWidget {
             height: 56,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.blue700, elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-              onPressed: () {},
+              onPressed: () {
+                // TODO: Implement save/update behavior for hostel changes.
+              },
               child: const Text("Lưu thay đổi", style: TextStyle(fontFamily: "Public Sans", fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.white)),
             ),
           ),
