@@ -2,7 +2,11 @@ class CollapseText {
   CollapseText._();
 
   static int getWordCount(String text) {
-    return text.trim().split(RegExp(r'\s+')).length;
+    final trimmed = text.trim();
+    if (trimmed.isEmpty) {
+      return 0;
+    }
+    return trimmed.split(RegExp(r'\s+')).length;
   }
 
   static String getTruncatedText(String text, int wordLimit) {
