@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
-import 'components/body.dart';
-import 'components/host_bottom_nav.dart';
+import 'components/empty_hostel_screen/empty_hostel_body.dart';
+import 'components/empty_hostel_screen/host_bottom_nav.dart';
 
 class EmptyHostelScreen extends StatelessWidget {
   const EmptyHostelScreen({super.key});
@@ -29,7 +29,8 @@ class EmptyHostelScreen extends StatelessWidget {
           child: Container(color: AppColors.slate200, height: 1.0),
         ),
       ),
-      body: const Body(),
+
+      body: const EmptyHostelBody(),
       bottomNavigationBar: const HostBottomNav(),
     );
   }
