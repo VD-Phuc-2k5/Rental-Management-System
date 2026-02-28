@@ -6,6 +6,18 @@ import 'package:app/screens/register-screen/components/register_logo.dart';
 class RegisterBody extends StatelessWidget {
   const RegisterBody({super.key});
 
+  Future<void> _handleRegister(
+    String username, 
+    String password, 
+    String email, 
+    String confirmPassword) async {
+    // TODO: Implement register logic
+  }
+
+  void _handleOnLoginPressed() {
+    // TODO: Navigate to login screen
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +70,10 @@ class RegisterBody extends StatelessWidget {
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: const RegisterForm(),
+                  child: RegisterForm(
+                    onSubmit: _handleRegister,
+                    onLoginPressed: _handleOnLoginPressed,
+                  ),
                 ),
               ],
             ),
