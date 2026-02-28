@@ -32,7 +32,7 @@ class _RoomDescriptionSectionState extends State<RoomDescriptionSection> {
         Text(
           'Mô tả',
           style: const TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: 'Nunito',
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: AppColors.black
