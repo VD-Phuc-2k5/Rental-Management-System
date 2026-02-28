@@ -36,7 +36,6 @@ class SummarySection extends StatelessWidget {
                 color: AppColors.slate500,
               ),
               textAlign: TextAlign.center,
-              textScaleFactor: 1.0,
             ),
           ],
         ),
