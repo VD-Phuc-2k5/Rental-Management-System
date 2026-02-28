@@ -8,12 +8,12 @@ class RegisterForm extends StatefulWidget {
     String email,
     String confirmPassword
   )? onSubmit;
-  final VoidCallback? onForgotPassword;
+  final VoidCallback? onLoginPressed;
 
   const RegisterForm({
     super.key,
     this.onSubmit,
-    this.onForgotPassword,
+    this.onLoginPressed,
   });
 
   @override
@@ -22,6 +22,7 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   bool _isLoading = false;
   bool _agreeTerms = false;
   final TextEditingController _usernameController = TextEditingController();
@@ -106,17 +107,18 @@ class _RegisterFormState extends State<RegisterForm> {
           "Họ và tên", 
           "Nhập họ và tên", 
           _usernameController, 
-          Icons.person_outline_rounded, null, null),
+          Icons.person_outline_rounded, false, null, null),
         const SizedBox(height: 6),
         _buildTextField(
           "Số điện thoại / Email", 
-          "Nhập số điện thoại hoặc email", _emailController, Icons.email_outlined, null, null),
+          "Nhập số điện thoại hoặc email", _emailController, Icons.email_outlined, false, null, null),
         const SizedBox(height: 6),
         _buildTextField(
           "Mật khẩu",
           "Nhập mật khẩu",
           _passwordController,
           Icons.lock_outline_rounded,
+          _obscurePassword,
           _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
           () {
             setState(() {
@@ -130,10 +132,11 @@ class _RegisterFormState extends State<RegisterForm> {
           "Nhập lại mật khẩu",
           _confirmPasswordController,
           Icons.lock_outline_rounded,
-          _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+          _obscureConfirmPassword,
+          _obscureConfirmPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
           () {
             setState(() {
-              _obscurePassword = !_obscurePassword;
+              _obscureConfirmPassword = !_obscureConfirmPassword;
             });
           },
         ),
@@ -284,7 +287,7 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
             ),
             TextButton(
-              onPressed: widget.onForgotPassword,
+              onPressed: widget.onLoginPressed,
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: Size.zero,
@@ -313,6 +316,7 @@ class _RegisterFormState extends State<RegisterForm> {
     String hintText,
     TextEditingController controller,
     IconData prefixIcon,
+    bool obscureText,
     IconData? suffixIcon,
     void Function()? onSuffixIconPressed,
   ) {
@@ -338,6 +342,9 @@ class _RegisterFormState extends State<RegisterForm> {
           child: TextField(
             controller: controller,
             enabled: !_isLoading,
+            obscureText: obscureText,
+            enableSuggestions: !obscureText,
+            autocorrect: !obscureText,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: TextStyle(
