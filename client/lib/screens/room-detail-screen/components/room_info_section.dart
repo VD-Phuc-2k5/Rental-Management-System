@@ -22,98 +22,100 @@ class RoomInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(bottom: 152),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.bolt_outlined,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.bolt_outlined,
+              size: 20,
+              color: AppColors.blue700,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Điện: ${formatVND(electricPrice.toInt())}/kWh',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.black,
+              ),
+            ),
+            const SizedBox(width: 24),
+            Icon(
+              Icons.water_drop_outlined,
+              size: 20,
+              color: AppColors.blue700,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Nước: ${formatVND(waterPrice.toInt())}/m3',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.black,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: AppColors.slate100,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Icon(
+                Icons.location_on_outlined,
                 size: 20,
                 color: AppColors.blue700,
               ),
-              const SizedBox(width: 8),
-              Text(
-                'Điện: ${formatVND(electricPrice.toInt())}/kWh',
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                address,
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color: AppColors.black,
+                  color: AppColors.slate500,
                 ),
               ),
-              const SizedBox(width: 24),
-              Icon(
-                Icons.water_drop_outlined,
-                size: 20,
-                color: AppColors.blue700,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Nước: ${formatVND(waterPrice.toInt())}/m3',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.black,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.slate100,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Icon(
-                  Icons.location_on_outlined,
-                  size: 20,
-                  color: AppColors.blue700,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  address,
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.slate500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 12,
-            runSpacing: 8,
-            children: [
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 12,
+          runSpacing: 8,
+          children: [
+            _buildFeature(
+              Icons.square_foot_outlined,
+              '${area.toInt()}m²',
+            ),
+            _buildFeature(
+              Icons.bed_outlined,
+              '$bedrooms phòng ngủ',
+            ),
+            if (hasFurniture)
               _buildFeature(
-                Icons.square_foot_outlined,
-                '${area.toInt()}m²',
+                Icons.weekend_outlined,
+                'Có nội thất',
               ),
-              _buildFeature(
-                Icons.bed_outlined,
-                '$bedrooms phòng ngủ',
-              ),
-              if (hasFurniture)
-                _buildFeature(
-                  Icons.weekend_outlined,
-                  'Có nội thất',
-                ),
-            ],
-          ),
-        ],
-      ),
+          ],
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 16),
+          height: 1,
+          color: AppColors.slate200,
+        ),
+      ],
     );
   }
 

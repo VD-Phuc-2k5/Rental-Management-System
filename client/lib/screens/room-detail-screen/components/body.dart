@@ -14,33 +14,31 @@ class RoomDetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ImageCarouselSection(imageUrls: imageUrls),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                const RoomHeadingDetail(
-                  title: "Phòng trọ cao cấp 25m² - Full nội thất",
-                  price: 2800000,
-                ),
-                const SizedBox(height: 10),
-                const RoomInfoSection(
-                  electricPrice: 3500,
-                  waterPrice: 25000,
-                  address: "123 Đường Nguyễn Văn Linh, Phường Tán Thuận Tây, Quận 7, TP.HCM",
-                  area: 25,
-                  bedrooms: 1,
-                  hasFurniture: true,
-                ),
-              ],
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ImageCarouselSection(imageUrls: imageUrls),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              const RoomHeadingDetail(
+                title: "Phòng trọ cao cấp 25m² - Full nội thất",
+                price: 2800000,
+              ),
+              const SizedBox(height: 10),
+              const RoomInfoSection(
+                electricPrice: 3500,
+                waterPrice: 25000,
+                address: "123 Đường Nguyễn Văn Linh, Phường Tán Thuận Tây, Quận 7, TP.HCM",
+                area: 25,
+                bedrooms: 1,
+                hasFurniture: true,
+              ),                
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
