@@ -30,7 +30,7 @@ class _InputOtpBodyState extends State<InputOtpBody> {
     if (!_isOtpComplete) return;
     // TODO: navigate to reset-password screen
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Xác nhận OTP: $_otp')),
+      const SnackBar(content: Text('Mã OTP đã được xác nhận!')),
     );
   }
 

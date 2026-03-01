@@ -26,15 +26,17 @@ class _ResendOtpRowState extends State<ResendOtpRow> {
   void initState() {
     super.initState();
     _secondsRemaining = widget.countdownSeconds;
-    _startTimer();
+    // Assign directly — no setState during initState
+    _startTimer(fromInit: true);
   }
 
-  void _startTimer() {
-    setState(() {
-      _canResend = false;
-      _secondsRemaining = widget.countdownSeconds;
-    });
+  void _startTimer({bool fromInit = false}) {
+    // Cancel before anything else to avoid racey ordering
     _timer?.cancel();
+    _secondsRemaining = widget.countdownSeconds;
+    _canResend = false;
+    // Only trigger a rebuild when called after the first build
+    if (!fromInit) setState(() {});
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) return;
       if (_secondsRemaining == 0) {
@@ -93,20 +95,23 @@ class _ResendOtpRowState extends State<ResendOtpRow> {
                 fontFamily: 'Noto Sans',
               ),
             ),
-            if (_canResend)
-              GestureDetector(
-                onTap: _handleResend,
-                child: const Text(
-                  'Gửi lại',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.blue700,
-                    fontFamily: 'Noto Sans',
-                    decorationColor: AppColors.blue700,
-                  ),
+            TextButton(
+              onPressed: _canResend ? _handleResend : null,
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                'Gửi lại',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: _canResend ? AppColors.blue700 : AppColors.slate500,
+                  fontFamily: 'Noto Sans',
                 ),
-              )
+              ),
+            ),
           ],
         ),
       ],
