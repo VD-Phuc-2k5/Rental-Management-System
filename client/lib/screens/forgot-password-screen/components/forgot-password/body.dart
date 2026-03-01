@@ -2,16 +2,16 @@ import 'package:app/screens/forgot-password-screen/components/forgot-password/fo
 import 'package:app/screens/forgot-password-screen/components/forgot-password/instruction_text.dart';
 import 'package:app/screens/forgot-password-screen/components/forgot-password/phone_email_input.dart';
 import 'package:app/screens/forgot-password-screen/components/forgot-password/send_otp_button.dart';
-import 'package:app/screens/forgot-password-screen/input_otp_screen.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordBody extends StatelessWidget {
   const ForgotPasswordBody({super.key});
 
   void _handleSendOtp(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const InputOtpScreen()),
+     ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('OTP input screen is not implemented yet.'),
+      ),
     );
   }
 
