@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:app/core/constants.dart';
 class TenantCccdUploadSection extends StatelessWidget {
   const TenantCccdUploadSection({super.key});
 
@@ -49,7 +49,7 @@ class _UploadBox extends StatelessWidget {
         height: 110,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFCBD5E1)),
+          border: Border.all(color: AppColors.slate300),
           color: Colors.white,
         ),
         child: Column(

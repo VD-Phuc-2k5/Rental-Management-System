@@ -5,7 +5,7 @@ import 'components/parking_toggle_section.dart';
 import 'components/vehicle_list_section.dart';
 import 'components/vehicle_form_section.dart';
 import 'components/parking_bottom_bar.dart';
-
+import 'package:app/screens/form-info-agreement-services-screen/agreement_screen.dart';
 class ParkingInfoScreen extends StatefulWidget {
   const ParkingInfoScreen({super.key});
 
@@ -61,9 +61,11 @@ class _ParkingInfoScreenState extends State<ParkingInfoScreen> {
     });
   }
 
-  void _next() {
-    // TODO: điều hướng sang bước 3 (màn tiếp theo)
-    // Navigator.push(context, MaterialPageRoute(builder: (_) => const Step3Screen()));
+  void _goNext(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const AgreementUiScreen()),
+    );
   }
 
   @override
@@ -120,7 +122,9 @@ class _ParkingInfoScreenState extends State<ParkingInfoScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: ParkingBottomBar(onNext: _next),
+      bottomNavigationBar: ParkingBottomBar(
+        onNext: () => _goNext(context),
+      ),
     );
   }
 }

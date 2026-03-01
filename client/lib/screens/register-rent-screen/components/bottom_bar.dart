@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:app/core/constants.dart';
 class RegisterRentBottomBar extends StatelessWidget {
   final VoidCallback onRegister;
 
@@ -33,9 +33,9 @@ Widget build(BuildContext context) {
           onPressed: onRegister,
           style: const ButtonStyle(
             backgroundColor:
-                WidgetStatePropertyAll(Color(0xFF1A5FAD)),
+                WidgetStatePropertyAll(AppColors.blue700),
             foregroundColor:
-                WidgetStatePropertyAll(Color(0xFFFFFFFF)),
+                WidgetStatePropertyAll(AppColors.white),
             shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(24)),
