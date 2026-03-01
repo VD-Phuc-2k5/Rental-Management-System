@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 import 'package:app/screens/update-hostel-screen/components/update_hostel_body.dart';
+import 'package:flutter/material.dart';
 
 class UpdateHostelScreen extends StatelessWidget {
   const UpdateHostelScreen({super.key});

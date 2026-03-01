@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:flutter/material.dart';
 
 class UtilitiesSection extends StatelessWidget {
   const UtilitiesSection({super.key});
@@ -36,7 +36,11 @@ class UtilitiesSection extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: isActive ? AppColors.blue700 : AppColors.slate600),
+          Icon(
+            icon,
+            size: 14,
+            color: isActive ? AppColors.blue700 : AppColors.slate600,
+          ),
           const SizedBox(width: 6),
           Text(
             label,

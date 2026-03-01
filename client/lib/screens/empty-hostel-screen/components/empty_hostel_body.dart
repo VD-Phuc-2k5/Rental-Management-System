@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
-import 'hostel_logo.dart';
+import 'package:flutter/material.dart';
+
 import 'add_hostel_button.dart';
+import 'hostel_logo.dart';
 
 class EmptyHostelBody extends StatelessWidget {
   const EmptyHostelBody({super.key});

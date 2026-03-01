@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:flutter/material.dart';
 
 class HostBottomNav extends StatelessWidget {
   const HostBottomNav({super.key});
@@ -61,11 +61,31 @@ class HostBottomNav extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _buildNavItem(icon: Icons.grid_view, label: "Nhà trọ", isActive: true),
-          _buildNavItem(icon: Icons.door_front_door_outlined, label: "Phòng", isActive: false),
-          _buildNavItem(icon: Icons.check_circle_outline, label: "Yêu cầu", isActive: false),
-          _buildNavItem(icon: Icons.receipt_long_outlined, label: "Hóa đơn", isActive: false),
-          _buildNavItem(icon: Icons.person_outline, label: "Hồ sơ", isActive: false),
+          _buildNavItem(
+            icon: Icons.grid_view,
+            label: "Nhà trọ",
+            isActive: true,
+          ),
+          _buildNavItem(
+            icon: Icons.door_front_door_outlined,
+            label: "Phòng",
+            isActive: false,
+          ),
+          _buildNavItem(
+            icon: Icons.check_circle_outline,
+            label: "Yêu cầu",
+            isActive: false,
+          ),
+          _buildNavItem(
+            icon: Icons.receipt_long_outlined,
+            label: "Hóa đơn",
+            isActive: false,
+          ),
+          _buildNavItem(
+            icon: Icons.person_outline,
+            label: "Hồ sơ",
+            isActive: false,
+          ),
         ],
       ),
     );

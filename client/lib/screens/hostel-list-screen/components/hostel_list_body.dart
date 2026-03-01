@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'summary_section.dart';
+
 import 'hostel_card.dart';
+import 'summary_section.dart';
 
 class HostelListBody extends StatelessWidget {
   const HostelListBody({super.key});

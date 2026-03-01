@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 import 'package:app/screens/add-hostel-screen/add_hostel_screen.dart';
-import 'package:app/screens/hostel-list-screen/components/hostel_list_body.dart';
 import 'package:app/screens/empty-hostel-screen/components/host_bottom_nav.dart';
+import 'package:app/screens/hostel-list-screen/components/hostel_list_body.dart';
+import 'package:flutter/material.dart';
 
 class HostelListScreen extends StatelessWidget {
   const HostelListScreen({super.key});
@@ -26,12 +26,18 @@ class HostelListScreen extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16.0, top: 11.0, bottom: 11.0),
+            padding: const EdgeInsets.only(
+              right: 16.0,
+              top: 11.0,
+              bottom: 11.0,
+            ),
             child: InkWell(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AddHostelScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const AddHostelScreen(),
+                  ),
                 );
               },
               borderRadius: BorderRadius.circular(5.0),
