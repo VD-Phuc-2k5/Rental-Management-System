@@ -13,7 +13,7 @@ class RegisterRentApartmentSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _ImageHeader(
-            imagePath: 'assets/images/9_screen/apartment.jpg',
+            imagePath: 'assets/images/apartment.jpg',
             tagText: 'Căn hộ dịch vụ',
           ),
           Padding(
