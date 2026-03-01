@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:flutter/material.dart';
 
 class ImagesSection extends StatelessWidget {
   const ImagesSection({super.key});
@@ -29,7 +29,11 @@ class ImagesSection extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.slate50,
           borderRadius: BorderRadius.circular(5.0),
-          border: Border.all(color: AppColors.slate300, width: 2.0, style: BorderStyle.solid),
+          border: Border.all(
+            color: AppColors.slate300,
+            width: 2.0,
+            style: BorderStyle.solid,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

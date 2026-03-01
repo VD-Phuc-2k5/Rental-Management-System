@@ -11,7 +11,7 @@ class RoomListSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(5.0),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        border: Border.all(color: AppColors.slate100),
         boxShadow: [BoxShadow(color: AppColors.black.withAlpha(13), blurRadius: 2, offset: const Offset(0, 1))],
       ),
       child: Row(
@@ -19,7 +19,7 @@ class RoomListSection extends StatelessWidget {
           Container(
             width: 48,
             height: 48,
-            decoration: BoxDecoration(color: const Color(0xFFEFF6FF), border: Border.all(color: const Color(0xFFDBEAFE)), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: AppColors.blue50, border: Border.all(color: AppColors.blue100), shape: BoxShape.circle),
             child: Center(child: Text("P.$roomNumber", style: const TextStyle(fontFamily: "Nunito", fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.blue700))),
           ),
           const SizedBox(width: 12),

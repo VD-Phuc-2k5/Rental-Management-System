@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 import 'package:app/screens/add-hostel-screen/add_hostel_screen.dart';
+import 'package:flutter/material.dart';
 
 class AddHostelButton extends StatelessWidget {
   const AddHostelButton({super.key});
@@ -23,7 +23,9 @@ class AddHostelButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.blue700,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
           elevation: 0,
         ),
         onPressed: () {

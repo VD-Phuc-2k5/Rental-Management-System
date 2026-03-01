@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:flutter/material.dart';
+
 import 'basic_info_section.dart';
-import 'utilities_section.dart';
-import 'images_section.dart';
 import 'bottom_action_bar.dart';
+import 'images_section.dart';
+import 'utilities_section.dart';
 
 class AddHostelBody extends StatelessWidget {
   const AddHostelBody({super.key});

@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:flutter/material.dart';
+
+import 'room_action_buttons.dart';
 import 'room_form_card.dart';
 import 'room_list_section.dart';
-import 'room_action_buttons.dart';
 
 class AddRoomBody extends StatelessWidget {
   const AddRoomBody({super.key});
@@ -24,13 +25,20 @@ class AddRoomBody extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.blue700,
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
                 ),
                 onPressed: () {},
                 icon: const Icon(Icons.add, color: AppColors.white, size: 16),
                 label: const Text(
                   "Thêm phòng",
-                  style: TextStyle(fontFamily: "Nunito", fontWeight: FontWeight.w500, fontSize: 16, color: AppColors.white)
+                  style: TextStyle(
+                    fontFamily: "Nunito",
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: AppColors.white,
+                  ),
                 ),
               ),
             ),

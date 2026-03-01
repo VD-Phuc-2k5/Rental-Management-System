@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:flutter/material.dart';
 
 class BottomActionBar extends StatelessWidget {
   const BottomActionBar({super.key});
@@ -22,7 +22,9 @@ class BottomActionBar extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.blue700,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
               ),
               onPressed: null,
               child: const Text(

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:flutter/material.dart';
 
 class BasicInfoSection extends StatelessWidget {
   const BasicInfoSection({super.key});
@@ -50,7 +50,10 @@ class BasicInfoSection extends StatelessWidget {
         ),
         filled: true,
         fillColor: AppColors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5.0),
           borderSide: const BorderSide(color: AppColors.slate300, width: 1.0),
@@ -76,21 +79,37 @@ class BasicInfoSection extends StatelessWidget {
           _buildTextField(hintText: "VD: Landmark A"),
           const SizedBox(height: 16),
           _buildLabel("Địa chỉ chi tiết"),
-          _buildTextField(hintText: "Số nhà, tên đường, phường, quận, thành phố...", maxLines: 3),
+          _buildTextField(
+            hintText: "Số nhà, tên đường, phường, quận, thành phố...",
+            maxLines: 3,
+          ),
           const SizedBox(height: 16),
           _buildLabel("Loại hình"),
           TextField(
             readOnly: true,
             decoration: InputDecoration(
               hintText: "Chọn loại hình",
-              hintStyle: const TextStyle(fontFamily: "Public Sans", color: AppColors.slate900, fontSize: 16),
-              suffixIcon: const Icon(Icons.keyboard_arrow_down, color: AppColors.slate500),
+              hintStyle: const TextStyle(
+                fontFamily: "Public Sans",
+                color: AppColors.slate900,
+                fontSize: 16,
+              ),
+              suffixIcon: const Icon(
+                Icons.keyboard_arrow_down,
+                color: AppColors.slate500,
+              ),
               filled: true,
               fillColor: AppColors.white,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(color: AppColors.slate300, width: 1.0),
+                borderSide: const BorderSide(
+                  color: AppColors.slate300,
+                  width: 1.0,
+                ),
               ),
             ),
           ),

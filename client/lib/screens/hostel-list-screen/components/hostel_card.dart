@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 import 'package:app/screens/update-hostel-screen/update_hostel_screen.dart';
+import 'package:flutter/material.dart';
 
 class HostelCard extends StatelessWidget {
   final String title;
@@ -24,9 +24,7 @@ class HostelCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const UpdateHostelScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => const UpdateHostelScreen()),
         );
       },
       child: Container(
@@ -63,17 +61,23 @@ class HostelCard extends StatelessWidget {
 
     List<Widget> blocks = [];
     Widget buildBlock(Color color) => Container(
-          width: 14,
-          height: 14,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(3.0),
-          ),
-        );
+      width: 14,
+      height: 14,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(3.0),
+      ),
+    );
 
-    for (int i = 0; i < blueBlocks; i++) blocks.add(buildBlock(AppColors.blue700));
-    for (int i = 0; i < orangeBlocks; i++) blocks.add(buildBlock(const Color(0xFFF59E0B)));
-    for (int i = 0; i < greyBlocks; i++) blocks.add(buildBlock(const Color(0xFFCBD5E1)));
+    for (int i = 0; i < blueBlocks; i++) {
+      blocks.add(buildBlock(AppColors.blue700));
+    }
+    for (int i = 0; i < orangeBlocks; i++) {
+      blocks.add(buildBlock(const Color(0xFFF59E0B)));
+    }
+    for (int i = 0; i < greyBlocks; i++) {
+      blocks.add(buildBlock(const Color(0xFFCBD5E1)));
+    }
 
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
@@ -125,7 +129,9 @@ class HostelCard extends StatelessWidget {
                   return const SizedBox(
                     width: dashWidth,
                     height: 1.0,
-                    child: DecoratedBox(decoration: BoxDecoration(color: Color(0xFFF1F5F9))),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(color: Color(0xFFF1F5F9)),
+                    ),
                   );
                 }),
               );

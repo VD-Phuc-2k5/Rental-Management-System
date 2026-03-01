@@ -1,6 +1,7 @@
 import 'dart:ui';
-import 'package:flutter/material.dart';
+
 import 'package:app/core/constants.dart';
+import 'package:flutter/material.dart';
 
 class HostelLogo extends StatelessWidget {
   const HostelLogo({super.key});
@@ -40,7 +41,11 @@ class HostelLogo extends StatelessWidget {
               ],
             ),
             child: const Center(
-              child: Icon(Icons.apartment, size: 96.0, color: AppColors.blue700),
+              child: Icon(
+                Icons.apartment,
+                size: 96.0,
+                color: AppColors.blue700,
+              ),
             ),
           ),
           Positioned(

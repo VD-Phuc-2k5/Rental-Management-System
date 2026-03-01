@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:flutter/material.dart';
 
 class UpdateUtilitiesSection extends StatelessWidget {
   const UpdateUtilitiesSection({super.key});
@@ -10,14 +10,29 @@ class UpdateUtilitiesSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: isActive ? AppColors.blue700.withAlpha(26) : AppColors.white,
         borderRadius: BorderRadius.circular(9999),
-        border: Border.all(color: isActive ? AppColors.blue700 : AppColors.slate300, width: 1.0),
+        border: Border.all(
+          color: isActive ? AppColors.blue700 : AppColors.slate300,
+          width: 1.0,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: isActive ? AppColors.blue700 : AppColors.slate600),
+          Icon(
+            icon,
+            size: 14,
+            color: isActive ? AppColors.blue700 : AppColors.slate600,
+          ),
           const SizedBox(width: 6),
-          Text(label, style: TextStyle(fontFamily: "Public Sans", fontWeight: FontWeight.w500, fontSize: 14, color: isActive ? AppColors.blue700 : AppColors.slate600)),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: "Public Sans",
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              color: isActive ? AppColors.blue700 : AppColors.slate600,
+            ),
+          ),
         ],
       ),
     );
@@ -34,7 +49,15 @@ class UpdateUtilitiesSection extends StatelessWidget {
             children: const [
               Icon(Icons.grid_view, color: AppColors.blue700, size: 16),
               SizedBox(width: 8),
-              Text("Tiện ích chung", style: TextStyle(fontFamily: "Public Sans", fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.blue700)),
+              Text(
+                "Tiện ích chung",
+                style: TextStyle(
+                  fontFamily: "Public Sans",
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  color: AppColors.blue700,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
