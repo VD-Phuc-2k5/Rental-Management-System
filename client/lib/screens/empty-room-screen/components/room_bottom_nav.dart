@@ -6,34 +6,48 @@ class RoomBottomNav extends StatelessWidget {
 
   Widget _buildNavItem(IconData icon, String label, bool isActive) {
     return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Icon(
-            icon,
-            size: 20,
-            color: isActive ? AppColors.blue700 : AppColors.slate500,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: isActive ? AppColors.blue700 : AppColors.slate500,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontFamily: 'Noto Sans',
+                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                  fontSize: 10,
+                  color: isActive ? AppColors.blue700 : AppColors.slate500,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'Noto Sans',
-              fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-              fontSize: 10,
-              color: isActive ? AppColors.blue700 : AppColors.slate500,
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Opacity(
+              opacity: isActive ? 1 : 0,
+              child: Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 4),
+                  width: 48,
+                  height: 2,
+                  decoration: BoxDecoration(
+                    color: AppColors.blue700,
+                    borderRadius: BorderRadius.circular(9999),
+                  ),
+                ),
+              ),
             ),
           ),
-          if (isActive)
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              width: 48,
-              height: 2,
-              decoration: BoxDecoration(
-                color: AppColors.blue700,
-                borderRadius: BorderRadius.circular(9999),
-              ),
-            )
         ],
       ),
     );
