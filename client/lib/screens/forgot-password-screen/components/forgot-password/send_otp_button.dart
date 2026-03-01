@@ -2,7 +2,7 @@ import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
 class SendOtpButton extends StatelessWidget {
-  final VoidCallback? onPressed;
+  final VoidCallback onPressed;
 
   const SendOtpButton({super.key, required this.onPressed});
 
