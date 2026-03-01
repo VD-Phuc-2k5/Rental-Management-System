@@ -1,3 +1,4 @@
+import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
 class TenantMembersSection extends StatelessWidget {
@@ -147,7 +148,7 @@ class _MemberCard extends StatelessWidget {
               height: 38,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0xFFF1F5F9),
+                color: AppColors.slate100,
               ),
               child: const Icon(Icons.person_outline, color: Colors.grey),
             ),

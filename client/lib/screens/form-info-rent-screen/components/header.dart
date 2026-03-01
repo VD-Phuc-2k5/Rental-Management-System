@@ -1,3 +1,4 @@
+import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
 class TenantInfoHeader extends StatelessWidget {
@@ -47,7 +48,7 @@ class _StepBar extends StatelessWidget {
             height: 6,
             margin: EdgeInsets.only(right: i == total - 1 ? 0 : 8),
             decoration: BoxDecoration(
-              color: done ? const Color(0xFF195AA4) : const Color(0xFFE5E7EB),
+              color: done ? const Color(0xFF195AA4) : AppColors.gray200,
               borderRadius: BorderRadius.circular(99),
             ),
           ),

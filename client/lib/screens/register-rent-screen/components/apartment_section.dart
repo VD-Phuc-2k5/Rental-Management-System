@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:app/core/constants.dart';
 class RegisterRentApartmentSection extends StatelessWidget {
   const RegisterRentApartmentSection({super.key});
 
@@ -182,7 +182,7 @@ class _PriceRow extends StatelessWidget {
         Text(
           price,
           style: const TextStyle(
-            color: Color(0xFF1A5FAD),
+            color: AppColors.blue700,
             fontSize: 20,
             fontWeight: FontWeight.w700,
           ),

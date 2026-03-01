@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:app/core/constants.dart';
 class TenantBottomBar extends StatelessWidget {
   final VoidCallback onNext;
 
@@ -33,7 +33,7 @@ class TenantBottomBar extends StatelessWidget {
             onPressed: onNext,
             style: const ButtonStyle(
               backgroundColor:
-                  WidgetStatePropertyAll(Color(0xFF1A5FAD)),
+                  WidgetStatePropertyAll(AppColors.blue700),
               foregroundColor:
                   WidgetStatePropertyAll(Colors.white),
               shape: WidgetStatePropertyAll(
