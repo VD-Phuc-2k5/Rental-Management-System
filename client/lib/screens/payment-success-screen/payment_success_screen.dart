@@ -9,7 +9,7 @@ class PaymentSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: "Thanh toán"),
+      appBar: CommonAppBar(title: "Thanh toán", showBack: false),
       body: Body(price: price),
     );
   }

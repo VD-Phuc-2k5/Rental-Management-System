@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 
 class QrPaymentScreen extends StatelessWidget {
-  const QrPaymentScreen({super.key, required this.price, required this.roomId});
+  const QrPaymentScreen({
+    super.key,
+    required this.price,
+    required this.roomName,
+  });
 
   final double appbarBorderWidth = 1.0;
   final int price;
-  final String roomId;
+  final String roomName;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +35,7 @@ class QrPaymentScreen extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         margin: const EdgeInsets.only(top: 10),
-        child: Body(price: price, roomId: roomId, onSuccess: onSuccess),
+        child: Body(price: price, roomName: roomName, onSuccess: onSuccess),
       ),
     );
   }
