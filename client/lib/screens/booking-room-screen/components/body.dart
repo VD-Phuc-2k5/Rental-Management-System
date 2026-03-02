@@ -1,3 +1,4 @@
+import 'package:app/screens/booking-room-screen/components/calendar_picker.dart';
 import 'package:app/screens/booking-room-screen/components/card_title.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,7 @@ class BookingRoomBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -16,6 +17,13 @@ class BookingRoomBody extends StatelessWidget {
             imageUrl: "https://file4.batdongsan.com.vn/2025/12/23/20251223125240-cf4d_wm.jpg", 
             address: "123 Đường Nguyễn Huệ, Quận 1, TP.HCM", 
             price: 2800000
+          ),
+          const SizedBox(height: 16),
+          CustomCalendarPicker(
+            initialDate: DateTime.now(),
+            onDateSelected: (value) {
+              // TODO: Handle date selection
+            },
           ),
         ],
       ),
