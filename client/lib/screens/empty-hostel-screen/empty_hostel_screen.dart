@@ -30,7 +30,6 @@ class EmptyHostelScreen extends StatelessWidget {
       ),
 
       body: const EmptyHostelBody(),
-      // bottomNavigationBar: const HostBottomNav(),
     );
   }
 }
