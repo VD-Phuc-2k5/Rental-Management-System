@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/add-room-screen/add_room_screen.dart';
 import 'package:flutter/material.dart';
 
 class RoomListFilter extends StatelessWidget {
@@ -32,7 +33,14 @@ class RoomListFilter extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddRoomScreen(),
+                  ),
+                );
+              },
               icon: const Icon(Icons.add, size: 16, color: AppColors.blue700),
               label: const Text(
                 "Thêm phòng",
