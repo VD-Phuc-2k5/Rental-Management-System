@@ -5,7 +5,7 @@ import 'package:app/screens/form-info-rent-screen/components/header.dart';
 import 'package:app/screens/form-info-rent-screen/components/info_form.dart';
 import 'package:app/screens/form-info-rent-screen/components/members.dart';
 import 'package:app/screens/form-info-rent-screen/components/bottom_bar.dart';
-import 'package:app/screens/form-info-parking-screen/parking_info__rent_screen.dart';
+import 'package:app/screens/form-info-parking-screen/parking_info_rent_screen.dart';
 
 class TenantInfoScreen extends StatefulWidget {
   const TenantInfoScreen({super.key});

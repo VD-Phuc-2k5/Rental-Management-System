@@ -38,7 +38,6 @@ class _ParkingInfoScreenState extends State<ParkingInfoScreen> {
   void _addVehicle() {
     final plate = plateCtl.text.trim();
 
-    // bạn có thể validate chặt hơn tuỳ ý
     if (plate.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Vui lòng nhập biển số xe')),
