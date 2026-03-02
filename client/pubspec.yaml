@@ -21,6 +21,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/room-list-screen/
+    - assets/images/add-room-screen/
   fonts:
     - family: Inter
       fonts:
