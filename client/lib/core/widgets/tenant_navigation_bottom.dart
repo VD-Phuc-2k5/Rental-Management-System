@@ -1,3 +1,4 @@
+import 'package:app/screens/tenant-maintenance-request-screen/tenant_maintenance_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 import 'package:app/screens/home-screen/home_screen.dart';
@@ -32,6 +33,13 @@ class TenantNavigationBottom extends StatelessWidget {
     }
 
     switch (index) {
+      case 2:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const TenantMaintenanceRequestScreen(),
+          ),
+        );
+        break;
       case 3:
         Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const TenantInvoiceListScreen()),
