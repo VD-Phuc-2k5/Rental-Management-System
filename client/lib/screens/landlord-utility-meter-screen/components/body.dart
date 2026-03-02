@@ -1,9 +1,9 @@
 import 'package:app/core/constants.dart';
-import 'package:app/screens/landlord-utility-meter-screens/components/hostel_filter_tabs.dart';
-import 'package:app/screens/landlord-utility-meter-screens/components/month_selector.dart';
-import 'package:app/screens/landlord-utility-meter-screens/components/room_meter_card.dart';
-import 'package:app/screens/landlord-utility-meter-screens/components/utility_meter_examples.dart';
-import 'package:app/screens/landlord-utility-meter-screens/components/utility_meter_models.dart';
+import 'package:app/screens/landlord-utility-meter-screen/components/hostel_filter_tabs.dart';
+import 'package:app/screens/landlord-utility-meter-screen/components/month_selector.dart';
+import 'package:app/screens/landlord-utility-meter-screen/components/room_meter_card.dart';
+import 'package:app/screens/landlord-utility-meter-screen/components/utility_meter_examples.dart';
+import 'package:app/screens/landlord-utility-meter-screen/components/utility_meter_models.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatefulWidget {
@@ -19,12 +19,39 @@ class _BodyState extends State<Body> {
   late UtilityMeterUpdateData _data;
   String? _selectedHostel;
   late Map<String, RoomMeterData> _roomsMap;
+  final Map<String, TextEditingController> electricityControllers = {};
+  final Map<String, TextEditingController> waterControllers = {};
 
   @override
   void initState() {
     super.initState();
     _data = widget.initialData ?? UtilityMeterExamples.february2026;
     _roomsMap = {for (var room in _data.rooms) room.id: room};
+  }
+
+  @override
+  void dispose() {
+    for (final electricityController in electricityControllers.values) {
+      electricityController.dispose();
+    }
+    for (final waterController in waterControllers.values) {
+      waterController.dispose();
+    }
+    super.dispose();
+  }
+
+  TextEditingController _electricController(RoomMeterData room) {
+    return electricityControllers.putIfAbsent(
+      room.id,
+      () => TextEditingController(text: room.electricity.newReading.toString()),
+    );
+  }
+
+  TextEditingController _waterController(RoomMeterData room) {
+    return waterControllers.putIfAbsent(
+      room.id,
+      () => TextEditingController(text: room.water.newReading.toString()),
+    );
   }
 
   void _handleHostelSelected(String? hostel) {
@@ -56,7 +83,7 @@ class _BodyState extends State<Body> {
   }
 
   void _handlePreviewAndCalculate() {
-    // TODO: Navigate to preview/summary screen or show dialog
+    // TO DO: Navigate to preview/summary screen or show dialog
     final updatedRooms = _roomsMap.values.toList();
     final rentedRooms = updatedRooms.where(
       (r) => r.status == RoomStatus.rented,
@@ -95,6 +122,8 @@ class _BodyState extends State<Body> {
                     final room = displayRooms[index];
                     return RoomMeterCard(
                       room: room,
+                      electricityController: _electricController(room),
+                      waterController: _waterController(room),
                       onElectricityNewReadingChanged: (value) =>
                           _handleElectricityReadingChanged(room.id, value),
                       onWaterNewReadingChanged: (value) =>

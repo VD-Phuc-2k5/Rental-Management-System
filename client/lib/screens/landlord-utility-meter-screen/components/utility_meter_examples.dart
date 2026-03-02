@@ -1,4 +1,4 @@
-import 'package:app/screens/landlord-utility-meter-screens/components/utility_meter_models.dart';
+import 'package:app/screens/landlord-utility-meter-screen/components/utility_meter_models.dart';
 
 class UtilityMeterExamples {
   static const UtilityMeterUpdateData february2026 = UtilityMeterUpdateData(

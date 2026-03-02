@@ -3,15 +3,8 @@ import 'package:flutter/material.dart';
 
 class MonthSelector extends StatelessWidget {
   final String currentMonth;
-  final VoidCallback? onPreviousMonth;
-  final VoidCallback? onNextMonth;
 
-  const MonthSelector({
-    super.key,
-    required this.currentMonth,
-    this.onPreviousMonth,
-    this.onNextMonth,
-  });
+  const MonthSelector({super.key, required this.currentMonth});
 
   @override
   Widget build(BuildContext context) {

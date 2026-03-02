@@ -56,8 +56,7 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isPaid = invoice.status == InvoiceStatus.pending;
-
+    final bool isPaid = invoice.status == InvoiceStatus.paid;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
