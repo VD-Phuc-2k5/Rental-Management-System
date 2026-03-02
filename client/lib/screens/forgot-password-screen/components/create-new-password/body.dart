@@ -61,7 +61,7 @@ class _CreateNewPasswordBodyState extends State<CreateNewPasswordBody> {
                       children: [
                         const CreateNewPassIntruction(),
                         const SizedBox(height: 16),
-                        NewpassInputForm(
+                        NewPassInputForm(
                           formKey: _formKey,
                           passwordController: _passwordController,
                           confirmPasswordController: _confirmPasswordController,

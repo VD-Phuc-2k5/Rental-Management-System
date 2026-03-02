@@ -1,12 +1,12 @@
 import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
-class NewpassInputForm extends StatefulWidget {
+class NewPassInputForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
 
-  const NewpassInputForm({
+  const NewPassInputForm({
     super.key,
     required this.formKey,
     required this.passwordController,
@@ -14,10 +14,10 @@ class NewpassInputForm extends StatefulWidget {
   });
 
   @override
-  State<NewpassInputForm> createState() => _NewpassInputFormState();
+  State<NewPassInputForm> createState() => _NewPassInputFormState();
 }
 
-class _NewpassInputFormState extends State<NewpassInputForm> {
+class _NewPassInputFormState extends State<NewPassInputForm> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 

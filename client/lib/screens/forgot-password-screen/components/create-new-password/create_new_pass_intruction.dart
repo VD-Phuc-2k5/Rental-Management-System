@@ -22,7 +22,7 @@ class CreateNewPassIntruction extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Vui lòng thiết lặp mật khẩu an toàn',
+          'Vui lòng thiết lập mật khẩu an toàn',
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
