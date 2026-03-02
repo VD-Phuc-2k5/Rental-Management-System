@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+
 import 'package:app/screens/form-info-rent-screen/components/header.dart';
 import 'package:app/screens/form-info-rent-screen/components/info_form.dart';
 import 'package:app/screens/form-info-rent-screen/components/members.dart';
 import 'package:app/screens/form-info-rent-screen/components/bottom_bar.dart';
+import 'package:app/screens/form-info-parking-screen/parking_info_rent_screen.dart';
 
 class TenantInfoScreen extends StatefulWidget {
   const TenantInfoScreen({super.key});
@@ -43,6 +45,12 @@ class _TenantInfoScreenState extends State<TenantInfoScreen> {
       dobCtl.text =
           '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}';
     }
+  }
+  void _goNext(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ParkingInfoScreen()),
+    );
   }
 
   @override
@@ -95,7 +103,7 @@ class _TenantInfoScreenState extends State<TenantInfoScreen> {
         ),
       ),
       bottomNavigationBar: TenantBottomBar(
-        onNext: () {},
+        onNext: () => _goNext(context),
       ),
     );
   }
