@@ -24,7 +24,7 @@ class BackToHomeButton extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute<void>(
                     builder: (context) => const HomeScreen(),

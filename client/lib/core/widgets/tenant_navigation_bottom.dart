@@ -32,17 +32,15 @@ class TenantNavigationBottom extends StatelessWidget {
     }
 
     switch (index) {
-      case 0:
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
-        break;
       case 3:
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const TenantInvoiceListScreen()),
         );
         break;
       default:
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const HomeScreen()));
         break;
     }
   }
