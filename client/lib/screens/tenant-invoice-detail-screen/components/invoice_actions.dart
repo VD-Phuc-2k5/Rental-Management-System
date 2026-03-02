@@ -60,7 +60,7 @@ class InvoiceActions extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: 8.0,
         children: [
-          Icon(Icons.picture_as_pdf, color: AppColors.slate700),
+          Icon(Icons.payment, color: AppColors.slate700),
           Text(
             'Thanh toán ngay',
             style: TextStyle(

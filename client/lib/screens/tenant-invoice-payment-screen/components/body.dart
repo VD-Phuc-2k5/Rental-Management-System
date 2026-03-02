@@ -42,7 +42,7 @@ class _BodyState extends State<Body> {
   }
 
   void _handlePaymentSubmit() {
-    // Callback to parent component with selected payment method
+    // Notify parent component that payment has been submitted
     widget.onPaymentSubmit?.call();
   }
 

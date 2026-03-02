@@ -23,7 +23,7 @@ class QrPaymentScreen extends StatelessWidget {
       if (navigated) return;
       navigated = true;
 
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => PaymentSuccessScreen(price: price)),
       );
     }

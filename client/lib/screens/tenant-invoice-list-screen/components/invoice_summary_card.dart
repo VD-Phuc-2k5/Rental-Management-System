@@ -132,9 +132,7 @@ class InvoiceSummaryCard extends StatelessWidget {
             ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.white),
-              onPressed: () {
-                // TO DO: Call onPayNow
-              },
+              onPressed: onPayNow,
               child: const Text(
                 'Thanh toán ngay',
                 style: TextStyle(

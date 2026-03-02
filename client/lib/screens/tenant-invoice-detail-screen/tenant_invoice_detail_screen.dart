@@ -43,7 +43,7 @@ class TenantInvoiceDetailScreen extends StatelessWidget {
   }
 
   void _handleDownloadPDF() {
-    // TODO: Implement PDF download logic
+    // TO DO: Implement PDF download logic
     // This will be integrated with API later
   }
 
