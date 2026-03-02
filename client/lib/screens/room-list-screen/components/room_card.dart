@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/update-room-screen/update_room_screen.dart';
 import 'package:flutter/material.dart';
 
 class RoomCard extends StatelessWidget {
@@ -249,7 +250,14 @@ class RoomCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UpdateRoomScreen(),
+                  ),
+                );
+              },
               child: const Text(
                 "Cập nhật thông tin phòng",
                 style: TextStyle(
