@@ -33,7 +33,6 @@ class EmptyRoomScreen extends StatelessWidget {
         ),
       ),
       body: const EmptyRoomBody(),
-      // bottomNavigationBar: const RoomBottomNav(),
     );
   }
 }
