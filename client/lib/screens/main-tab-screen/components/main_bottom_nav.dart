@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class MainBottomNav extends StatelessWidget {
   final int selectedIndex;
-  final Function(int) onItemTapped;
+  final ValueChanged<int> onItemTapped;
 
   const MainBottomNav({
     super.key,
