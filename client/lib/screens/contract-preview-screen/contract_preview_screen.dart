@@ -22,7 +22,9 @@ class ContractPreviewScreen extends StatelessWidget {
         ),
         title: const Text(
           'Hợp đồng thuê trọ',
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: TextStyle(fontWeight: FontWeight.w700,
+            fontSize: 18,
+            color: Color(0xFF111417),),
         ),
       ),
       body: SingleChildScrollView(

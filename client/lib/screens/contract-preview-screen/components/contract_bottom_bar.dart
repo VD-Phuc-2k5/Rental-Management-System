@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:app/core/constants.dart';
 class ContractBottomBar extends StatelessWidget {
   final String text;
 
@@ -30,7 +30,7 @@ class ContractBottomBar extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {}, // UI only
             style: const ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(Color(0xFF1A5FAD)),
+              backgroundColor: WidgetStatePropertyAll(AppColors.blue800),
               foregroundColor: WidgetStatePropertyAll(Colors.white),
               shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(28))),
@@ -38,7 +38,7 @@ class ContractBottomBar extends StatelessWidget {
             ),
             child: Text(
               text,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
             ),
           ),
         ),

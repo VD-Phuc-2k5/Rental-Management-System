@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:app/core/constants.dart';
 class DepositSection extends StatelessWidget {
   const DepositSection({super.key});
 
@@ -11,8 +11,8 @@ class DepositSection extends StatelessWidget {
         const Text(
           'Tiền đặt cọc',
           style: TextStyle(
-            fontWeight: FontWeight.w800,
-            color: Color(0xFF0F172A),
+            fontWeight: FontWeight.w600,
+            color: AppColors.blue950,
             fontSize: 16,
           ),
         ),
@@ -36,26 +36,26 @@ class DepositSection extends StatelessWidget {
                   ),
                   child: Row(
                     children: const [
-                      Icon(Icons.payments_outlined, color: Color(0xFF195AA4)),
+                      Icon(Icons.payments_outlined, color: AppColors.slate500),
                       SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           '3.000.000',
                           style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xFF0F172A),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.blue950,
                             fontSize: 16,
                           ),
                         ),
                       ),
-                      Text('VND', style: TextStyle(color: Color(0xFF647487), fontWeight: FontWeight.w700)),
+                      Text('VND', style: TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w500)),
                     ],
                   ),
                 ),
                 const SizedBox(height: 10),
                 const Text(
                   'Số tiền này sẽ được ghi nhận vào biên lai thu tiền cọc.',
-                  style: TextStyle(color: Color(0xFF647487)),
+                  style: TextStyle(color: AppColors.slate500, fontSize: 12, fontWeight: FontWeight.w400),
                 ),
               ],
             ),
