@@ -25,11 +25,8 @@ class _AgreementUiScreenState extends State<AgreementUiScreen> {
   @override
   void dispose() {
     rentPriceCtl.dispose();
-    
+
     startDateCtl.dispose();
-    elecPriceCtl.dispose();
-    waterPriceCtl.dispose();
-    parkingFeeCtl.dispose();
     elecPriceCtl.dispose();
     waterPriceCtl.dispose();
     parkingFeeCtl.dispose();
