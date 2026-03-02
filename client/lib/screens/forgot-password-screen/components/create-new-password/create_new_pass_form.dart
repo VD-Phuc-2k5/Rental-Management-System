@@ -45,6 +45,15 @@ class _NewPassInputFormState extends State<NewPassInputForm> {
             keyboardType: TextInputType.visiblePassword,
             textAlignVertical: TextAlignVertical.center,
             style: const TextStyle(fontSize: 16, fontFamily: 'Nunito'),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Vui lòng nhập mật khẩu mới';
+              }
+              if (value.length < 8) {
+                return 'Mật khẩu phải có ít nhất 8 ký tự';
+              }
+              return null;
+            },
             decoration: InputDecoration(
               hintText: '********',
               hintStyle: const TextStyle(
@@ -101,6 +110,15 @@ class _NewPassInputFormState extends State<NewPassInputForm> {
             keyboardType: TextInputType.visiblePassword,
             textAlignVertical: TextAlignVertical.center,
             style: const TextStyle(fontSize: 16, fontFamily: 'Nunito'),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Vui lòng xác nhận mật khẩu';
+              }
+              if (value != widget.passwordController.text) {
+                return 'Mật khẩu xác nhận không khớp';
+              }
+              return null;
+            },
             decoration: InputDecoration(
               hintText: '********',
               hintStyle: const TextStyle(
