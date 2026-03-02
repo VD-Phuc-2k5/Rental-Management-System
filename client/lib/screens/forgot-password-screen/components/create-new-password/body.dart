@@ -4,7 +4,7 @@ import 'package:app/screens/forgot-password-screen/components/create-new-passwor
 import 'package:flutter/material.dart';
 
 class CreateNewPasswordBody extends StatefulWidget {
-  final void Function(String password, String confirmPassword) onSubmit;
+  final Future<void> Function(String password, String confirmPassword) onSubmit;
 
   const CreateNewPasswordBody({
     super.key,
@@ -35,11 +35,20 @@ class _CreateNewPasswordBodyState extends State<CreateNewPasswordBody> {
     setState(() => _isLoading = true);
 
     try {
-      widget.onSubmit(_passwordController.text, _confirmPasswordController.text);
+      await widget.onSubmit(_passwordController.text, _confirmPasswordController.text);
     } catch (e) {
-      // TODO: Hiển thị lỗi nếu có
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cập nhật mật khẩu thất bại: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
