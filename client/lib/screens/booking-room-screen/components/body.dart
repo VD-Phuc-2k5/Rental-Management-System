@@ -4,29 +4,23 @@ import 'package:app/screens/booking-room-screen/components/hour_picker.dart';
 import 'package:app/screens/booking-room-screen/components/note_section.dart';
 import 'package:flutter/material.dart';
 
-class BookingRoomBody extends StatefulWidget {
-  const BookingRoomBody({super.key});
+class BookingRoomBody extends StatelessWidget {
+  final List<String> hours;
+  final DateTime selectedDate;
+  final String selectedHour;
+  final TextEditingController noteController;
+  final ValueChanged<DateTime> onDateSelected;
+  final ValueChanged<String> onHourSelected;
 
-  @override
-  State<BookingRoomBody> createState() => _BookingRoomBodyState();
-}
-
-class _BookingRoomBodyState extends State<BookingRoomBody> {
-  final List<String> _hours = ["08:00", "09:00", "10:00", "14:00"];
-  late String _selectedHour;
-  final TextEditingController _noteController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedHour = _hours.first;
-  }
-
-  @override
-  void dispose() {
-    _noteController.dispose();
-    super.dispose();
-  }
+  const BookingRoomBody({
+    super.key,
+    required this.hours,
+    required this.selectedDate,
+    required this.selectedHour,
+    required this.noteController,
+    required this.onDateSelected,
+    required this.onHourSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,21 +38,17 @@ class _BookingRoomBodyState extends State<BookingRoomBody> {
           ),
           const SizedBox(height: 16),
           CustomCalendarPicker(
-            initialDate: DateTime.now(),
-            onDateSelected: (value) {
-              // TODO: Handle date selection
-            },
+            initialDate: selectedDate,
+            onDateSelected: onDateSelected,
           ),
           const SizedBox(height: 16),
           HourPicker(
-            hours: _hours,
-            selectedHour: _selectedHour,
-            onHourSelected: (value) {
-              setState(() => _selectedHour = value);
-            },
+            hours: hours,
+            selectedHour: selectedHour,
+            onHourSelected: onHourSelected,
           ),
           const SizedBox(height: 24),
-          NoteSection(controller: _noteController),
+          NoteSection(controller: noteController),
           const SizedBox(height: 24),
         ],
       ),
