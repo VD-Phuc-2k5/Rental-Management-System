@@ -66,7 +66,6 @@ class HostelListScreen extends StatelessWidget {
         ),
       ),
       body: const HostelListBody(),
-      // bottomNavigationBar: const HostBottomNav(),
     );
   }
 }
