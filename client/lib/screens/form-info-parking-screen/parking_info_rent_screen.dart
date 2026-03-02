@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'components/parking_header.dart';
-import 'components/parking_toggle_section.dart';
-import 'components/vehicle_list_section.dart';
-import 'components/vehicle_form_section.dart';
-import 'components/parking_bottom_bar.dart';
+import 'package:app/screens/form-info-parking-screen/components/parking_header.dart';
+import 'package:app/screens/form-info-parking-screen/components/parking_toggle_section.dart';
+import 'package:app/screens/form-info-parking-screen/components/vehicle_list_section.dart';
+import 'package:app/screens/form-info-parking-screen/components/vehicle_form_section.dart';
+import 'package:app/screens/form-info-parking-screen/components/parking_bottom_bar.dart';
 import 'package:app/screens/form-info-agreement-services-screen/agreement_screen.dart';
 class ParkingInfoScreen extends StatefulWidget {
   const ParkingInfoScreen({super.key});

@@ -27,14 +27,12 @@ class _ServiceRow extends StatefulWidget {
   final String name;
   final String price;
   final bool enabled;
-  //final bool disabled;
 
   const _ServiceRow({
     required this.icon,
     required this.name,
     required this.price,
     required this.enabled,
-   // this.disabled = false,
   });
 
   @override
@@ -82,7 +80,6 @@ class _ServiceRowState extends State<_ServiceRow> {
               widget.price,
               style: TextStyle(
                 fontWeight: FontWeight.w800,
-                //color: widget.disabled ? const Color(0xFF94A3B8) : const Color(0xFF0F172A),
               ),
             ),
           ),

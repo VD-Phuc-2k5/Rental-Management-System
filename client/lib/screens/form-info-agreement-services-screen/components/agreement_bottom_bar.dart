@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 class AgreementBottomBar extends StatelessWidget {
   final String text;
-
+  final VoidCallback? onNext;
   const AgreementBottomBar({
     super.key,
     required this.text,
+    this.onNext,
   });
 
   @override
@@ -24,7 +25,7 @@ class AgreementBottomBar extends StatelessWidget {
           height: 54,
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {}, // UI-only
+            onPressed: onNext,
             style: const ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(AppColors.blue700),
               foregroundColor: WidgetStatePropertyAll(Colors.white),

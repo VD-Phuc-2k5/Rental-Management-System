@@ -10,14 +10,18 @@ class RentPriceSectionUi extends StatefulWidget {
   final String initialTerm;
   final ValueChanged<String>? onTermChanged;
 
-  const RentPriceSectionUi({
+  RentPriceSectionUi({
     super.key,
     required this.rentPriceCtl,
     required this.startDateCtl,
-    this.terms = const ['6 tháng', '12 tháng', '18 tháng', '24 tháng'],
-    this.initialTerm = '12 tháng',
+    List<String> terms = const ['6 tháng', '12 tháng', '18 tháng', '24 tháng'],
+    String? initialTerm,
     this.onTermChanged,
-  });
+  }): terms = terms,
+      initialTerm =
+          (initialTerm != null && terms.contains(initialTerm))
+              ? initialTerm
+              : terms.first;
 
   @override
   State<RentPriceSectionUi> createState() => _RentPriceSectionUiState();
@@ -58,7 +62,7 @@ class _RentPriceSectionUiState extends State<RentPriceSectionUi> {
                     const SizedBox(height: 8),
                     _PillInput(
                       controller: widget.startDateCtl,
-                      hint: 'mm/dd/yyyy',
+                      hint: 'dd/mm/yyyy',
                       keyboardType: TextInputType.datetime,
                     ),
                   ],
@@ -131,7 +135,7 @@ class _PillInput extends StatelessWidget {
 
   const _PillInput({
     required this.controller,
-    this.hint = 'mm/dd/yyyy',
+    this.hint = 'dd/mm/yyyy',
     this.keyboardType = TextInputType.datetime,
   });
 

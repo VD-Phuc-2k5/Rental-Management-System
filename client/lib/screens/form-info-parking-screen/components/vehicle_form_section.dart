@@ -218,7 +218,7 @@ class _SquareBtn extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           color: filled ? const Color(0xFF195AA4) : Colors.white,
           border: Border.all(
-            color: filled ? const Color(0xFF195AA4) : const Color(0xFF195AA4),
+            color: const Color(0xFF195AA4),
           ),
         ),
         child: Icon(
