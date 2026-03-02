@@ -39,9 +39,9 @@ class ParkingToggleSection extends StatelessWidget {
             Switch(
               value: value,
               onChanged: onChanged,
-              activeTrackColor: const Color(0xFF1A5FAD), 
+              activeTrackColor: AppColors.blue700, 
               activeColor: Colors.white,                
-              inactiveTrackColor: const Color(0xFFE5E7EB),
+              inactiveTrackColor: AppColors.gray200,
               inactiveThumbColor: Colors.white,
             ),
           ],

@@ -65,7 +65,7 @@ class VehicleFormSection extends StatelessWidget {
                 hintText: 'Ví dụ: 59A-123.45',
                 hintStyle: const TextStyle(color: AppColors.slate400,fontSize: 16,fontWeight: FontWeight.w400),
                 filled: true,
-                fillColor: const Color(0xFFFFFFFF),
+                fillColor: AppColors.white,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
