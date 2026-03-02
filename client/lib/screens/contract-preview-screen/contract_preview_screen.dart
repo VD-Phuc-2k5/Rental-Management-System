@@ -38,8 +38,9 @@ class ContractPreviewScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const ContractBottomBar(
-        text: 'Gửi hợp đồng cho khách  >',
+      bottomNavigationBar: ContractBottomBar(
+        text: 'Gửi hợp đồng cho khách',
+        onNext: () {},
       ),
     );
   }

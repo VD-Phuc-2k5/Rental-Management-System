@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 class ContractBottomBar extends StatelessWidget {
   final String text;
-
+  final VoidCallback? onNext;
   const ContractBottomBar({
     super.key,
     required this.text,
+    this.onNext,
   });
 
   @override
@@ -28,7 +29,7 @@ class ContractBottomBar extends StatelessWidget {
           height: 54,
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {}, // UI only
+           onPressed: onNext,
             style: const ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(AppColors.blue800),
               foregroundColor: WidgetStatePropertyAll(Colors.white),
@@ -36,9 +37,21 @@ class ContractBottomBar extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(28))),
               ),
             ),
-            child: Text(
-              text,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700,),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  text,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(width: 8),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 20,
+                  color: AppColors.white,
+                ),
+              ],
             ),
           ),
         ),
