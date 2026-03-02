@@ -1,3 +1,4 @@
+import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
 class CalendarDayCell extends StatelessWidget {
@@ -24,17 +25,17 @@ class CalendarDayCell extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: isSelected
-              ? const Color(0xFF2F6FED)
+              ? AppColors.blue700
               : Colors.transparent,
         ),
         child: Text(
           "${date.day}",
           style: TextStyle(
             color: isPast
-                ? Colors.grey.shade400
+                ? AppColors.slate300
                 : isSelected
-                    ? Colors.white
-                    : Colors.black,
+                    ? AppColors.white
+                    : AppColors.black,
             fontWeight: isSelected
                 ? FontWeight.bold
                 : FontWeight.normal,
