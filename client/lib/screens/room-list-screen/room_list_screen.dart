@@ -1,7 +1,6 @@
 import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
-import 'components/room_bottom_nav.dart';
 import 'components/room_list_body.dart';
 
 class RoomListScreen extends StatelessWidget {
@@ -55,7 +54,7 @@ class RoomListScreen extends StatelessWidget {
         ),
       ),
       body: const RoomListBody(),
-      bottomNavigationBar: const RoomBottomNav(),
+      // bottomNavigationBar: const RoomBottomNav(),
     );
   }
 }

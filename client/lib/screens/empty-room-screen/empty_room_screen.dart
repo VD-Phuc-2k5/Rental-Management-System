@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 import 'package:app/screens/empty-room-screen/components/empty_room_body.dart';
-import 'package:app/screens/empty-room-screen/components/room_bottom_nav.dart';
+import 'package:flutter/material.dart';
 
 class EmptyRoomScreen extends StatelessWidget {
   const EmptyRoomScreen({super.key});
@@ -34,7 +33,7 @@ class EmptyRoomScreen extends StatelessWidget {
         ),
       ),
       body: const EmptyRoomBody(),
-      bottomNavigationBar: const RoomBottomNav(),
+      // bottomNavigationBar: const RoomBottomNav(),
     );
   }
 }
