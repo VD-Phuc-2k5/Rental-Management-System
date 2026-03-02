@@ -1,5 +1,5 @@
 import 'package:app/screens/home-screen/components/body.dart';
-import 'package:app/screens/home-screen/components/navigation_bottom.dart';
+import 'package:app/core/widgets/tenant_navigation_bottom.dart';
 import "package:flutter/material.dart";
 import 'package:app/core/constants.dart';
 
@@ -11,8 +11,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,12 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              "NhàTrọ+", 
+              "NhàTrọ+",
               style: TextStyle(
-                fontSize: 32, 
+                fontSize: 32,
                 fontFamily: "Inter",
                 fontWeight: FontWeight.w700,
-                color: AppColors.blue700
+                color: AppColors.blue700,
               ),
             ),
           ),
@@ -53,9 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: IconButton(
               onPressed: () {},
-              icon: const Icon(Icons.account_circle_outlined, size: 32, color: AppColors.blue700),
-            ),  
-          )
+              icon: const Icon(
+                Icons.account_circle_outlined,
+                size: 32,
+                color: AppColors.blue700,
+              ),
+            ),
+          ),
         ],
       ),
       body: Container(
@@ -63,14 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: const HomeScreenBody(),
       ),
-      bottomNavigationBar: NavigationBottom(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
+      bottomNavigationBar: const TenantNavigationBottom(currentIndex: 0),
     );
   }
 }

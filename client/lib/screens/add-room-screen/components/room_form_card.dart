@@ -230,9 +230,9 @@ class RoomFormCard extends StatelessWidget {
           _buildLabel("Hình ảnh phòng"),
           Row(
             children: [
-              _buildImagePreview('assets/images/room_img1.jpg'),
+              _buildImagePreview('assets/images/add-room-screen/room_img1.jpg'),
               const SizedBox(width: 8),
-              _buildImagePreview('assets/images/room_img2.jpg'),
+              _buildImagePreview('assets/images/add-room-screen/room_img2.jpg'),
               const SizedBox(width: 8),
 
               Expanded(

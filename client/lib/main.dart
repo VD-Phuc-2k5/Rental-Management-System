@@ -1,5 +1,6 @@
+import 'package:app/screens/home-screen/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'screens/register-rent-screen/register_rent_screen.dart';
+import 'package:app/core/constants.dart';
 
 void main() {
   runApp(const MainApp());
@@ -12,7 +13,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const RegisterRentScreen(),
+      theme: ThemeData(scaffoldBackgroundColor: AppColors.white),
+      home: HomeScreen(),
     );
   }
 }
