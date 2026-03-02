@@ -3,9 +3,13 @@ import 'package:app/core/constants.dart';
 import 'package:app/core/format_currency.dart';
 
 class PaymentHeading extends StatelessWidget {
-  const PaymentHeading({super.key, required this.price, required this.roomId});
+  const PaymentHeading({
+    super.key,
+    required this.price,
+    required this.roomName,
+  });
   final int price;
-  final String roomId;
+  final String roomName;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class PaymentHeading extends StatelessWidget {
             children: [
               const Icon(Icons.apartment, size: 20, color: AppColors.blue700),
               Text(
-                roomId,
+                roomName,
                 style: const TextStyle(
                   color: AppColors.slate700,
                   fontFamily: "Inter",

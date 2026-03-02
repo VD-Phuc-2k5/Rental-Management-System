@@ -11,12 +11,12 @@ class Body extends StatefulWidget {
   const Body({
     super.key,
     required this.price,
-    required this.roomId,
+    required this.roomName,
     required this.onSuccess,
   });
 
   final int price;
-  final String roomId;
+  final String roomName;
   final VoidCallback onSuccess;
 
   @override
@@ -28,7 +28,7 @@ class _BodyState extends State<Body> {
   bool _paymentSuccess = false;
   late final DateTime _expiresAt;
 
-  Future<PaymentStatus> checkPayment(String roomId) async {
+  Future<PaymentStatus> checkPayment(String roomName) async {
     await Future.delayed(const Duration(milliseconds: 12000));
     return PaymentStatus.success;
   }
@@ -37,7 +37,7 @@ class _BodyState extends State<Body> {
     _pollingTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       if (_paymentSuccess) return;
 
-      final status = await checkPayment(widget.roomId);
+      final status = await checkPayment(widget.roomName);
 
       if (!mounted) return;
 
@@ -77,7 +77,7 @@ class _BodyState extends State<Body> {
     return Column(
       spacing: 24,
       children: [
-        PaymentHeading(price: widget.price, roomId: widget.roomId),
+        PaymentHeading(price: widget.price, roomName: widget.roomName),
         const PaymentQr(),
         PaymentCountdown(expiresAt: _expiresAt, onExpired: _onExpired),
         const DownloadButton(),

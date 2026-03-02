@@ -1,6 +1,6 @@
 import 'package:app/core/constants.dart';
 import 'package:app/screens/forgot-password-screen/components/forgot-password/body.dart';
-import 'package:app/screens/forgot-password-screen/components/forgot-password/progress_indicator_bar.dart';
+import 'package:app/screens/forgot-password-screen/components/progress_indicator_bar.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {

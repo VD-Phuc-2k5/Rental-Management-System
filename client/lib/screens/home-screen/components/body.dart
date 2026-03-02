@@ -39,21 +39,21 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                 Text(
                   "Phòng nổi bật",
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Text(
                   "Xem thêm",
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.blue600,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: AppColors.blue600,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
           ),
           const IntroRoomSection(),
-        ]
+        ],
       ),
     );
   }
