@@ -29,6 +29,9 @@ class _AgreementUiScreenState extends State<AgreementUiScreen> {
     elecPriceCtl.dispose();
     waterPriceCtl.dispose();
     parkingFeeCtl.dispose();
+    elecPriceCtl.dispose();
+    waterPriceCtl.dispose();
+    parkingFeeCtl.dispose();
     super.dispose();
   }
 
