@@ -35,7 +35,6 @@ class _RequestFormState extends State<RequestForm> {
       _showMessage("Bạn chỉ có thể tải lên tối đa 5 ảnh");
       return;
     }
-
     try {
       final XFile? pickedFile = await _imagePicker.pickImage(
         source: ImageSource.gallery,
@@ -44,12 +43,15 @@ class _RequestFormState extends State<RequestForm> {
         imageQuality: 85,
       );
 
+      if (!mounted) return;
+
       if (pickedFile != null) {
         setState(() {
           _selectedImages.add(pickedFile);
         });
       }
     } catch (e) {
+      if (!mounted) return;
       _showMessage("Lỗi khi chọn ảnh: $e");
     }
   }

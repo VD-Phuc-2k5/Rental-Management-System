@@ -1,7 +1,7 @@
 import "package:app/core/collapse_text.dart";
 import "package:app/core/constants.dart";
 import "package:app/core/models/maintenance_request.dart";
-import "package:app/screens/tenant-maintenance-request-screen/components/priority_selector.dart";
+import 'package:app/core/models/priority.dart';
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 

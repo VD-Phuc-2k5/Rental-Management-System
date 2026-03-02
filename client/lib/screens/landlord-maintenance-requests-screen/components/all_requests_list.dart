@@ -1,17 +1,17 @@
 import "package:app/core/constants.dart";
 import "package:app/core/models/maintenance_request.dart";
 import "package:app/core/widgets/maintenance_request_card.dart";
-import 'package:app/core/models/priority.dart';
+import "package:app/core/models/priority.dart";
 import "package:flutter/material.dart";
 
-class ProcessRequestsList extends StatefulWidget {
-  const ProcessRequestsList({super.key});
+class AllRequestsList extends StatefulWidget {
+  const AllRequestsList({super.key});
 
   @override
-  State<ProcessRequestsList> createState() => _ProcessRequestsListState();
+  State<AllRequestsList> createState() => _AllRequestsListState();
 }
 
-class _ProcessRequestsListState extends State<ProcessRequestsList> {
+class _AllRequestsListState extends State<AllRequestsList> {
   bool _isLoading = false;
   List<MaintenanceRequest> _requests = [];
 
@@ -27,10 +27,10 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
     });
 
     try {
-      // TO DO: Implement API call to fetch pending/processing requests
+      // TODO: Implement API call to fetch all maintenance requests
       await Future.delayed(const Duration(seconds: 1));
 
-      // Mock data - only pending and processing requests
+      // Mock data - all requests from all rooms
       final mockRequests = [
         MaintenanceRequest(
           id: "1",
@@ -62,6 +62,17 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           createdAt: DateTime.now().subtract(const Duration(days: 1)),
           imageUrl: null,
         ),
+        MaintenanceRequest(
+          id: "4",
+          title: "Sửa chữa điều hòa",
+          description:
+              "Điều hòa không hoạt động, phát ra tiếng ồn lớn và không làm lạnh được.",
+          location: "Phòng 105 - Lê Văn C",
+          priority: Priority.high,
+          status: RequestStatus.completed,
+          createdAt: DateTime.now().subtract(const Duration(days: 2)),
+          imageUrl: null,
+        ),
       ];
 
       if (mounted) {
@@ -83,16 +94,6 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
     await _loadRequests();
   }
 
-  void _handleAction(MaintenanceRequest request, String action) {
-    // TODO: Implement action handling
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("$action: ${request.title}"),
-        duration: const Duration(seconds: 1),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_isLoading && _requests.isEmpty) {
@@ -109,7 +110,7 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
             Icon(Icons.inbox_outlined, size: 80, color: AppColors.slate300),
             const SizedBox(height: 16),
             Text(
-              "Không có yêu cầu cần xử lý",
+              "Chưa có yêu cầu nào",
               style: TextStyle(
                 fontSize: 16,
                 color: AppColors.slate500,
@@ -140,50 +141,9 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
                 ),
               );
             },
-            actionButton: _buildActionButton(request),
           );
         },
       ),
     );
-  }
-
-  Widget _buildActionButton(MaintenanceRequest request) {
-    if (request.status == RequestStatus.pending) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: AppColors.orange100,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Text(
-          "Chờ xử lý",
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: AppColors.orange600,
-          ),
-        ),
-      );
-    } else if (request.status == RequestStatus.processing) {
-      return GestureDetector(
-        onTap: () => _handleAction(request, "Chờ xác nhận"),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: AppColors.blue100,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            "Chờ xác nhận",
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.blue700,
-            ),
-          ),
-        ),
-      );
-    }
-    return const SizedBox.shrink();
   }
 }

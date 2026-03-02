@@ -1,4 +1,4 @@
-import "package:app/screens/tenant-maintenance-request-screen/components/priority_selector.dart";
+import 'priority.dart';
 
 enum RequestStatus { pending, processing, completed, rejected }
 
