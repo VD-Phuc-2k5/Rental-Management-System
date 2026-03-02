@@ -1,4 +1,3 @@
-import "dart:io";
 import "package:app/core/constants.dart";
 import "package:app/screens/tenant-maintenance-request-screen/components/image_upload_section.dart";
 import "package:app/screens/tenant-maintenance-request-screen/components/labeled_text_field.dart";
@@ -19,10 +18,11 @@ class _BodyState extends State<Body> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _imagePicker = ImagePicker();
+  final int _maxImages = 5;
 
   int _selectedTabIndex = 0;
   Priority _selectedPriority = Priority.low;
-  List<File> _selectedImages = [];
+  List<XFile> _selectedImages = [];
   bool _isSubmitting = false;
 
   @override
@@ -33,7 +33,7 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> _pickImage() async {
-    if (_selectedImages.length >= 5) {
+    if (_selectedImages.length >= _maxImages) {
       _showMessage("Bạn chỉ có thể tải lên tối đa 5 ảnh");
       return;
     }
@@ -48,7 +48,7 @@ class _BodyState extends State<Body> {
 
       if (pickedFile != null) {
         setState(() {
-          _selectedImages.add(File(pickedFile.path));
+          _selectedImages.add(pickedFile);
         });
       }
     } catch (e) {
@@ -89,7 +89,7 @@ class _BodyState extends State<Body> {
     });
 
     try {
-      // TODO: Implement API call to submit maintenance request
+      // TO DO: Implement API call to submit maintenance request
       // Example:
       // await maintenanceService.createRequest(
       //   title: _titleController.text.trim(),
@@ -192,7 +192,7 @@ class _BodyState extends State<Body> {
                       selectedImages: _selectedImages,
                       onAddImage: _pickImage,
                       onRemoveImage: _removeImage,
-                      maxImages: 5,
+                      maxImages: _maxImages,
                     ),
                     SizedBox(
                       width: double.infinity,

@@ -1,9 +1,10 @@
 import "package:app/core/constants.dart";
 import "package:flutter/material.dart";
-import "dart:io";
+import "package:image_picker/image_picker.dart";
+import 'dart:typed_data';
 
 class ImageUploadSection extends StatelessWidget {
-  final List<File> selectedImages;
+  final List<XFile> selectedImages;
   final VoidCallback onAddImage;
   final Function(int) onRemoveImage;
   final int maxImages;
@@ -47,34 +48,55 @@ class ImageUploadSection extends StatelessWidget {
     );
   }
 
-  Widget _buildImagePreview(int index, File image) {
-    return Stack(
-      children: [
-        Container(
-          width: 100,
-          height: 100,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppColors.slate200),
-            image: DecorationImage(image: FileImage(image), fit: BoxFit.cover),
-          ),
-        ),
-        Positioned(
-          top: -8,
-          right: -8,
-          child: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(
-                color: AppColors.red500,
-                shape: BoxShape.circle,
+  Widget _buildImagePreview(int index, XFile image) {
+    return FutureBuilder<Uint8List>(
+      future: image.readAsBytes(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            width: 100,
+            height: 100,
+            alignment: Alignment.center,
+            child: const CircularProgressIndicator(strokeWidth: 2),
+          );
+        }
+
+        return Stack(
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColors.slate200),
+                image: DecorationImage(
+                  image: MemoryImage(snapshot.data!),
+                  fit: BoxFit.cover,
+                ),
               ),
-              child: const Icon(Icons.close, color: AppColors.white, size: 16),
             ),
-            onPressed: () => onRemoveImage(index),
-          ),
-        ),
-      ],
+            Positioned(
+              top: -8,
+              right: -8,
+              child: IconButton(
+                icon: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: AppColors.red500,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.close,
+                    color: AppColors.white,
+                    size: 16,
+                  ),
+                ),
+                onPressed: () => onRemoveImage(index),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
