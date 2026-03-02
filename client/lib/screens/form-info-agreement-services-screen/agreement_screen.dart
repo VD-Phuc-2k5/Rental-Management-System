@@ -8,6 +8,7 @@ import 'package:app/screens/form-info-agreement-services-screen/components/utili
 import 'package:app/screens/form-info-agreement-services-screen/components/add_on_services_section.dart';
 import 'package:app/screens/form-info-agreement-services-screen/components/equipment_section.dart';
 import 'package:app/screens/form-info-agreement-services-screen/components/agreement_bottom_bar.dart';
+import 'package:app/screens/contract-preview-screen/contract_preview_screen.dart';
 
 class AgreementUiScreen extends StatefulWidget {
   const AgreementUiScreen({super.key});
@@ -32,7 +33,12 @@ class _AgreementUiScreenState extends State<AgreementUiScreen> {
     parkingFeeCtl.dispose();
     super.dispose();
   }
-
+  void _goNext(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ContractPreviewScreen()),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +115,7 @@ class _AgreementUiScreenState extends State<AgreementUiScreen> {
       ),
       bottomNavigationBar:  AgreementBottomBar(
         text: 'Xác nhận & Gửi yêu cầu',
-        onNext: () {},
+        onNext: () => _goNext(context),
       ),
     );
   }
