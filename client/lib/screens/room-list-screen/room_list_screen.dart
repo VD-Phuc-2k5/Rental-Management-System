@@ -54,7 +54,6 @@ class RoomListScreen extends StatelessWidget {
         ),
       ),
       body: const RoomListBody(),
-      // bottomNavigationBar: const RoomBottomNav(),
     );
   }
 }
