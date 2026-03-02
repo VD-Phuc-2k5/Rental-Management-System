@@ -15,7 +15,7 @@ class Body extends StatelessWidget {
   const Body({
     super.key,
     this.invoice = const InvoiceDetailData(
-      status: InvoiceStatus.paid,
+      status: InvoiceStatus.pending,
       generalInfo: InvoiceGeneralInfoData(
         roomName: 'Phòng 302 - Nhà Trọ Xanh',
         landlordName: 'Nguyễn văn A',

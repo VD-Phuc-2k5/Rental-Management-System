@@ -29,7 +29,7 @@ class TenantInvoiceListScreen extends StatelessWidget {
   }
 
   void _navigateToPayment(BuildContext context) {
-    // TODO: Replace with actual invoice data from API
+    // TO DO: Replace with actual invoice data from API
     const paymentData = PaymentData(
       invoiceId: 'INV-2026-03',
       roomName: 'Phòng 202 - Nhà Trọ Xanh',

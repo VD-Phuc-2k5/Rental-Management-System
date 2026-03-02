@@ -22,10 +22,14 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.white,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: AppColors.blue950),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
+      leading: showBack
+          ? IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back, color: AppColors.blue950),
+            )
+          : null,
       title: Text(
         title,
         style: const TextStyle(
@@ -38,9 +42,11 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       automaticallyImplyLeading: showBack,
       iconTheme: const IconThemeData(color: AppColors.blue950),
-      actions: const [
-        SizedBox(width: 48), // bằng kích thước leading
-      ],
+      actions:
+          actions ??
+          const [
+            SizedBox(width: 48), // bằng kích thước leading
+          ],
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(appbarBorderWidth),
         child: Container(height: appbarBorderWidth, color: AppColors.slate100),
