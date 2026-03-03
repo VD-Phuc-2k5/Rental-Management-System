@@ -44,7 +44,7 @@ class _HeroImage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF0F172A), Color(0xFF64748B)],
+            colors: [AppColors.blue950, AppColors.slate500],
           ),
         ),
         child: Stack(
@@ -55,7 +55,6 @@ class _HeroImage extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            Container(color: AppColors.gray400),
             Positioned(
               left: 14,
               bottom: 14,
@@ -148,7 +147,7 @@ class _InfoRow extends StatelessWidget {
           Expanded(
             child: Text(label, style: const TextStyle(color: AppColors.slate500,fontWeight: FontWeight.w400)),
           ),
-          Text(value, style: const TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w400)),
+          Text(value,maxLines: 2, style: const TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w400)),
         ],
       ),
     );
@@ -191,9 +190,8 @@ class _PreviewBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
+        color: AppColors.slate50,
         borderRadius: BorderRadius.circular(28),
-        //border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

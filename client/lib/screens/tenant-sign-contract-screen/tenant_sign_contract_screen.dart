@@ -13,7 +13,7 @@ class TenantSignContractScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F5F7),
+      backgroundColor: AppColors.grayBackground,
       appBar: const CommonAppBar(title: "Ký hợp đồng", showBack: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 14, 16, 22),

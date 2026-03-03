@@ -24,6 +24,16 @@ class _AgreeTermsRowState extends State<AgreeTermsRow> {
     agreed = widget.initialValue;
   }
 
+  @override
+  void didUpdateWidget(covariant AgreeTermsRow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialValue != widget.initialValue) {
+      setState(() {
+        agreed = widget.initialValue;
+      });
+    }
+  }
+
   void _toggle() {
     setState(() => agreed = !agreed);
     widget.onChanged?.call(agreed);
@@ -92,7 +102,7 @@ class _CheckBoxCircle extends StatelessWidget {
           color: value ? AppColors.blue700 : AppColors.white,
           borderRadius: BorderRadius.circular(999),
           border: Border.all(
-            color: value ? AppColors.blue700 : const Color(0xFFCBD5E1),
+            color: value ? AppColors.blue700 : AppColors.slate300,
           ),
         ),
         child: value
