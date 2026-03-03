@@ -29,7 +29,7 @@ class TechnicianInfoSection extends StatelessWidget {
     required String label,
     required String hint,
     required TextEditingController controller,
-    bool required = false,
+    bool isRequired = false,
     TextInputType? keyboardType,
     int maxLines = 1,
     Widget? suffixIcon,
@@ -47,7 +47,7 @@ class TechnicianInfoSection extends StatelessWidget {
             ),
             children: [
               TextSpan(text: label),
-              if (required)
+              if (isRequired)
                 const TextSpan(
                   text: ' *',
                   style: TextStyle(color: AppColors.red500),
@@ -114,13 +114,13 @@ class TechnicianInfoSection extends StatelessWidget {
             label: "Tên thợ sửa chữa",
             hint: "VD: Anh Nam Thợ Điện",
             controller: nameController,
-            required: true,
+            isRequired: true,
           ),
           _buildTextField(
             label: "Số điện thoại thợ",
             hint: "09xx xxx xxx",
             controller: phoneController,
-            required: true,
+            isRequired: true,
             keyboardType: TextInputType.phone,
             suffixIcon: const Icon(
               Icons.phone_outlined,
