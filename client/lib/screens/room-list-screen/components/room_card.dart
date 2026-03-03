@@ -36,7 +36,8 @@ class RoomCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => RoomDetailsEmptyScreen(roomNumber: "302"),
+              builder: (context) =>
+                  RoomDetailsEmptyScreen(roomNumber: roomNumber),
             ),
           );
         } else {
@@ -44,7 +45,7 @@ class RoomCard extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  const RoomDetailsRentedScreen(roomNumber: "302"),
+                  RoomDetailsRentedScreen(roomNumber: roomNumber),
             ),
           );
         }
@@ -304,7 +305,25 @@ class RoomCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  if (!isRented) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RoomDetailsEmptyScreen(roomNumber: roomNumber),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RoomDetailsRentedScreen(roomNumber: roomNumber),
+                      ),
+                    );
+                  }
+                },
                 child: Text(
                   isRented ? "Xem chi tiết" : "Đăng bài",
                   style: const TextStyle(

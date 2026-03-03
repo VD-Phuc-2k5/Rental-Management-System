@@ -92,7 +92,7 @@ class HostelCard extends StatelessWidget {
       onTap: () {
         MainTabScreen.of(context)?.switchTab(1);
       },
-      borderRadius: BorderRadius.circular(8.0),
+      borderRadius: BorderRadius.circular(5.0),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16.0),
