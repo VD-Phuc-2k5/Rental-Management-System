@@ -1,5 +1,6 @@
 import 'package:app/core/constants.dart';
 import 'package:app/screens/room-details-empty-screen/room_details_empty_screen.dart';
+import 'package:app/screens/room-details-rented-screen/room_details_rented_screen.dart';
 import 'package:app/screens/update-room-screen/update_room_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +37,13 @@ class RoomCard extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => const RoomDetailsEmptyScreen(),
+            ),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const RoomDetailsRentedScreen(),
             ),
           );
         }
