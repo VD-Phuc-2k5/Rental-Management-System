@@ -1,4 +1,5 @@
 import 'package:app/screens/home-screen/home_screen.dart';
+import 'package:app/screens/landlord-maintenance-requests-screen/landlord_maintenance_requests_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -17,7 +18,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(scaffoldBackgroundColor: AppColors.white),
-      home: HomeScreen(),
+      home: LandlordMaintenanceRequestsScreen(),
     );
   }
 }
