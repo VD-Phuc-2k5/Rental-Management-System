@@ -1,8 +1,12 @@
+import 'package:app/core/widgets/primary_button.dart';
+import 'package:app/screens/booking-room-screen/components/my-booking-room/empty-room/empty_logo.dart';
+import 'package:app/screens/home-screen/home_screen.dart';
+import 'package:app/screens/booking-room-screen/components/my-booking-room/empty-room/empty_title.dart';
 import 'package:app/screens/booking-room-screen/components/my-booking-room/has-room/my_room_card.dart';
 import 'package:flutter/material.dart';
 
-class HasRoomBody extends StatelessWidget {
-  const HasRoomBody({super.key});
+class RoomBody extends StatelessWidget {
+  const RoomBody({super.key});
 
   List<MyRoom> get _rooms => [
     MyRoom(
@@ -49,15 +53,37 @@ class HasRoomBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            MyRoomCard(rooms: _rooms),
-          ],
-        ),
-      )
-    );
+    return _rooms.isEmpty
+        ? SizedBox(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.75,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const EmptyLogo(),
+                const SizedBox(height: 64),
+                const EmptyTitle(),
+                const SizedBox(height: 48),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: PrimaryButton(
+                    label: "Tìm phòng ngay",
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => const HomeScreen()),
+                        (route) => false,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          )
+        : SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: MyRoomCard(rooms: _rooms),
+          );
   }
 }
