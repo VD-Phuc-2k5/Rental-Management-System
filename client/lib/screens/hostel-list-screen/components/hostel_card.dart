@@ -1,5 +1,5 @@
 import 'package:app/core/constants.dart';
-import 'package:app/screens/main-tab-screen/main_tab_screen.dart';
+import 'package:app/screens/room-list-screen/room_list_screen.dart';
 import 'package:app/screens/update-hostel-screen/update_hostel_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -74,10 +74,10 @@ class HostelCard extends StatelessWidget {
       blocks.add(buildBlock(AppColors.blue700));
     }
     for (int i = 0; i < orangeBlocks; i++) {
-      blocks.add(buildBlock(const Color(0xFFF59E0B)));
+      blocks.add(buildBlock(AppColors.amber500));
     }
     for (int i = 0; i < greyBlocks; i++) {
-      blocks.add(buildBlock(const Color(0xFFCBD5E1)));
+      blocks.add(buildBlock(AppColors.slate300));
     }
 
     return Padding(
@@ -88,10 +88,14 @@ class HostelCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
-        MainTabScreen.of(context)?.switchTab(1);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const RoomListScreen()),
+        );
       },
+      borderRadius: BorderRadius.circular(5.0),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16.0),
@@ -135,7 +139,7 @@ class HostelCard extends StatelessWidget {
                       width: dashWidth,
                       height: 1.0,
                       child: DecoratedBox(
-                        decoration: BoxDecoration(color: Color(0xFFF1F5F9)),
+                        decoration: BoxDecoration(color: AppColors.slate100),
                       ),
                     );
                   }),

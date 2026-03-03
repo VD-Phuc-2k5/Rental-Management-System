@@ -23,6 +23,7 @@ flutter:
     - assets/images/
     - assets/images/room-list-screen/
     - assets/images/add-room-screen/
+    - assets/images/room-details-empty-screen/
   fonts:
     - family: Inter
       fonts:
