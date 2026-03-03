@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/contract-extension-request-screen/contract_extension_request_screen.dart';
 import 'package:app/screens/home-screen/home_screen.dart';
 import 'package:app/screens/contract-expiry-warning-screen/components/contract_action_button.dart';
 import 'package:app/screens/contract-expiry-warning-screen/components/contract_expiry_header.dart';
@@ -17,12 +18,8 @@ class Body extends StatelessWidget {
   }
 
   void _handleExtendContract(BuildContext context) {
-    // TO DO: Navigate to contract extension screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Chức năng gia hạn hợp đồng đang được phát triển"),
-        backgroundColor: AppColors.blue700,
-      ),
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ContractExtensionRequestScreen()),
     );
   }
 
