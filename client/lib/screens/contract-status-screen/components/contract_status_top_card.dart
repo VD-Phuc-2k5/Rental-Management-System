@@ -37,7 +37,7 @@ class ContractStatusTopCard extends StatelessWidget {
               textAlign: TextAlign.center,
               text: TextSpan(
                 style: const TextStyle(
-                  color: Color(0xFF647487),
+                  color: AppColors.slate500,
                   height: 1.25,
                   fontSize: 14,
                 ),
