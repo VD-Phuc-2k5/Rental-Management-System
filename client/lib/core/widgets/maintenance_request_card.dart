@@ -41,7 +41,7 @@ class MaintenanceRequestCard extends StatelessWidget {
           spacing: 12.0,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Column(
@@ -76,14 +76,15 @@ class MaintenanceRequestCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (request.imageUrl != null) ...[
+                ...[
                   const SizedBox(width: 12),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
-                      request.imageUrl!,
-                      width: 60,
-                      height: 60,
+                      request.imageUrls.isNotEmpty
+                          ? request.imageUrls.first
+                          : "assets/images/empty-image.jpg",
+                      width: 90,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(

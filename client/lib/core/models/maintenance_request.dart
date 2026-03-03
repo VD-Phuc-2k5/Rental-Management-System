@@ -10,7 +10,7 @@ class MaintenanceRequest {
   final Priority priority;
   final RequestStatus status;
   final DateTime createdAt;
-  final String? imageUrl;
+  final List<String> imageUrls;
   final String? tenantName;
 
   MaintenanceRequest({
@@ -21,7 +21,7 @@ class MaintenanceRequest {
     required this.priority,
     required this.status,
     required this.createdAt,
-    this.imageUrl,
+    this.imageUrls = const [],
     this.tenantName,
   });
 }
