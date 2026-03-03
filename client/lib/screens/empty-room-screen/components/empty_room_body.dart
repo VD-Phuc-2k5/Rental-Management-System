@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:app/screens/add-room-screen/add_room_screen.dart';
+import 'package:app/screens/main-tab-screen/components/room_management_wrapper.dart';
+import 'package:flutter/material.dart';
+
 import 'blueprint_illustration.dart';
 
 class EmptyRoomBody extends StatelessWidget {
@@ -52,9 +55,22 @@ class EmptyRoomBody extends StatelessWidget {
                   backgroundColor: AppColors.blue700,
                   foregroundColor: AppColors.white,
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddRoomScreen(),
+                    ),
+                  );
+
+                  if (result == true && context.mounted) {
+                    RoomManagementWrapper.of(context)?.updateState(true);
+                  }
+                },
                 icon: const Icon(Icons.add, size: 20),
                 label: const Text(
                   "Thêm khu trọ mới",
