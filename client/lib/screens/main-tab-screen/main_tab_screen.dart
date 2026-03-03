@@ -32,8 +32,9 @@ class MainTabScreenState extends State<MainTabScreen> {
     });
   }
 
-  // Hàm này để chuyển tab từ xa
   void switchTab(int index) {
+    if (index < 0 || index >= _screens.length) return;
+
     setState(() {
       _selectedIndex = index;
     });

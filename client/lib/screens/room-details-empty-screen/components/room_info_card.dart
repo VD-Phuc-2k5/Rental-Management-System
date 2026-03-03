@@ -2,7 +2,9 @@ import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
 class RoomInfoCard extends StatelessWidget {
-  const RoomInfoCard({super.key});
+  final String roomNumber;
+
+  const RoomInfoCard({super.key, required this.roomNumber});
 
   Widget _buildUtilityItem(IconData icon, String label) {
     return Expanded(
@@ -113,10 +115,10 @@ class RoomInfoCard extends StatelessWidget {
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          "Phòng 302",
-                          style: TextStyle(
+                          "Phòng $roomNumber",
+                          style: const TextStyle(
                             fontFamily: 'Nunito',
                             fontWeight: FontWeight.w700,
                             fontSize: 20,
