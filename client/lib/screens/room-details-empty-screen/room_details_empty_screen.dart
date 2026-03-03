@@ -6,7 +6,9 @@ import 'components/room_details_bottom_bar.dart';
 import 'components/room_info_card.dart';
 
 class RoomDetailsEmptyScreen extends StatelessWidget {
-  const RoomDetailsEmptyScreen({super.key});
+  final String roomNumber;
+
+  const RoomDetailsEmptyScreen({super.key, required this.roomNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,12 @@ class RoomDetailsEmptyScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(children: const [RoomInfoCard(), EmptyTenantState()]),
+        child: Column(
+          children: [
+            RoomInfoCard(roomNumber: roomNumber),
+            const EmptyTenantState(),
+          ],
+        ),
       ),
       bottomNavigationBar: const RoomDetailsBottomBar(),
     );
