@@ -22,9 +22,9 @@ class RoomDetailsEmptyScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         titleSpacing: 0,
-        title: const Text(
-          "Chi tiết phòng 302",
-          style: TextStyle(
+        title: Text(
+          "Chi tiết phòng $roomNumber",
+          style: const TextStyle(
             color: AppColors.slate900,
             fontFamily: "Inter",
             fontWeight: FontWeight.w700,

@@ -35,7 +35,7 @@ class RoomCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => RoomDetailsEmptyScreen(roomNumber: "101"),
+              builder: (context) => RoomDetailsEmptyScreen(roomNumber: "302"),
             ),
           );
         }
