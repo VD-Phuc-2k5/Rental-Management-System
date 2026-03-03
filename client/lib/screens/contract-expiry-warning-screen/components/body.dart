@@ -1,8 +1,8 @@
 import 'package:app/core/constants.dart';
 import 'package:app/screens/home-screen/home_screen.dart';
-import 'package:app/screens/landlord-contract-expiry-warning-screen/components/contract_action_button.dart';
-import 'package:app/screens/landlord-contract-expiry-warning-screen/components/contract_expiry_header.dart';
-import 'package:app/screens/landlord-contract-expiry-warning-screen/components/countdown_widget.dart';
+import 'package:app/screens/contract-expiry-warning-screen/components/contract_action_button.dart';
+import 'package:app/screens/contract-expiry-warning-screen/components/contract_expiry_header.dart';
+import 'package:app/screens/contract-expiry-warning-screen/components/countdown_widget.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
@@ -12,6 +12,7 @@ class Body extends StatelessWidget {
   int _calculateDaysRemaining(DateTime expiryDate) {
     final now = DateTime.now();
     final difference = expiryDate.difference(now);
+    if (difference.inDays < 0) return 0;
     return difference.inDays;
   }
 
@@ -55,7 +56,7 @@ class Body extends StatelessWidget {
     );
     Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (_) => const HomeScreen()));
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
   }
 
   Widget _buildActionButtons(BuildContext context) {
