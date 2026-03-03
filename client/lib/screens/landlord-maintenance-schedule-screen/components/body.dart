@@ -37,7 +37,7 @@ class _BodyState extends State<Body> {
       context: context,
       initialDate: _selectedDate ?? now,
       firstDate: now,
-      lastDate: DateTime(now.year + 1),
+      lastDate: now.add(Duration(days: 365)),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -111,6 +111,23 @@ class _BodyState extends State<Body> {
       return false;
     }
 
+    // Combine Date + Time thành DateTime đầy đủ
+    final scheduledAt = DateTime(
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedTime!.hour,
+      _selectedTime!.minute,
+    );
+
+    final now = DateTime.now();
+
+    // Validate không cho chọn quá khứ
+    if (!scheduledAt.isAfter(now)) {
+      _showMessage("Thời gian hẹn phải lớn hơn thời điểm hiện tại");
+      return false;
+    }
+
     return true;
   }
 
@@ -153,10 +170,21 @@ class _BodyState extends State<Body> {
       if (mounted) {
         Navigator.of(context).pop();
       }
-    } catch (e) {
-      if (mounted) {
-        _showMessage("Lỗi khi lưu lịch: $e");
+    } catch (e, stackTrace) {
+      debugPrint("Error when saving schedule: $e");
+      debugPrintStack(stackTrace: stackTrace);
+
+      if (!mounted) return;
+
+      String friendlyMessage = "Đã xảy ra lỗi. Vui lòng thử lại sau.";
+
+      if (e.toString().contains("SocketException")) {
+        friendlyMessage = "Không có kết nối Internet.";
+      } else if (e.toString().contains("TimeoutException")) {
+        friendlyMessage = "Kết nối quá thời gian. Vui lòng thử lại.";
       }
+
+      _showMessage(friendlyMessage);
     } finally {
       if (mounted) {
         setState(() {
