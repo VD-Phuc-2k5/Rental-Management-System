@@ -7,11 +7,15 @@ import 'components/room_management_wrapper.dart';
 class MainTabScreen extends StatefulWidget {
   const MainTabScreen({super.key});
 
+  static MainTabScreenState? of(BuildContext context) {
+    return context.findAncestorStateOfType<MainTabScreenState>();
+  }
+
   @override
-  State<MainTabScreen> createState() => _MainTabScreenState();
+  State<MainTabScreen> createState() => MainTabScreenState();
 }
 
-class _MainTabScreenState extends State<MainTabScreen> {
+class MainTabScreenState extends State<MainTabScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
@@ -28,10 +32,17 @@ class _MainTabScreenState extends State<MainTabScreen> {
     });
   }
 
+  // Hàm này để chuyển tab từ xa
+  void switchTab(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: IndexedStack(index: _selectedIndex, children: _screens),
       bottomNavigationBar: MainBottomNav(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,

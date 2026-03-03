@@ -1,8 +1,15 @@
 import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
-class BasicInfoSection extends StatelessWidget {
+class BasicInfoSection extends StatefulWidget {
   const BasicInfoSection({super.key});
+
+  @override
+  State<BasicInfoSection> createState() => _BasicInfoSectionState();
+}
+
+class _BasicInfoSectionState extends State<BasicInfoSection> {
+  String _selectedHostelType = 'Nhà nguyên căn';
 
   Widget _buildSectionHeader(IconData icon, String title) {
     return Row(
@@ -75,29 +82,26 @@ class BasicInfoSection extends StatelessWidget {
         children: [
           _buildSectionHeader(Icons.info_outline, "Thông tin cơ bản"),
           const SizedBox(height: 16),
+
           _buildLabel("Tên nhà trọ"),
           _buildTextField(hintText: "VD: Landmark A"),
           const SizedBox(height: 16),
+
           _buildLabel("Địa chỉ chi tiết"),
           _buildTextField(
             hintText: "Số nhà, tên đường, phường, quận, thành phố...",
             maxLines: 3,
           ),
           const SizedBox(height: 16),
+
           _buildLabel("Loại hình"),
-          TextField(
-            readOnly: true,
+          DropdownButtonFormField<String>(
+            value: _selectedHostelType,
+            icon: const Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.slate500,
+            ),
             decoration: InputDecoration(
-              hintText: "Chọn loại hình",
-              hintStyle: const TextStyle(
-                fontFamily: "Public Sans",
-                color: AppColors.slate900,
-                fontSize: 16,
-              ),
-              suffixIcon: const Icon(
-                Icons.keyboard_arrow_down,
-                color: AppColors.slate500,
-              ),
               filled: true,
               fillColor: AppColors.white,
               contentPadding: const EdgeInsets.symmetric(
@@ -111,7 +115,31 @@ class BasicInfoSection extends StatelessWidget {
                   width: 1.0,
                 ),
               ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                borderSide: const BorderSide(
+                  color: AppColors.blue700,
+                  width: 1.0,
+                ),
+              ),
             ),
+            style: const TextStyle(
+              fontFamily: "Public Sans",
+              color: AppColors.slate900,
+              fontSize: 16,
+            ),
+            items: ['Nhà nguyên căn', 'Nhà trọ truyền thống'].map((
+              String value,
+            ) {
+              return DropdownMenuItem<String>(value: value, child: Text(value));
+            }).toList(),
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  _selectedHostelType = newValue;
+                });
+              }
+            },
           ),
         ],
       ),
