@@ -6,15 +6,15 @@ import '../../room-list-screen/room_list_screen.dart';
 class RoomManagementWrapper extends StatefulWidget {
   const RoomManagementWrapper({super.key});
 
-  static _RoomManagementWrapperState? of(BuildContext context) {
-    return context.findAncestorStateOfType<_RoomManagementWrapperState>();
+  static RoomManagementWrapperState? of(BuildContext context) {
+    return context.findAncestorStateOfType<RoomManagementWrapperState>();
   }
 
   @override
-  State<RoomManagementWrapper> createState() => _RoomManagementWrapperState();
+  State<RoomManagementWrapper> createState() => RoomManagementWrapperState();
 }
 
-class _RoomManagementWrapperState extends State<RoomManagementWrapper> {
+class RoomManagementWrapperState extends State<RoomManagementWrapper> {
   bool hasRooms = false;
 
   void updateState(bool hasRoomData) {

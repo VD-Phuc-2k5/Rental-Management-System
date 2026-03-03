@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 class HostelManagementWrapper extends StatefulWidget {
   const HostelManagementWrapper({super.key});
 
-  static _HostelManagementWrapperState? of(BuildContext context) {
-    return context.findAncestorStateOfType<_HostelManagementWrapperState>();
+  static HostelManagementWrapperState? of(BuildContext context) {
+    return context.findAncestorStateOfType<HostelManagementWrapperState>();
   }
 
   @override
   State<HostelManagementWrapper> createState() =>
-      _HostelManagementWrapperState();
+      HostelManagementWrapperState();
 }
 
-class _HostelManagementWrapperState extends State<HostelManagementWrapper> {
+class HostelManagementWrapperState extends State<HostelManagementWrapper> {
   bool isEmpty = true;
 
   void updateState(bool emptyStatus) {
