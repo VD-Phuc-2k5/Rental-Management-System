@@ -171,6 +171,7 @@ class _InfoRowBlue extends StatelessWidget {
           ),
           Text(
             value,
+            maxLines: 2,
             style: const TextStyle(
               color: AppColors.blue700,
               fontWeight: FontWeight.w700,
