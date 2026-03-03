@@ -1,3 +1,4 @@
+import 'package:app/screens/booking-room-screen/my_booking_room_screen.dart';
 import 'package:app/screens/tenant-maintenance-request-screen/tenant_maintenance_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
@@ -33,6 +34,16 @@ class TenantNavigationBottom extends StatelessWidget {
     }
 
     switch (index) {
+      case 0:
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+        break;
+      case 1:
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const MyBookingRoomScreen()),
+        );
+        break;
       case 2:
         Navigator.of(context).push(
           MaterialPageRoute(
