@@ -2,6 +2,7 @@ import "package:app/core/constants.dart";
 import "package:app/core/models/maintenance_request.dart";
 import "package:app/core/widgets/maintenance_request_card.dart";
 import 'package:app/core/models/priority.dart';
+import "package:app/screens/landlord-maintenance-schedule-screen/landlord_maintenance_schedule_screen.dart";
 import "package:flutter/material.dart";
 
 class ProcessRequestsList extends StatefulWidget {
@@ -40,7 +41,10 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           priority: Priority.high,
           status: RequestStatus.pending,
           createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-          imageUrl: null,
+          imageUrls: [
+            "assets/images/maintenance1-image.png",
+            "assets/images/maintenance2-image.png",
+          ],
         ),
         MaintenanceRequest(
           id: "2",
@@ -50,7 +54,7 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           priority: Priority.medium,
           status: RequestStatus.pending,
           createdAt: DateTime.now().subtract(const Duration(hours: 5)),
-          imageUrl: null,
+          imageUrls: [],
         ),
         MaintenanceRequest(
           id: "3",
@@ -60,7 +64,7 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           priority: Priority.low,
           status: RequestStatus.processing,
           createdAt: DateTime.now().subtract(const Duration(days: 1)),
-          imageUrl: null,
+          imageUrls: [],
         ),
       ];
 
@@ -81,16 +85,6 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
 
   Future<void> _onRefresh() async {
     await _loadRequests();
-  }
-
-  void _handleAction(MaintenanceRequest request, String action) {
-    // TODO: Implement action handling
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("$action: ${request.title}"),
-        duration: const Duration(seconds: 1),
-      ),
-    );
   }
 
   @override
@@ -132,11 +126,10 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           return MaintenanceRequestCard(
             request: request,
             onTap: () {
-              // TODO: Navigate to request detail
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Chi tiết: ${request.title}"),
-                  duration: const Duration(seconds: 1),
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) =>
+                      LandlordMaintenanceScheduleScreen(request: request),
                 ),
               );
             },
@@ -165,21 +158,18 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
         ),
       );
     } else if (request.status == RequestStatus.processing) {
-      return GestureDetector(
-        onTap: () => _handleAction(request, "Chờ xác nhận"),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: AppColors.blue100,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            "Chờ xác nhận",
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.blue700,
-            ),
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.blue100,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          "Chờ xác nhận",
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blue700,
           ),
         ),
       );
