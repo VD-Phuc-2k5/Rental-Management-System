@@ -15,11 +15,36 @@ class NewStartDatePicker extends StatelessWidget {
   });
 
   Future<void> _selectDate(BuildContext context) async {
+    final DateTime firstDate;
+    final DateTime lastDate;
+
+    if (contractExpiryDate != null) {
+      if (selectedDate.isBefore((contractExpiryDate!))) {
+        firstDate = selectedDate;
+        lastDate = contractExpiryDate!;
+      } else {
+        firstDate = contractExpiryDate!;
+        lastDate = selectedDate;
+      }
+    } else {
+      firstDate = selectedDate;
+      lastDate = selectedDate;
+    }
+
+    final DateTime initialDate;
+    if (selectedDate.isBefore(firstDate)) {
+      initialDate = firstDate;
+    } else if (selectedDate.isAfter(lastDate)) {
+      initialDate = lastDate;
+    } else {
+      initialDate = selectedDate;
+    }
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2024),
-      lastDate: DateTime(2030),
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
 
     if (picked != null && picked != selectedDate) {
@@ -74,7 +99,24 @@ class NewStartDatePicker extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 4.0),
             child: Text(
-              "*Mặc định là ngày kế tiếp sau khi hết hạn hợp đồng cũ.",
+              "*Ngày bắt đầu phải từ sau ngày hết hạn hợp đồng cũ.",
+              style: TextStyle(
+                color: AppColors.slate500,
+                fontFamily: "Inter",
+                fontWeight: FontWeight.w400,
+                fontSize: 12,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+        if (contractExpiryDate != null &&
+            selectedDate.isAtSameMomentAs(
+              contractExpiryDate!.add(const Duration(days: 1)),
+            ))
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Text(
+              "Mặc định là ngày kế tiếp sau khi hết hạn hợp đồng cũ",
               style: TextStyle(
                 color: AppColors.slate500,
                 fontFamily: "Inter",

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class ExtensionPeriodDropdown extends StatelessWidget {
   final int selectedMonths;
   final ValueChanged<int?> onChanged;
+  final allowedOptions = const [3, 6, 9, 12, 24];
 
   const ExtensionPeriodDropdown({
     super.key,
@@ -42,7 +43,7 @@ class ExtensionPeriodDropdown extends StatelessWidget {
               ),
             ),
             icon: Icon(Icons.keyboard_arrow_down, color: AppColors.slate500),
-            items: [3, 6, 9, 12, 24]
+            items: allowedOptions
                 .map(
                   (months) => DropdownMenuItem<int>(
                     value: months,

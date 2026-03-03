@@ -2,14 +2,12 @@ import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
 class InfoMessage extends StatelessWidget {
-  final String message;
   final Color? backgroundColor;
   final Color? iconColor;
   final Color? textColor;
 
   const InfoMessage({
     super.key,
-    required this.message,
     this.backgroundColor,
     this.iconColor,
     this.textColor,

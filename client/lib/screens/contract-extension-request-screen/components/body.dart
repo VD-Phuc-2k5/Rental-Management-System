@@ -54,7 +54,19 @@ class _BodyState extends State<Body> {
 
   void _handleSubmit() {
     // Validate form
-    if (_selectedStartDate.isBefore(_contractExpiryDate)) {
+    final DateTime startDateOnly = DateTime(
+      _selectedStartDate.year,
+      _selectedStartDate.month,
+      _selectedStartDate.day,
+    );
+
+    final DateTime expiryDateOnly = DateTime(
+      _contractExpiryDate.year,
+      _contractExpiryDate.month,
+      _contractExpiryDate.day,
+    );
+
+    if (!startDateOnly.isAfter((expiryDateOnly))) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ngày bắt đầu phải sau ngày hết hạn hợp đồng cũ'),
@@ -132,10 +144,7 @@ class _BodyState extends State<Body> {
             ),
 
             // Info message
-            InfoMessage(
-              message:
-                  "Chủ trọ sẽ xem xét yêu cầu và gửi lại hợp đồng qua ứng dụng để bạn ký xác nhận online.",
-            ),
+            InfoMessage(),
 
             // Submit button
             SubmitButton(
