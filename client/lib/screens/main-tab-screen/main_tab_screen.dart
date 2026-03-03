@@ -7,15 +7,15 @@ import 'components/room_management_wrapper.dart';
 class MainTabScreen extends StatefulWidget {
   const MainTabScreen({super.key});
 
-  static _MainTabScreenState? of(BuildContext context) {
-    return context.findAncestorStateOfType<_MainTabScreenState>();
+  static MainTabScreenState? of(BuildContext context) {
+    return context.findAncestorStateOfType<MainTabScreenState>();
   }
 
   @override
-  State<MainTabScreen> createState() => _MainTabScreenState();
+  State<MainTabScreen> createState() => MainTabScreenState();
 }
 
-class _MainTabScreenState extends State<MainTabScreen> {
+class MainTabScreenState extends State<MainTabScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
