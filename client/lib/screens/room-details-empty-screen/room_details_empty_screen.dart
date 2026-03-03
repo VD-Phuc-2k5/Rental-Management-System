@@ -1,4 +1,6 @@
 import 'package:app/core/constants.dart';
+// 1. Import cái AppBar dùng chung của Phúc
+import 'package:app/core/widgets/common_appbar.dart';
 import 'package:flutter/material.dart';
 
 import 'components/empty_tenant_state.dart';
@@ -14,38 +16,24 @@ class RoomDetailsEmptyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.gray25,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.slate900),
-          onPressed: () => Navigator.pop(context),
-        ),
-        titleSpacing: 0,
-        title: Text(
-          "Chi tiết phòng $roomNumber",
-          style: const TextStyle(
-            color: AppColors.slate900,
-            fontFamily: "Inter",
-            fontWeight: FontWeight.w700,
-            fontSize: 20,
+      appBar: CommonAppBar(title: "Chi tiết phòng $roomNumber"),
+
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  RoomInfoCard(roomNumber: roomNumber),
+                  const EmptyTenantState(),
+                ],
+              ),
+            ),
           ),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: AppColors.slate100, height: 1.0),
-        ),
+          const RoomDetailsBottomBar(),
+        ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            RoomInfoCard(roomNumber: roomNumber),
-            const EmptyTenantState(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: const RoomDetailsBottomBar(),
     );
   }
 }

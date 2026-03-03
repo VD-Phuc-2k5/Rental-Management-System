@@ -1,7 +1,8 @@
-import 'package:app/screens/empty-hostel-screen/empty_hostel_screen.dart';
-import 'package:app/screens/landlord-maintenance-requests-screen/landlord_maintenance_requests_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:app/screens/landlord-maintenance-requests-screen/landlord_maintenance_requests_screen.dart';
+import 'package:app/screens/main-tab-screen/components/hostel_management_wrapper.dart';
+import 'package:app/screens/main-tab-screen/components/room_management_wrapper.dart';
+import 'package:flutter/material.dart';
 
 class LandlordNavigationBottom extends StatelessWidget {
   final int currentIndex;
@@ -42,17 +43,24 @@ class LandlordNavigationBottom extends StatelessWidget {
     }
 
     switch (index) {
+      case 0:
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HostelManagementWrapper()),
+        );
+        break;
+      case 1:
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const RoomManagementWrapper()),
+        );
+        break;
       case 2:
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => LandlordMaintenanceRequestsScreen(),
+            builder: (_) => const LandlordMaintenanceRequestsScreen(),
           ),
         );
         break;
       default:
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const EmptyHostelScreen()));
         break;
     }
   }

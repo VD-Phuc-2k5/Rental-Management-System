@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/core/widgets/landlord_navigation_bottom.dart';
 import 'package:app/screens/empty-hostel-screen/components/empty_hostel_body.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +31,7 @@ class EmptyHostelScreen extends StatelessWidget {
       ),
 
       body: const EmptyHostelBody(),
+      bottomNavigationBar: const LandlordNavigationBottom(currentIndex: 0),
     );
   }
 }

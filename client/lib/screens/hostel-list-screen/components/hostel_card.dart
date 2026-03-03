@@ -1,5 +1,5 @@
 import 'package:app/core/constants.dart';
-import 'package:app/screens/main-tab-screen/main_tab_screen.dart';
+import 'package:app/screens/room-list-screen/room_list_screen.dart';
 import 'package:app/screens/update-hostel-screen/update_hostel_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -90,7 +90,10 @@ class HostelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        MainTabScreen.of(context)?.switchTab(1);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const RoomListScreen()),
+        );
       },
       borderRadius: BorderRadius.circular(5.0),
       child: Container(

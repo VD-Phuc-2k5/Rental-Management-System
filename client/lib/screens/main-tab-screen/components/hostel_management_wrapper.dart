@@ -15,7 +15,7 @@ class HostelManagementWrapper extends StatefulWidget {
 }
 
 class HostelManagementWrapperState extends State<HostelManagementWrapper> {
-  bool isEmpty = true;
+  static bool isEmpty = true;
 
   void updateState(bool emptyStatus) {
     setState(() {

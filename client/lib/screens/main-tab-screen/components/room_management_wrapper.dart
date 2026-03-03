@@ -15,7 +15,7 @@ class RoomManagementWrapper extends StatefulWidget {
 }
 
 class RoomManagementWrapperState extends State<RoomManagementWrapper> {
-  bool hasRooms = false;
+  static bool hasRooms = false;
 
   void updateState(bool hasRoomData) {
     setState(() {
