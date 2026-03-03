@@ -8,7 +8,7 @@ class PaymentBottomBar extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFDCE0E5), width: 1)),
+        border: Border(top: BorderSide(color: AppColors.gray100, width: 1)),
         boxShadow: [
           BoxShadow(
             color: Color(0x14000000),
@@ -26,7 +26,7 @@ class PaymentBottomBar extends StatelessWidget {
               height: 54,
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {}, // UI-only
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.blue700,
                   foregroundColor: AppColors.white,
@@ -43,7 +43,7 @@ class PaymentBottomBar extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
-                Icon(Icons.lock_outline, size: 16, color: Color(0xFF94A3B8)),
+                Icon(Icons.lock_outline, size: 16, color: AppColors.gray500),
                 SizedBox(width: 6),
                 Text(
                   'Giao dịch được bảo mật bởi hệ thống NhàTrọ+',

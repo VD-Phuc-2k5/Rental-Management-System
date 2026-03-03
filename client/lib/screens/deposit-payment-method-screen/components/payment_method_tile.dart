@@ -6,24 +6,32 @@ class PaymentMethodTile extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final bool selected;
-
+  final VoidCallback? onTap;
   const PaymentMethodTile({
     super.key,
     required this.title,
     required this.subtitle,
     required this.icon,
     required this.selected,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final borderColor = selected ? AppColors.blue700 : AppColors.gray200;
     final borderWidth = selected ? 1.8 : 1.2;
-
-    return Container(
+    final bgColor = selected
+      ? AppColors.blue700.withOpacity(0.05)
+      : AppColors.white;
+    return Material(
+  color: Colors.transparent,
+  child: InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(14),
+    child: Container(
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: bgColor,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: borderColor, width: borderWidth),
       ),
@@ -67,7 +75,9 @@ class PaymentMethodTile extends StatelessWidget {
           _RadioDot(selected: selected),
         ],
       ),
-    );
+    ),
+  ),
+);
   }
 }
 
@@ -83,7 +93,7 @@ class _RadioDot extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: selected ? const Color(0xFF195AA4) : const Color(0xFFCBD5E1),
+          color: selected ? AppColors.blue700 : AppColors.slate300,
           width: 2,
         ),
       ),
@@ -94,7 +104,7 @@ class _RadioDot extends StatelessWidget {
                 height: 10,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color(0xFF195AA4),
+                  color: AppColors.blue700,
                 ),
               ),
             )

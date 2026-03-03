@@ -31,13 +31,14 @@ class PaymentSummaryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            const Divider(height: 1),
+            const Divider(height: 1,color: AppColors.gray100,),
             const SizedBox(height: 12),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: const [
-                Icon(Icons.apartment_rounded, color: Color(0xFF647487)),
+                Icon(Icons.apartment_rounded, color: AppColors.slate500),
                 SizedBox(width: 10),
-                Expanded(
+                Flexible(
                   child: Text(
                     'Phòng 301 - Tòa Landmark',
                     style: TextStyle(

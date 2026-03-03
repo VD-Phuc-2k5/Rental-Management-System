@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'payment_method_tile.dart';
 
-class PaymentMethodsSection extends StatelessWidget {
+class PaymentMethodsSection extends StatefulWidget {
   const PaymentMethodsSection({super.key});
+
+  @override
+  State<PaymentMethodsSection> createState() => _PaymentMethodsSectionState();
+}
+
+class _PaymentMethodsSectionState extends State<PaymentMethodsSection> {
+  int selectedIndex = 2; // mặc định chọn "Chuyển khoản ngân hàng"
+
+  void _select(int index) {
+    setState(() => selectedIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Text(
+      children: [
+        const Text(
           'Chọn phương thức thanh toán',
           style: TextStyle(
             color: Color(0xFF1A202C),
@@ -17,29 +28,32 @@ class PaymentMethodsSection extends StatelessWidget {
             fontSize: 16,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
 
         PaymentMethodTile(
           title: 'Ví điện tử MoMo',
           subtitle: 'Miễn phí giao dịch',
           icon: Icons.account_balance_wallet_outlined,
-          selected: false,
+          selected: selectedIndex == 0,
+          onTap: () => _select(0),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
 
         PaymentMethodTile(
           title: 'Cổng thanh toán VNPay',
           subtitle: 'Thẻ ATM, QR Code',
           icon: Icons.qr_code_2_rounded,
-          selected: false,
+          selected: selectedIndex == 1,
+          onTap: () => _select(1),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
 
         PaymentMethodTile(
           title: 'Chuyển khoản ngân hàng',
           subtitle: 'Ngân hàng',
           icon: Icons.account_balance_rounded,
-          selected: true, // giống ảnh
+          selected: selectedIndex == 2,
+          onTap: () => _select(2),
         ),
       ],
     );
