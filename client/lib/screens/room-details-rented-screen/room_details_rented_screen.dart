@@ -8,7 +8,9 @@ import 'components/rented_room_bottom_bar.dart';
 import 'components/tenant_list_section.dart';
 
 class RoomDetailsRentedScreen extends StatelessWidget {
-  const RoomDetailsRentedScreen({super.key});
+  final String roomNumber;
+
+  const RoomDetailsRentedScreen({super.key, required this.roomNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +24,9 @@ class RoomDetailsRentedScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         titleSpacing: 0,
-        title: const Text(
-          "Chi tiết phòng 302",
-          style: TextStyle(
+        title: Text(
+          "Chi tiết phòng $roomNumber",
+          style: const TextStyle(
             color: AppColors.slate900,
             fontFamily: "Inter",
             fontWeight: FontWeight.w700,
@@ -39,14 +41,14 @@ class RoomDetailsRentedScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          children: const [
-            TenantListSection(),
-            SizedBox(height: 24),
-            RoomInfoCard(),
-            SizedBox(height: 24),
-            PendingRequestsSection(),
-            SizedBox(height: 24),
-            ContractInfoSection(),
+          children: [
+            const TenantListSection(),
+            const SizedBox(height: 24),
+            RoomInfoCard(roomNumber: roomNumber),
+            const SizedBox(height: 24),
+            const PendingRequestsSection(),
+            const SizedBox(height: 24),
+            const ContractInfoSection(),
           ],
         ),
       ),

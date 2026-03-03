@@ -43,7 +43,8 @@ class RoomCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const RoomDetailsRentedScreen(),
+              builder: (context) =>
+                  const RoomDetailsRentedScreen(roomNumber: "302"),
             ),
           );
         }
