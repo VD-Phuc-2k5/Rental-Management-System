@@ -58,7 +58,7 @@ class ScheduleSection extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    dateText.isEmpty ? 'mm/dd/yyyy' : dateText,
+                    dateText.isEmpty ? 'dd/MM/yyyy' : dateText,
                     style: TextStyle(
                       fontSize: 16,
                       color: dateText.isEmpty
@@ -109,7 +109,7 @@ class ScheduleSection extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    timeText.isEmpty ? '--:----' : timeText,
+                    timeText.isEmpty ? '--:--' : timeText,
                     style: TextStyle(
                       fontSize: 16,
                       color: timeText.isEmpty
