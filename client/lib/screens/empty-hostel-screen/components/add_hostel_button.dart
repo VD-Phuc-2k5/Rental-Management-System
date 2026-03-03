@@ -1,5 +1,6 @@
 import 'package:app/core/constants.dart';
 import 'package:app/screens/add-hostel-screen/add_hostel_screen.dart';
+import 'package:app/screens/main-tab-screen/components/hostel_management_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class AddHostelButton extends StatelessWidget {
@@ -28,11 +29,15 @@ class AddHostelButton extends StatelessWidget {
           ),
           elevation: 0,
         ),
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddHostelScreen()),
           );
+
+          if (result == true && context.mounted) {
+            HostelManagementWrapper.of(context)?.updateState(false);
+          }
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

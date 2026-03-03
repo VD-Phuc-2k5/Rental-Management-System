@@ -26,7 +26,9 @@ class BottomActionBar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              onPressed: null,
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
               child: const Text(
                 "Thêm nhà trọ",
                 style: TextStyle(

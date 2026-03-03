@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/core/widgets/landlord_navigation_bottom.dart';
 import 'package:app/screens/empty-room-screen/components/empty_room_body.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +34,7 @@ class EmptyRoomScreen extends StatelessWidget {
         ),
       ),
       body: const EmptyRoomBody(),
+      bottomNavigationBar: const LandlordNavigationBottom(currentIndex: 1),
     );
   }
 }

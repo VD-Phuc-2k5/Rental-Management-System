@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/core/widgets/landlord_navigation_bottom.dart';
 import 'package:app/screens/add-hostel-screen/add_hostel_screen.dart';
 import 'package:app/screens/hostel-list-screen/components/hostel_list_body.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,7 @@ class HostelListScreen extends StatelessWidget {
         ),
       ),
       body: const HostelListBody(),
+      bottomNavigationBar: const LandlordNavigationBottom(currentIndex: 0),
     );
   }
 }

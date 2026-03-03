@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/room-list-screen/room_list_screen.dart';
 import 'package:app/screens/update-hostel-screen/update_hostel_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -73,10 +74,10 @@ class HostelCard extends StatelessWidget {
       blocks.add(buildBlock(AppColors.blue700));
     }
     for (int i = 0; i < orangeBlocks; i++) {
-      blocks.add(buildBlock(const Color(0xFFF59E0B)));
+      blocks.add(buildBlock(AppColors.amber500));
     }
     for (int i = 0; i < greyBlocks; i++) {
-      blocks.add(buildBlock(const Color(0xFFCBD5E1)));
+      blocks.add(buildBlock(AppColors.slate300));
     }
 
     return Padding(
@@ -87,73 +88,82 @@ class HostelCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border.all(color: AppColors.slate200),
-        borderRadius: BorderRadius.circular(5.0),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withAlpha(13),
-            blurRadius: 2,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontFamily: 'Nunito',
-              fontWeight: FontWeight.w700,
-              fontSize: 16,
-              color: AppColors.slate900,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const RoomListScreen()),
+        );
+      },
+      borderRadius: BorderRadius.circular(5.0),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          border: Border.all(color: AppColors.slate200),
+          borderRadius: BorderRadius.circular(5.0),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withAlpha(13),
+              blurRadius: 2,
+              offset: const Offset(0, 1),
             ),
-          ),
-          _buildRoomBlocks(),
-          const SizedBox(height: 16),
-
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final boxWidth = constraints.constrainWidth();
-              const dashWidth = 4.0;
-              final dashCount = (boxWidth / (2 * dashWidth)).floor();
-              return Flex(
-                direction: Axis.horizontal,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(dashCount, (_) {
-                  return const SizedBox(
-                    width: dashWidth,
-                    height: 1.0,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(color: Color(0xFFF1F5F9)),
-                    ),
-                  );
-                }),
-              );
-            },
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                statusText,
-                style: const TextStyle(
-                  fontFamily: 'Noto Sans',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: AppColors.slate500,
-                ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                color: AppColors.slate900,
               ),
-              _buildUpdateButton(context),
-            ],
-          ),
-        ],
+            ),
+            _buildRoomBlocks(),
+            const SizedBox(height: 16),
+
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final boxWidth = constraints.constrainWidth();
+                const dashWidth = 4.0;
+                final dashCount = (boxWidth / (2 * dashWidth)).floor();
+                return Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(dashCount, (_) {
+                    return const SizedBox(
+                      width: dashWidth,
+                      height: 1.0,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(color: AppColors.slate100),
+                      ),
+                    );
+                  }),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  statusText,
+                  style: const TextStyle(
+                    fontFamily: 'Noto Sans',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.slate500,
+                  ),
+                ),
+                _buildUpdateButton(context),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

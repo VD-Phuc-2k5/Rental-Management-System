@@ -29,7 +29,9 @@ class AddRoomBody extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
                 icon: const Icon(Icons.add, color: AppColors.white, size: 16),
                 label: const Text(
                   "Thêm phòng",

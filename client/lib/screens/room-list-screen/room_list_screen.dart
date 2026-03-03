@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/core/widgets/landlord_navigation_bottom.dart';
 import 'package:flutter/material.dart';
 
 import 'components/room_list_body.dart';
@@ -54,6 +55,7 @@ class RoomListScreen extends StatelessWidget {
         ),
       ),
       body: const RoomListBody(),
+      bottomNavigationBar: const LandlordNavigationBottom(currentIndex: 1),
     );
   }
 }
