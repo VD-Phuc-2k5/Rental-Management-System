@@ -1,16 +1,21 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/transfer-leader-role-screen/transfer_leader_role_screen.dart';
 import 'package:flutter/material.dart';
 
-class Member {
+class RentalContractMember {
   final String name;
   final String role;
   final bool isLeader;
 
-  const Member({required this.name, required this.role, this.isLeader = false});
+  const RentalContractMember({
+    required this.name,
+    required this.role,
+    this.isLeader = false,
+  });
 }
 
 class MemberListSection extends StatelessWidget {
-  final List<Member> members;
+  final List<RentalContractMember> members;
   final VoidCallback onAddMember;
   final void Function(int index) onDeleteMember;
 
@@ -108,52 +113,71 @@ class _MemberCard extends StatelessWidget {
         color: AppColors.slate50,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    color: AppColors.blue900,
-                    fontFamily: "Inter",
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  role,
-                  style: const TextStyle(
-                    color: AppColors.slate500,
-                    fontFamily: "Inter",
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                  ),
-                ),
-                if (isLeader) ...[
-                  const SizedBox(height: 6),
-                  const Text(
-                    "Chuyển quyền trưởng phòng",
-                    style: TextStyle(
-                      color: AppColors.blue700,
-                      fontFamily: "Inter",
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        color: AppColors.blue900,
+                        fontFamily: "Inter",
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      ),
                     ),
+                    const SizedBox(height: 4),
+                    Text(
+                      role,
+                      style: const TextStyle(
+                        color: AppColors.slate500,
+                        fontFamily: "Inter",
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                onPressed: onDelete,
+                icon: const Icon(Icons.delete_outline, color: AppColors.red500),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+            ],
+          ),
+          if (isLeader) ...[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const TransferLeaderRoleScreen(),
                   ),
-                ],
-              ],
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                padding: EdgeInsets.zero,
+              ),
+              child: const Text(
+                "Chuyển quyền trưởng phòng",
+                style: TextStyle(
+                  color: AppColors.blue700,
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              ),
             ),
-          ),
-          IconButton(
-            onPressed: onDelete,
-            icon: const Icon(Icons.delete_outline, color: AppColors.red500),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
+          ],
         ],
       ),
     );

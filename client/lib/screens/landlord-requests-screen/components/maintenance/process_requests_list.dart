@@ -6,7 +6,9 @@ import "package:app/screens/landlord-maintenance-schedule-screen/landlord_mainte
 import "package:flutter/material.dart";
 
 class ProcessRequestsList extends StatefulWidget {
-  const ProcessRequestsList({super.key});
+  final ValueChanged<int>? onCountChanged;
+
+  const ProcessRequestsList({super.key, this.onCountChanged});
 
   @override
   State<ProcessRequestsList> createState() => _ProcessRequestsListState();
@@ -73,6 +75,7 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           _requests = mockRequests;
           _isLoading = false;
         });
+        widget.onCountChanged?.call(mockRequests.length);
       }
     } catch (e) {
       if (mounted) {
