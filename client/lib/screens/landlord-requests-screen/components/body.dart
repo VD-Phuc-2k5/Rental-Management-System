@@ -1,6 +1,6 @@
 import "package:app/screens/landlord-requests-screen/components/maintenance/process_requests_list.dart";
 import "package:app/screens/landlord-requests-screen/components/tab_header.dart";
-import "package:app/screens/landlord-requests-screen/components/view-rooom/view_room_list.dart";
+import "package:app/screens/landlord-requests-screen/components/view-room/view_room_list.dart";
 import "package:flutter/material.dart";
 
 class Body extends StatefulWidget {

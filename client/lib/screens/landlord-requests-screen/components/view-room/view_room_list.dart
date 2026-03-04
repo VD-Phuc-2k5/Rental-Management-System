@@ -1,6 +1,6 @@
 import 'package:app/core/constants.dart';
 import 'package:app/core/models/room_request.dart';
-import 'package:app/screens/landlord-requests-screen/components/view-rooom/view_room_card.dart';
+import 'package:app/screens/landlord-requests-screen/components/view-room/view_room_card.dart';
 import 'package:flutter/material.dart';
 
 class ViewRoomList extends StatefulWidget {
