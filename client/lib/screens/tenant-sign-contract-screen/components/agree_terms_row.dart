@@ -94,19 +94,19 @@ class _CheckBoxCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(999),
+      //borderRadius:  BoxShape.circle,
       child: Container(
         width: 22,
         height: 22,
         decoration: BoxDecoration(
           color: value ? AppColors.blue700 : AppColors.white,
-          borderRadius: BorderRadius.circular(999),
+          shape: BoxShape.circle,
           border: Border.all(
             color: value ? AppColors.blue700 : AppColors.slate300,
           ),
         ),
         child: value
-            ? const Icon(Icons.check, size: 16, color: Colors.white)
+            ? const Icon(Icons.check, size: 16, color: AppColors.white)
             : null,
       ),
     );

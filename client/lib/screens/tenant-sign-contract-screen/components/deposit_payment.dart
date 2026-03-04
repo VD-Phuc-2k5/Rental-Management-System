@@ -7,7 +7,7 @@ class DepositPaymentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: Colors.white,
+      color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(14, 14, 14, 16),
@@ -54,7 +54,7 @@ class DepositPaymentCard extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {},
-                icon: const Icon(Icons.credit_card, color: Colors.white),
+                icon: const Icon(Icons.credit_card, color: AppColors.white),
                 label: const Text(
                   'Thanh toán tiền cọc ngay',
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),

@@ -8,9 +8,9 @@ class ImportantNoticeCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.blue700.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.blue700.withOpacity(0.2)),
+        color: AppColors.blue700.withValues(alpha: 0.1),
+        shape: BoxShape.circle,
+        border: Border.all(color: AppColors.blue700.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -19,7 +19,7 @@ class ImportantNoticeCard extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.blue700.withOpacity(0.2),
+              color: AppColors.blue700.withValues(alpha: 0.2),
             ),
             child: const Icon(Icons.notifications_none_rounded, color: AppColors.blue700),
           ),

@@ -7,7 +7,7 @@ class TenantContractSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: Colors.white,
+      color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
@@ -75,7 +75,7 @@ class _HeroImage extends StatelessWidget {
                   Text(
                     'P.302 - Nhà Trọ Xanh',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                     ),
@@ -206,21 +206,29 @@ class _PreviewBox extends StatelessWidget {
             'Điều 2: Giá cả và phương thức thanh toán. Tiền...',
             style: TextStyle(color: AppColors.slate500, height: 1.25,fontWeight: FontWeight.w400,fontSize: 12),
           ),
+          
           const SizedBox(height: 10),
-          Row(
-            children: const [
-              Text(
-                'Xem toàn bộ hợp đồng',
-                style: TextStyle(
-                  color: AppColors.blue700,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                ),
+          InkWell(
+            onTap: () {},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text(
+                    'Xem toàn bộ hợp đồng',
+                    style: TextStyle(
+                      color: AppColors.blue700,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                  SizedBox(width: 6),
+                  Icon(Icons.open_in_new_rounded, size: 16, color: AppColors.blue700),
+                ],
               ),
-              SizedBox(width: 6),
-              Icon(Icons.open_in_new_rounded, size: 16, color: AppColors.blue700),
-            ],
-          )
+            ),
+          ),
         ],
       ),
     );
