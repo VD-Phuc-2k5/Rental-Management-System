@@ -16,14 +16,28 @@ class _BodyState extends State<Body> {
   final TextEditingController _reasonController = TextEditingController();
 
   // Sample data - Replace with actual data from your state management
-  final List<Member> _members = [
-    const Member(name: "Nguyễn Văn A", role: "Trưởng phòng", isLeader: true),
-    const Member(name: "Trần Thị B", role: "Thành viên", isLeader: false),
+  final List<RentalContractMember> _members = [
+    const RentalContractMember(
+      name: "Nguyễn Văn A",
+      role: "Trưởng phòng",
+      isLeader: true,
+    ),
+    const RentalContractMember(
+      name: "Trần Thị B",
+      role: "Thành viên",
+      isLeader: false,
+    ),
   ];
 
-  final List<Vehicle> _vehicles = [
-    const Vehicle(name: "Xe máy Honda Vision", licensePlate: "59-A1 123.45"),
-    const Vehicle(name: "Xe máy điện VinFast", licensePlate: "59-MD1 999.99"),
+  final List<ContractVehicle> _vehicles = [
+    const ContractVehicle(
+      name: "Xe máy Honda Vision",
+      licensePlate: "59-A1 123.45",
+    ),
+    const ContractVehicle(
+      name: "Xe máy điện VinFast",
+      licensePlate: "59-MD1 999.99",
+    ),
   ];
 
   @override
@@ -81,7 +95,7 @@ class _BodyState extends State<Body> {
           children: [
             const ContractInfoCard(
               roomName: "Phòng 101",
-              roomImageUrl:
+              roomImageAssetPath:
                   "assets/images/room-details-empty-screen/room_img1.png",
               startDate: "01/01/2026",
               endDate: "31/12/2026",
