@@ -7,7 +7,7 @@ class UpdateRentalContractScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       appBar: CommonAppBar(title: "Cập nhật hợp đồng"),
       body: Body(),
     );
