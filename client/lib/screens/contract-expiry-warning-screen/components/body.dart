@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/contract-extension-request-screen/contract_extension_request_screen.dart';
 import 'package:app/screens/home-screen/home_screen.dart';
 import 'package:app/screens/contract-expiry-warning-screen/components/contract_action_button.dart';
 import 'package:app/screens/contract-expiry-warning-screen/components/contract_expiry_header.dart';
@@ -11,18 +12,20 @@ class Body extends StatelessWidget {
   // Calculate days remaining until contract expiry
   int _calculateDaysRemaining(DateTime expiryDate) {
     final now = DateTime.now();
-    final difference = expiryDate.difference(now);
-    if (difference.inDays < 0) return 0;
-    return difference.inDays;
+    final today = DateTime(now.year, now.month, now.day);
+    final expiryDateOnly = DateTime(
+      expiryDate.year,
+      expiryDate.month,
+      expiryDate.day,
+    );
+    final dayDifference = expiryDateOnly.difference(today).inDays;
+    if (dayDifference < 0) return 0;
+    return dayDifference;
   }
 
   void _handleExtendContract(BuildContext context) {
-    // TO DO: Navigate to contract extension screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Chức năng gia hạn hợp đồng đang được phát triển"),
-        backgroundColor: AppColors.blue700,
-      ),
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ContractExtensionRequestScreen()),
     );
   }
 
@@ -46,14 +49,21 @@ class Body extends StatelessWidget {
     );
   }
 
-  void _handleRemindLater(BuildContext context) {
+  Future<void> _handleRemindLater(BuildContext context) async {
     // TO DO: Set reminder for 3 days later and close screen
-    ScaffoldMessenger.of(context).showSnackBar(
+    final messenger = ScaffoldMessenger.of(context);
+
+    final controller = messenger.showSnackBar(
       const SnackBar(
         content: Text("Sẽ nhắc lại sau 3 ngày"),
         backgroundColor: AppColors.green600,
       ),
     );
+
+    await controller.closed;
+
+    if (!context.mounted) return;
+
     Navigator.of(
       context,
     ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
