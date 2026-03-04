@@ -25,10 +25,9 @@ class LocationSection extends StatelessWidget {
               ),
             ],
           ),
-          child: TextField(
-            controller: TextEditingController(
-              text: "Khu A, 123 Nguyễn Trãi, Quận 5, thành phố Hồ Chí Minh",
-            ),
+          child: TextFormField(
+            initialValue:
+                "Khu A, 123 Nguyễn Trãi, Quận 5, thành phố Hồ Chí Minh",
             maxLines: null,
             keyboardType: TextInputType.multiline,
             style: const TextStyle(

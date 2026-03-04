@@ -49,10 +49,8 @@ class BasicInfoSection extends StatelessWidget {
               ),
             ],
           ),
-          child: TextField(
-            controller: initialValue != null
-                ? TextEditingController(text: initialValue)
-                : null,
+          child: TextFormField(
+            initialValue: initialValue,
             style: const TextStyle(
               fontFamily: "Noto Sans",
               fontWeight: FontWeight.w400,
