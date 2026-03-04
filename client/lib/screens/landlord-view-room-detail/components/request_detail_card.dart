@@ -55,13 +55,13 @@ Color _getStatusTextBackground(String status) {
 
 class RequestDetailCard extends StatelessWidget {
   final String date;
-  final String note;
+  final String? note;
   final String status;
 
   const RequestDetailCard({
     super.key,
     required this.date,
-    required this.note,
+    this.note,
     required this.status,
   });
 
@@ -115,7 +115,7 @@ class RequestDetailCard extends StatelessWidget {
 
   Widget _buildInfo(
     String title,
-    String value,
+    String? value,
     IconData icon,
     Color iconColor,
     Color iconBackgroundColor, {
@@ -150,7 +150,7 @@ class RequestDetailCard extends StatelessWidget {
             const SizedBox(height: 4.0),
             !isStatus
                 ? Text(
-                    isNote ? '"$value"' : value,                    
+                    isNote ? '"$value"' : value ?? "Không có ghi chú",
                     style: TextStyle(
                       fontSize: 16.0,
                       color: isNote ? AppColors.slate500 : AppColors.slate900,
@@ -163,13 +163,13 @@ class RequestDetailCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: _getStatusTextBackground(value),
+                      color: _getStatusTextBackground(value ?? ""),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      value,
+                      value ?? "Không có trạng thái",
                       style: TextStyle(
-                        color: _getStatusTextColor(value),
+                        color: _getStatusTextColor(value ?? ""),
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         fontFamily: "Inter",
