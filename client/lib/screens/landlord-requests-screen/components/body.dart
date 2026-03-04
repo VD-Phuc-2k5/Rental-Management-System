@@ -1,5 +1,6 @@
-import "package:app/screens/landlord-maintenance-requests-screen/components/process_requests_list.dart";
-import "package:app/screens/landlord-maintenance-requests-screen/components/tab_header.dart";
+import "package:app/screens/landlord-requests-screen/components/maintenance/process_requests_list.dart";
+import "package:app/screens/landlord-requests-screen/components/tab_header.dart";
+import "package:app/screens/landlord-requests-screen/components/view-rooom/view_room_list.dart";
 import "package:flutter/material.dart";
 
 class Body extends StatefulWidget {
@@ -27,7 +28,7 @@ class _BodyState extends State<Body> {
         ),
         Expanded(
           child: _selectedTabIndex == 0
-              ? const Text("")
+              ? const ViewRoomList()
               : const ProcessRequestsList(),
         ),
       ],

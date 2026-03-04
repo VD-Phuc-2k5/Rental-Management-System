@@ -1,5 +1,5 @@
 import 'package:app/core/constants.dart';
-import 'package:app/screens/landlord-maintenance-requests-screen/landlord_maintenance_requests_screen.dart';
+import 'package:app/screens/landlord-requests-screen/landlord_requests_screen.dart';
 import 'package:app/screens/main-tab-screen/components/hostel_management_wrapper.dart';
 import 'package:app/screens/main-tab-screen/components/room_management_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +56,7 @@ class LandlordNavigationBottom extends StatelessWidget {
       case 2:
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => const LandlordMaintenanceRequestsScreen(),
+            builder: (_) => const LandlordRequestsScreen(),
           ),
         );
         break;
