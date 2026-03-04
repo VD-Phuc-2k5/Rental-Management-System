@@ -10,38 +10,45 @@ class MemberInfoCard extends StatelessWidget {
     required this.rows,
   });
 
-  const MemberInfoCard.contact({super.key})
+   MemberInfoCard.contact({
+    super.key,
+    String? phoneNumber,
+    String? email,})
       : title = 'THÔNG TIN LIÊN HỆ',
-        rows = const [
+        rows =  [
           _InfoRowData(
             icon: Icons.call,
             label: 'Số điện thoại',
-            value: '0901 234 567',
+            value: phoneNumber ?? '',
           ),
           _InfoRowData(
             icon: Icons.mail_outline,
             label: 'Email',
-            value: 'tuan.nguyen@nhatroplus.com',
+            value: email ?? '',
           ),
         ];
 
-  const MemberInfoCard.identity({super.key})
+  MemberInfoCard.identity({
+    super.key,
+    String? idNumber,
+    String? dateOfBirth,
+    String? address,})
       : title = 'THÔNG TIN ĐỊNH DANH',
-        rows = const [
+        rows = [
           _InfoRowData(
             icon: Icons.badge_outlined,
             label: 'Số CCCD / CMND',
-            value: '012345678901',
+            value: idNumber ?? '',
           ),
           _InfoRowData(
             icon: Icons.cake_outlined,
             label: 'Ngày sinh',
-            value: '15/05/1995',
+            value: dateOfBirth ?? '',
           ),
           _InfoRowData(
             icon: Icons.location_on_outlined,
             label: 'Địa chỉ thường trú',
-            value: '123 Đường Lê Lợi, Phường Bến\nThành, Quận 1, TP. Hồ Chí Minh',
+            value: address ?? '',
           ),
         ];
 
@@ -65,7 +72,7 @@ class MemberInfoCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            ...rows.map((r) => _InfoRow(r)).toList(),
+            ...rows.map((r) => _InfoRow(r)),
           ],
         ),
       ),

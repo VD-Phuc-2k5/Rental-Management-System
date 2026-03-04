@@ -24,19 +24,36 @@ class MemberDetailScreen extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 18, 16, 110),
+        padding: EdgeInsets.fromLTRB(
+          16,
+          18,
+          16,
+          MediaQuery.of(context).viewPadding.bottom + kBottomNavigationBarHeight,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            MemberProfileHeader(),
+          children:  [
+            MemberProfileHeader(
+              name: 'Nguyễn Văn Tuấn',
+              role: 'Trưởng phòng',
+              joinMonth: 5,
+              joinYear: 2023,
+            ),
             SizedBox(height: 16),
             PrimaryCallButton(),
             SizedBox(height: 16),
 
-            MemberInfoCard.contact(),
+            MemberInfoCard.contact(
+              phoneNumber: '0901 234 567',
+              email: 'tuan.nguyen@nhatroplus.com',
+            ),
             SizedBox(height: 14),
 
-            MemberInfoCard.identity(),
+            MemberInfoCard.identity(
+              idNumber: '123456789012',
+              dateOfBirth: '01/01/1990',
+              address: '123 Đường ABC, Quận XYZ, TP. HCM',
+            ),
             SizedBox(height: 18),
 
             IdDocumentsSection(),

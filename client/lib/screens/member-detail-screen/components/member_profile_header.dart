@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 class MemberProfileHeader extends StatelessWidget {
-  const MemberProfileHeader({super.key});
+  final String? name;
+  final String? role;
+  final ImageProvider? avatar;
+  final int? joinMonth;
+  final int? joinYear;
+  const MemberProfileHeader({
+    super.key,
+    this.name,
+    this.role,
+    this.avatar,
+    this.joinMonth,
+    this.joinYear,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final displayName = name ?? '';
+    final displayRole = role ?? '';
+    final m = joinMonth;
+    final y = joinYear;
+    final joinText = (m != null && y != null)
+    ? 'Thành viên từ Tháng ${m.toString().padLeft(2, '0')}, $y'
+    : '';
     return Column(
       children: [
         Center(
@@ -24,8 +43,8 @@ class MemberProfileHeader extends StatelessWidget {
               border: Border.all(color: AppColors.white, width: 4),
             ),
             child: ClipOval(
-              child: Image.asset(
-                'assets/images/Profile_Avatar.png',
+              child: Image(
+                image: avatar ?? const AssetImage('assets/images/profile_avatar.png'),
                 width: 92,
                 height: 92,
                 fit: BoxFit.cover,
@@ -34,8 +53,8 @@ class MemberProfileHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
-        const Text(
-          'Nguyễn Minh Tuấn',
+         Text(
+           displayName,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w700,
@@ -53,11 +72,11 @@ class MemberProfileHeader extends StatelessWidget {
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 Icon(Icons.verified_user_outlined, size: 14, color: AppColors.blue700),
                 SizedBox(width: 6),
                 Text(
-                  'Trưởng phòng',
+                  displayRole,
                   style: TextStyle(
                     color: AppColors.blue700,
                     fontWeight: FontWeight.w600,
@@ -68,8 +87,8 @@ class MemberProfileHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        const Text(
-          'Thành viên từ Tháng 05, 2023',
+        Text(
+          joinText,
           style: TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w400),
         ),
       ],
