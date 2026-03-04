@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 class ContractInfoCard extends StatelessWidget {
   final String roomName;
-  final String roomImageUrl;
+  final String roomImageAssetPath;
   final String startDate;
   final String endDate;
 
   const ContractInfoCard({
     super.key,
     required this.roomName,
-    required this.roomImageUrl,
+    required this.roomImageAssetPath,
     required this.startDate,
     required this.endDate,
   });
@@ -34,7 +34,7 @@ class ContractInfoCard extends StatelessWidget {
               Stack(
                 children: [
                   Image.asset(
-                    roomImageUrl,
+                    roomImageAssetPath,
                     width: double.infinity,
                     height: 150,
                     fit: BoxFit.cover,
