@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:app/core/format_currency.dart';
 class DepositPaymentCard extends StatelessWidget {
   const DepositPaymentCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final int depositAmount = 5000000;
     return Card(
       elevation: 0,
       color: AppColors.white,
@@ -32,14 +34,14 @@ class DepositPaymentCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Row(
-              children: const [
+              children: [
                 Text(
                   'Số tiền cọc cần đóng:',
                   style: TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w500,fontSize: 16),
                 ),
                 Spacer(),
                 Text(
-                  '5.000.000đ',
+                  formatVND(depositAmount),
                   style: TextStyle(
                     color: AppColors.blue700,
                     fontWeight: FontWeight.w800,
