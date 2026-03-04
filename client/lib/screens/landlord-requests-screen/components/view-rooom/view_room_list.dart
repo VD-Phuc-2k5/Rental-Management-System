@@ -82,8 +82,8 @@ class _ViewRoomListState extends State<ViewRoomList> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+    if (_isLoading && _requests.isEmpty) {
+      return const Center(child: CircularProgressIndicator(color: AppColors.blue700));
     }
 
     if (_requests.isEmpty) {
