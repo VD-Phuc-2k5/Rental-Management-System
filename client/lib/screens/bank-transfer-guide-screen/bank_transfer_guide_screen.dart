@@ -29,7 +29,13 @@ class BankTransferGuideScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 12),
-            BankTransferCard(),
+            BankTransferCard(
+              bankName: 'Vietcombank (VCB)',
+              accountName: 'CÔNG TY CÔNG NGHỆ NHATRO PLUS',
+              accountNumber: '1234567890',
+              amount: 5000000,
+              transferContent: 'NTPLUS 301A 0912345678',
+            )
           ],
         ),
       ),

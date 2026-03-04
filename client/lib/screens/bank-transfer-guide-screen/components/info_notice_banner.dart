@@ -12,7 +12,7 @@ class InfoNoticeBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.blue700.withValues(alpha: 0.2)),
       ),
-      child: Row(
+      child: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
           Icon(Icons.info_outline_rounded, color: AppColors.blue700),

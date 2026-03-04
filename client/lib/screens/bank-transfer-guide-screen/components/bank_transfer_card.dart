@@ -1,38 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:app/screens/bank-transfer-guide-screen/components/copy_pill_button.dart';
 import 'package:app/core/constants.dart';
+import 'package:app/core/format_currency.dart';
 class BankTransferCard extends StatelessWidget {
-  const BankTransferCard({super.key});
+  final String? bankName;
+  final String? accountName;
+  final String? accountNumber;
+  final double? amount;
+  final String? transferContent;
+  const BankTransferCard({
+    super.key,
+    this.bankName,
+    this.accountName,
+    this.accountNumber,
+    this.amount,
+    this.transferContent,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final displayAmount = amount == null ? '' : formatVND(amount!.round());
     return Card(
       elevation: 0,
       color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Column(
-        children: const [
-          _BankRow(),
-          Divider(height: 1,color: AppColors.slate100,),
+        children:  [
+          _BankRow(bankName: bankName),
+          const Divider(height: 1,color: AppColors.slate100),
           _TextRow(
             label: 'Chủ tài khoản',
-            value: 'CONG TY CONG NGHE NHATRO PLUS',
+            value: accountName ?? 'lỗi',
           ),
-          Divider(height: 1,color: AppColors.slate100),
+          const Divider(height: 1,color: AppColors.slate100),
           _CopyRow(
             label: 'Số tài khoản',
-            value: '1234567890',
+            value: accountNumber ?? 'lỗi',
           ),
-          Divider(height: 1,color: AppColors.slate100),
+          const Divider(height: 1,color: AppColors.slate100),
           _CopyRow(
             label: 'Số tiền',
-            value: '5.000.000đ',
+            value: displayAmount,
             valueColor: AppColors.blue700,
           ),
           Divider(height: 1,color: AppColors.slate100),
           _CopyRow(
             label: 'Nội dung chuyển khoản',
-            value: 'NTPLUS 301A 0912345678',
+            value: transferContent ?? 'lỗi',
             highlight: true,
           ),
         ],
@@ -42,7 +56,12 @@ class BankTransferCard extends StatelessWidget {
 }
 
 class _BankRow extends StatelessWidget {
-  const _BankRow();
+  final String? bankName;
+  const _BankRow(
+    {
+      required this.bankName,
+    }
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +79,7 @@ class _BankRow extends StatelessWidget {
             child: const Icon(Icons.account_balance_rounded, color: AppColors.blue700),
           ),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -70,7 +89,7 @@ class _BankRow extends StatelessWidget {
                 ),
                 SizedBox(height: 3),
                 Text(
-                  'Vietcombank (VCB)',
+                  bankName ?? 'lỗi',
                   style: TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w600),
                 ),
               ],
