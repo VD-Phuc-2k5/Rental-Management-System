@@ -5,12 +5,14 @@ class TabHeader extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTabSelected;
   final List<String> tabs;
+  final List<int>? counts;
 
   const TabHeader({
     super.key,
     required this.selectedIndex,
     required this.onTabSelected,
     required this.tabs,
+    this.counts,
   });
 
   @override
@@ -51,7 +53,9 @@ class TabHeader extends StatelessWidget {
           shadowColor: Colors.transparent,
         ),
         child: Text(
-          tabs[index],
+          counts != null && counts!.length > index
+              ? '${tabs[index]} (${counts![index]})'
+              : tabs[index],
           style: TextStyle(
             color: isSelected ? AppColors.blue700 : AppColors.slate500,
             fontWeight: FontWeight.w700,

@@ -12,6 +12,8 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   int _selectedTabIndex = 0;
+  int _viewRoomCount = 0;
+  int _processCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +27,20 @@ class _BodyState extends State<Body> {
             });
           },
           tabs: const ["Xem phòng", "Xử lý sự cố"],
+          counts: [_viewRoomCount, _processCount],
         ),
         Expanded(
           child: _selectedTabIndex == 0
-              ? const ViewRoomList()
-              : const ProcessRequestsList(),
+              ? ViewRoomList(
+                  onCountChanged: (count) {
+                    setState(() => _viewRoomCount = count);
+                  },
+                )
+              : ProcessRequestsList(
+                  onCountChanged: (count) {
+                    setState(() => _processCount = count);
+                  },
+                ),
         ),
       ],
     );

@@ -4,7 +4,9 @@ import 'package:app/screens/landlord-requests-screen/components/view-rooom/view_
 import 'package:flutter/material.dart';
 
 class ViewRoomList extends StatefulWidget {
-  const ViewRoomList({super.key});
+  final ValueChanged<int>? onCountChanged;
+
+  const ViewRoomList({super.key, this.onCountChanged});
 
   @override
   State<ViewRoomList> createState() => _ViewRoomListState();
@@ -65,13 +67,16 @@ class _ViewRoomListState extends State<ViewRoomList> {
           _requests = mockRequests;
           _isLoading = false;
         });
+        widget.onCountChanged?.call(mockRequests.length);
       }
     } catch (e) {
       // Handle error
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
