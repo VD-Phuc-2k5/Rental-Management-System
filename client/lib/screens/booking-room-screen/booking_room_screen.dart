@@ -1,7 +1,7 @@
 import 'package:app/core/constants.dart';
 import 'package:app/core/widgets/common_appbar.dart';
 import 'package:app/core/widgets/primary_button.dart';
-import 'package:app/screens/booking-room-screen/components/body.dart';
+import 'package:app/screens/booking-room-screen/components/booking-room/body.dart';
 import 'package:flutter/material.dart';
 
 class BookingRoomScreen extends StatefulWidget {

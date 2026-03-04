@@ -1,7 +1,7 @@
-import 'package:app/screens/booking-room-screen/components/calendar_picker.dart';
-import 'package:app/screens/booking-room-screen/components/card_title.dart';
-import 'package:app/screens/booking-room-screen/components/hour_picker.dart';
-import 'package:app/screens/booking-room-screen/components/note_section.dart';
+import 'package:app/screens/booking-room-screen/components/booking-room/calendar_picker.dart';
+import 'package:app/screens/booking-room-screen/components/booking-room/card_title.dart';
+import 'package:app/screens/booking-room-screen/components/booking-room/hour_picker.dart';
+import 'package:app/screens/booking-room-screen/components/booking-room/note_section.dart';
 import 'package:flutter/material.dart';
 
 class BookingRoomBody extends StatelessWidget {
