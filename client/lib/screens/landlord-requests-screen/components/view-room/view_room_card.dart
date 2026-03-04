@@ -8,6 +8,7 @@ class ViewRoomCard extends StatelessWidget {
   final String scheduledDate;
   final String? note;
   final String status;
+  final VoidCallback onTap;
 
   const ViewRoomCard({
     super.key,
@@ -15,6 +16,7 @@ class ViewRoomCard extends StatelessWidget {
     required this.phoneNumber,
     required this.roomInfo,
     required this.scheduledDate,
+    required this.onTap,
     this.note,
     this.status = 'Chờ xử lý',
   });
