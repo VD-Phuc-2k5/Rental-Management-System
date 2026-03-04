@@ -12,27 +12,30 @@ class CancelContractBottomBar extends StatelessWidget {
         color: AppColors.white,
         border: Border(top: BorderSide(color: AppColors.slate200, width: 1)),
       ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 52,
-        child: ElevatedButton(
-          onPressed: () {
-            // Xử lý logic gửi yêu cầu
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.blue700,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          height: 52,
+          child: ElevatedButton(
+            onPressed: () {
+              // Xử lý logic gửi yêu cầu
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.blue700,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              elevation: 0,
             ),
-            elevation: 0,
-          ),
-          child: const Text(
-            "Xác nhận gửi yêu cầu",
-            style: TextStyle(
-              color: AppColors.white,
-              fontFamily: "Inter",
-              fontWeight: FontWeight.w700,
-              fontSize: 16,
+            child: const Text(
+              "Xác nhận gửi yêu cầu",
+              style: TextStyle(
+                color: AppColors.white,
+                fontFamily: "Inter",
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+              ),
             ),
           ),
         ),

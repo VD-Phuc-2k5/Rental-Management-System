@@ -27,7 +27,7 @@ class _CancelFormSectionState extends State<CancelFormSection> {
               ? const [
                   TextSpan(
                     text: " *",
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(color: AppColors.red500),
                   ),
                 ]
               : [],
@@ -59,7 +59,7 @@ class _CancelFormSectionState extends State<CancelFormSection> {
           TextFormField(
             readOnly: true,
             decoration: InputDecoration(
-              hintText: "mm/dd/yyyy",
+              hintText: "dd/MM/yyyy",
               hintStyle: const TextStyle(
                 fontFamily: "Inter",
                 fontWeight: FontWeight.w400,
