@@ -57,6 +57,9 @@ class _PasswordInputSectionState extends State<PasswordInputSection> {
               TextField(
                 controller: widget.controller,
                 obscureText: !_isPasswordVisible,
+                enableSuggestions: false,
+                autocorrect: false,
+                keyboardType: TextInputType.visiblePassword,
                 decoration: InputDecoration(
                   hintText: 'Nhập mật khẩu để xác thực',
                   hintStyle: const TextStyle(
