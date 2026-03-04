@@ -2,16 +2,20 @@ import 'package:app/core/constants.dart';
 import 'package:app/screens/transfer-leader-role-screen/transfer_leader_role_screen.dart';
 import 'package:flutter/material.dart';
 
-class Member {
+class RentalContractMember {
   final String name;
   final String role;
   final bool isLeader;
 
-  const Member({required this.name, required this.role, this.isLeader = false});
+  const RentalContractMember({
+    required this.name,
+    required this.role,
+    this.isLeader = false,
+  });
 }
 
 class MemberListSection extends StatelessWidget {
-  final List<Member> members;
+  final List<RentalContractMember> members;
   final VoidCallback onAddMember;
   final void Function(int index) onDeleteMember;
 
