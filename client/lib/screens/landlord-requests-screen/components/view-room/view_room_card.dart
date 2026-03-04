@@ -73,8 +73,10 @@ class ViewRoomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14.0),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14.0),
       margin: const EdgeInsets.only(bottom: 16.0),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -177,6 +179,7 @@ class ViewRoomCard extends StatelessWidget {
             ),
           ],
         ],
+      ),
       ),
     );
   }
