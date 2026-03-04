@@ -16,35 +16,27 @@ class MemberSelectionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RadioGroup<String>(
-      groupValue: selectedMemberId,
-      onChanged: (value) {
-        if (value != null) {
-          onMemberSelected(value);
-        }
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Chọn trưởng phòng mới',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w700,
-              fontSize: 16,
-              color: AppColors.slate900,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Chọn trưởng phòng mới",
+          style: TextStyle(
+            color: AppColors.slate900,
+            fontFamily: "Inter",
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
           ),
-          const SizedBox(height: 16),
-          ...members.map(
-            (member) => _MemberRadioTile(
-              member: member,
-              isSelected: selectedMemberId == member.id,
-              onTap: () => onMemberSelected(member.id),
-            ),
+        ),
+        const SizedBox(height: 16),
+        ...members.map(
+          (member) => _MemberRadioTile(
+            member: member,
+            isSelected: selectedMemberId == member.id,
+            onTap: () => onMemberSelected(member.id),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -162,11 +154,11 @@ class _MemberRadioTile extends StatelessWidget {
                   ],
                 ),
               ),
-              Radio<bool>(
-                value: true,
-                groupValue: isSelected,
-                onChanged: (_) => onTap(),
-                activeColor: AppColors.blue700,
+              Icon(
+                isSelected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+                color: isSelected ? AppColors.blue700 : AppColors.slate300,
               ),
             ],
           ),
