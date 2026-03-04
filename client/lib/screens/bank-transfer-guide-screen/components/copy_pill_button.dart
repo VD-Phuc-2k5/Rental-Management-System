@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:app/core/constants.dart';
 class CopyPillButton extends StatelessWidget {
-  const CopyPillButton({super.key});
+  final String textToCopy;
+  const CopyPillButton({
+    super.key,
+    required this.textToCopy,});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.blue700.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(999),
-      ),
+    return GestureDetector(
+     onTap: () {
+      Clipboard.setData(ClipboardData(text: textToCopy));
+     },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.blue700.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(999),
+        ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: const [
@@ -25,7 +33,7 @@ class CopyPillButton extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      ),),
     );
   }
 }

@@ -8,7 +8,7 @@ class BankTransferCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: Colors.white,
+      color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Column(
         children: const [
@@ -55,7 +55,7 @@ class _BankRow extends StatelessWidget {
             height: 44,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.blue700.withOpacity(0.1),
+              color: AppColors.blue700.withValues(alpha: 0.1),
             ),
             child: const Icon(Icons.account_balance_rounded, color: AppColors.blue700),
           ),
@@ -161,7 +161,7 @@ class _CopyRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          const CopyPillButton(),
+          CopyPillButton(textToCopy: value),
         ],
       ),
     );

@@ -8,9 +8,9 @@ class InfoNoticeBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
       decoration: BoxDecoration(
-        color: AppColors.blue700.withOpacity(0.1),
+        color: AppColors.blue700.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.blue700.withOpacity(0.2)),
+        border: Border.all(color: AppColors.blue700.withValues(alpha: 0.2)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
