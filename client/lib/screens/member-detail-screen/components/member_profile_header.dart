@@ -48,7 +48,7 @@ class MemberProfileHeader extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.blue700.withOpacity(0.1),
+              color: AppColors.blue700.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(999),
             ),
             child: Row(

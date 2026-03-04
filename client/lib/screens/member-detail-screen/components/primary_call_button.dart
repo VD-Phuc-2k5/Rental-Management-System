@@ -18,7 +18,7 @@ class PrimaryCallButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.blue700,
           foregroundColor: AppColors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(48)),
           elevation: 0,
         ),
       ),

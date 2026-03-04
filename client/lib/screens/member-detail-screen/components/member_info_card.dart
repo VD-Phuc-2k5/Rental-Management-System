@@ -49,7 +49,7 @@ class MemberInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: Colors.white,
+      color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 10),
@@ -101,7 +101,7 @@ class _InfoRow extends StatelessWidget {
             height: 42,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.blue700.withOpacity(0.1),
+              color: AppColors.blue700.withValues(alpha: 0.1),
             ),
             child: Icon(data.icon, color: AppColors.blue700),
           ),

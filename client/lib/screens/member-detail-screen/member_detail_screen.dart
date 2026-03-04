@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/widgets/common_appbar.dart';
 
-import 'components/member_profile_header.dart';
-import 'components/primary_call_button.dart';
-import 'components/member_info_card.dart';
-import 'components/id_documents_section.dart';
-import 'components/danger_bottom_button.dart';
-
+import 'package:app/screens/member-detail-screen/components/member_profile_header.dart';
+import 'package:app/screens/member-detail-screen/components/primary_call_button.dart';
+import 'package:app/screens/member-detail-screen/components/member_info_card.dart';
+import 'package:app/screens/member-detail-screen/components/id_documents_section.dart';
+import 'package:app/screens/member-detail-screen/components/danger_bottom_button.dart';
+import 'package:app/core/constants.dart';
 class MemberDetailScreen extends StatelessWidget {
   const MemberDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F5F7),
+      backgroundColor: AppColors.grayBackground,
       appBar: CommonAppBar(
         title: 'Thông tin thành viên',
         actions: [

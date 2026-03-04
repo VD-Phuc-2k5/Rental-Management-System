@@ -11,7 +11,7 @@ class DangerBottomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFF3F5F7),
+      color: AppColors.grayBackground,
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
       child: SafeArea(
         top: false,
@@ -20,7 +20,7 @@ class DangerBottomButton extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: () {},
-            icon: const Icon(Icons.person_remove_alt_1_outlined, color: Colors.white),
+            icon: const Icon(Icons.person_remove_alt_1_outlined, color: AppColors.white),
             label: Text(
               text,
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
