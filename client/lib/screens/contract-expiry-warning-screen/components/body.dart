@@ -4,6 +4,7 @@ import 'package:app/screens/home-screen/home_screen.dart';
 import 'package:app/screens/contract-expiry-warning-screen/components/contract_action_button.dart';
 import 'package:app/screens/contract-expiry-warning-screen/components/contract_expiry_header.dart';
 import 'package:app/screens/contract-expiry-warning-screen/components/countdown_widget.dart';
+import 'package:app/screens/update-rental-contract-screen/update_rental_contract_screen.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
@@ -30,12 +31,8 @@ class Body extends StatelessWidget {
   }
 
   void _handleUpdateContract(BuildContext context) {
-    // TO DO: Navigate to contract update screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Chức năng cập nhật hợp đồng đang được phát triển"),
-        backgroundColor: AppColors.blue700,
-      ),
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const UpdateRentalContractScreen()),
     );
   }
 
