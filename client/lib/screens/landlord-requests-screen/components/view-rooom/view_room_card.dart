@@ -20,12 +20,27 @@ class ViewRoomCard extends StatelessWidget {
   });
 
   String _getInitials(String name) {
-    final parts = name.trim().split(' ');
-    if (parts.length >= 2) {
-      return '${parts[parts.length - 2][0]}${parts[parts.length - 1][0]}'
-          .toUpperCase();
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) {
+      return '?';
     }
-    return parts.isNotEmpty ? parts[0][0].toUpperCase() : '?';
+    final parts = trimmed
+        .split(RegExp(r'\s+'))
+        .where((part) => part.isNotEmpty)
+        .toList();
+    if (parts.isEmpty) {
+      return '?';
+    }
+    if (parts.length >= 2) {
+      final secondLast = parts[parts.length - 2];
+      final last = parts[parts.length - 1];
+      if (secondLast.isEmpty || last.isEmpty) {
+        return '?';
+      }
+      return '${secondLast[0]}${last[0]}'.toUpperCase();
+    }
+    final firstPart = parts[0];
+    return firstPart.isNotEmpty ? firstPart[0].toUpperCase() : '?';
   }
 
   Color _getStatusColor(String status) {
