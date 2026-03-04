@@ -1,15 +1,15 @@
 import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
-class Vehicle {
+class ContractVehicle {
   final String name;
   final String licensePlate;
 
-  const Vehicle({required this.name, required this.licensePlate});
+  const ContractVehicle({required this.name, required this.licensePlate});
 }
 
 class VehicleListSection extends StatelessWidget {
-  final List<Vehicle> vehicles;
+  final List<ContractVehicle> vehicles;
   final VoidCallback onAddVehicle;
   final void Function(int index) onDeleteVehicle;
 
