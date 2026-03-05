@@ -1,3 +1,5 @@
+import 'package:app/core/models/invoice_preview.dart';
+import 'package:app/screens/preview-invoice/preview_invoice_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app/screens/add-electric-water-screen/components/bottom_action_bar.dart';
 import 'package:app/screens/add-electric-water-screen/components/data_preview_table.dart';
@@ -68,6 +70,53 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
     });
   }
 
+  final List<InvoicePreview> _mockInvoices = const [
+    InvoicePreview(
+      id: '1',
+      hostelName: 'Nhà A',
+      roomNumber: '101',
+      rentFee: 3000000,
+      electricKwh: 110,
+      electricFee: 220000,
+      waterM3: 15,
+      waterFee: 75000,
+      serviceFee: 50000,
+    ),
+    InvoicePreview(
+      id: '2',
+      hostelName: 'Nhà A',
+      roomNumber: '102',
+      rentFee: 3200000,
+      electricKwh: 115,
+      electricFee: 230000,
+      waterM3: 12,
+      waterFee: 60000,
+      serviceFee: 50000,
+    ),
+    InvoicePreview(
+      id: '3',
+      hostelName: 'Nhà B',
+      roomNumber: '103',
+      rentFee: 2800000,
+      electricKwh: 50, // lỗi
+      electricFee: 100000,
+      waterM3: 20,
+      waterFee: 100000,
+      serviceFee: 50000,
+    ),
+    InvoicePreview(
+      id: '4',
+      hostelName: 'Nhà B',
+      roomNumber: '201',
+      rentFee: 3500000,
+      electricKwh: 120,
+      electricFee: 240000,
+      waterM3: 15,
+      waterFee: 75000,
+      serviceFee: 50000,
+    ),
+  ];
+
   // ─── Submit (thay bằng API call thực tế) ─────────────────────────────────────
   Future<void> _onNext() async {
     setState(() => _isSubmitting = true);
@@ -78,7 +127,15 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
     setState(() => _isSubmitting = false);
 
     if (mounted) {
-      // TODO: điều hướng sang màn hình tiếp theo
+      Navigator.of(context)
+        .push(MaterialPageRoute(
+          builder: (_) => 
+            PreviewInvoiceScreen(
+              monthLabel: "Tháng 02/2026", 
+              invoices: _mockInvoices
+            )
+        )
+      );
     }
   }
 
@@ -112,7 +169,7 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
         BottomActionBar(
           onNext: _hasData ? _onNext : null,
           isLoading: _isSubmitting,
-          hasErrors: _hasErrors,
+          hasErrors: false,
         ),
       ],
     );
