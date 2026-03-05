@@ -106,7 +106,6 @@ class _TimelineItem extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // left: dot + line
         SizedBox(
           width: 30,
           child: Column(
@@ -121,7 +120,7 @@ class _TimelineItem extends StatelessWidget {
                 Container(
                   width: 2,
                   height: 34,
-                  color: const Color(0xFFBBF7D0), // line xanh nhạt
+                  color: AppColors.green200,
                 ),
             ],
           ),
