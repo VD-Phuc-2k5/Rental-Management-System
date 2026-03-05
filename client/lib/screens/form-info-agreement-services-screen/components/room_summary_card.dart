@@ -15,9 +15,9 @@ class RoomSummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.blue700.withOpacity(0.1),
+        color: AppColors.blue700.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.blue700.withOpacity(0.2)),
+        border: Border.all(color: AppColors.blue700.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -51,7 +51,7 @@ class RoomSummaryCard extends StatelessWidget {
             ),
             child: ClipOval(
               child: Image.asset(
-                'assets/images/apartment.jpg',
+                'assets/images/room_tick.jpg',
                 fit: BoxFit.cover,
               ),
             ),
