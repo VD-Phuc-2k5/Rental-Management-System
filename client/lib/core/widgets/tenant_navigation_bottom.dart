@@ -1,9 +1,10 @@
+import 'package:app/core/constants.dart';
 import 'package:app/screens/booking-room-screen/my_booking_room_screen.dart';
+import 'package:app/screens/home-screen/home_screen.dart';
+import 'package:app/screens/profile-screen/profile_screen.dart';
+import 'package:app/screens/tenant-invoice-list-screen/tenant_invoice_list_screen.dart';
 import 'package:app/screens/tenant-maintenance-request-screen/tenant_maintenance_request_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/screens/home-screen/home_screen.dart';
-import 'package:app/screens/tenant-invoice-list-screen/tenant_invoice_list_screen.dart';
 
 class TenantNavigationBottom extends StatelessWidget {
   final int currentIndex;
@@ -35,14 +36,14 @@ class TenantNavigationBottom extends StatelessWidget {
 
     switch (index) {
       case 0:
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const HomeScreen()));
         break;
       case 1:
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const MyBookingRoomScreen()),
-        );
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const MyBookingRoomScreen()));
         break;
       case 2:
         Navigator.of(context).push(
@@ -55,6 +56,11 @@ class TenantNavigationBottom extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const TenantInvoiceListScreen()),
         );
+        break;
+      case 4:
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const ProfileScreen()));
         break;
       default:
         Navigator.of(
