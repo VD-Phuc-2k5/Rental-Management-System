@@ -1,6 +1,7 @@
 import "package:app/screens/tenant-maintenance-request-screen/components/request_form.dart";
 import "package:app/screens/tenant-maintenance-request-screen/components/tab_header.dart";
 import "package:flutter/material.dart";
+import 'package:app/screens/history-progress-reports-screen/components/history_requests_view.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key});
@@ -26,7 +27,7 @@ class _BodyState extends State<Body> {
           tabs: const ["Yêu cầu sửa chữa", "Lịch sử yêu cầu"],
         ),
         Expanded(
-          child: _selectedTabIndex == 0 ? const RequestForm() : const Text(""),
+          child: _selectedTabIndex == 0 ? const RequestForm() : const HistoryRequestsView(),
         ),
       ],
     );
