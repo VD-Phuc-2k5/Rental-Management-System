@@ -1,5 +1,6 @@
 import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ChecklistSection extends StatefulWidget {
   const ChecklistSection({super.key});
@@ -158,6 +159,9 @@ class _ChecklistSectionState extends State<ChecklistSection> {
                             color: AppColors.slate900,
                           ),
                           keyboardType: TextInputType.number,
+
+                          inputFormatters: [CurrencyInputFormatter()],
+
                           decoration: InputDecoration(
                             suffixText: " đ",
                             suffixStyle: const TextStyle(
@@ -193,6 +197,35 @@ class _ChecklistSectionState extends State<ChecklistSection> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class CurrencyInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) {
+      return newValue.copyWith(text: '');
+    }
+
+    String digitsOnly = newValue.text.replaceAll(RegExp(r'[^\d]'), '');
+    if (digitsOnly.isEmpty) return newValue.copyWith(text: '');
+
+    String formatted = '';
+    int length = digitsOnly.length;
+    for (int i = 0; i < length; i++) {
+      if (i > 0 && (length - i) % 3 == 0) {
+        formatted += '.';
+      }
+      formatted += digitsOnly[i];
+    }
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }
