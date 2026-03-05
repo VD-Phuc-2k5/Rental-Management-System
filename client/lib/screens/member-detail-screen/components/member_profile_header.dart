@@ -44,7 +44,7 @@ class MemberProfileHeader extends StatelessWidget {
             ),
             child: ClipOval(
               child: Image(
-                image: avatar ?? const AssetImage('assets/images/profile_avatar.png'),
+                image: avatar ?? const AssetImage('assets/images/profile_avatar_member.png'),
                 width: 92,
                 height: 92,
                 fit: BoxFit.cover,
