@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
-import 'components/contract_preview_card.dart';
-import 'components/deposit_section.dart';
-import 'components/contract_bottom_bar.dart';
+import 'package:app/screens/contract-preview-screen/components/contract_preview_card.dart';
+import 'package:app/screens/contract-preview-screen/components/deposit_section.dart';
+import 'package:app/screens/contract-preview-screen/components/contract_bottom_bar.dart';
+import 'package:app/screens/contract-status-screen/contract_status_screen.dart';
 
 class ContractPreviewScreen extends StatelessWidget {
   const ContractPreviewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    void _goNext(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ContractStatusScreen()),
+    );
+  }
     return Scaffold(
       backgroundColor: const Color(0xFFF3F5F7),
       appBar: AppBar(
@@ -40,7 +47,7 @@ class ContractPreviewScreen extends StatelessWidget {
       ),
       bottomNavigationBar: ContractBottomBar(
         text: 'Gửi hợp đồng cho khách',
-        onNext: () {},
+        onNext: () => _goNext(context),
       ),
     );
   }

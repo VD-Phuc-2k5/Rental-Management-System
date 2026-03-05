@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 import 'package:app/core/format_currency.dart';
+import 'package:app/screens/deposit-payment-method-screen/deposit_payment_method_screen.dart';
 class DepositPaymentCard extends StatelessWidget {
   const DepositPaymentCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    void _goNext(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const DepositPaymentMethodScreen()),
+    );
+  }
     final int depositAmount = 5000000;
     return Card(
       elevation: 0,
@@ -55,7 +62,7 @@ class DepositPaymentCard extends StatelessWidget {
               height: 54,
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () => _goNext(context),
                 icon: const Icon(Icons.credit_card, color: AppColors.white),
                 label: const Text(
                   'Thanh toán tiền cọc ngay',
