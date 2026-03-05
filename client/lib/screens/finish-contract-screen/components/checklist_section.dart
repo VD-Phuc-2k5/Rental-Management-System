@@ -66,9 +66,8 @@ class _ChecklistSectionState extends State<ChecklistSection> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                SizedBox(
-                  height: 24,
-                  width: 44,
+                Transform.scale(
+                  scale: 0.8,
                   child: Switch(
                     value: isGood,
                     onChanged: onChanged,
