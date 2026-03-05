@@ -5,16 +5,16 @@ import 'package:app/screens/preview-invoice/components/invoice_bottom_bar.dart';
 import 'package:app/screens/preview-invoice/components/invoice_card.dart';
 import 'package:app/core/models/invoice_preview.dart';
 
-class PreviewContractBody extends StatefulWidget {
+class PreviewInvoceBody extends StatefulWidget {
   final List<InvoicePreview> invoices;
 
-  const PreviewContractBody({super.key, required this.invoices});
+  const PreviewInvoceBody({super.key, required this.invoices});
 
   @override
-  State<PreviewContractBody> createState() => _PreviewContractBodyState();
+  State<PreviewInvoceBody> createState() => _PreviewInvoceBodyState();
 }
 
-class _PreviewContractBodyState extends State<PreviewContractBody> {
+class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
   late final Set<String> _selectedIds;
   bool _isSending = false;
 

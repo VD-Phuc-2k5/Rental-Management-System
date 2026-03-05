@@ -39,7 +39,7 @@ class PreviewInvoiceScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: PreviewContractBody(invoices: invoices),
+      body: PreviewInvoceBody(invoices: invoices),
     );
   }
 }
