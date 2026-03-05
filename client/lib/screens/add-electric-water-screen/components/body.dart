@@ -169,7 +169,7 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
         BottomActionBar(
           onNext: _hasData ? _onNext : null,
           isLoading: _isSubmitting,
-          hasErrors: false,
+          hasErrors: _hasErrors,
         ),
       ],
     );
