@@ -24,6 +24,7 @@ flutter:
     - assets/images/room-list-screen/
     - assets/images/add-room-screen/
     - assets/images/room-details-empty-screen/
+    - assets/images/finish-contract-screen/
   fonts:
     - family: Inter
       fonts:

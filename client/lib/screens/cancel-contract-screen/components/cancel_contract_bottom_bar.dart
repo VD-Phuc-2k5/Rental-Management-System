@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/finish-contract-screen/finish_contract_screen.dart';
 import 'package:flutter/material.dart';
 
 class CancelContractBottomBar extends StatelessWidget {
@@ -19,7 +20,12 @@ class CancelContractBottomBar extends StatelessWidget {
           height: 52,
           child: ElevatedButton(
             onPressed: () {
-              // Xử lý logic gửi yêu cầu
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FinishContractScreen(),
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.blue700,
