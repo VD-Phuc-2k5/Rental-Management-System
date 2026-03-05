@@ -1,8 +1,15 @@
 import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
-class UpdatePostBottomBar extends StatelessWidget {
-  const UpdatePostBottomBar({super.key});
+class PostFormBottomBar extends StatelessWidget {
+  final String submitLabel;
+  final VoidCallback? onSubmit;
+
+  const PostFormBottomBar({
+    super.key,
+    required this.submitLabel,
+    this.onSubmit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +23,7 @@ class UpdatePostBottomBar extends StatelessWidget {
             width: double.infinity,
             height: 56,
             child: ElevatedButton(
-              onPressed: () {
-                // Xử lý logic cập nhật sau
-              },
+              onPressed: onSubmit,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.blue700,
                 shape: RoundedRectangleBorder(
@@ -26,9 +31,9 @@ class UpdatePostBottomBar extends StatelessWidget {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                "Cập nhật bài đăng",
-                style: TextStyle(
+              child: Text(
+                submitLabel,
+                style: const TextStyle(
                   color: AppColors.white,
                   fontFamily: "Public Sans",
                   fontWeight: FontWeight.w700,
@@ -42,9 +47,7 @@ class UpdatePostBottomBar extends StatelessWidget {
             width: double.infinity,
             height: 56,
             child: OutlinedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: () => Navigator.pop(context),
               style: OutlinedButton.styleFrom(
                 backgroundColor: AppColors.white,
                 side: const BorderSide(color: AppColors.slate200, width: 2),

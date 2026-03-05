@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'section_header.dart';
 
 class DescriptionSection extends StatelessWidget {
-  const DescriptionSection({super.key});
+  final String? initialDescription;
+
+  const DescriptionSection({super.key, this.initialDescription});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,8 @@ class DescriptionSection extends StatelessWidget {
               ),
             ],
           ),
-          child: TextField(
+          child: TextFormField(
+            initialValue: initialDescription,
             maxLines: 4,
             decoration: InputDecoration(
               hintText:

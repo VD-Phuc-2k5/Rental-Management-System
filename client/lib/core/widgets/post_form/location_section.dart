@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'section_header.dart';
 
 class LocationSection extends StatelessWidget {
-  const LocationSection({super.key});
+  final String? initialAddress;
+
+  const LocationSection({super.key, this.initialAddress});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +28,7 @@ class LocationSection extends StatelessWidget {
             ],
           ),
           child: TextFormField(
-            initialValue:
-                "Khu A, 123 Nguyễn Trãi, Quận 5, thành phố Hồ Chí Minh",
+            initialValue: initialAddress,
             maxLines: null,
             keyboardType: TextInputType.multiline,
             style: const TextStyle(
@@ -37,6 +38,13 @@ class LocationSection extends StatelessWidget {
               color: AppColors.slate700,
             ),
             decoration: InputDecoration(
+              hintText: "Nhập địa chỉ phòng trọ",
+              hintStyle: const TextStyle(
+                fontFamily: "Public Sans",
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                color: AppColors.slate400,
+              ),
               prefixIcon: const Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,

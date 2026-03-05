@@ -4,7 +4,20 @@ import 'package:flutter/material.dart';
 import 'section_header.dart';
 
 class BasicInfoSection extends StatelessWidget {
-  const BasicInfoSection({super.key});
+  final String? initialTitle;
+  final String? initialArea;
+  final String? initialPrice;
+  final String? initialElectric;
+  final String? initialWater;
+
+  const BasicInfoSection({
+    super.key,
+    this.initialTitle,
+    this.initialArea,
+    this.initialPrice,
+    this.initialElectric,
+    this.initialWater,
+  });
 
   Widget _buildTextField(
     String label, {
@@ -125,6 +138,7 @@ class BasicInfoSection extends StatelessWidget {
         _buildTextField(
           "Tiêu đề bài đăng",
           hintText: "Ví dụ: Phòng trọ cao cấp Q.1",
+          initialValue: initialTitle,
           isRequired: true,
         ),
         const SizedBox(height: 16),
@@ -133,7 +147,8 @@ class BasicInfoSection extends StatelessWidget {
             Expanded(
               child: _buildTextField(
                 "Diện tích",
-                initialValue: "25",
+                hintText: "0",
+                initialValue: initialArea,
                 suffixText: "m²",
               ),
             ),
@@ -141,7 +156,8 @@ class BasicInfoSection extends StatelessWidget {
             Expanded(
               child: _buildTextField(
                 "Giá thuê",
-                initialValue: "3.500.000",
+                hintText: "0",
+                initialValue: initialPrice,
                 suffixText: "VNĐ",
               ),
             ),
@@ -153,7 +169,8 @@ class BasicInfoSection extends StatelessWidget {
             Expanded(
               child: _buildTextField(
                 "Giá điện",
-                initialValue: "3.500",
+                hintText: "0",
+                initialValue: initialElectric,
                 suffixText: "đ/KWh",
               ),
             ),
@@ -161,7 +178,8 @@ class BasicInfoSection extends StatelessWidget {
             Expanded(
               child: _buildTextField(
                 "Giá nước",
-                initialValue: "15.000",
+                hintText: "0",
+                initialValue: initialWater,
                 suffixText: "đ/m3",
               ),
             ),

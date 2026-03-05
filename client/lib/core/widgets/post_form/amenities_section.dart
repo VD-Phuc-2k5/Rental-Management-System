@@ -4,14 +4,19 @@ import 'package:flutter/material.dart';
 import 'section_header.dart';
 
 class AmenitiesSection extends StatefulWidget {
-  const AmenitiesSection({super.key});
+  final Set<String> initialSelectedAmenities;
+
+  const AmenitiesSection({
+    super.key,
+    this.initialSelectedAmenities = const {},
+  });
 
   @override
   State<AmenitiesSection> createState() => _AmenitiesSectionState();
 }
 
 class _AmenitiesSectionState extends State<AmenitiesSection> {
-  final Set<String> _selectedAmenities = {"Wifi"};
+  late final Set<String> _selectedAmenities;
 
   final List<Map<String, dynamic>> _amenitiesList = [
     {"label": "Wifi", "icon": Icons.wifi},
@@ -21,6 +26,12 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
     {"label": "Giờ giấc tự do", "icon": Icons.access_time},
     {"label": "Không chung chủ", "icon": Icons.key_outlined},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedAmenities = Set.from(widget.initialSelectedAmenities);
+  }
 
   Widget _buildAmenityChip(String label, IconData icon) {
     final isSelected = _selectedAmenities.contains(label);
