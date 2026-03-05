@@ -88,6 +88,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     child: Text(
                       badge!.text,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                       style: TextStyle(
                         color: badge!.textColor,
                         fontSize: 12,
