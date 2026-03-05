@@ -3,7 +3,7 @@ import 'package:app/core/constants.dart';
 import 'package:app/core/format_currency.dart';
 class TransactionSummaryCard extends StatelessWidget {
   final String? bankName;
-  final double? amount;
+  final int? amount;
   final String? transferContent;
   const TransactionSummaryCard({
     super.key,
@@ -14,7 +14,7 @@ class TransactionSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayAmount = amount == null ? '' : formatVND(amount!.round());
+    final displayAmount = amount == null ? '' : formatVND(amount!);
     return Card(
       elevation: 0,
       color: AppColors.white,
@@ -48,7 +48,7 @@ class TransactionSummaryCard extends StatelessWidget {
                       ),
                       SizedBox(height: 3),
                       Text(
-                        bankName ?? 'lỗi',
+                        (bankName == null || bankName!.trim().isEmpty) ? '—' : bankName!,
                         style: TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -75,7 +75,7 @@ class TransactionSummaryCard extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      transferContent ?? 'lỗi',
+                       (transferContent == null || transferContent!.trim().isEmpty) ? '—' : transferContent!,
                       style: TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w700),
                     ),
                   ),),
