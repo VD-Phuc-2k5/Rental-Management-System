@@ -8,14 +8,14 @@ import 'package:app/core/widgets/post_form/location_section.dart';
 import 'package:app/core/widgets/post_form/post_form_bottom_bar.dart';
 import 'package:flutter/material.dart';
 
-class UpdatePostScreen extends StatelessWidget {
-  const UpdatePostScreen({super.key});
+class CreateNewPostScreen extends StatelessWidget {
+  const CreateNewPostScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.gray25,
-      appBar: const CommonAppBar(title: "Cập nhật bài đăng"),
+      appBar: const CommonAppBar(title: "Đăng tin mới"),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -23,25 +23,15 @@ class UpdatePostScreen extends StatelessWidget {
           children: const [
             ImageUploadSection(),
             SizedBox(height: 24),
-            BasicInfoSection(
-              initialArea: "25",
-              initialPrice: "3.500.000",
-              initialElectric: "3.500",
-              initialWater: "15.000",
-            ),
+            BasicInfoSection(),
             SizedBox(height: 24),
-            LocationSection(
-              initialAddress:
-                  "Khu A, 123 Nguyễn Trãi, Quận 5, thành phố Hồ Chí Minh",
-            ),
+            LocationSection(),
             SizedBox(height: 24),
-            AmenitiesSection(
-              initialSelectedAmenities: {"Wifi"},
-            ),
+            AmenitiesSection(),
             SizedBox(height: 24),
             DescriptionSection(),
             SizedBox(height: 32),
-            PostFormBottomBar(submitLabel: "Cập nhật bài đăng"),
+            PostFormBottomBar(submitLabel: "Đăng tin mới"),
           ],
         ),
       ),
