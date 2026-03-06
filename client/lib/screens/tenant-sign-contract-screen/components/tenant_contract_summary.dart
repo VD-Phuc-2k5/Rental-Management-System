@@ -51,10 +51,15 @@ class _HeroImage extends StatelessWidget {
           children: [
              Positioned.fill(
               child: Image.asset(
-                'assets/images/apartment.jpg',
+                'assets/images/room_sign_contract.png',
                 fit: BoxFit.cover,
               ),
             ),
+            Positioned.fill(
+            child: Container(
+            color: Colors.black.withValues(alpha: 0.25),
+              ),
+           ),
             Positioned(
               left: 14,
               bottom: 14,

@@ -9,7 +9,7 @@ class ImportantNoticeCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.blue700.withValues(alpha: 0.1),
-        shape: BoxShape.circle,
+        borderRadius: BorderRadius.circular(999),
         border: Border.all(color: AppColors.blue700.withValues(alpha: 0.2)),
       ),
       child: Row(
