@@ -14,7 +14,7 @@ class HistoryRequestsView extends StatelessWidget {
         title: 'Vòi nước rò rỉ',
         description: 'Nước chảy liên tục ở bồn rửa mặt, g...',
         location: '',
-        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+        createdAt: DateTime(2026, 3, 5, 10, 0),
         priority: Priority.high,
         status: RequestStatus.pending,
         imageUrls: const [
@@ -26,7 +26,7 @@ class HistoryRequestsView extends StatelessWidget {
         title: 'Hỏng khoá cửa chính',
         description: 'Khoá bị kẹt, rất khó mở từ bên ngoài...',
         location: '',
-        createdAt: DateTime.now().subtract(const Duration(hours: 5)),
+        createdAt: DateTime(2026, 3, 5, 12, 0),
         priority: Priority.medium,
         status: RequestStatus.pending,
         imageUrls: const [
@@ -38,21 +38,16 @@ class HistoryRequestsView extends StatelessWidget {
         title: 'Thay bóng đèn hành lang',
         description: 'Bóng đèn bị cháy sáng nay.',
         location: '',
-        createdAt: DateTime.now().subtract(const Duration(days: 1)),
+        createdAt: DateTime(2026, 3, 5, 1, 0),
         priority: Priority.low,
         status: RequestStatus.processing,
         imageUrls: const [],
       ),
     ];
-
-    if (historyRequests.isEmpty) {
-      return const Center(child: Text('Chưa có dữ liệu'));
-    }
-
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+    
+    return ListView.builder(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 120),
       itemCount: historyRequests.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, i) => MaintenanceRequestCard(
         request: historyRequests[i],
         onTap: () {},
