@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/landlord-payment-history/landlord_payment_history_screen.dart';
 import 'package:app/screens/landlord-requests-screen/landlord_requests_screen.dart';
 import 'package:app/screens/main-tab-screen/components/hostel_management_wrapper.dart';
 import 'package:app/screens/main-tab-screen/components/room_management_wrapper.dart';
@@ -57,6 +58,13 @@ class LandlordNavigationBottom extends StatelessWidget {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (_) => const LandlordRequestsScreen(),
+          ),
+        );
+        break;
+      case 3:
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => const LandlordPaymentHistoryScreen(),
           ),
         );
         break;
