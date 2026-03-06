@@ -25,7 +25,7 @@ class TenantSignContractScreen extends StatelessWidget {
 
             Center(
               child: Text(
-                'HỢP ĐỒNG THUÊ NHÀ',
+                'HỢP ĐỒNG THUÊ TRỌ',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 20,

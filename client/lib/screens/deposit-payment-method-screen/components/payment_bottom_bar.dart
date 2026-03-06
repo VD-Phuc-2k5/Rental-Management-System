@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:app/screens/bank-transfer-guide-screen/bank_transfer_guide_screen.dart';
 class PaymentBottomBar extends StatelessWidget {
   const PaymentBottomBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+      void _goNext(BuildContext context) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const BankTransferGuideScreen()),
+      );
+    }
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -26,7 +33,7 @@ class PaymentBottomBar extends StatelessWidget {
               height: 54,
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => _goNext(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.blue700,
                   foregroundColor: AppColors.white,

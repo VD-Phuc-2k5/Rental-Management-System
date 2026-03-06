@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
+import 'package:app/screens/tenant-sign-contract-screen/tenant_sign_contract_screen.dart';
 class ContractPreviewCard extends StatelessWidget {
   const ContractPreviewCard({super.key});
 
@@ -79,7 +80,7 @@ class _ContractHeader extends StatelessWidget {
   child: Column(
     children: const [
       Text(
-        'HỢP ĐỒNG THUÊ NHÀ',
+        'HỢP ĐỒNG THUÊ TRỌ',
         textAlign: TextAlign.center,
         style: TextStyle(
           color: AppColors.blue800,
@@ -225,6 +226,12 @@ class _Signatures extends StatelessWidget {
     );
   }
 }
+void _goNext(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const TenantSignContractScreen()),
+    );
+  }
 
 class _SignatureBox extends StatelessWidget {
   final String title;
@@ -245,20 +252,42 @@ class _SignatureBox extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        Container(
-          height: 86,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.slate300,
-              width: 2,
-              style: BorderStyle.solid,
+        Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const TenantSignContractScreen(),
+                ),
+              );
+            },
+            child: Container(
+              height: 86,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppColors.slate300,
+                  width: 2,
+                  style: BorderStyle.solid,
+                ),
+                color: AppColors.slate50,
+              ),
+              child: const Center(
+                child: Text(
+                  'Chưa ký',
+                  style: TextStyle(
+                    color: AppColors.slate400,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
             ),
-            color: AppColors.slate50,
-          ),
-          child: const Center(
-            child: Text('Chưa ký', style: TextStyle(color: AppColors.slate400, fontWeight: FontWeight.w400,fontSize: 12,)),
           ),
         ),
         const SizedBox(height: 10),
