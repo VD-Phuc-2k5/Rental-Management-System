@@ -257,7 +257,14 @@ class _SignatureBox extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: () => _goNext(context),
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const TenantSignContractScreen(),
+                ),
+              );
+            },
             child: Container(
               height: 86,
               width: double.infinity,

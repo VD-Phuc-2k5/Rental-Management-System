@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 
 class ComplaintIssueInfoCard extends StatelessWidget {
-  const ComplaintIssueInfoCard({super.key});
+  final String issueTitle;
+  final String roomName;
+  final String statusLabel;
+  const ComplaintIssueInfoCard({
+    super.key,
+    required this.issueTitle,
+    required this.roomName,
+    required this.statusLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +23,7 @@ class ComplaintIssueInfoCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -30,7 +38,7 @@ class ComplaintIssueInfoCard extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Hỏng vòi nước',
+                    issueTitle,
                     style: TextStyle(
                       color: AppColors.blue700,
                       fontWeight: FontWeight.w400,
@@ -39,7 +47,7 @@ class ComplaintIssueInfoCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Phòng 302 - Nhà A1',
+                    roomName,
                     style: TextStyle(
                       color: AppColors.gray600,
                       fontWeight: FontWeight.w400,
@@ -54,8 +62,8 @@ class ComplaintIssueInfoCard extends StatelessWidget {
               //   color: const Color(0xFFF1F5F9),
               //   borderRadius: BorderRadius.circular(999),
               // ),
-              child: const Text(
-                'READ-ONLY',
+              child: Text(
+                statusLabel,
                 style: TextStyle(
                   color: AppColors.gray600,
                   fontWeight: FontWeight.w700,

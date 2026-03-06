@@ -28,7 +28,7 @@ class ComplaintBottomBar extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.red500,
               foregroundColor: AppColors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
               elevation: 0,
             ),
             child: const Text(

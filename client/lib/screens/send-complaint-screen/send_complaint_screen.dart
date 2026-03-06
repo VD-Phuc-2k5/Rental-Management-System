@@ -21,7 +21,11 @@ class SendComplaintScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
-            ComplaintIssueInfoCard(),
+            ComplaintIssueInfoCard(
+              issueTitle: 'Hỏng vòi nước',
+              roomName: 'Phòng 302 - Nhà A1',
+              statusLabel: 'READ-ONLY',
+            ),
             SizedBox(height: 16),
 
             ComplaintReasonField(),

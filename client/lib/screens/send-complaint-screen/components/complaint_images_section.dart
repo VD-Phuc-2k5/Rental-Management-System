@@ -20,11 +20,11 @@ class ComplaintImagesSection extends StatelessWidget {
         const SizedBox(height: 12),
         Row(
           children: [
-            Expanded(child: _UploadBox(onPressed: () {})),
+            const Expanded(child: _UploadBox(onPressed: null)),
             SizedBox(width: 12),
-            Expanded(child: _UploadBox(onPressed: () {})),
+            const Expanded(child: _UploadBox(onPressed: null)),
             SizedBox(width: 12),
-            Expanded(child: _UploadBox(onPressed: () {})),
+            const Expanded(child: _UploadBox(onPressed: null)),
           ],
         ),
         const SizedBox(height: 10),
