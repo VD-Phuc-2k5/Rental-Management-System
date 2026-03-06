@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/landlord-requests-screen/landlord_requests_screen.dart';
 import 'package:flutter/material.dart';
 
 class PendingRequestsSection extends StatelessWidget {
@@ -130,7 +131,12 @@ class PendingRequestsSection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LandlordRequestsScreen()),
+                    );
+                  },
                   icon: const Icon(
                     Icons.flash_on,
                     size: 16,

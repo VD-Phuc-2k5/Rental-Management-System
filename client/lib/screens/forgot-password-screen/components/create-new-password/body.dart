@@ -1,6 +1,7 @@
 import 'package:app/core/widgets/primary_button.dart';
 import 'package:app/screens/forgot-password-screen/components/create-new-password/create_new_pass_form.dart';
 import 'package:app/screens/forgot-password-screen/components/create-new-password/create_new_pass_intruction.dart';
+import 'package:app/screens/home-screen/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class CreateNewPasswordBody extends StatefulWidget {
@@ -36,6 +37,14 @@ class _CreateNewPasswordBodyState extends State<CreateNewPasswordBody> {
 
     try {
       await widget.onSubmit(_passwordController.text, _confirmPasswordController.text);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Mật khẩu đã được cập nhật thành công!')),
+        );
+        Navigator.push(context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

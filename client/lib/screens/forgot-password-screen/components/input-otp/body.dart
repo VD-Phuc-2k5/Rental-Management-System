@@ -2,6 +2,7 @@ import 'package:app/screens/forgot-password-screen/components/input-otp/otp_inpu
 import 'package:app/screens/forgot-password-screen/components/input-otp/otp_instruction_text.dart';
 import 'package:app/screens/forgot-password-screen/components/input-otp/resend_otp_row.dart';
 import 'package:app/screens/forgot-password-screen/components/input-otp/verify_otp_button.dart';
+import 'package:app/screens/forgot-password-screen/create_new_password_screen.dart';
 import 'package:flutter/material.dart';
 
 class InputOtpBody extends StatefulWidget {
@@ -28,7 +29,10 @@ class _InputOtpBodyState extends State<InputOtpBody> {
 
   void _handleVerify() {
     if (!_isOtpComplete) return;
-    // TODO: navigate to reset-password screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CreateNewPasswordScreen()),
+    );
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Mã OTP đã được xác nhận!')),
     );
@@ -71,6 +75,7 @@ class _InputOtpBodyState extends State<InputOtpBody> {
                 VerifyOtpButton(
                   onPressed: _isOtpComplete ? _handleVerify : null,
                 ),
+
                 const SizedBox(height: 32),
               ],
             ),

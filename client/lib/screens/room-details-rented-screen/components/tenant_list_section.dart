@@ -1,10 +1,12 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/member-detail-screen/member_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class TenantListSection extends StatelessWidget {
   const TenantListSection({super.key});
 
   Widget _buildTenantRow(
+    BuildContext context,
     String name,
     String phone,
     String role,
@@ -12,7 +14,12 @@ class TenantListSection extends StatelessWidget {
   ) {
     String initialLetter = name.trim().split(' ').last[0].toUpperCase();
 
-    return Row(
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const MemberDetailScreen()),
+      ),
+      child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
@@ -94,6 +101,7 @@ class TenantListSection extends StatelessWidget {
           child: Icon(Icons.chevron_right, color: AppColors.slate300, size: 24),
         ),
       ],
+    ),
     );
   }
 
@@ -115,9 +123,9 @@ class TenantListSection extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildTenantRow("Nguyễn Văn A", "0912 345 678", "Trưởng phòng", true),
+          _buildTenantRow(context, "Nguyễn Văn A", "0912 345 678", "Trưởng phòng", true),
           const SizedBox(height: 16),
-          _buildTenantRow("Nguyễn Văn B", "0912 345 679", "Thành viên", false),
+          _buildTenantRow(context, "Nguyễn Văn B", "0912 345 679", "Thành viên", false),
           const SizedBox(height: 16),
           const Divider(color: AppColors.slate100, height: 1),
           const SizedBox(height: 16),
