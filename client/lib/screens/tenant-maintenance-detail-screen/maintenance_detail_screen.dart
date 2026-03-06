@@ -24,13 +24,19 @@ class TenantMaintenanceDetailScreen extends StatelessWidget {
             MaintenanceNoticeBanner(),
             SizedBox(height: 14),
 
-            WorkerInfoCard(),
+            WorkerInfoCard(
+              workerName: 'Nguyễn Văn A',
+              scheduledTime: '14:00, 20/10/2023',
+            ),
             SizedBox(height: 14),
 
             ProcessingTimelineCard(),
             SizedBox(height: 14),
 
-            IssueDetailCard(),
+            IssueDetailCard(
+              issueImage1: 'assets/images/maintenance_1.jpg',
+              issueImage2: 'assets/images/room_sign_contract.png',
+            )
           ],
         ),
       ),

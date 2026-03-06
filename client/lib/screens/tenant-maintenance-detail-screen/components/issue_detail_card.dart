@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 
 class IssueDetailCard extends StatelessWidget {
-  const IssueDetailCard({super.key});
+  final String issueImage1;
+  final String issueImage2;
+  const IssueDetailCard({
+    super.key,
+    required this.issueImage1,
+    required this.issueImage2,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +32,13 @@ class IssueDetailCard extends StatelessWidget {
             const SizedBox(height: 12),
 
             Row(
-              children: const [
+              children: [
                 Expanded(
-                  child: _PhotoTile(assetPath: 'assets/images/maintenance_1.jpg'),
+                  child: _PhotoTile(assetPath: issueImage1),
                 ),
                 SizedBox(width: 12),
                 Expanded(
-                  child: _PhotoTile(assetPath: 'assets/images/room_sign_contract.png'),
+                  child: _PhotoTile(assetPath: issueImage2),
                 ),
               ],
             ),

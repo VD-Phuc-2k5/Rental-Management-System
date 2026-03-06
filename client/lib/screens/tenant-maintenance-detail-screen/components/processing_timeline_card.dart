@@ -101,8 +101,6 @@ class _TimelineItem extends StatelessWidget {
             ? AppColors.blue950
             : AppColors.gray400;
 
-    final subColor = isCurrent ? AppColors.slate500 : AppColors.slate500;
-
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -146,7 +144,7 @@ class _TimelineItem extends StatelessWidget {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: isCurrent ? AppColors.slate500 : subColor,
+                      color: AppColors.slate500,
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                       height: 1.2,

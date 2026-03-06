@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:app/core/constants.dart';
 
 class WorkerInfoCard extends StatelessWidget {
-  const WorkerInfoCard({super.key});
+  final String workerName;
+  final String scheduledTime;
+  const WorkerInfoCard({
+    super.key,
+    required this.workerName,
+    required this.scheduledTime,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +35,12 @@ class WorkerInfoCard extends StatelessWidget {
               children: [
                 const _Avatar(),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Nguyễn Văn A',
+                        workerName,
                         style: TextStyle(
                           color: AppColors.blue950,
                           fontWeight: FontWeight.w600,
@@ -47,7 +53,7 @@ class WorkerInfoCard extends StatelessWidget {
                           Icon(Icons.access_time, size: 16, color: AppColors.slate500),
                           SizedBox(width: 6),
                           Text(
-                            '14:00, 20/10/2023',
+                            scheduledTime,
                             style: TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w400),
                           ),
                         ],
@@ -55,14 +61,22 @@ class WorkerInfoCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.green50,
+                Semantics(
+                  button: true,
+                  label: 'Gọi thợ',
+                  child: InkWell(
+                    onTap: () {},
+                    customBorder: const CircleBorder(),
+                    child: Container(
+                      width: 42,
+                      height: 42,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.green50,
+                      ),
+                      child: const Icon(Icons.call, color: AppColors.green600),
+                    ),
                   ),
-                  child: const Icon(Icons.call, color: AppColors.green600),
                 ),
               ],
             ),
