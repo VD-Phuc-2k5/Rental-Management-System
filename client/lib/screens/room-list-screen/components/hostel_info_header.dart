@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/add-electric-water-screen/add_electric_water_screen.dart';
 import 'package:flutter/material.dart';
 
 class HostelInfoHeader extends StatelessWidget {
@@ -108,7 +109,14 @@ class HostelInfoHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddElectricWaterScreen(),
+                  ),
+                );
+              },
               icon: const Icon(
                 Icons.upload_file_outlined,
                 color: AppColors.white,

@@ -1,5 +1,6 @@
 import 'package:app/screens/home-screen/components/intro_room_card.dart';
 import 'package:flutter/material.dart';
+import 'package:app/screens/room-detail-screen/room_detail_screen.dart';
 
 class IntroRoomSection extends StatelessWidget {
   const IntroRoomSection({super.key});
@@ -45,8 +46,12 @@ class IntroRoomSection extends StatelessWidget {
               price: room["price"] ?? "Giá không xác định",
               imageUrl: room["imageUrl"],
               onTap: () {
-                // TODO: Navigate đến màn hình chi tiết phòng
-                
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RoomDetailScreen(),
+                  ),
+                );
               },
             ),
           ),
