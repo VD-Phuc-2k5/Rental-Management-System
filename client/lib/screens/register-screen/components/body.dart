@@ -1,4 +1,5 @@
 import 'package:app/core/constants.dart';
+import 'package:app/screens/login-screen/login_screen.dart';
 import 'package:app/screens/register-screen/components/register_form.dart';
 import 'package:flutter/material.dart';
 import 'package:app/screens/register-screen/components/register_logo.dart';
@@ -14,8 +15,11 @@ class RegisterBody extends StatelessWidget {
     // TODO: Implement register logic
   }
 
-  void _handleOnLoginPressed() {
-    // TODO: Navigate to login screen
+  void _handleOnLoginPressed(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
   }
 
   @override
@@ -72,7 +76,7 @@ class RegisterBody extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: RegisterForm(
                     onSubmit: _handleRegister,
-                    onLoginPressed: _handleOnLoginPressed,
+                    onLoginPressed: () => _handleOnLoginPressed(context),
                   ),
                 ),
               ],

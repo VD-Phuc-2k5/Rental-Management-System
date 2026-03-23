@@ -1,3 +1,5 @@
+import 'package:app/screens/forgot-password-screen/forgot_password_screen.dart';
+import 'package:app/screens/register-screen/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app/screens/login-screen/components/login_background.dart';
 import 'package:app/screens/login-screen/components/login_logo.dart';
@@ -13,12 +15,22 @@ class LoginScreenBody extends StatelessWidget {
     // TODO: Implement login logic
   }
 
-  void _handleForgotPassword() {
-    // TODO: Navigate to forgot password screen
+  void _handleForgotPassword(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ForgotPasswordScreen(),
+      ),
+    );
   }
 
-  void _handleSignUp() {
-    // TODO: Navigate to sign up screen
+  void _handleSignUp(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const RegisterScreen(),
+      ),
+    );
   }
 
   @override
@@ -41,10 +53,10 @@ class LoginScreenBody extends StatelessWidget {
                     const SizedBox(height: 24),
                     LoginForm(
                       onSubmit: _handleLogin,
-                      onForgotPassword: _handleForgotPassword,
+                      onForgotPassword: () => _handleForgotPassword(context),
                     ),
                     const SizedBox(height: 24),
-                    LoginFooter(onSignUpPressed: _handleSignUp),
+                    LoginFooter(onSignUpPressed: () => _handleSignUp(context)),
                     const SizedBox(height: 40),
                   ],
                 ),
