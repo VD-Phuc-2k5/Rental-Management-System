@@ -1,9 +1,24 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { validateEnvironment } from './config/environment.config';
+import { UsersModule } from './modules/users/presentation/user.module';
+import { DrizzleModule } from './shared/infrastructure/database/drizzle.module';
+import { SupabaseModule } from './shared/infrastructure/supabase/supabase.module';
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+      envFilePath: ['.env.local', '.env'],
+      validate: validateEnvironment,
+    }),
+    SupabaseModule,
+    DrizzleModule,
+    UsersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
