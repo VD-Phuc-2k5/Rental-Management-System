@@ -18,18 +18,34 @@ export class DrizzleUserRepository implements UserRepository {
             return null;
     }
 
-        return new UserEntity(row.id, row.email, row.fullName, row.createdAt.toISOString());
+        return new UserEntity(
+            row.id,
+            row.phone,
+            row.fullName,
+            row.avatarUrl,
+            row.createdAt.toISOString(),
+            row.updatedAt.toISOString(),
+        );
     }
 
     async create(input: CreateUserInput): Promise<UserEntity> {
         const [row] = await this.drizzleService.db
             .insert(users)
             .values({
-                email: input.email,
+                id: input.id,
+                phone: input.phone,
                 fullName: input.fullName,
+                avatarUrl: input.avatarUrl,
             })
             .returning();
 
-        return new UserEntity(row.id, row.email, row.fullName, row.createdAt.toISOString());
+        return new UserEntity(
+            row.id,
+            row.phone,
+            row.fullName,
+            row.avatarUrl,
+            row.createdAt.toISOString(),
+            row.updatedAt.toISOString(),
+        );
     }
 }
