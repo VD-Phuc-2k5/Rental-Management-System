@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   AuthRepository,
   RegisterAuthInput,
@@ -33,17 +38,33 @@ export class SupabaseAuthRepository implements AuthRepository {
   }
 
   async login(email: string, password: string): Promise<{ token: string }> {
-    const { data, error } = await this.supabaseService.getClient().auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { data, error } = await this.supabaseService.getClient().auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error || !data.session) {
-      throw new BadRequestException(error?.message ?? 'Đăng nhập thất bại');
+      if (error || !data.session) {
+        const errorMessage = error?.message?.toLowerCase() ?? '';
+        const isInvalidCredentialError =
+          error?.status === 400 || errorMessage.includes('invalid login credentials');
+
+        if (isInvalidCredentialError) {
+          throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
+        }
+
+        throw new BadRequestException(error?.message ?? 'Đăng nhập thất bại');
+      }
+
+      return {
+        token: data.session.access_token,
+      };
+    } catch (error) {
+      if (error instanceof UnauthorizedException || error instanceof BadRequestException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Lỗi hệ thống khi đăng nhập');
     }
-
-    return {
-      token: data.session.access_token,
-    };
   }
 }
