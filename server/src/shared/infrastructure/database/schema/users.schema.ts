@@ -9,7 +9,7 @@ export const users = pgTable('users', {
   id: uuid('id')
     .primaryKey()
     .references(() => authUsers.id, { onDelete: 'cascade' }),
-  phone: text('phone'),
+  phone: text('phone').notNull(),
   fullName: text('full_name').notNull(),
   avatarUrl: text('avatar_url'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
