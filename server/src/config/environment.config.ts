@@ -18,6 +18,16 @@ export function validateEnvironment(config: Record<string, unknown>): Environmen
     throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
   }
 
+  const normalizedSupabaseKey = supabaseServiceRoleKey.trim();
+  if (
+    normalizedSupabaseKey.startsWith('sb_publishable_') ||
+    normalizedSupabaseKey.startsWith('eyJ')
+  ) {
+    throw new Error(
+      'SUPABASE_SERVICE_ROLE_KEY must be a service role key (secret), not publishable/anon key',
+    );
+  }
+
   if (typeof databaseUrl !== 'string' || databaseUrl.trim().length === 0) {
     throw new Error('DATABASE_URL is required');
   }
@@ -25,7 +35,7 @@ export function validateEnvironment(config: Record<string, unknown>): Environmen
   return {
     PORT: typeof config.PORT === 'string' ? config.PORT : undefined,
     SUPABASE_URL: supabaseUrl,
-    SUPABASE_SERVICE_ROLE_KEY: supabaseServiceRoleKey,
+    SUPABASE_SERVICE_ROLE_KEY: normalizedSupabaseKey,
     DATABASE_URL: databaseUrl,
   };
 }
