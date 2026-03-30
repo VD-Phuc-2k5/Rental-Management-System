@@ -16,7 +16,7 @@ export class DrizzleUserRepository implements UserRepository {
 
         if (!row) {
             return null;
-    }
+        }
 
         return new UserEntity(
             row.id,
