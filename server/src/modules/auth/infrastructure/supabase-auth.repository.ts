@@ -31,4 +31,19 @@ export class SupabaseAuthRepository implements AuthRepository {
       email: data.user.email ?? input.email,
     };
   }
+
+  async login(email: string, password: string): Promise<{ token: string }> {
+    const { data, error } = await this.supabaseService.getClient().auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error || !data.session) {
+      throw new BadRequestException(error?.message ?? 'Đăng nhập thất bại');
+    }
+
+    return {
+      token: data.session.access_token,
+    };
+  }
 }
