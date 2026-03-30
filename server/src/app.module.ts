@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validateEnvironment } from './config/environment.config';
 import { UsersModule } from './modules/users/presentation/user.module';
+import { AuthModule } from './modules/auth/presentation/auth.module';
 import { DrizzleModule } from './shared/infrastructure/database/drizzle.module';
 import { SupabaseModule } from './shared/infrastructure/supabase/supabase.module';
 
@@ -18,6 +19,7 @@ import { SupabaseModule } from './shared/infrastructure/supabase/supabase.module
     SupabaseModule,
     DrizzleModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
