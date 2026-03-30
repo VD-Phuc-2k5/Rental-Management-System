@@ -3,7 +3,7 @@ import { UserEntity } from '../entities/user.entity';
 export type CreateUserInput = {
   id: string;
   email: string;
-  phone?: string;
+  phone: string;
   fullName: string;
   avatarUrl?: string;
 };
