@@ -1,8 +1,10 @@
 export class UserEntity {
   constructor(
     public readonly id: string,
-    public readonly email: string,
+    public readonly phone: string | null,
     public readonly fullName: string,
+    public readonly avatarUrl: string | null,
     public readonly createdAt: string,
+    public readonly updatedAt: string,
   ) {}
 }
