@@ -51,7 +51,7 @@ export class DrizzleUserRepository implements UserRepository {
 
     async createWithDefaultRole(input: CreateUserInput): Promise<UserEntity> {
         const row = await this.drizzleService.db.transaction(async (tx) => {
-            const [createdUser] = await tx
+            const [insertedUser] = await tx
                 .insert(users)
                 .values({
                     id: input.id,
@@ -59,12 +59,23 @@ export class DrizzleUserRepository implements UserRepository {
                     fullName: input.fullName,
                     avatarUrl: input.avatarUrl,
                 })
+                .onConflictDoNothing()
                 .returning();
+
+            const createdUser =
+                insertedUser ??
+                (await tx.query.users.findFirst({
+                    where: eq(users.id, input.id),
+                }));
+
+            if (!createdUser) {
+                throw new Error('Không tìm thấy thông tin người dùng sau khi tạo tài khoản');
+            }
 
             await tx.insert(userRoles).values({
                 userId: createdUser.id,
                 role: 'tenant',
-            });
+            }).onConflictDoNothing();
 
             return createdUser;
         });
