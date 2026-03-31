@@ -15,6 +15,20 @@
       "when": 1774881645014,
       "tag": "0001_fair_pestilence",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774973518474,
+      "tag": "0002_keen_alex_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1774974013280,
+      "tag": "0003_tiresome_zeigeist",
+      "breakpoints": true
     }
   ]
 }
