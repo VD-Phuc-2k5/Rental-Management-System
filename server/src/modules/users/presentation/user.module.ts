@@ -17,5 +17,6 @@ import { FindUserService } from "../application/services/find-user.service";
       useClass: DrizzleUserRepository,
     },
   ],
+  exports: [UserRepository],
 })
 export class UsersModule {}

@@ -4,8 +4,10 @@ import { RegisterService } from '../application/services/register.service';
 import { AuthRepository } from '../domain/repositories/auth.repository';
 import { SupabaseAuthRepository } from '../infrastructure/supabase-auth.repository';
 import { LoginService } from '../application/services/login.service';
+import { UsersModule } from '../../users/presentation/user.module';
 
 @Module({
+  imports: [UsersModule],
   controllers: [AuthController],
   providers: [
     RegisterService,

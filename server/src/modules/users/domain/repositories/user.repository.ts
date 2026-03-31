@@ -10,4 +10,5 @@ export type CreateUserInput = {
 export abstract class UserRepository {
   abstract findById(id: string): Promise<UserEntity | null>;
   abstract create(input: CreateUserInput): Promise<UserEntity>;
+  abstract createWithDefaultRole(input: CreateUserInput): Promise<UserEntity>;
 }
