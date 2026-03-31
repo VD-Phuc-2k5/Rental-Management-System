@@ -15,12 +15,24 @@ import { Request, Response } from 'express';
       const status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
 
+      const details =
+        typeof exceptionResponse === 'string'
+          ? { message: exceptionResponse }
+          : exceptionResponse;
+
+      const message =
+        typeof details === 'object' && details !== null && 'message' in details
+          ? Array.isArray(details.message)
+            ? details.message[0]
+            : details.message
+          : exception.message;
+
       response.status(status).json({
         statusCode: status,
-        message: 'Error',
+        message,
         error: exception.name,
-        details: exceptionResponse,
-        path: request.url
+        details,
+        path: request.url,
       });
     }
   }

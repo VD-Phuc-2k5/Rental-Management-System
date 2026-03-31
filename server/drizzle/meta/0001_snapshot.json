@@ -1,6 +1,6 @@
 {
-  "id": "137c8a27-f08d-40d2-938f-1d79c800e707",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "d3993245-a171-4f63-90b3-05b7cc500a21",
+  "prevId": "137c8a27-f08d-40d2-938f-1d79c800e707",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -18,7 +18,7 @@
           "name": "phone",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "full_name": {
           "name": "full_name",
