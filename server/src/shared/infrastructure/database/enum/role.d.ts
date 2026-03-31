@@ -1,0 +1,1 @@
+type RoleType = 'tenant' | 'landlord';
