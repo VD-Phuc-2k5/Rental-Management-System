@@ -1,8 +1,5 @@
 import {
-  BadRequestException,
   Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import {
   AuthRepository,
@@ -10,34 +7,67 @@ import {
   RegisteredAuthUser,
 } from '../domain/repositories/auth.repository';
 import { SupabaseService } from '../../../shared/infrastructure/supabase/supabase.service';
+import {
+  AuthOperationError,
+  DuplicateEmailError,
+  InvalidCredentialsError,
+} from '../domain/errors/auth.errors';
 
 @Injectable()
 export class SupabaseAuthRepository implements AuthRepository {
   constructor(private readonly supabaseService: SupabaseService) {}
 
   async register(input: RegisterAuthInput): Promise<RegisteredAuthUser> {
-    const { data, error } = await this.supabaseService.getClient().auth.admin.createUser({
-      email: input.email,
-      password: input.password,
-      email_confirm: true,
-      user_metadata: {
-        phone: input.phone,
-        fullName: input.fullName,
-        avatarUrl: input.avatarUrl,
-      },
-    });
+    try {
+      const { data, error } = await this.supabaseService.getClient().auth.admin.createUser({
+        email: input.email,
+        password: input.password,
+        email_confirm: true,
+        user_metadata: {
+          phone: input.phone,
+          fullName: input.fullName,
+          avatarUrl: input.avatarUrl,
+        },
+      });
 
-    if (error || !data.user) {
-      throw new BadRequestException(error?.message ?? 'Đăng ký thất bại');
+      if (error || !data.user) {
+        const errorMessage = error?.message?.toLowerCase() ?? '';
+        const isDuplicatedEmailError =
+          errorMessage.includes('already been registered') ||
+          errorMessage.includes('already registered') ||
+          errorMessage.includes('already exists') ||
+          errorMessage.includes('duplicate') ||
+          errorMessage.includes('email address has already');
+
+        if (isDuplicatedEmailError) {
+          throw new DuplicateEmailError();
+        }
+
+        throw new AuthOperationError(error?.message ?? 'Đăng ký thất bại');
+      }
+
+      return {
+        id: data.user.id,
+        email: data.user.email ?? input.email,
+      };
+    } catch (error) {
+      if (error instanceof DuplicateEmailError || error instanceof AuthOperationError) {
+        throw error;
+      }
+
+      throw new AuthOperationError('Lỗi hệ thống khi đăng ký');
     }
-
-    return {
-      id: data.user.id,
-      email: data.user.email ?? input.email,
-    };
   }
 
-  async login(email: string, password: string): Promise<{ token: string }> {
+  async deleteUser(userId: string): Promise<void> {
+    const { error } = await this.supabaseService.getClient().auth.admin.deleteUser(userId);
+
+    if (error) {
+      throw new AuthOperationError('Không thể hoàn tác người dùng đã tạo');
+    }
+  }
+
+  async login(email: string, password: string): Promise<string> {
     try {
       const { data, error } = await this.supabaseService.getClient().auth.signInWithPassword({
         email,
@@ -50,21 +80,19 @@ export class SupabaseAuthRepository implements AuthRepository {
           error?.status === 400 || errorMessage.includes('invalid login credentials');
 
         if (isInvalidCredentialError) {
-          throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
+          throw new InvalidCredentialsError();
         }
 
-        throw new BadRequestException(error?.message ?? 'Đăng nhập thất bại');
+        throw new AuthOperationError(error?.message ?? 'Đăng nhập thất bại');
       }
 
-      return {
-        token: data.session.access_token,
-      };
+      return data.session.access_token;
     } catch (error) {
-      if (error instanceof UnauthorizedException || error instanceof BadRequestException) {
+      if (error instanceof InvalidCredentialsError || error instanceof AuthOperationError) {
         throw error;
       }
 
-      throw new InternalServerErrorException('Lỗi hệ thống khi đăng nhập');
+      throw new AuthOperationError('Lỗi hệ thống khi đăng nhập');
     }
   }
 }

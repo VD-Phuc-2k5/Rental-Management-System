@@ -13,5 +13,6 @@ export type RegisteredAuthUser = {
 
 export abstract class AuthRepository {
   abstract register(input: RegisterAuthInput): Promise<RegisteredAuthUser>;
-  abstract login(email: string, password: string): Promise<{ token: string }>;
+  abstract deleteUser(userId: string): Promise<void>;
+  abstract login(email: string, password: string): Promise<string>;
 }
