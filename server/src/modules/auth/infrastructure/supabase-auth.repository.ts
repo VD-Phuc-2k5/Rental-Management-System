@@ -67,7 +67,7 @@ export class SupabaseAuthRepository implements AuthRepository {
     }
   }
 
-  async login(email: string, password: string): Promise<string> {
+  async login(email: string, password: string): Promise<{ token: string, userId: string}> {
     try {
       const { data, error } = await this.supabaseService.getClient().auth.signInWithPassword({
         email,
@@ -86,7 +86,10 @@ export class SupabaseAuthRepository implements AuthRepository {
         throw new AuthOperationError(error?.message ?? 'Đăng nhập thất bại');
       }
 
-      return data.session.access_token;
+      return {
+        token: data.session.access_token,
+        userId: data.user.id,
+      }
     } catch (error) {
       if (error instanceof InvalidCredentialsError || error instanceof AuthOperationError) {
         throw error;
