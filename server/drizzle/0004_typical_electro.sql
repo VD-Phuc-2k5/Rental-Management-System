@@ -1,0 +1,1 @@
+ALTER TABLE "properties" ADD COLUMN "amenities" text[] NOT NULL;

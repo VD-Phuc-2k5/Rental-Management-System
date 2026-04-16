@@ -11,6 +11,7 @@ export const properties = pgTable('properties', {
     district: text('district').notNull(),
     city: text('city').notNull(),
     description: text('description').notNull(),
+    amenity_codes: text('amenities').array().notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
         .defaultNow()
