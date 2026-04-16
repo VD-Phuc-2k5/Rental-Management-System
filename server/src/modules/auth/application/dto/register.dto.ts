@@ -13,20 +13,20 @@ import {
 export class RegisterDto {
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  email!: string;
 
   @IsString()
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(100)
   @Matches(/\S/, { message: 'Tên không được chứa khoảng trắng' })
-  fullName: string;
+  fullName!: string;
 
   @IsString()
   @IsNotEmpty()
   @Length(10, 15)
   @Matches(/^[0-9]+$/, { message: 'Số điện thoại chỉ được chứa chữ số' })
-  phone: string;
+  phone!: string;
 
   @IsOptional()
   @IsUrl({ require_tld: false })
@@ -39,5 +39,5 @@ export class RegisterDto {
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/, {
     message: 'Mật khẩu phải có chữ hoa, chữ thường, số và ký tự đặc biệt',
   })
-  password: string;
+  password!: string;
 }

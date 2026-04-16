@@ -10,7 +10,7 @@ import {
   AuthOperationError,
   InvalidCredentialsError,
 } from '../../domain/errors/auth.errors';
-import { UserRepository } from 'src/modules/users/domain/repositories/user.repository';
+import { UserRepository } from '../../../users/domain/repositories/user.repository';
 
 
 @Injectable()
