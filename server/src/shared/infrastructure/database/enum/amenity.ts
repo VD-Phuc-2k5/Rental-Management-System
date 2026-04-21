@@ -1,0 +1,9 @@
+export enum Amenity {
+    WIFI = 'WIFI',
+    BED = 'BED',
+    FRIDGE = 'FRIDGE',
+    BALCONY = 'BALCONY',
+    WATER_HEATER = 'WATER_HEATER',
+    AIR_CONDITIONER = 'AIR_CONDITIONER',
+    PRIVATE_BATHROOM = 'PRIVATE_BATHROOM',
+}

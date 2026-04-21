@@ -1,6 +1,8 @@
 import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
 import { users } from "./users.schema";
 import { relations } from "drizzle-orm/relations";
+import { Amenity } from "../enum/amenity";
+import { amenityEnum } from "./amenity.schema";
 
 export const properties = pgTable('properties', {
     id: uuid('id').defaultRandom().primaryKey(),
@@ -11,7 +13,7 @@ export const properties = pgTable('properties', {
     district: text('district').notNull(),
     city: text('city').notNull(),
     description: text('description').notNull(),
-    amenity_codes: text('amenities').array().notNull(),
+    amenity_codes: amenityEnum('amenities').array().$type<Amenity[]>().notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
         .defaultNow()
