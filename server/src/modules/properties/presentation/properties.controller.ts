@@ -8,7 +8,7 @@ import { AuthGuard } from "src/shared/common/guards/auth.guard";
 import { RolesGuard } from "src/shared/common/guards/roles.guard";
 import { Roles } from "src/shared/common/decorators/roles.decorator";
 import { CurrentUser } from "src/shared/common/decorators/current-user.decorator";
-import type { AuthenticatedUser } from "src/shared/common/auth/authenticated-request.interface";
+import { UserDTO } from "src/shared/dto/user.dto";
 
 @Controller("properties")
 export class PropertiesController {
@@ -21,13 +21,18 @@ export class PropertiesController {
   @Post()
   async createProperty(
     @Body() input: CreatePropertiesDto,
-    @CurrentUser() currentUser: AuthenticatedUser,
-  ): Promise<PropertiesEntity> {
+    @CurrentUser() currentUser: UserDTO,
+  ) {
     try {
-      return await this.createPropertiesService.execute({
+      const property= await this.createPropertiesService.execute({
         ...input,
         landlorerId: currentUser.id,
       });
+
+      return {
+        ...property,
+        landlored: currentUser
+      }
     } catch (error) {
       if (error instanceof LandlordNotFoundError) {
         throw new BadRequestException(error.message);
