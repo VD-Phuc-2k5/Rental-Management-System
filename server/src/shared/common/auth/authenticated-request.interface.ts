@@ -1,12 +1,6 @@
 import { Request } from 'express';
-
-export type AuthenticatedUser = {
-  id: string;
-  email: string;
-  roles: string[];
-  
-};
+import { UserDTO } from 'src/shared/dto/user.dto';
 
 export interface AuthenticatedRequest extends Request {
-  user: AuthenticatedUser;
+  user: UserDTO;
 }

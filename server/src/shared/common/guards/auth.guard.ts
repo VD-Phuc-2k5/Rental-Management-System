@@ -37,7 +37,6 @@ export class AuthGuard implements CanActivate {
 
     const localUser = await this.drizzleService.db.query.users.findFirst({
       where: eq(users.id, data.user.id),
-      columns: { id: true },
       with: {
         roles: {
           columns: { role: true },
@@ -52,6 +51,9 @@ export class AuthGuard implements CanActivate {
     request.user = {
       id: localUser.id,
       email: data.user.email ?? '',
+      phone: localUser.phone,
+      full_name: localUser.fullName,
+      avartar_url: localUser.avatarUrl,
       roles: localUser.roles.map((item) => item.role),
     };
 
