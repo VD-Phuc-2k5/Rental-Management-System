@@ -1,0 +1,2 @@
+ALTER TABLE "rooms" ADD COLUMN "property_id" uuid NOT NULL;--> statement-breakpoint
+ALTER TABLE "rooms" ADD CONSTRAINT "rooms_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;

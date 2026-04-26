@@ -1,6 +1,7 @@
 import { pgSchema, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { userRoles } from './user-roles.schema';
 import { relations } from 'drizzle-orm/relations';
+import { properties } from './properties.schema';
 
 const authSchema = pgSchema('auth');
 const authUsers = authSchema.table('users', {
@@ -23,4 +24,5 @@ export const users = pgTable('users', {
 
 export const usersRelations = relations(users, ({ many }) => ({
   roles: many(userRoles),
+  properties: many(properties),
 }));

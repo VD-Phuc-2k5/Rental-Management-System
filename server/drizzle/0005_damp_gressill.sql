@@ -1,0 +1,2 @@
+CREATE TYPE "public"."amenity" AS ENUM('WIFI', 'PARKING', 'GYM');--> statement-breakpoint
+ALTER TABLE "properties" ALTER COLUMN "amenities" SET DATA TYPE "public"."amenity"[] USING "amenities"::"public"."amenity"[];

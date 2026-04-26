@@ -7,6 +7,7 @@ import { UsersModule } from './modules/users/presentation/user.module';
 import { AuthModule } from './modules/auth/presentation/auth.module';
 import { DrizzleModule } from './shared/infrastructure/database/drizzle.module';
 import { SupabaseModule } from './shared/infrastructure/supabase/supabase.module';
+import { PropertiesModule } from './modules/properties/presentation/properties.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { SupabaseModule } from './shared/infrastructure/supabase/supabase.module
     DrizzleModule,
     UsersModule,
     AuthModule,
+    PropertiesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

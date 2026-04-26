@@ -15,6 +15,55 @@
       "when": 1774881645014,
       "tag": "0001_fair_pestilence",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774973518474,
+      "tag": "0002_keen_alex_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1774974013280,
+      "tag": "0003_tiresome_zeigeist",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1776349438980,
+      "tag": "0004_typical_electro",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1776354244394,
+      "tag": "0005_damp_gressill",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1776709438672,
+      "tag": "0006_outstanding_devos",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1777221367948,
+      "tag": "0007_jazzy_scream",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1777222700259,
+      "tag": "0008_salty_mathemanic",
+      "breakpoints": true
     }
   ]
 }
