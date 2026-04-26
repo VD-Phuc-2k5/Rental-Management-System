@@ -3,6 +3,7 @@ import { users } from "./users.schema";
 import { relations } from "drizzle-orm/relations";
 import { Amenity } from "../enum/amenity";
 import { amenityEnum } from "./amenity.schema";
+import { rooms } from "./room.schema";
 
 export const properties = pgTable('properties', {
     id: uuid('id').defaultRandom().primaryKey(),
@@ -21,9 +22,10 @@ export const properties = pgTable('properties', {
         .notNull(),
 });
 
-export const propertiesRelations = relations(properties, ({ one }) => ({
+export const propertiesRelations = relations(properties, ({ one, many }) => ({
     landlord: one(users, {
         fields: [properties.landlorerId],
         references: [users.id],
     }),
+    rooms: many(rooms),
 }));
