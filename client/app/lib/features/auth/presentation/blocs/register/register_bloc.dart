@@ -23,7 +23,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     RegisterRequested event,
     Emitter<RegisterState> emit,
   ) async {
-    emit(const ReigsterLoadInProgress());
+    emit(const RegisterLoadInProgress());
 
     final result = await _registerUsecase(
       RegisterParams(

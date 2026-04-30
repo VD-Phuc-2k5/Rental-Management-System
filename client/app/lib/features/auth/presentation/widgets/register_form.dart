@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../screens/login-screen/login_screen.dart';
-import '../blocs/bloc/register_bloc.dart';
+import '../blocs/register/register_bloc.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -71,7 +71,7 @@ class _RegisterFormState extends State<RegisterForm> {
         }
       },
       builder: (context, state) {
-        final isLoading = state is ReigsterLoadInProgress;
+        final isLoading = state is RegisterLoadInProgress;
         return ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 350),
           child: Form(

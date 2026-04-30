@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/di.dart';
 import '../../../../core/widgets/common_appbar.dart';
-import '../blocs/bloc/register_bloc.dart';
+import '../blocs/register/register_bloc.dart';
 import '../widgets/register_form.dart';
 import '../widgets/register_logo.dart';
 
