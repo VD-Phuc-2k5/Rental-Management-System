@@ -9,17 +9,54 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # Icon
+  cupertino_icons: ^1.0.8
+
+  # API
+  http: ^1.6.0
+  flutter_dotenv: ^6.0.0
+
+  # State Management
+  get_it: ^9.2.0
+  injectable: ^2.7.1+4
+  bloc: ^9.2.0
+  flutter_bloc: ^9.1.1
+
+  # Routing
+  go_router: ^17.1.0
+
+  # Data Class & Functional Programming
+  equatable: ^2.0.8
+  fpdart:
+    ^1.2.0
+
+    # UI & Utilities
+  cached_network_image: ^3.4.1
+  image_picker: ^1.2.1
   intl: ^0.20.2
-  image_picker: ^1.1.2
+  uuid: ^4.5.2
+  string_validator: ^1.2.0
+  stream_transform: ^2.1.1
+
+  # Local Packages
+  core:
+    path: ../packages/core
+  domain:
+    path: ../packages/domain
+  data:
+    path: ../packages/data
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  build_runner: ^2.11.0
+  injectable_generator: ^2.12.0
 
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/images/
     - assets/images/room-list-screen/
     - assets/images/add-room-screen/
