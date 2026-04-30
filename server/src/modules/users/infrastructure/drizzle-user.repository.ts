@@ -34,6 +34,7 @@ export class DrizzleUserRepository implements UserRepository {
             row.roles.map((r) => r.role),
             row.createdAt.toISOString(),
             row.updatedAt.toISOString(),
+            row.acceptedTerms,
         );
     }
 
@@ -64,6 +65,7 @@ export class DrizzleUserRepository implements UserRepository {
             ['tenant'],
             row.createdAt.toISOString(),
             row.updatedAt.toISOString(),
+            row.acceptedTerms,
         );
 
     }
@@ -107,6 +109,7 @@ export class DrizzleUserRepository implements UserRepository {
             ['tenant'],
             row.createdAt.toISOString(),
             row.updatedAt.toISOString(),
+            row.acceptedTerms,
         );
     }
 }

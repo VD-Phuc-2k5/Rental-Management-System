@@ -19,6 +19,14 @@ export class SupabaseAuthRepository implements AuthRepository {
 
   async register(input: RegisterAuthInput): Promise<RegisteredAuthUser> {
     try {
+      if (input.password !== input.confirmPassword) {
+        throw new AuthOperationError('Mật khẩu và xác nhận mật khẩu không khớp');
+      }
+
+      if (input.acceptTerms !== true) {
+        throw new AuthOperationError('Bạn phải chấp nhận điều khoản để đăng ký');
+      }
+
       const { data, error } = await this.supabaseService.getClient().auth.admin.createUser({
         email: input.email,
         password: input.password,
@@ -37,6 +45,7 @@ export class SupabaseAuthRepository implements AuthRepository {
           errorMessage.includes('already registered') ||
           errorMessage.includes('already exists') ||
           errorMessage.includes('duplicate') ||
+          errorMessage.includes('unique constraint') ||
           errorMessage.includes('email address has already');
 
         if (isDuplicatedEmailError) {
