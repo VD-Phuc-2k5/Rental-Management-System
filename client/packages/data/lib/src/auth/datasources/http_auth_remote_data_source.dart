@@ -35,7 +35,7 @@ class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
 
       if (response.statusCode == 201) {
-        return UserModel.fromJson(json);
+        return UserModel.fromJson(json['data']);
       }
 
       throw AuthenticationException(message: json['message'] as String);
