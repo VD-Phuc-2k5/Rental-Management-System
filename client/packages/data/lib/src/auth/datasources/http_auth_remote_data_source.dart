@@ -9,9 +9,9 @@ import '../models/user_model.dart';
 import 'auth_remote_data_source.dart';
 
 class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
-  HttpAuthRemoteDataSource({required this.client});
+  HttpAuthRemoteDataSource({required http.Client client}) : _client = client;
 
-  final http.Client client;
+  final http.Client _client;
 
   @override
   Future<UserModel> register({
@@ -21,7 +21,7 @@ class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
     required String phone,
   }) async {
     try {
-      final response = await client.post(
+      final response = await _client.post(
         Uri.parse("$baseUrl/auth/register"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
