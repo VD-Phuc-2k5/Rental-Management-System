@@ -1,12 +1,12 @@
-import 'package:app/screens/forgot-password-screen/forgot_password_screen.dart';
-import 'package:app/screens/register-screen/register_screen.dart';
+import '../../../features/auth/presentation/pages/register_page.dart';
+import '../../forgot-password-screen/forgot_password_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:app/screens/login-screen/components/login_background.dart';
-import 'package:app/screens/login-screen/components/login_logo.dart';
-import 'package:app/screens/login-screen/components/login_header.dart';
-import 'package:app/screens/login-screen/components/login_form.dart';
-import 'package:app/screens/login-screen/components/login_footer.dart';
-import 'package:app/core/constants.dart';
+import 'login_background.dart';
+import 'login_logo.dart';
+import 'login_header.dart';
+import 'login_form.dart';
+import 'login_footer.dart';
+import '../../../core/constants.dart';
 
 class LoginScreenBody extends StatelessWidget {
   const LoginScreenBody({super.key});
@@ -28,7 +28,7 @@ class LoginScreenBody extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const RegisterScreen(),
+        builder: (context) => const RegisterPage(),
       ),
     );
   }

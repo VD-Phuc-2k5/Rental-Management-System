@@ -13,6 +13,9 @@ abstract class RegisterModule {
   @LazySingleton(as: AuthRemoteDataSource)
   HttpAuthRemoteDataSource get authRemoteDataSource;
 
+  @LazySingleton(as: AuthRepository)
+  AuthRepositoryImpl get authRepository;
+
   // --- Domain Layer (UseCases) Registration (Injectable - factory) ---
   // auth
   @injectable
