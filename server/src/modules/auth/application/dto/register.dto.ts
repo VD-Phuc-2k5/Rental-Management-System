@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -23,10 +24,10 @@ export class RegisterDto {
   fullName!: string;
 
   @IsString()
-  @IsNotEmpty()
   @Length(10, 15)
   @Matches(/^[0-9]+$/, { message: 'Số điện thoại chỉ được chứa chữ số' })
-  phone!: string;
+  @IsOptional()
+  phone: string | null = null;
 
   @IsOptional()
   @IsUrl({ require_tld: false })
@@ -40,4 +41,14 @@ export class RegisterDto {
     message: 'Mật khẩu phải có chữ hoa, chữ thường, số và ký tự đặc biệt',
   })
   password!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  @MaxLength(72)
+  confirm_password!: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  accepted_terms!: boolean;
 }

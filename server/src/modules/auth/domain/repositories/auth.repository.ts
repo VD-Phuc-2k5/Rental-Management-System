@@ -1,9 +1,11 @@
 export type RegisterAuthInput = {
   email: string;
   password: string;
-  phone: string;
+  confirmPassword: string;
+  phone: string | null;
   fullName: string;
   avatarUrl?: string;
+  acceptTerms: boolean;
 };
 
 export type RegisteredAuthUser = {

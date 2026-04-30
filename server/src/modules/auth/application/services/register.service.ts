@@ -35,9 +35,11 @@ export class RegisterService {
       const authInput: RegisterAuthInput = {
         email: input.email,
         password: input.password,
+        confirmPassword: input.confirm_password,
         phone: input.phone,
         fullName: input.fullName,
         avatarUrl: input.avatarUrl,
+        acceptTerms: input.accepted_terms,
       };
 
       const authUser = await this.authRepository.register(authInput);
