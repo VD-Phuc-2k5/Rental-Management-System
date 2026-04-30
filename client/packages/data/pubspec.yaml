@@ -13,6 +13,7 @@ dependencies:
   equatable: ^2.0.8
   fpdart: ^1.2.0
   json_annotation: ^4.10.0
+  http: ^1.6.0
 
   core:
     path: ../core
