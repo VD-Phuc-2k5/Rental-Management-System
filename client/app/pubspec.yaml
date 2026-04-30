@@ -27,10 +27,9 @@ dependencies:
 
   # Data Class & Functional Programming
   equatable: ^2.0.8
-  fpdart:
-    ^1.2.0
+  fpdart: ^1.2.0
 
-    # UI & Utilities
+  # UI & Utilities
   cached_network_image: ^3.4.1
   image_picker: ^1.2.1
   intl: ^0.20.2
