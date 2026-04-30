@@ -1,1 +1,1 @@
-export 'src/errors//errors.dart';
+export 'src/errors/errors.dart';
