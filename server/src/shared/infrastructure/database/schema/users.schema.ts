@@ -1,7 +1,8 @@
-import { pgSchema, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgSchema, pgTable, text, timestamp, uuid, boolean } from 'drizzle-orm/pg-core';
 import { userRoles } from './user-roles.schema';
 import { relations } from 'drizzle-orm/relations';
 import { properties } from './properties.schema';
+import { sql } from 'drizzle-orm/sql/sql';
 
 const authSchema = pgSchema('auth');
 const authUsers = authSchema.table('users', {
@@ -12,9 +13,10 @@ export const users = pgTable('users', {
   id: uuid('id')
     .primaryKey()
     .references(() => authUsers.id, { onDelete: 'cascade' }),
-  phone: text('phone').notNull(),
+  phone: text('phone').unique(),
   fullName: text('full_name').notNull(),
   avatarUrl: text('avatar_url'),
+  acceptedTerms: boolean('accepted_terms').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .defaultNow()
