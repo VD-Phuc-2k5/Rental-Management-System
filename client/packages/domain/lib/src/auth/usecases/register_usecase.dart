@@ -9,14 +9,18 @@ class RegisterParams extends Equatable {
   const RegisterParams({
     required this.fullName,
     required this.password,
+    required this.confirmPassword,
     required this.email,
     required this.phone,
+    required this.acceptedTerms,
   });
 
   final String fullName;
   final String password;
+  final String confirmPassword;
   final String email;
   final String phone;
+  final bool acceptedTerms;
 
   @override
   List<Object> get props => [fullName, password, email, phone];
@@ -33,8 +37,10 @@ class RegisterUsecase implements UseCase<void, RegisterParams> {
     return await _authRepository.register(
       fullName: params.fullName,
       password: params.password,
+      confirmPassword: params.confirmPassword,
       email: params.email,
       phone: params.phone,
+      acceptedTerms: params.acceptedTerms,
     );
   }
 }

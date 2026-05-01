@@ -2,6 +2,7 @@ import 'core/di/di.dart';
 import 'package:core/constants.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
+import 'features/auth/presentation/pages/register_page.dart';
 import 'screens/home-screen/home_screen.dart';
 
 void main() async {
@@ -19,7 +20,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(scaffoldBackgroundColor: AppColors.white),
-      home: const HomeScreen(),
+      home: const RegisterPage(),
     );
   }
 }

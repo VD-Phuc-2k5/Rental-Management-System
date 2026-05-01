@@ -14,15 +14,19 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, void>> register({
     required String fullName,
     required String password,
+    required String confirmPassword,
     required String email,
     required String phone,
+    required bool acceptedTerms,
   }) async {
     try {
       await _authRemoteDataSource.register(
         fullName: fullName,
         password: password,
+        confirmPassword: confirmPassword,
         email: email,
         phone: phone,
+        acceptedTerms: acceptedTerms,
       );
 
       return const Right(null);

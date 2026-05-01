@@ -17,8 +17,10 @@ class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
   Future<UserModel> register({
     required String fullName,
     required String password,
+    required String confirmPassword,
     required String email,
     required String phone,
+    required bool acceptedTerms,
   }) async {
     try {
       final response = await _client.post(
@@ -28,7 +30,9 @@ class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
           'fullName': fullName,
           'email': email,
           'password': password,
+          'confirm_password': confirmPassword,
           'phone': phone,
+          'accepted_terms': acceptedTerms,
         }),
       );
 

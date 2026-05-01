@@ -29,8 +29,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       RegisterParams(
         fullName: event.fullName,
         password: event.password,
+        confirmPassword: event.confirmPassword,
         email: event.email,
         phone: event.phone,
+        acceptedTerms: event.acceptedTerms,
       ),
     );
 

@@ -19,12 +19,14 @@ class _RegisterFormState extends State<RegisterForm> {
 
   // obsecures
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   // TextEditing Controllers
   final _fullnameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   void _submit() {
     setState(() {
@@ -38,8 +40,10 @@ class _RegisterFormState extends State<RegisterForm> {
       RegisterRequested(
         fullName: _fullnameController.text.trim(),
         password: _passwordController.text.trim(),
+        confirmPassword: _confirmPasswordController.text.trim(),
         email: _emailController.text.trim(),
         phone: _phoneController.text.trim(),
+        acceptedTerms: true,
       ),
     );
   }
@@ -310,6 +314,130 @@ class _RegisterFormState extends State<RegisterForm> {
                       enabled: !isLoading,
                     ),
                   ],
+                ),
+
+                // Confirm password
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Xác nhận mật khẩu",
+                      style: TextStyle(
+                        color: AppColors.slate500,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    TextFormField(
+                      controller: _confirmPasswordController,
+                      obscureText: _obscureConfirmPassword,
+                      style: const TextStyle(
+                        color: AppColors.slate400,
+                      ),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          Icons.key_outlined,
+                          color: AppColors.slate400,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: AppColors.slate400,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
+                            });
+                          },
+                        ),
+                        hintText: "Nhập xác nhận mật khẩu",
+                        hintStyle: const TextStyle(
+                          color: AppColors.slate400,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(80.0),
+                          borderSide: const BorderSide(
+                            color: AppColors.slate500,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(80.0),
+                          borderSide: const BorderSide(
+                            color: AppColors.blue500,
+                          ),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Xác nhận mật khẩu không được để trống.';
+                        }
+                        return null;
+                      },
+                      textInputAction: TextInputAction.next,
+                      enabled: !isLoading,
+                    ),
+                  ],
+                ),
+
+                // Accepted terms
+                FormField<bool>(
+                  initialValue: false,
+                  validator: (value) {
+                    if (value != true) return 'Vui lòng đồng ý điều khoản';
+                    return null;
+                  },
+                  builder: (field) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: field.value ?? false,
+                              onChanged: (val) => field.didChange(val),
+                              fillColor: WidgetStateProperty.resolveWith((
+                                states,
+                              ) {
+                                if (states.contains(WidgetState.selected)) {
+                                  return AppColors.blue700;
+                                }
+                                return AppColors.white;
+                              }),
+                            ),
+                            const Row(
+                              children: [
+                                Text(
+                                  'Tôi đồng ý với ',
+                                  style: TextStyle(color: AppColors.slate500),
+                                ),
+                                Text(
+                                  'Điều khoản sử dụng',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.blue700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        if (field.hasError)
+                          Text(
+                            field.errorText!,
+                            style: const TextStyle(
+                              color: AppColors.red500,
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
 
                 // Submit button
