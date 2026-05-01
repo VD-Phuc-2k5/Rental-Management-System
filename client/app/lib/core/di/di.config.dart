@@ -15,8 +15,8 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:http/http.dart' as _i519;
 import 'package:injectable/injectable.dart' as _i526;
 
-import '../../features/auth/presentation/blocs/bloc/register_bloc.dart'
-    as _i939;
+import '../../features/auth/presentation/blocs/register/register_bloc.dart'
+    as _i517;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -33,8 +33,8 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i378.AuthRepository>(() => registerModule.authRepository);
     gh.factory<_i378.RegisterUsecase>(() => registerModule.registerUseCase);
-    gh.factory<_i939.RegisterBloc>(
-      () => _i939.RegisterBloc(registerUsecase: gh<_i378.RegisterUsecase>()),
+    gh.factory<_i517.RegisterBloc>(
+      () => _i517.RegisterBloc(registerUsecase: gh<_i378.RegisterUsecase>()),
     );
     return this;
   }
