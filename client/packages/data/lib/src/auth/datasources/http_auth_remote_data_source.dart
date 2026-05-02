@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -12,6 +13,10 @@ class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
   HttpAuthRemoteDataSource({required http.Client client}) : _client = client;
 
   final http.Client _client;
+  final _authStateController = StreamController<UserModel?>.broadcast();
+
+  @override
+  Stream<UserModel?> get onAuthStateChanged => _authStateController.stream;
 
   @override
   Future<UserModel> register({
@@ -39,6 +44,7 @@ class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
 
       if (response.statusCode == 201) {
+        _authStateController.add(json['data']);
         return UserModel.fromJson(json['data']);
       }
 
@@ -53,6 +59,17 @@ class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
       throw UnknownException(
         message: 'Unexpected error: ${e.toString()}',
       );
+    }
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      _authStateController.add(null);
+    } on SocketException {
+      throw const NetworkException();
+    } catch (e) {
+      throw UnknownException(message: e.toString());
     }
   }
 }

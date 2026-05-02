@@ -1,6 +1,8 @@
 import '../models/user_model.dart';
 
 abstract interface class AuthRemoteDataSource {
+  Stream<UserModel?> get onAuthStateChanged;
+
   Future<UserModel> register({
     required String fullName,
     required String password,
@@ -9,4 +11,6 @@ abstract interface class AuthRemoteDataSource {
     required String phone,
     required bool acceptedTerms,
   });
+
+  Future<void> logout();
 }

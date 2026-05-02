@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:core/errors.dart';
 import 'package:domain/auth.dart';
 import 'package:fpdart/fpdart.dart';
@@ -9,6 +11,27 @@ class AuthRepositoryImpl implements AuthRepository {
     : _authRemoteDataSource = authRemoteDataSource;
 
   final AuthRemoteDataSource _authRemoteDataSource;
+
+  @override
+  Stream<UserEntity?> get onAuthStateChanged {
+    final controller = StreamController<UserEntity?>();
+
+    final subscription = _authRemoteDataSource.onAuthStateChanged.listen(
+      (userModel) {
+        controller.add(userModel);
+      },
+      onError: (error) {
+        print('Auth Steam Error: $error');
+        controller.add(null);
+      },
+    );
+
+    controller.onCancel = () {
+      subscription.cancel();
+    };
+
+    return controller.stream;
+  }
 
   @override
   Future<Either<Failure, void>> register({
@@ -32,6 +55,18 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(null);
     } on AuthenticationException catch (e) {
       return Left(AuthenticationFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      await _authRemoteDataSource.logout();
+      return const Right(null);
     } on NetworkException {
       return const Left(NetworkFailure());
     } on UnknownException catch (e) {
