@@ -2,7 +2,9 @@ import 'package:core/constants.dart';
 import 'package:core/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/config/router/route_constants.dart';
 import '../blocs/login/login_bloc.dart';
 
 class LoginForm extends StatefulWidget {
@@ -51,7 +53,6 @@ class _LoginFormState extends State<LoginForm> {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginLoadFailure) {
-          print(state.failure.message);
           showToast(message: state.failure.message, type: ToastType.error);
         }
 
@@ -220,7 +221,7 @@ class _LoginFormState extends State<LoginForm> {
                   onPressed: isLoading
                       ? null
                       : () {
-                          // context.goNamed(RouteNames.login);
+                          context.goNamed(RouteNames.register);
                         },
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -2,8 +2,9 @@ import 'package:core/constants.dart';
 import 'package:core/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../screens/login-screen/login_screen.dart';
+import '../../../../core/config/router/route_constants.dart';
 import '../blocs/register/register_bloc.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -67,11 +68,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
         if (state is RegisterLoadSuccess) {
           showToast(message: "Đăng ký thành công", type: ToastType.success);
-          Navigator.of(
-            context,
-          ).pushReplacement(
-            MaterialPageRoute(builder: (_) => const LoginScreen()),
-          );
+          context.goNamed(RouteNames.login);
         }
       },
       builder: (context, state) {
@@ -468,7 +465,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   onPressed: isLoading
                       ? null
                       : () {
-                          // context.goNamed(RouteNames.login);
+                          context.goNamed(RouteNames.login);
                         },
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
