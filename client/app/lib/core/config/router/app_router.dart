@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/auth/presentation/blocs/authentication/authentication_bloc.dart';
+import '../../../features/auth/presentation/pages/register_page.dart';
+import '../../../features/splash/presentation/pages/splash_page.dart';
+import '../../../screens/login-screen/login_screen.dart';
 import '../../widgets/error_page.dart';
 import 'go_router_refresh_stream.dart';
 import 'route_constants.dart';
@@ -30,7 +33,29 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
 
       return null;
     },
-    routes: [],
+    routes: [
+      GoRoute(
+        path: RoutePaths.splash,
+        name: RouteNames.splash,
+        builder: (BuildContext context, GoRouterState state) {
+          return const SplashPage();
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.register,
+        name: RouteNames.register,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RegisterPage();
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.login,
+        name: RouteNames.login,
+        builder: (BuildContext context, GoRouterState state) {
+          return const LoginScreen();
+        },
+      ),
+    ],
     errorBuilder: (BuildContext context, GoRouterState state) {
       return ErrorPage(error: state.error);
     },

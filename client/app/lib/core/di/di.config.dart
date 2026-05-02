@@ -30,11 +30,13 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule(this);
-    gh.lazySingleton<_i519.Client>(() => registerModule.httpClient);
+    gh.singleton<_i519.Client>(() => registerModule.httpClient);
     gh.lazySingleton<_i41.AuthRemoteDataSource>(
       () => registerModule.authRemoteDataSource,
     );
     gh.lazySingleton<_i378.AuthRepository>(() => registerModule.authRepository);
+    gh.factory<_i378.RegisterUsecase>(() => registerModule.registerUseCase);
+    gh.factory<_i378.LogoutUsecase>(() => registerModule.logoutUsecase);
     gh.singleton<_i652.AuthenticationBloc>(
       () => _i652.AuthenticationBloc(
         authRepository: gh<_i378.AuthRepository>(),
@@ -45,7 +47,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i583.GoRouter>(
       () => registerModule.router(gh<_i652.AuthenticationBloc>()),
     );
-    gh.factory<_i378.RegisterUsecase>(() => registerModule.registerUseCase);
     gh.factory<_i517.RegisterBloc>(
       () => _i517.RegisterBloc(registerUsecase: gh<_i378.RegisterUsecase>()),
     );
@@ -70,4 +71,8 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i378.RegisterUsecase get registerUseCase =>
       _i378.RegisterUsecase(authRepository: _getIt<_i378.AuthRepository>());
+
+  @override
+  _i378.LogoutUsecase get logoutUsecase =>
+      _i378.LogoutUsecase(authRepository: _getIt<_i378.AuthRepository>());
 }

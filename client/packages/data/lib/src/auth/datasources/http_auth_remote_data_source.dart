@@ -15,8 +15,18 @@ class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
   final http.Client _client;
   final _authStateController = StreamController<UserModel?>.broadcast();
 
+  void _checkInitialAuthState() {
+    // TO DO: Implement token/session check logic here
+    Future.microtask(() {
+      _authStateController.add(null);
+    });
+  }
+
   @override
-  Stream<UserModel?> get onAuthStateChanged => _authStateController.stream;
+  Stream<UserModel?> get onAuthStateChanged {
+    _checkInitialAuthState();
+    return _authStateController.stream;
+  }
 
   @override
   Future<UserModel> register({

@@ -9,7 +9,7 @@ import '../config/router/app_router.dart';
 
 @module
 abstract class RegisterModule {
-  @lazySingleton
+  @singleton
   http.Client get httpClient => http.Client();
 
   @singleton
@@ -27,4 +27,7 @@ abstract class RegisterModule {
   // auth
   @injectable
   RegisterUsecase get registerUseCase;
+
+  @Injectable()
+  LogoutUsecase get logoutUsecase;
 }
