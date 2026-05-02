@@ -12,9 +12,12 @@
 import 'package:data/auth.dart' as _i41;
 import 'package:domain/auth.dart' as _i378;
 import 'package:get_it/get_it.dart' as _i174;
+import 'package:go_router/go_router.dart' as _i583;
 import 'package:http/http.dart' as _i519;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../features/auth/presentation/blocs/authentication/authentication_bloc.dart'
+    as _i652;
 import '../../features/auth/presentation/blocs/register/register_bloc.dart'
     as _i517;
 import 'register_module.dart' as _i291;
@@ -32,6 +35,16 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.authRemoteDataSource,
     );
     gh.lazySingleton<_i378.AuthRepository>(() => registerModule.authRepository);
+    gh.singleton<_i652.AuthenticationBloc>(
+      () => _i652.AuthenticationBloc(
+        authRepository: gh<_i378.AuthRepository>(),
+        logoutUseCase: gh<_i378.LogoutUsecase>(),
+      ),
+      dispose: (i) => i.close(),
+    );
+    gh.singleton<_i583.GoRouter>(
+      () => registerModule.router(gh<_i652.AuthenticationBloc>()),
+    );
     gh.factory<_i378.RegisterUsecase>(() => registerModule.registerUseCase);
     gh.factory<_i517.RegisterBloc>(
       () => _i517.RegisterBloc(registerUsecase: gh<_i378.RegisterUsecase>()),
