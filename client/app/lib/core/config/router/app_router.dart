@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/auth/presentation/blocs/authentication/authentication_bloc.dart';
+import '../../widgets/error_page.dart';
 import 'go_router_refresh_stream.dart';
 import 'route_constants.dart';
 
@@ -30,5 +31,8 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
       return null;
     },
     routes: [],
+    errorBuilder: (BuildContext context, GoRouterState state) {
+      return ErrorPage(error: state.error);
+    },
   );
 }
