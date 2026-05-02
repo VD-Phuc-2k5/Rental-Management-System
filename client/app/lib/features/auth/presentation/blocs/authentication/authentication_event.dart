@@ -10,7 +10,7 @@ sealed class AuthenticationEvent extends Equatable {
 final class _AuthenticationStatusChanged extends AuthenticationEvent {
   const _AuthenticationStatusChanged(this.user);
 
-  final UserEntity? user;
+  final AuthEntity? user;
 
   @override
   List<Object?> get props => [user];

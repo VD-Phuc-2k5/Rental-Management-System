@@ -18,6 +18,7 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../features/auth/presentation/blocs/authentication/authentication_bloc.dart'
     as _i652;
+import '../../features/auth/presentation/blocs/login/login_bloc.dart' as _i1018;
 import '../../features/auth/presentation/blocs/register/register_bloc.dart'
     as _i517;
 import 'register_module.dart' as _i291;
@@ -36,6 +37,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i378.AuthRepository>(() => registerModule.authRepository);
     gh.factory<_i378.RegisterUsecase>(() => registerModule.registerUseCase);
+    gh.factory<_i378.LoginUsecase>(() => registerModule.loginUsecase);
     gh.factory<_i378.LogoutUsecase>(() => registerModule.logoutUsecase);
     gh.singleton<_i652.AuthenticationBloc>(
       () => _i652.AuthenticationBloc(
@@ -49,6 +51,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i517.RegisterBloc>(
       () => _i517.RegisterBloc(registerUsecase: gh<_i378.RegisterUsecase>()),
+    );
+    gh.factory<_i1018.LoginBloc>(
+      () => _i1018.LoginBloc(loginUsecase: gh<_i378.LoginUsecase>()),
     );
     return this;
   }
@@ -71,6 +76,10 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i378.RegisterUsecase get registerUseCase =>
       _i378.RegisterUsecase(authRepository: _getIt<_i378.AuthRepository>());
+
+  @override
+  _i378.LoginUsecase get loginUsecase =>
+      _i378.LoginUsecase(authRepository: _getIt<_i378.AuthRepository>());
 
   @override
   _i378.LogoutUsecase get logoutUsecase =>

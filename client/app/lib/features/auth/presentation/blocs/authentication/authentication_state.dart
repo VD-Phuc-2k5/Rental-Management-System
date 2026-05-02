@@ -10,7 +10,7 @@ class AuthenticationState extends Equatable {
 
   const AuthenticationState.unknown() : this._();
 
-  const AuthenticationState.authenticated(UserEntity user)
+  const AuthenticationState.authenticated(AuthEntity user)
     : this._(
         status: AuthenticationStatus.authenticated,
         user: user,
@@ -22,7 +22,7 @@ class AuthenticationState extends Equatable {
       );
 
   final AuthenticationStatus status;
-  final UserEntity? user;
+  final AuthEntity? user;
 
   @override
   List<Object?> get props => [status, user];

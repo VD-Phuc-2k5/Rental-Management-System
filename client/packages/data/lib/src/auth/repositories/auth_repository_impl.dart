@@ -13,8 +13,8 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _authRemoteDataSource;
 
   @override
-  Stream<UserEntity?> get onAuthStateChanged {
-    final controller = StreamController<UserEntity?>();
+  Stream<AuthEntity?> get onAuthStateChanged {
+    final controller = StreamController<AuthEntity?>();
 
     final subscription = _authRemoteDataSource.onAuthStateChanged.listen(
       (userModel) {
@@ -53,6 +53,27 @@ class AuthRepositoryImpl implements AuthRepository {
       );
 
       return const Right(null);
+    } on AuthenticationException catch (e) {
+      return Left(AuthenticationFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthEntity>> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final data = await _authRemoteDataSource.login(
+        email: email,
+        password: password,
+      );
+
+      return Right(data);
     } on AuthenticationException catch (e) {
       return Left(AuthenticationFailure(message: e.message));
     } on NetworkException {

@@ -19,7 +19,7 @@ class AuthenticationBloc
        _authRepository = authRepository,
        super(const AuthenticationState.unknown()) {
     _authStateSubscription = _authRepository.onAuthStateChanged.listen(
-      (UserEntity? user) {
+      (AuthEntity? user) {
         add(_AuthenticationStatusChanged(user));
       },
     );
@@ -30,7 +30,7 @@ class AuthenticationBloc
 
   final AuthRepository _authRepository;
   final LogoutUsecase _logoutUseCase;
-  StreamSubscription<UserEntity?>? _authStateSubscription;
+  StreamSubscription<AuthEntity?>? _authStateSubscription;
 
   void _onAuthenticationStatusChanged(
     _AuthenticationStatusChanged event,

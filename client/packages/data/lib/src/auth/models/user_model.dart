@@ -9,13 +9,13 @@ part 'user_model.g.dart';
 class UserModel extends UserEntity {
   UserModel({
     required super.id,
-    required super.email,
+    super.email,
     required super.role,
-    required this.profile,
+    this.profile,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 
-  final ProfileModel profile;
+  final ProfileModel? profile;
 }

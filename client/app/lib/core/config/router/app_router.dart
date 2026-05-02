@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/auth/presentation/blocs/authentication/authentication_bloc.dart';
+import '../../../features/auth/presentation/pages/login_page.dart';
 import '../../../features/auth/presentation/pages/register_page.dart';
 import '../../../features/splash/presentation/pages/splash_page.dart';
 import '../../../screens/login-screen/login_screen.dart';
@@ -52,7 +53,7 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         path: RoutePaths.login,
         name: RouteNames.login,
         builder: (BuildContext context, GoRouterState state) {
-          return const LoginScreen();
+          return const LoginPage();
         },
       ),
     ],

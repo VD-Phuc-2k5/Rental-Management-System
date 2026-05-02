@@ -28,6 +28,9 @@ abstract class RegisterModule {
   @injectable
   RegisterUsecase get registerUseCase;
 
-  @Injectable()
+  @injectable
+  LoginUsecase get loginUsecase;
+
+  @injectable
   LogoutUsecase get logoutUsecase;
 }

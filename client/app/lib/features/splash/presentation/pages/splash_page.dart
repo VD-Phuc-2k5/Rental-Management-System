@@ -1,3 +1,4 @@
+import 'package:core/constants.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatelessWidget {
@@ -7,7 +8,9 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          color: AppColors.blue700,
+        ),
       ),
     );
   }
