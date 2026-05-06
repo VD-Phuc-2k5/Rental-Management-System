@@ -4,6 +4,12 @@ import { RegisterDto } from '../application/dto/register.dto';
 import { LoginDto } from '../application/dto/login.dto';
 import { RegisterService } from '../application/services/register.service';
 import { LoginService } from '../application/services/login.service';
+import { ForgotPasswordDto } from '../application/dto/forgot-password.dto';
+import { ResetPasswordDto } from '../application/dto/reset-password.dto';
+import { RequestPasswordResetService } from '../application/services/request-password-reset.service';
+import { ResetPasswordService } from '../application/services/reset-password.service';
+import { VerifyOtpDto } from '../application/dto/verify-otp.dto';
+import { VerifyOtpService } from '../application/services/verify-otp.service';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -11,6 +17,9 @@ export class AuthController {
   constructor(
     private readonly registerService: RegisterService,
     private readonly loginService: LoginService,
+    private readonly requestPasswordResetService: RequestPasswordResetService,
+    private readonly resetPasswordService: ResetPasswordService,
+    private readonly verifyOtpService: VerifyOtpService,
   ) {}
 
   @Post('register')
@@ -92,5 +101,93 @@ export class AuthController {
   async login(@Body() body: LoginDto) {
     const { email, password } = body;
     return this.loginService.execute(email, password); 
+  }
+
+  @Post('forgot-password')
+  @ApiBody({
+    type: ForgotPasswordDto,
+    examples: {
+      forgotPassword: {
+        value: {
+          email: 'tenant@example.com',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+    schema: {
+      example: {
+        statusCode: 201,
+        message: 'Success',
+        data: {
+          message: 'Neu email ton tai, ma OTP da duoc gui',
+        },
+      },
+    },
+  })
+  async forgotPassword(@Body() body: ForgotPasswordDto) {
+    return this.requestPasswordResetService.execute(body);
+  }
+
+  @Post('reset-password')
+  @ApiBody({
+    type: ResetPasswordDto,
+    examples: {
+      resetPassword: {
+        value: {
+          email: 'tenant@example.com',
+          otp: '123456',
+          newPassword: 'Aa123456!',
+          confirmPassword: 'Aa123456!',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+    schema: {
+      example: {
+        statusCode: 201,
+        message: 'Success',
+        data: {
+          message: 'Dat lai mat khau thanh cong',
+        },
+      },
+    },
+  })
+  async resetPassword(@Body() body: ResetPasswordDto) {
+    return this.resetPasswordService.execute(body);
+  }
+
+  @Post('confirm-otp')
+  @ApiBody({
+    type: VerifyOtpDto,
+    examples: {
+      confirmOtp: {
+        value: {
+          email: 'tenant@example.com',
+          otp: '123456',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+    schema: {
+      example: {
+        statusCode: 201,
+        message: 'Success',
+        data: {
+          message: 'OTP hop le',
+        },
+      },
+    },
+  })
+  async confirmOtp(@Body() body: VerifyOtpDto) {
+    return this.verifyOtpService.execute(body);
   }
 }

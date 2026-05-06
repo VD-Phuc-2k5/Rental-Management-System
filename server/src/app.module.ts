@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/presentation/auth.module';
 import { DrizzleModule } from './shared/infrastructure/database/drizzle.module';
 import { SupabaseModule } from './shared/infrastructure/supabase/supabase.module';
 import { PropertiesModule } from './modules/properties/presentation/properties.module';
+import { RedisModule } from './shared/infrastructure/redis/redis.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PropertiesModule } from './modules/properties/presentation/properties.m
       validate: validateEnvironment,
     }),
     SupabaseModule,
+    RedisModule,
     DrizzleModule,
     UsersModule,
     AuthModule,
