@@ -107,4 +107,48 @@ export class SupabaseAuthRepository implements AuthRepository {
       throw new AuthOperationError('Lỗi hệ thống khi đăng nhập');
     }
   }
+
+  async findUserIdByEmail(email: string): Promise<string | null> {
+    try {
+      const { data, error } = await this.supabaseService.getClient().auth.admin.listUsers({
+        page: 1,
+        perPage: 1000,
+      });
+
+      if (error) {
+        throw new AuthOperationError(error.message ?? 'Khong the tra cuu nguoi dung');
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+      const matched = data.users.find((user) =>
+        (user.email ?? '').toLowerCase() === normalizedEmail,
+      );
+
+      return matched?.id ?? null;
+    } catch (error) {
+      if (error instanceof AuthOperationError) {
+        throw error;
+      }
+
+      throw new AuthOperationError('Khong the tra cuu nguoi dung');
+    }
+  }
+
+  async updatePassword(userId: string, password: string): Promise<void> {
+    try {
+      const { error } = await this.supabaseService.getClient().auth.admin.updateUserById(userId, {
+        password,
+      });
+
+      if (error) {
+        throw new AuthOperationError(error.message ?? 'Khong the cap nhat mat khau');
+      }
+    } catch (error) {
+      if (error instanceof AuthOperationError) {
+        throw error;
+      }
+
+      throw new AuthOperationError('Khong the cap nhat mat khau');
+    }
+  }
 }
