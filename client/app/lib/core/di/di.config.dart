@@ -18,6 +18,8 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../features/auth/presentation/blocs/authentication/authentication_bloc.dart'
     as _i652;
+import '../../features/auth/presentation/blocs/forgot_password/forgot_password_bloc.dart'
+    as _i1047;
 import '../../features/auth/presentation/blocs/login/login_bloc.dart' as _i1018;
 import '../../features/auth/presentation/blocs/register/register_bloc.dart'
     as _i517;
@@ -39,6 +41,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i378.RegisterUsecase>(() => registerModule.registerUseCase);
     gh.factory<_i378.LoginUsecase>(() => registerModule.loginUsecase);
     gh.factory<_i378.LogoutUsecase>(() => registerModule.logoutUsecase);
+    gh.factory<_i378.ForgotPasswordUsecase>(
+      () => registerModule.forgotPasswordUsecase,
+    );
+    gh.factory<_i1047.ForgotPasswordBloc>(
+      () => _i1047.ForgotPasswordBloc(
+        forgotPasswordUsecase: gh<_i378.ForgotPasswordUsecase>(),
+      ),
+    );
     gh.singleton<_i652.AuthenticationBloc>(
       () => _i652.AuthenticationBloc(
         authRepository: gh<_i378.AuthRepository>(),
@@ -84,4 +94,10 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i378.LogoutUsecase get logoutUsecase =>
       _i378.LogoutUsecase(authRepository: _getIt<_i378.AuthRepository>());
+
+  @override
+  _i378.ForgotPasswordUsecase get forgotPasswordUsecase =>
+      _i378.ForgotPasswordUsecase(
+        authRepository: _getIt<_i378.AuthRepository>(),
+      );
 }

@@ -1,0 +1,23 @@
+import 'package:core/constants.dart';
+import 'package:flutter/material.dart';
+
+class ForgotPasswordLogo extends StatelessWidget {
+  const ForgotPasswordLogo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 96,
+      height: 96,
+      decoration: BoxDecoration(
+        color: AppColors.blue700.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(9999),
+      ),
+      child: const Icon(
+        Icons.lock_reset,
+        size: 40,
+        color: AppColors.blue700,
+      ),
+    );
+  }
+}
