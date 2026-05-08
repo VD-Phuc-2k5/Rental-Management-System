@@ -18,4 +18,8 @@ abstract interface class AuthRemoteDataSource {
   });
 
   Future<void> logout();
+
+  Future<void> forgotPassword({
+    required String email,
+  });
 }

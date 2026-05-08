@@ -119,4 +119,35 @@ class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
       throw UnknownException(message: e.toString());
     }
   }
+
+  @override
+  Future<void> forgotPassword({required String email}) async {
+    try {
+      final response = await _client.post(
+        Uri.parse("$baseUrl/auth/forgot-password"),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+        }),
+      );
+
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+
+      if (response.statusCode == 201) {
+        return;
+      }
+
+      throw AuthenticationException(message: json['message'] as String);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(
+        message: 'Invalid response format',
+      );
+    } catch (e) {
+      throw UnknownException(
+        message: 'Unexpected error: ${e.toString()}',
+      );
+    }
+  }
 }
