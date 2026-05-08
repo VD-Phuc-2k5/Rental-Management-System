@@ -193,6 +193,21 @@ class _LoginFormState extends State<LoginForm> {
                   ],
                 ),
 
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        context.goNamed(RouteNames.forgotPassword);
+                      },
+                      child: const Text(
+                        "Quên mật khẩu",
+                        style: TextStyle(color: AppColors.blue700),
+                      ),
+                    ),
+                  ],
+                ),
+
                 // Submit button
                 ElevatedButton(
                   onPressed: isLoading ? null : _submit,
