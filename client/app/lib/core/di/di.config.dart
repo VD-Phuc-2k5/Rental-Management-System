@@ -47,6 +47,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.forgotPasswordUsecase,
     );
     gh.factory<_i378.VerifyOtpUsecase>(() => registerModule.verifyOtpUsecase);
+    gh.factory<_i378.ResetPasswordUsecase>(
+      () => registerModule.resetPasswordUsecase,
+    );
     gh.factory<_i1047.ForgotPasswordBloc>(
       () => _i1047.ForgotPasswordBloc(
         forgotPasswordUsecase: gh<_i378.ForgotPasswordUsecase>(),
@@ -113,4 +116,10 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i378.VerifyOtpUsecase get verifyOtpUsecase =>
       _i378.VerifyOtpUsecase(authRepository: _getIt<_i378.AuthRepository>());
+
+  @override
+  _i378.ResetPasswordUsecase get resetPasswordUsecase =>
+      _i378.ResetPasswordUsecase(
+        authRepository: _getIt<_i378.AuthRepository>(),
+      );
 }

@@ -5,6 +5,7 @@ import '../../../features/auth/presentation/blocs/authentication/authentication_
 import '../../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../../features/auth/presentation/pages/login_page.dart';
 import '../../../features/auth/presentation/pages/register_page.dart';
+import '../../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../../features/auth/presentation/pages/verify_otp_page.dart';
 import '../../../features/splash/presentation/pages/splash_page.dart';
 import '../../widgets/error_page.dart';
@@ -24,7 +25,8 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
           location == RoutePaths.login || location == RoutePaths.register;
       final isForgotPassword =
           location.startsWith(RoutePaths.forgotPassword) ||
-          location.startsWith(RoutePaths.verifyForgotPasswordOtpPrefix);
+          location.startsWith(RoutePaths.verifyForgotPasswordOtpPrefix) ||
+          location.startsWith(RoutePaths.resetPassword);
 
       if (authStatus == AuthenticationStatus.unknown) {
         return isSplash ? null : RoutePaths.splash;
@@ -73,6 +75,16 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         builder: (BuildContext context, GoRouterState state) {
           final String email = state.pathParameters["email"] ?? "";
           return VerifyOtpPage(email: email);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.resetPassword,
+        name: RouteNames.resetPassword,
+        builder: (BuildContext context, GoRouterState state) {
+          final extra = state.extra as Map<String, String>;
+          final String email = extra["email"] ?? "";
+          final String otp = extra["otp"] ?? "";
+          return ResetPasswordPage(email: email, otp: otp);
         },
       ),
     ],

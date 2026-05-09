@@ -4,7 +4,9 @@ import 'package:core/constants.dart';
 import 'package:core/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/config/router/route_constants.dart';
 import '../blocs/verify_otp/verify_otp_bloc.dart';
 
 class VerifyOtpForm extends StatefulWidget {
@@ -107,6 +109,16 @@ class _VerifyOtpFormState extends State<VerifyOtpForm> {
           showToast(
             message: "Xác thực OTP thành công!",
             type: ToastType.success,
+          );
+
+          final email = context.read<VerifyOtpBloc>().email;
+          final otp = _otpControllers
+              .map((otpController) => otpController.text)
+              .join();
+
+          context.goNamed(
+            RouteNames.resetPassword,
+            extra: {'email': email, 'otp': otp},
           );
         }
         if (state is VerifyOtpInitial && _isResending) {

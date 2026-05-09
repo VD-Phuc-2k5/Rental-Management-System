@@ -31,4 +31,11 @@ abstract interface class AuthRepository {
     required String email,
     required String otp,
   });
+  
+  Future<Either<Failure, void>> resetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+    required String confirmPassword,
+  });
 }
