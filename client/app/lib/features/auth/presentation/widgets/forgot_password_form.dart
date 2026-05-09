@@ -2,7 +2,9 @@ import 'package:core/constants.dart';
 import 'package:core/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/config/router/route_constants.dart';
 import '../blocs/forgot_password/forgot_password_bloc.dart';
 
 class ForgotPasswordForm extends StatefulWidget {
@@ -52,6 +54,13 @@ class _ForgotPasswordForm extends State<ForgotPasswordForm> {
           showToast(
             message: "Mã OTP đã gửi đến email của bạn!",
             type: ToastType.success,
+          );
+
+          context.goNamed(
+            RouteNames.verifyForgotPasswordOtp,
+            pathParameters: {
+              'email': _emailController.text.trim(),
+            },
           );
         }
       },
@@ -121,27 +130,40 @@ class _ForgotPasswordForm extends State<ForgotPasswordForm> {
                 ),
 
                 // Submit button
-                ElevatedButton(
-                  onPressed: isLoading ? null : _submit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.blue700,
-                    disabledBackgroundColor: AppColors.blue700.withValues(
-                      alpha: 0.6,
+                SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : _submit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.blue700,
+                      disabledBackgroundColor: AppColors.blue700.withValues(
+                        alpha: 0.6,
+                      ),
+                      foregroundColor: AppColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 6,
+                      shadowColor: Colors.black.withValues(alpha: 1),
                     ),
-                    foregroundColor: AppColors.white,
-                  ),
-                  child: isLoading
-                      ? const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppColors.white,
+                    child: isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppColors.white,
+                            ),
+                          )
+                        : const Text(
+                            'Gửi mã OTP',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Inter',
+                            ),
                           ),
-                        )
-                      : const Text(
-                          'Gửi mã OTP',
-                        ),
+                  ),
                 ),
               ],
             ),

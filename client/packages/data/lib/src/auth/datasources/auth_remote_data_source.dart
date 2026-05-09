@@ -22,4 +22,9 @@ abstract interface class AuthRemoteDataSource {
   Future<void> forgotPassword({
     required String email,
   });
+
+  Future<void> verifyOtp({
+    required String email,
+    required String otp,
+  });
 }

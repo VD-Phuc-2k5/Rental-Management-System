@@ -23,6 +23,8 @@ import '../../features/auth/presentation/blocs/forgot_password/forgot_password_b
 import '../../features/auth/presentation/blocs/login/login_bloc.dart' as _i1018;
 import '../../features/auth/presentation/blocs/register/register_bloc.dart'
     as _i517;
+import '../../features/auth/presentation/blocs/verify_otp/verify_otp_bloc.dart'
+    as _i452;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -44,8 +46,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i378.ForgotPasswordUsecase>(
       () => registerModule.forgotPasswordUsecase,
     );
+    gh.factory<_i378.VerifyOtpUsecase>(() => registerModule.verifyOtpUsecase);
     gh.factory<_i1047.ForgotPasswordBloc>(
       () => _i1047.ForgotPasswordBloc(
+        forgotPasswordUsecase: gh<_i378.ForgotPasswordUsecase>(),
+      ),
+    );
+    gh.factory<_i452.VerifyOtpBloc>(
+      () => _i452.VerifyOtpBloc(
+        verifyOtpUsecase: gh<_i378.VerifyOtpUsecase>(),
         forgotPasswordUsecase: gh<_i378.ForgotPasswordUsecase>(),
       ),
     );
@@ -100,4 +109,8 @@ class _$RegisterModule extends _i291.RegisterModule {
       _i378.ForgotPasswordUsecase(
         authRepository: _getIt<_i378.AuthRepository>(),
       );
+
+  @override
+  _i378.VerifyOtpUsecase get verifyOtpUsecase =>
+      _i378.VerifyOtpUsecase(authRepository: _getIt<_i378.AuthRepository>());
 }

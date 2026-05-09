@@ -36,4 +36,7 @@ abstract class RegisterModule {
 
   @injectable
   ForgotPasswordUsecase get forgotPasswordUsecase;
+
+  @injectable
+  VerifyOtpUsecase get verifyOtpUsecase;
 }

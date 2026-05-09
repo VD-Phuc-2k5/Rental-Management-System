@@ -26,4 +26,9 @@ abstract interface class AuthRepository {
   Future<Either<Failure, void>> forgotPassword({
     required String email,
   });
+
+  Future<Either<Failure, void>> verifyOtp({
+    required String email,
+    required String otp,
+  });
 }
