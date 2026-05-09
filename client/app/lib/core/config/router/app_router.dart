@@ -25,7 +25,7 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
           location == RoutePaths.login || location == RoutePaths.register;
       final isForgotPassword =
           location.startsWith(RoutePaths.forgotPassword) ||
-          location.startsWith(RoutePaths.verifyForgotPasswordOtpPrefix) ||
+          location.startsWith(RoutePaths.verifyForgotPasswordOtp) ||
           location.startsWith(RoutePaths.resetPassword);
 
       if (authStatus == AuthenticationStatus.unknown) {
@@ -73,7 +73,8 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         path: RoutePaths.verifyForgotPasswordOtp,
         name: RouteNames.verifyForgotPasswordOtp,
         builder: (BuildContext context, GoRouterState state) {
-          final String email = state.pathParameters["email"] ?? "";
+          final extra = state.extra as Map<String, String>;
+          final String email = extra["email"] ?? "";
           return VerifyOtpPage(email: email);
         },
       ),

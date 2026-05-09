@@ -58,7 +58,7 @@ class _ForgotPasswordForm extends State<ForgotPasswordForm> {
 
           context.goNamed(
             RouteNames.verifyForgotPasswordOtp,
-            pathParameters: {
+            extra: {
               'email': _emailController.text.trim(),
             },
           );
