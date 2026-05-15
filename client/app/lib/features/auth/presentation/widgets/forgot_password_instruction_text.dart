@@ -1,22 +1,21 @@
-import 'package:app/core/constants.dart';
+import 'package:core/constants.dart';
 import 'package:flutter/material.dart';
 
-class InstructionText extends StatelessWidget {
-
-  const InstructionText({super.key});
+class ForgotPasswordInstructionText extends StatelessWidget {
+  const ForgotPasswordInstructionText({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisSize: MainAxisSize.min,
-      children: const [
+      children: [
         Text(
           'Quên mật khẩu?',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w700,
             fontFamily: 'Inter',
-            color: AppColors.black
+            color: AppColors.black,
           ),
         ),
         SizedBox(height: 8),

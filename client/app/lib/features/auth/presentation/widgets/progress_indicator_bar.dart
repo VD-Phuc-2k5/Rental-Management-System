@@ -1,15 +1,14 @@
-import 'package:app/core/constants.dart';
+import 'package:core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ProgressIndicatorBar extends StatelessWidget {
-  final int currentStep;
-  final int totalSteps;
-
   const ProgressIndicatorBar({
     super.key,
     required this.currentStep,
     required this.totalSteps,
   });
+  final int currentStep;
+  final int totalSteps;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class ProgressIndicatorBar extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: Text(
             'Bước $clampedStep/$totalSteps',
-            style: TextStyle(
+            style: const TextStyle(
               color: AppColors.slate500,
               fontSize: 12,
               fontWeight: FontWeight.w400,

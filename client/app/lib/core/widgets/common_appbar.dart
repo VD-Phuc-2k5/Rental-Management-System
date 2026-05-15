@@ -1,28 +1,19 @@
+import 'package:core/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import 'package:go_router/go_router.dart';
 
 class CommonAppBarBadge {
-  final String text;
-  final Color textColor;
-  final Color backgroundColor;
-
   CommonAppBarBadge({
     required this.text,
     this.textColor = AppColors.blue700,
     this.backgroundColor = AppColors.blue100,
   });
+  final String text;
+  final Color textColor;
+  final Color backgroundColor;
 }
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final bool showBack;
-  final List<Widget>? actions;
-  final double appbarBorderWidth;
-  final CommonAppBarBadge? badge;
-
-  static const double _badgeRowHeight = 24.0;
-  static const double _badgeBottomMargin = 8.0;
-
   const CommonAppBar({
     super.key,
     required this.title,
@@ -30,7 +21,17 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.appbarBorderWidth = 1.0,
     this.badge,
+    this.prevRouteName,
   });
+  final String title;
+  final bool showBack;
+  final List<Widget>? actions;
+  final double appbarBorderWidth;
+  final CommonAppBarBadge? badge;
+  final String? prevRouteName;
+
+  static const double _badgeRowHeight = 24.0;
+  static const double _badgeBottomMargin = 8.0;
 
   @override
   Size get preferredSize => Size.fromHeight(
@@ -46,7 +47,9 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: showBack
           ? IconButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                if (prevRouteName != null) {
+                  context.goNamed(prevRouteName!);
+                }
               },
               icon: const Icon(Icons.arrow_back, color: AppColors.blue950),
             )
@@ -66,7 +69,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions:
           actions ??
           const [
-            SizedBox(width: 48), // bằng kích thước leading
+            SizedBox(width: 48),
           ],
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(
@@ -81,7 +84,10 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
                 height: _badgeRowHeight,
                 child: Center(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: badge!.backgroundColor,
                       borderRadius: BorderRadius.circular(12),

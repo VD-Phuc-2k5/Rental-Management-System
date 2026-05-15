@@ -33,4 +33,13 @@ abstract class RegisterModule {
 
   @injectable
   LogoutUsecase get logoutUsecase;
+
+  @injectable
+  ForgotPasswordUsecase get forgotPasswordUsecase;
+
+  @injectable
+  VerifyOtpUsecase get verifyOtpUsecase;
+
+  @injectable
+  ResetPasswordUsecase get resetPasswordUsecase;
 }

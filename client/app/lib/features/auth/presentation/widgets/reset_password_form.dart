@@ -6,24 +6,26 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/router/route_constants.dart';
 import '../blocs/login/login_bloc.dart';
+import '../blocs/reset_password/reset_password_bloc.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class ResetPasswordForm extends StatefulWidget {
+  const ResetPasswordForm({super.key});
 
   @override
-  State<StatefulWidget> createState() => _LoginFormState();
+  State<StatefulWidget> createState() => _ResetPasswordFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _ResetPasswordFormState extends State<ResetPasswordForm> {
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
   // obsecures
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   // TextEditing Controllers
-  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   void _submit() {
     setState(() {
@@ -33,31 +35,36 @@ class _LoginFormState extends State<LoginForm> {
     final form = _formKey.currentState;
     if (form == null || !form.validate()) return;
 
-    context.read<LoginBloc>().add(
-      LoginRequested(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+    context.read<ResetPasswordBloc>().add(
+      ResetPasswordRequested(
+        newPassword: _passwordController.text.trim(),
+        confirmPassword: _confirmPasswordController.text.trim(),
       ),
     );
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginBloc, LoginState>(
+    return BlocConsumer<ResetPasswordBloc, ResetPasswordState>(
       listener: (context, state) {
-        if (state is LoginLoadFailure) {
+        if (state is ResetPasswordLoadFailure) {
           showToast(message: state.failure.message, type: ToastType.error);
         }
 
-        if (state is LoginLoadSuccess) {
-          showToast(message: "Đăng nhập thành công", type: ToastType.success);
+        if (state is ResetPasswordLoadSuccess) {
+          showToast(
+            message: "Đặt lại mật khẩu thành công",
+            type: ToastType.success,
+          );
+
+          context.goNamed(RouteNames.login);
         }
       },
       builder: (context, state) {
@@ -71,66 +78,12 @@ class _LoginFormState extends State<LoginForm> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 20,
               children: [
-                // Email
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Email",
-                      style: TextStyle(
-                        color: AppColors.slate500,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 6,
-                    ),
-                    TextFormField(
-                      controller: _emailController,
-                      style: const TextStyle(
-                        color: AppColors.slate400,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.email_outlined,
-                          color: AppColors.slate400,
-                        ),
-                        hintText: "Nhập email",
-                        hintStyle: const TextStyle(
-                          color: AppColors.slate400,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(80.0),
-                          borderSide: const BorderSide(
-                            color: AppColors.slate500,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(80.0),
-                          borderSide: const BorderSide(
-                            color: AppColors.blue500,
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Email không được để trống.';
-                        }
-                        return null;
-                      },
-                      textInputAction: TextInputAction.next,
-                      enabled: !isLoading,
-                    ),
-                  ],
-                ),
-
                 // Password
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Mật khẩu",
+                      "Mật khẩu mới",
                       style: TextStyle(
                         color: AppColors.slate500,
                         fontSize: 14,
@@ -164,7 +117,7 @@ class _LoginFormState extends State<LoginForm> {
                             });
                           },
                         ),
-                        hintText: "Nhập mật khẩu",
+                        hintText: "Nhập mật khẩu mới",
                         hintStyle: const TextStyle(
                           color: AppColors.slate400,
                         ),
@@ -183,7 +136,7 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Mật khẩu không được để trống.';
+                          return 'Mật khẩu mới không được để trống.';
                         }
                         return null;
                       },
@@ -193,63 +146,113 @@ class _LoginFormState extends State<LoginForm> {
                   ],
                 ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                // Confirm Password
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        context.goNamed(RouteNames.forgotPassword);
-                      },
-                      child: const Text(
-                        "Quên mật khẩu",
-                        style: TextStyle(color: AppColors.blue700),
+                    const Text(
+                      "Xác nhận mật khẩu",
+                      style: TextStyle(
+                        color: AppColors.slate500,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    TextFormField(
+                      controller: _confirmPasswordController,
+                      obscureText: _obscureConfirmPassword,
+                      style: const TextStyle(
+                        color: AppColors.slate400,
+                      ),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          Icons.key_outlined,
+                          color: AppColors.slate400,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: AppColors.slate400,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
+                            });
+                          },
+                        ),
+                        hintText: "Nhập Xác nhận mật khẩu",
+                        hintStyle: const TextStyle(
+                          color: AppColors.slate400,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(80.0),
+                          borderSide: const BorderSide(
+                            color: AppColors.slate500,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(80.0),
+                          borderSide: const BorderSide(
+                            color: AppColors.blue500,
+                          ),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Xác nhận mật khẩu không được để trống.';
+                        }
+                        return null;
+                      },
+                      textInputAction: TextInputAction.next,
+                      enabled: !isLoading,
                     ),
                   ],
                 ),
 
-                // Submit button
-                ElevatedButton(
-                  onPressed: isLoading ? null : _submit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.blue700,
-                    disabledBackgroundColor: AppColors.blue700.withValues(
-                      alpha: 0.6,
-                    ),
-                    foregroundColor: AppColors.white,
-                  ),
-                  child: isLoading
-                      ? const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppColors.white,
-                          ),
-                        )
-                      : const Text(
-                          'Đăng nhập',
-                        ),
+                const SizedBox(
+                  height: 20,
                 ),
 
-                TextButton(
-                  onPressed: isLoading
-                      ? null
-                      : () {
-                          context.goNamed(RouteNames.register);
-                        },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Chưa có tài khoản? ',
-                        style: TextStyle(color: AppColors.slate500),
+                // Submit button
+                SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : _submit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.blue700,
+                      disabledBackgroundColor: AppColors.blue700.withValues(
+                        alpha: 0.6,
                       ),
-                      Text(
-                        'Đăng ký',
-                        style: TextStyle(color: AppColors.blue700),
+                      foregroundColor: AppColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                    ],
+                      elevation: 6,
+                      shadowColor: Colors.black.withValues(alpha: 1),
+                    ),
+                    child: isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppColors.white,
+                            ),
+                          )
+                        : const Text(
+                            'Xác nhận',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
                   ),
                 ),
               ],

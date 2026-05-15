@@ -18,9 +18,13 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../features/auth/presentation/blocs/authentication/authentication_bloc.dart'
     as _i652;
+import '../../features/auth/presentation/blocs/forgot_password/forgot_password_bloc.dart'
+    as _i1047;
 import '../../features/auth/presentation/blocs/login/login_bloc.dart' as _i1018;
 import '../../features/auth/presentation/blocs/register/register_bloc.dart'
     as _i517;
+import '../../features/auth/presentation/blocs/verify_otp/verify_otp_bloc.dart'
+    as _i452;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -39,6 +43,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i378.RegisterUsecase>(() => registerModule.registerUseCase);
     gh.factory<_i378.LoginUsecase>(() => registerModule.loginUsecase);
     gh.factory<_i378.LogoutUsecase>(() => registerModule.logoutUsecase);
+    gh.factory<_i378.ForgotPasswordUsecase>(
+      () => registerModule.forgotPasswordUsecase,
+    );
+    gh.factory<_i378.VerifyOtpUsecase>(() => registerModule.verifyOtpUsecase);
+    gh.factory<_i378.ResetPasswordUsecase>(
+      () => registerModule.resetPasswordUsecase,
+    );
+    gh.factory<_i1047.ForgotPasswordBloc>(
+      () => _i1047.ForgotPasswordBloc(
+        forgotPasswordUsecase: gh<_i378.ForgotPasswordUsecase>(),
+      ),
+    );
+    gh.factory<_i452.VerifyOtpBloc>(
+      () => _i452.VerifyOtpBloc(
+        verifyOtpUsecase: gh<_i378.VerifyOtpUsecase>(),
+        forgotPasswordUsecase: gh<_i378.ForgotPasswordUsecase>(),
+      ),
+    );
     gh.singleton<_i652.AuthenticationBloc>(
       () => _i652.AuthenticationBloc(
         authRepository: gh<_i378.AuthRepository>(),
@@ -84,4 +106,20 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i378.LogoutUsecase get logoutUsecase =>
       _i378.LogoutUsecase(authRepository: _getIt<_i378.AuthRepository>());
+
+  @override
+  _i378.ForgotPasswordUsecase get forgotPasswordUsecase =>
+      _i378.ForgotPasswordUsecase(
+        authRepository: _getIt<_i378.AuthRepository>(),
+      );
+
+  @override
+  _i378.VerifyOtpUsecase get verifyOtpUsecase =>
+      _i378.VerifyOtpUsecase(authRepository: _getIt<_i378.AuthRepository>());
+
+  @override
+  _i378.ResetPasswordUsecase get resetPasswordUsecase =>
+      _i378.ResetPasswordUsecase(
+        authRepository: _getIt<_i378.AuthRepository>(),
+      );
 }

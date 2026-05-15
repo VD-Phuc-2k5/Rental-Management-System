@@ -26,32 +26,35 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: AppColors.gray25,
-      body: Stack(
-        children: [
-          LoginBackground(),
-          Center(
-            child: SafeArea(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    LoginLogo(),
-                    SizedBox(height: 12),
-                    LoginHeader(),
-                    SizedBox(height: 24),
-                    LoginForm(),
-                    SizedBox(height: 24),
-                    //LoginFooter(onSignUpPressed: () => _handleSignUp(context)),
-                    SizedBox(height: 40),
-                  ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: const Scaffold(
+        backgroundColor: AppColors.gray25,
+        body: Stack(
+          children: [
+            LoginBackground(),
+            Center(
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      LoginLogo(),
+                      SizedBox(height: 12),
+                      LoginHeader(),
+                      SizedBox(height: 24),
+                      LoginForm(),
+                      SizedBox(height: 24),
+                      //LoginFooter(onSignUpPressed: () => _handleSignUp(context)),
+                      SizedBox(height: 40),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

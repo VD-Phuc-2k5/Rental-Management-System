@@ -1,17 +1,16 @@
-import 'package:app/core/constants.dart';
+import 'package:core/constants.dart';
 import 'package:flutter/material.dart';
 
-class CreateNewPassIntruction extends StatelessWidget {
-
-  const CreateNewPassIntruction({super.key});
+class ResetPasswordIntruction extends StatelessWidget {
+  const ResetPasswordIntruction({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Tạo mật khẩu mới',
           style: TextStyle(
             fontSize: 32,
@@ -20,10 +19,10 @@ class CreateNewPassIntruction extends StatelessWidget {
             color: AppColors.black,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           'Vui lòng thiết lập mật khẩu an toàn',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             fontFamily: 'Liberation Sans',

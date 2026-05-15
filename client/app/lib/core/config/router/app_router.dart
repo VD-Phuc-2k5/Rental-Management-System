@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/auth/presentation/blocs/authentication/authentication_bloc.dart';
+import '../../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../../features/auth/presentation/pages/login_page.dart';
 import '../../../features/auth/presentation/pages/register_page.dart';
+import '../../../features/auth/presentation/pages/reset_password_page.dart';
+import '../../../features/auth/presentation/pages/verify_otp_page.dart';
 import '../../../features/splash/presentation/pages/splash_page.dart';
 import '../../widgets/error_page.dart';
 import 'go_router_refresh_stream.dart';
@@ -20,6 +23,10 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
       final isSplash = location == RoutePaths.splash;
       final isAuthRoute =
           location == RoutePaths.login || location == RoutePaths.register;
+      final isForgotPassword =
+          location.startsWith(RoutePaths.forgotPassword) ||
+          location.startsWith(RoutePaths.verifyForgotPasswordOtp) ||
+          location.startsWith(RoutePaths.resetPassword);
 
       if (authStatus == AuthenticationStatus.unknown) {
         return isSplash ? null : RoutePaths.splash;
@@ -28,7 +35,7 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
       if (authStatus == AuthenticationStatus.authenticated) {
         if (isSplash || isAuthRoute) return RoutePaths.home;
       } else {
-        if (!isAuthRoute) return RoutePaths.login;
+        if (!isAuthRoute && !isForgotPassword) return RoutePaths.login;
       }
 
       return null;
@@ -53,6 +60,32 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         name: RouteNames.login,
         builder: (BuildContext context, GoRouterState state) {
           return const LoginPage();
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.forgotPassword,
+        name: RouteNames.forgotPassword,
+        builder: (BuildContext context, GoRouterState state) {
+          return const ForgotPasswordPage();
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.verifyForgotPasswordOtp,
+        name: RouteNames.verifyForgotPasswordOtp,
+        builder: (BuildContext context, GoRouterState state) {
+          final extra = state.extra as Map<String, String>;
+          final String email = extra["email"] ?? "";
+          return VerifyOtpPage(email: email);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.resetPassword,
+        name: RouteNames.resetPassword,
+        builder: (BuildContext context, GoRouterState state) {
+          final extra = state.extra as Map<String, String>;
+          final String email = extra["email"] ?? "";
+          final String otp = extra["otp"] ?? "";
+          return ResetPasswordPage(email: email, otp: otp);
         },
       ),
     ],

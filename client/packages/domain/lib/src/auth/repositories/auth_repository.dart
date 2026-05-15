@@ -22,4 +22,20 @@ abstract interface class AuthRepository {
   });
 
   Future<Either<Failure, void>> logout();
+
+  Future<Either<Failure, void>> forgotPassword({
+    required String email,
+  });
+
+  Future<Either<Failure, void>> verifyOtp({
+    required String email,
+    required String otp,
+  });
+  
+  Future<Either<Failure, void>> resetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+    required String confirmPassword,
+  });
 }
