@@ -33,6 +33,7 @@ export class SupabaseAuthRepository implements AuthRepository {
         email_confirm: true,
         user_metadata: {
           phone: input.phone,
+          identityNumber: input.identity_number,
           fullName: input.fullName,
           avatarUrl: input.avatarUrl,
         },

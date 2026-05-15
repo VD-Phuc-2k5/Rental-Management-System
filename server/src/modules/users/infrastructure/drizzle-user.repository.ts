@@ -29,6 +29,7 @@ export class DrizzleUserRepository implements UserRepository {
         return new UserEntity(
             row.id,
             row.phone,
+            row.identityNumber,
             row.fullName,
             row.avatarUrl,
             row.roles.map((r) => r.role),
@@ -38,39 +39,67 @@ export class DrizzleUserRepository implements UserRepository {
         );
     }
 
-    async create(input: CreateUserInput): Promise<UserEntity> {
-        const row = await this.drizzleService.db.transaction(async (tx) => {
-            const [user] = await tx.insert(users).values(
-                {
-                    id: input.id,
-                    fullName: input.fullName,
-                    phone: input.phone,
-                    avatarUrl: input.avatarUrl,
+    async findByPhone(phone: string): Promise<UserEntity | null> {
+        const row = await this.drizzleService.db.query.users
+            .findFirst({
+                where: eq(users.phone, phone),
+                with: {
+                    roles: {
+                        columns: {
+                            role: true,
+                        }
+                    }
                 }
-            ).returning();
-
-            await tx.insert(userRoles).values({
-                userId: user.id,
-                role: "tenant"
             });
 
-            return user;
-        });
+        if (!row) {
+            return null;
+        }
 
         return new UserEntity(
             row.id,
             row.phone,
+            row.identityNumber,
             row.fullName,
             row.avatarUrl,
-            ['tenant'],
+            row.roles.map((r) => r.role),
             row.createdAt.toISOString(),
             row.updatedAt.toISOString(),
             row.acceptedTerms,
         );
-
     }
 
-    async createWithDefaultRole(input: CreateUserInput): Promise<UserEntity> {
+    async findByIdentityNumber(identityNumber: string): Promise<UserEntity | null> {
+        const row = await this.drizzleService.db.query.users
+            .findFirst({
+                where: eq(users.identityNumber, identityNumber),
+                with: {
+                    roles: {
+                        columns: {
+                            role: true,
+                        }
+                    }
+                }
+            });
+
+        if (!row) {
+            return null;
+        }
+
+        return new UserEntity(
+            row.id,
+            row.phone,
+            row.identityNumber,
+            row.fullName,
+            row.avatarUrl,
+            row.roles.map((r) => r.role),
+            row.createdAt.toISOString(),
+            row.updatedAt.toISOString(),
+            row.acceptedTerms,
+        );
+    }
+
+    async create(input: CreateUserInput, role = 'tenant' as RoleType): Promise<UserEntity> {
         const row = await this.drizzleService.db.transaction(async (tx) => {
             const [insertedUser] = await tx
                 .insert(users)
@@ -79,6 +108,7 @@ export class DrizzleUserRepository implements UserRepository {
                     phone: input.phone,
                     fullName: input.fullName,
                     avatarUrl: input.avatarUrl,
+                    identityNumber: input.identityNumber,
                 })
                 .onConflictDoNothing()
                 .returning();
@@ -95,7 +125,7 @@ export class DrizzleUserRepository implements UserRepository {
 
             await tx.insert(userRoles).values({
                 userId: createdUser.id,
-                role: 'tenant',
+                role: role,
             }).onConflictDoNothing();
 
             return createdUser;
@@ -104,9 +134,10 @@ export class DrizzleUserRepository implements UserRepository {
         return new UserEntity(
             row.id,
             row.phone,
+            row.identityNumber,
             row.fullName,
             row.avatarUrl,
-            ['tenant'],
+            [role],
             row.createdAt.toISOString(),
             row.updatedAt.toISOString(),
             row.acceptedTerms,

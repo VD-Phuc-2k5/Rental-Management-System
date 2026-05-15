@@ -10,6 +10,7 @@ import { RequestPasswordResetService } from '../application/services/request-pas
 import { ResetPasswordService } from '../application/services/reset-password.service';
 import { VerifyOtpDto } from '../application/dto/verify-otp.dto';
 import { VerifyOtpService } from '../application/services/verify-otp.service';
+import { identity } from 'rxjs';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -22,7 +23,7 @@ export class AuthController {
     private readonly verifyOtpService: VerifyOtpService,
   ) {}
 
-  @Post('register')
+  @Post('register/user')
   @ApiBody({
     type: RegisterDto,
     examples: {
@@ -59,8 +60,50 @@ export class AuthController {
       },
     },
   })
-  async register(@Body() body: RegisterDto) {
+  async registerUser(@Body() body: RegisterDto) {
     return this.registerService.execute(body);
+  }
+
+  @Post('register/landlord')
+  @ApiBody({
+    type: RegisterDto,
+    examples: {
+      register: {
+        value: {
+          email: 'landlord@example.com',
+          fullName: 'Tran Thi B',
+          phone: '0912345678',
+          identity_number: '123456789012',
+          avatarUrl: 'https://example.com/avatar.png',
+          password: 'Aa123456!',
+          confirm_password: 'Aa123456!',
+          accepted_terms: true,
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+    schema: {
+      example: {
+        statusCode: 201,
+        message: 'Success',
+        data: {
+          id: '3d2b765f-3f41-4a36-9f04-742c339b49b5',
+          email: 'landlord@example.com',
+          profile: {
+            phone: '0912345678',
+            fullName: 'Tran Thi B',
+            avatarUrl: 'https://example.com/avatar.png',
+          },
+          role: 'landlord',
+        },
+      },
+    },
+  })
+  async registerLandlord(@Body() body: RegisterDto) {
+    return this.registerService.execute(body, 'landlord');
   }
 
   @Post('login')

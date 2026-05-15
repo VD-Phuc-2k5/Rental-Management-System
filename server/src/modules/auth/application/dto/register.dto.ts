@@ -33,6 +33,13 @@ export class RegisterDto {
   @ApiPropertyOptional({ example: '0912345678' })
   phone: string | null = null;
 
+  @IsString()
+  @IsOptional()
+  @Matches(/^[0-9]+$/, { message: 'Số CMND/CCCD chỉ được chứa chữ số' })
+  @Length(12, 12)
+  @ApiPropertyOptional({ example: '123456789012' })
+  identity_number?: string | null = null;
+
   @IsOptional()
   @IsUrl({ require_tld: false })
   @ApiPropertyOptional({ example: 'https://example.com/avatar.png' })

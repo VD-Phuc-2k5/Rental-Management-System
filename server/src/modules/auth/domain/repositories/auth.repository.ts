@@ -3,6 +3,7 @@ export type RegisterAuthInput = {
   password: string;
   confirmPassword: string;
   phone: string | null;
+  identity_number?: string | null;
   fullName: string;
   avatarUrl?: string;
   acceptTerms: boolean;
