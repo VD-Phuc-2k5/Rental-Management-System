@@ -198,7 +198,12 @@ class _LoginFormState extends State<LoginForm> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        context.goNamed(RouteNames.forgotPassword);
+                        context.goNamed(
+                          RouteNames.forgotPassword,
+                          extra: {
+                            'step': '1',
+                          },
+                        );
                       },
                       child: const Text(
                         "Quên mật khẩu",

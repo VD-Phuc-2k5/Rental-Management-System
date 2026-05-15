@@ -23,10 +23,7 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
       final isSplash = location == RoutePaths.splash;
       final isAuthRoute =
           location == RoutePaths.login || location == RoutePaths.register;
-      final isForgotPassword =
-          location.startsWith(RoutePaths.forgotPassword) ||
-          location.startsWith(RoutePaths.verifyForgotPasswordOtp) ||
-          location.startsWith(RoutePaths.resetPassword);
+      final isForgotPassword = location == RoutePaths.forgotPassword;
 
       if (authStatus == AuthenticationStatus.unknown) {
         return isSplash ? null : RoutePaths.splash;
@@ -66,26 +63,22 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         path: RoutePaths.forgotPassword,
         name: RouteNames.forgotPassword,
         builder: (BuildContext context, GoRouterState state) {
-          return const ForgotPasswordPage();
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.verifyForgotPasswordOtp,
-        name: RouteNames.verifyForgotPasswordOtp,
-        builder: (BuildContext context, GoRouterState state) {
           final extra = state.extra as Map<String, String>;
-          final String email = extra["email"] ?? "";
-          return VerifyOtpPage(email: email);
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.resetPassword,
-        name: RouteNames.resetPassword,
-        builder: (BuildContext context, GoRouterState state) {
-          final extra = state.extra as Map<String, String>;
-          final String email = extra["email"] ?? "";
-          final String otp = extra["otp"] ?? "";
-          return ResetPasswordPage(email: email, otp: otp);
+          final step = extra["step"] ?? "";
+
+          switch (step) {
+            case "1":
+              return const ForgotPasswordPage();
+            case "2":
+              final String email = extra["email"] ?? "";
+              return VerifyOtpPage(email: email);
+            case "3":
+              final String email = extra["email"] ?? "";
+              final String otp = extra["otp"] ?? "";
+              return ResetPasswordPage(email: email, otp: otp);
+            default:
+              return const SplashPage();
+          }
         },
       ),
     ],

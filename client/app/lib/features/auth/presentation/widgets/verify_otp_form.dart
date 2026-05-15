@@ -117,8 +117,8 @@ class _VerifyOtpFormState extends State<VerifyOtpForm> {
               .join();
 
           context.goNamed(
-            RouteNames.resetPassword,
-            extra: {'email': email, 'otp': otp},
+            RouteNames.forgotPassword,
+            extra: {'step': '3', 'email': email, 'otp': otp},
           );
         }
         if (state is VerifyOtpInitial && _isResending) {
