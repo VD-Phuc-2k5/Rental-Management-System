@@ -27,7 +27,7 @@ export class RequestPasswordResetService {
 
       await this.redisService
         .getClient()
-        .set(redisKey, otp, 'EX', this.otpTtlSeconds);
+        .set(redisKey, JSON.stringify({ otp, isVerified: false }), 'EX', this.otpTtlSeconds);
 
       if (userId) {
         await this.mailService.sendOtpEmail(email, otp);

@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { RedisService } from 'src/shared/infrastructure/redis/redis.service';
 import { VerifyOtpDto } from '../dto/verify-otp.dto';
+import { OTPData } from 'src/shared/typings/otp';
 
 @Injectable()
 export class VerifyOtpService {
@@ -11,11 +12,17 @@ export class VerifyOtpService {
     const otp = input.otp.trim();
     const redisKey = this.getRedisKey(email);
 
-    const storedOtp = await this.redisService.getClient().get(redisKey);
+    const storedOtp = await this.redisService.getValue<OTPData>(redisKey);
 
-    if (!storedOtp || storedOtp !== otp) {
+    if (!storedOtp || storedOtp.otp !== otp) {
       throw new BadRequestException('OTP không đúng hoặc đã hết hạn');
     }
+
+    //update OTP as verified
+    await this.redisService.getClient()
+      .set(
+        redisKey, 
+        JSON.stringify({ otp: storedOtp.otp, isVerified: true }));
 
     return { message: 'OTP hợp lệ' };
   }

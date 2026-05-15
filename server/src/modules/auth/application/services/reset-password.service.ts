@@ -3,6 +3,7 @@ import { AuthRepository } from '../../domain/repositories/auth.repository';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
 import { RedisService } from 'src/shared/infrastructure/redis/redis.service';
 import { AuthOperationError } from '../../domain/errors/auth.errors';
+import { OTPData } from 'src/shared/typings/otp';
 
 @Injectable()
 export class ResetPasswordService {
@@ -25,10 +26,14 @@ export class ResetPasswordService {
     const redisKey = this.getRedisKey(email);
 
     try {
-      const storedOtp = await this.redisService.getClient().get(redisKey);
+      const storedOtp = await this.redisService.getValue<OTPData>(redisKey);
 
-      if (!storedOtp || storedOtp !== otp) {
-        throw new BadRequestException('OTP không đúng hoặc đã hết hạn');
+      if (!storedOtp) {
+        throw new BadRequestException('Mã OTP không hợp lệ hoặc đã hết hạn');
+      }
+
+      if (!storedOtp || (storedOtp.otp !== otp && !storedOtp.isVerified)) {
+        throw new BadRequestException('Mã OTP không hợp lệ hoặc đã hết hạn');
       }
 
       const userId = await this.authRepository.findUserIdByEmail(email);
