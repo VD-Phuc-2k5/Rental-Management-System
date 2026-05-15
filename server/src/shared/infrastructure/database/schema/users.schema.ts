@@ -3,6 +3,7 @@ import { userRoles } from './user-roles.schema';
 import { relations } from 'drizzle-orm/relations';
 import { properties } from './properties.schema';
 import { sql } from 'drizzle-orm/sql/sql';
+import { identity } from 'rxjs';
 
 const authSchema = pgSchema('auth');
 const authUsers = authSchema.table('users', {
@@ -14,6 +15,7 @@ export const users = pgTable('users', {
     .primaryKey()
     .references(() => authUsers.id, { onDelete: 'cascade' }),
   phone: text('phone').unique(),
+  identityNumber: text('identity_number').unique(),
   fullName: text('full_name').notNull(),
   avatarUrl: text('avatar_url'),
   acceptedTerms: boolean('accepted_terms').notNull().default(false),
