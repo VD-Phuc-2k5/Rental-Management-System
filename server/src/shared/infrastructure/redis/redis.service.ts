@@ -41,4 +41,14 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   getClient(): Redis {
     return this.client;
   }
+
+  async getValue<T>(key: string): Promise<T | null> {
+    try {
+      const value = await this.client.get(key);
+      return value ? JSON.parse(value) as T : null;
+    } catch (error) {
+      this.logger.error('Failed to get value from Redis', error instanceof Error ? error.stack : String(error));
+      throw new Error('Failed to get value from Redis');
+    }
+  }
 }
