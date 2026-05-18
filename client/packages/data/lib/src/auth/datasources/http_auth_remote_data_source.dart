@@ -40,7 +40,7 @@ class HttpAuthRemoteDataSource implements AuthRemoteDataSource {
   }) async {
     try {
       final response = await _client.post(
-        Uri.parse("$baseUrl/auth/register"),
+        Uri.parse("$baseUrl/auth/register/user"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'fullName': fullName,
