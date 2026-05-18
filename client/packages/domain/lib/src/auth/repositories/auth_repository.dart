@@ -16,6 +16,16 @@ abstract interface class AuthRepository {
     required bool acceptedTerms,
   });
 
+  Future<Either<Failure, void>> registerLandlord({
+    required String identityNumber,
+    required String fullName,
+    required String password,
+    required String confirmPassword,
+    required String email,
+    required String phone,
+    required bool acceptedTerms,
+  });
+
   Future<Either<Failure, AuthEntity>> login({
     required String email,
     required String password,
@@ -31,7 +41,7 @@ abstract interface class AuthRepository {
     required String email,
     required String otp,
   });
-  
+
   Future<Either<Failure, void>> resetPassword({
     required String email,
     required String otp,

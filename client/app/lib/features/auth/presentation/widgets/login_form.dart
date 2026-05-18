@@ -237,25 +237,60 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                 ),
 
-                TextButton(
-                  onPressed: isLoading
-                      ? null
-                      : () {
-                          context.goNamed(RouteNames.register);
-                        },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Chưa có tài khoản? ',
-                        style: TextStyle(color: AppColors.slate500),
+                Column(
+                  children: [
+                    TextButton(
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              context.goNamed(
+                                RouteNames.register,
+                                extra: {
+                                  'role': 'user',
+                                },
+                              );
+                            },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Chưa có tài khoản? ',
+                            style: TextStyle(color: AppColors.slate500),
+                          ),
+                          Text(
+                            'Đăng ký',
+                            style: TextStyle(color: AppColors.blue700),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Đăng ký',
-                        style: TextStyle(color: AppColors.blue700),
+                    ),
+
+                    TextButton(
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              context.goNamed(
+                                RouteNames.register,
+                                extra: {
+                                  'role': 'landlord',
+                                },
+                              );
+                            },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Đăng ký trở thành chủ trọ? ',
+                            style: TextStyle(color: AppColors.slate500),
+                          ),
+                          Text(
+                            'Đăng ký',
+                            style: TextStyle(color: AppColors.blue700),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),

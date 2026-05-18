@@ -46,8 +46,6 @@ class LoginView extends StatelessWidget {
                       SizedBox(height: 24),
                       LoginForm(),
                       SizedBox(height: 24),
-                      //LoginFooter(onSignUpPressed: () => _handleSignUp(context)),
-                      SizedBox(height: 40),
                     ],
                   ),
                 ),

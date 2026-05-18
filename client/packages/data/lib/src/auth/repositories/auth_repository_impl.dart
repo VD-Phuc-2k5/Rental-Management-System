@@ -63,6 +63,37 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, void>> registerLandlord({
+    required String identityNumber,
+    required String fullName,
+    required String password,
+    required String confirmPassword,
+    required String email,
+    required String phone,
+    required bool acceptedTerms,
+  }) async {
+    try {
+      await _authRemoteDataSource.registerLandlord(
+        identityNumber: identityNumber,
+        fullName: fullName,
+        password: password,
+        confirmPassword: confirmPassword,
+        email: email,
+        phone: phone,
+        acceptedTerms: acceptedTerms,
+      );
+
+      return const Right(null);
+    } on AuthenticationException catch (e) {
+      return Left(AuthenticationFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
   Future<Either<Failure, AuthEntity>> login({
     required String email,
     required String password,

@@ -23,6 +23,8 @@ import '../../features/auth/presentation/blocs/forgot_password/forgot_password_b
 import '../../features/auth/presentation/blocs/login/login_bloc.dart' as _i1018;
 import '../../features/auth/presentation/blocs/register/register_bloc.dart'
     as _i517;
+import '../../features/auth/presentation/blocs/register_landlord/register_landlord_bloc.dart'
+    as _i165;
 import '../../features/auth/presentation/blocs/verify_otp/verify_otp_bloc.dart'
     as _i452;
 import 'register_module.dart' as _i291;
@@ -41,6 +43,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i378.AuthRepository>(() => registerModule.authRepository);
     gh.factory<_i378.RegisterUsecase>(() => registerModule.registerUseCase);
+    gh.factory<_i378.RegisterLandlordUsecase>(
+      () => registerModule.registerLandlordUsecase,
+    );
     gh.factory<_i378.LoginUsecase>(() => registerModule.loginUsecase);
     gh.factory<_i378.LogoutUsecase>(() => registerModule.logoutUsecase);
     gh.factory<_i378.ForgotPasswordUsecase>(
@@ -53,6 +58,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1047.ForgotPasswordBloc>(
       () => _i1047.ForgotPasswordBloc(
         forgotPasswordUsecase: gh<_i378.ForgotPasswordUsecase>(),
+      ),
+    );
+    gh.factory<_i165.RegisterLandlordBloc>(
+      () => _i165.RegisterLandlordBloc(
+        registerLandlordUsecase: gh<_i378.RegisterLandlordUsecase>(),
       ),
     );
     gh.factory<_i452.VerifyOtpBloc>(
@@ -98,6 +108,12 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i378.RegisterUsecase get registerUseCase =>
       _i378.RegisterUsecase(authRepository: _getIt<_i378.AuthRepository>());
+
+  @override
+  _i378.RegisterLandlordUsecase get registerLandlordUsecase =>
+      _i378.RegisterLandlordUsecase(
+        authRepository: _getIt<_i378.AuthRepository>(),
+      );
 
   @override
   _i378.LoginUsecase get loginUsecase =>

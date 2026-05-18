@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../features/auth/presentation/blocs/authentication/authentication_bloc.dart';
 import '../../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../../features/auth/presentation/pages/login_page.dart';
+import '../../../features/auth/presentation/pages/register_landlord_page.dart';
 import '../../../features/auth/presentation/pages/register_page.dart';
 import '../../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../../features/auth/presentation/pages/verify_otp_page.dart';
@@ -49,7 +50,17 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         path: RoutePaths.register,
         name: RouteNames.register,
         builder: (BuildContext context, GoRouterState state) {
-          return const RegisterPage();
+          final extra = state.extra as Map<String, String>;
+          final role = extra["role"] ?? "";
+
+          switch (role) {
+            case 'user':
+              return const RegisterPage();
+            case 'landlord':
+              return const RegisterLandlordPage();
+            default:
+              return const SplashPage();
+          }
         },
       ),
       GoRoute(

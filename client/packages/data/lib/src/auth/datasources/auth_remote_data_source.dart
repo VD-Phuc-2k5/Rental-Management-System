@@ -12,6 +12,16 @@ abstract interface class AuthRemoteDataSource {
     required bool acceptedTerms,
   });
 
+  Future<void> registerLandlord({
+    required String identityNumber,
+    required String fullName,
+    required String password,
+    required String confirmPassword,
+    required String email,
+    required String phone,
+    required bool acceptedTerms,
+  });
+
   Future<AuthModel> login({
     required String email,
     required String password,
