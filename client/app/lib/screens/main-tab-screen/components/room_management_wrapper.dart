@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../empty-room-screen/empty_room_screen.dart';
-import '../../room-list-screen/room_list_screen.dart';
-
 class RoomManagementWrapper extends StatefulWidget {
   const RoomManagementWrapper({super.key});
 
@@ -25,10 +22,6 @@ class RoomManagementWrapperState extends State<RoomManagementWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    if (hasRooms) {
-      return const RoomListScreen();
-    } else {
-      return const EmptyRoomScreen();
-    }
+    return Container();
   }
 }

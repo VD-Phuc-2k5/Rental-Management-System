@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+﻿import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,6 +9,7 @@ import { DrizzleModule } from './shared/infrastructure/database/drizzle.module';
 import { SupabaseModule } from './shared/infrastructure/supabase/supabase.module';
 import { PropertiesModule } from './modules/properties/presentation/properties.module';
 import { RedisModule } from './shared/infrastructure/redis/redis.module';
+import { RoomsModule } from './modules/rooms/presentation/room.module';
 
 @Module({
   imports: [
@@ -24,8 +25,10 @@ import { RedisModule } from './shared/infrastructure/redis/redis.module';
     UsersModule,
     AuthModule,
     PropertiesModule,
+    RoomsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+

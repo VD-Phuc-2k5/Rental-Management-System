@@ -1,8 +1,6 @@
 import 'package:app/core/constants.dart';
 import 'package:flutter/material.dart';
 
-import '../../update-room-screen/update_room_screen.dart';
-
 class RoomDetailsBottomBar extends StatelessWidget {
   const RoomDetailsBottomBar({super.key});
 
@@ -25,12 +23,7 @@ class RoomDetailsBottomBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(16.0),
             ),
           ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const UpdateRoomScreen()),
-            );
-          },
+          onPressed: () {},
           icon: const Icon(
             Icons.edit_outlined,
             color: AppColors.slate900,

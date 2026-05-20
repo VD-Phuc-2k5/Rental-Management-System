@@ -1,4 +1,4 @@
-class AppException implements Exception {
+﻿class AppException implements Exception {
   const AppException({required this.message});
 
   final String message;
@@ -33,4 +33,8 @@ class NetworkException extends AppException {
 
 class UnknownException extends AppException {
   const UnknownException({super.message = 'An unknown error occurred.'});
+}
+
+class ServerException extends AppException {
+  const ServerException({required super.message});
 }
