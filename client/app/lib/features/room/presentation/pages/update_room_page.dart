@@ -1,10 +1,10 @@
-﻿import 'package:app/core/constants.dart';
-import 'package:app/core/di/di.dart';
+﻿import 'package:core/constants.dart';
 import 'package:domain/room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/di/di.dart';
 import '../blocs/update_room/update_room_bloc.dart';
 
 class UpdateRoomPage extends StatelessWidget {
@@ -29,59 +29,126 @@ class _UpdateRoomView extends StatefulWidget {
 
 class _UpdateRoomViewState extends State<_UpdateRoomView> {
   late final _titleCtrl = TextEditingController(text: widget.room.title);
-  late final _areaCtrl = TextEditingController(text: widget.room.areaSqm.toString());
-  late final _rentCtrl = TextEditingController(text: widget.room.monthlyRent.toInt().toString());
-  late final _depositCtrl = TextEditingController(text: widget.room.depositAmount.toInt().toString());
-  late final _elecCtrl = TextEditingController(text: widget.room.electricityRatePerKwh.toString());
-  late final _waterCtrl = TextEditingController(text: widget.room.waterRatePerM3.toString());
-  late final _descCtrl = TextEditingController(text: widget.room.description ?? '');
+  late final _areaCtrl = TextEditingController(
+    text: widget.room.areaSqm.toString(),
+  );
+  late final _rentCtrl = TextEditingController(
+    text: widget.room.monthlyRent.toInt().toString(),
+  );
+  late final _depositCtrl = TextEditingController(
+    text: widget.room.depositAmount.toInt().toString(),
+  );
+  late final _elecCtrl = TextEditingController(
+    text: widget.room.electricityRatePerKwh.toString(),
+  );
+  late final _waterCtrl = TextEditingController(
+    text: widget.room.waterRatePerM3.toString(),
+  );
+  late final _descCtrl = TextEditingController(
+    text: widget.room.description ?? '',
+  );
   late bool _hasFurniture = widget.room.hasFurniture;
   late RoomStatus _status = widget.room.status;
 
   @override
   void dispose() {
-    _titleCtrl.dispose(); _areaCtrl.dispose(); _rentCtrl.dispose();
-    _depositCtrl.dispose(); _elecCtrl.dispose(); _waterCtrl.dispose();
+    _titleCtrl.dispose();
+    _areaCtrl.dispose();
+    _rentCtrl.dispose();
+    _depositCtrl.dispose();
+    _elecCtrl.dispose();
+    _waterCtrl.dispose();
     _descCtrl.dispose();
     super.dispose();
   }
 
   Widget _label(String text) => Padding(
     padding: const EdgeInsets.only(bottom: 8),
-    child: Text(text, style: const TextStyle(fontFamily: "Inter", fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.slate700)),
+    child: Text(
+      text,
+      style: const TextStyle(
+        fontFamily: "Inter",
+        fontWeight: FontWeight.w600,
+        fontSize: 14,
+        color: AppColors.slate700,
+      ),
+    ),
   );
 
-  Widget _field(TextEditingController ctrl, String hint, {String? suffix, TextInputType keyboardType = TextInputType.text, int maxLines = 1}) => TextFormField(
-    controller: ctrl, maxLines: maxLines, keyboardType: keyboardType,
-    style: const TextStyle(fontFamily: "Nunito", fontWeight: FontWeight.w400, fontSize: 16, color: AppColors.slate900),
+  Widget _field(
+    TextEditingController ctrl,
+    String hint, {
+    String? suffix,
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+  }) => TextFormField(
+    controller: ctrl,
+    maxLines: maxLines,
+    keyboardType: keyboardType,
+    style: const TextStyle(
+      fontFamily: "Nunito",
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      color: AppColors.slate900,
+    ),
     decoration: InputDecoration(
-      hintText: hint, filled: true, fillColor: AppColors.slate50,
+      hintText: hint,
+      filled: true,
+      fillColor: AppColors.slate50,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       suffixText: suffix,
-      suffixStyle: const TextStyle(fontFamily: "Nunito", fontWeight: FontWeight.w500, fontSize: 12, color: AppColors.slate400),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: const BorderSide(color: AppColors.slate200)),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: const BorderSide(color: AppColors.blue700)),
+      suffixStyle: const TextStyle(
+        fontFamily: "Nunito",
+        fontWeight: FontWeight.w500,
+        fontSize: 12,
+        color: AppColors.slate400,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: const BorderSide(color: AppColors.slate200),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: const BorderSide(color: AppColors.blue700),
+      ),
     ),
   );
 
   void _submit() {
     final area = double.tryParse(_areaCtrl.text.trim());
     final rent = double.tryParse(_rentCtrl.text.trim().replaceAll('.', ''));
-    final deposit = double.tryParse(_depositCtrl.text.trim().replaceAll('.', ''));
+    final deposit = double.tryParse(
+      _depositCtrl.text.trim().replaceAll('.', ''),
+    );
     final elec = double.tryParse(_elecCtrl.text.trim().replaceAll('.', ''));
     final water = double.tryParse(_waterCtrl.text.trim().replaceAll('.', ''));
-    if (_titleCtrl.text.trim().isEmpty || area == null || rent == null || deposit == null || elec == null || water == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vui lòng kiểm tra lại thông tin')));
+    if (_titleCtrl.text.trim().isEmpty ||
+        area == null ||
+        rent == null ||
+        deposit == null ||
+        elec == null ||
+        water == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vui lòng kiểm tra lại thông tin')),
+      );
       return;
     }
-    context.read<UpdateRoomBloc>().add(UpdateRoomSubmitted(
-      id: widget.room.id,
-      title: _titleCtrl.text.trim(), status: _status,
-      areaSqm: area, monthlyRent: rent, depositAmount: deposit,
-      electricityRatePerKwh: elec, waterRatePerM3: water,
-      hasFurniture: _hasFurniture,
-      description: _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim(),
-    ));
+    context.read<UpdateRoomBloc>().add(
+      UpdateRoomSubmitted(
+        id: widget.room.id,
+        title: _titleCtrl.text.trim(),
+        status: _status,
+        areaSqm: area,
+        monthlyRent: rent,
+        depositAmount: deposit,
+        electricityRatePerKwh: elec,
+        waterRatePerM3: water,
+        hasFurniture: _hasFurniture,
+        description: _descCtrl.text.trim().isEmpty
+            ? null
+            : _descCtrl.text.trim(),
+      ),
+    );
   }
 
   @override
@@ -89,22 +156,45 @@ class _UpdateRoomViewState extends State<_UpdateRoomView> {
     return BlocListener<UpdateRoomBloc, UpdateRoomState>(
       listener: (context, state) {
         if (state is UpdateRoomLoadSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cập nhật phòng thành công')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Cập nhật phòng thành công')),
+          );
           context.pop();
         } else if (state is UpdateRoomLoadFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.failure.message ?? 'Cập nhật thất bại')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.failure.message),
+            ),
+          );
         }
       },
       child: Scaffold(
         backgroundColor: AppColors.gray25,
         appBar: AppBar(
-          backgroundColor: AppColors.white, elevation: 0,
-          leading: IconButton(icon: const Icon(Icons.arrow_back, color: AppColors.slate700), onPressed: () => context.pop()),
+          backgroundColor: AppColors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColors.slate700),
+            onPressed: () => context.pop(),
+          ),
           titleSpacing: 0,
-          title: const Padding(padding: EdgeInsets.only(right: 40),
-            child: Text("Cập nhật phòng", textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.slate900, fontFamily: "Public Sans", fontWeight: FontWeight.w700, fontSize: 18))),
-          bottom: PreferredSize(preferredSize: const Size.fromHeight(1), child: Container(color: AppColors.slate200, height: 1)),
+          title: const Padding(
+            padding: EdgeInsets.only(right: 40),
+            child: Text(
+              "Cập nhật phòng",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: AppColors.slate900,
+                fontFamily: "Public Sans",
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
+            ),
+          ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Container(color: AppColors.slate200, height: 1),
+          ),
         ),
         body: Column(
           children: [
@@ -113,56 +203,179 @@ class _UpdateRoomViewState extends State<_UpdateRoomView> {
                 padding: const EdgeInsets.all(16),
                 child: Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(5), border: Border.all(color: AppColors.slate100),
-                    boxShadow: [BoxShadow(color: AppColors.black.withAlpha(13), blurRadius: 2, offset: const Offset(0, 1))]),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: AppColors.slate100),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.black.withAlpha(13),
+                        blurRadius: 2,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _label("Số phòng / Tên phòng"), _field(_titleCtrl, "VD: 101"),
+                      _label("Số phòng / Tên phòng"),
+                      _field(_titleCtrl, "VD: 101"),
                       const SizedBox(height: 16),
                       _label("Trạng thái"),
-                      StatefulBuilder(builder: (ctx, setSt) => DropdownButtonFormField<RoomStatus>(
-                        value: _status,
-                        decoration: InputDecoration(filled: true, fillColor: AppColors.white,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: const BorderSide(color: AppColors.slate200)),
-                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: const BorderSide(color: AppColors.blue700))),
-                        items: const [
-                          DropdownMenuItem(value: RoomStatus.available, child: Text('Còn trống')),
-                          DropdownMenuItem(value: RoomStatus.occupied, child: Text('Đang thuê')),
-                          DropdownMenuItem(value: RoomStatus.maintenance, child: Text('Bảo trì')),
+                      StatefulBuilder(
+                        builder: (ctx, setSt) =>
+                            DropdownButtonFormField<RoomStatus>(
+                              initialValue: _status,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: AppColors.white,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.slate200,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.blue700,
+                                  ),
+                                ),
+                              ),
+                              items: const [
+                                DropdownMenuItem(
+                                  value: RoomStatus.available,
+                                  child: Text('Còn trống'),
+                                ),
+                                DropdownMenuItem(
+                                  value: RoomStatus.occupied,
+                                  child: Text('Đang thuê'),
+                                ),
+                                DropdownMenuItem(
+                                  value: RoomStatus.maintenance,
+                                  child: Text('Bảo trì'),
+                                ),
+                              ],
+                              onChanged: (v) {
+                                if (v != null) {
+                                  setSt(() => _status = v);
+                                  setState(() {});
+                                }
+                              },
+                            ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _label("Diện tích (m²)"),
+                                _field(
+                                  _areaCtrl,
+                                  "25",
+                                  suffix: "m²",
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _label("Giá thuê"),
+                                _field(
+                                  _rentCtrl,
+                                  "3.500.000",
+                                  suffix: "đ",
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
-                        onChanged: (v) { if (v != null) { setSt(() => _status = v); setState(() {}); }},
-                      )),
+                      ),
                       const SizedBox(height: 16),
-                      Row(children: [
-                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_label("Diện tích (m²)"), _field(_areaCtrl, "25", suffix: "m²", keyboardType: TextInputType.number)])),
-                        const SizedBox(width: 16),
-                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_label("Giá thuê"), _field(_rentCtrl, "3.500.000", suffix: "đ", keyboardType: TextInputType.number)])),
-                      ]),
-                      const SizedBox(height: 16),
-                      _label("Tiền đặt cọc"), _field(_depositCtrl, "1.000.000", suffix: "đ", keyboardType: TextInputType.number),
-                      const SizedBox(height: 16),
-                      const Divider(color: AppColors.slate100, thickness: 1),
-                      const SizedBox(height: 16),
-                      Row(children: [
-                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_label("Giá điện"), _field(_elecCtrl, "3.500", suffix: "đ/kWh", keyboardType: TextInputType.number)])),
-                        const SizedBox(width: 16),
-                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_label("Giá nước"), _field(_waterCtrl, "15.000", suffix: "đ/m3", keyboardType: TextInputType.number)])),
-                      ]),
+                      _label("Tiền đặt cọc"),
+                      _field(
+                        _depositCtrl,
+                        "1.000.000",
+                        suffix: "đ",
+                        keyboardType: TextInputType.number,
+                      ),
                       const SizedBox(height: 16),
                       const Divider(color: AppColors.slate100, thickness: 1),
                       const SizedBox(height: 16),
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                        const Text("Có nội thất", style: TextStyle(fontFamily: "Inter", fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.slate700)),
-                        StatefulBuilder(builder: (ctx, setSt) => Switch(
-                          value: _hasFurniture,
-                          onChanged: (v) { setSt(() => _hasFurniture = v); setState(() {}); },
-                          activeColor: AppColors.blue700,
-                        )),
-                      ]),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _label("Giá điện"),
+                                _field(
+                                  _elecCtrl,
+                                  "3.500",
+                                  suffix: "đ/kWh",
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _label("Giá nước"),
+                                _field(
+                                  _waterCtrl,
+                                  "15.000",
+                                  suffix: "đ/m3",
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 16),
-                      _label("Mô tả (tùy chọn)"), _field(_descCtrl, "Mô tả thêm...", maxLines: 3),
+                      const Divider(color: AppColors.slate100, thickness: 1),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Có nội thất",
+                            style: TextStyle(
+                              fontFamily: "Inter",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: AppColors.slate700,
+                            ),
+                          ),
+                          StatefulBuilder(
+                            builder: (ctx, setSt) => Switch(
+                              value: _hasFurniture,
+                              onChanged: (v) {
+                                setSt(() => _hasFurniture = v);
+                                setState(() {});
+                              },
+                              activeThumbColor: AppColors.blue700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      _label("Mô tả (tùy chọn)"),
+                      _field(_descCtrl, "Mô tả thêm...", maxLines: 3),
                     ],
                   ),
                 ),
@@ -173,13 +386,34 @@ class _UpdateRoomViewState extends State<_UpdateRoomView> {
                 final loading = state is UpdateRoomLoadInProgress;
                 return Container(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-                  decoration: const BoxDecoration(color: AppColors.white, border: Border(top: BorderSide(color: AppColors.slate200))),
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    border: Border(top: BorderSide(color: AppColors.slate200)),
+                  ),
                   child: SizedBox(
-                    width: double.infinity, height: 48,
+                    width: double.infinity,
+                    height: 48,
                     child: ElevatedButton(
                       onPressed: loading ? null : _submit,
-                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.blue700, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
-                      child: loading ? const CircularProgressIndicator(color: AppColors.white) : const Text("Lưu thay đổi", style: TextStyle(fontFamily: "Nunito", fontWeight: FontWeight.w600, fontSize: 16, color: AppColors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.blue700,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: loading
+                          ? const CircularProgressIndicator(
+                              color: AppColors.white,
+                            )
+                          : const Text(
+                              "Lưu thay đổi",
+                              style: TextStyle(
+                                fontFamily: "Nunito",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: AppColors.white,
+                              ),
+                            ),
                     ),
                   ),
                 );

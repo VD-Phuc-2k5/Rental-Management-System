@@ -1,11 +1,11 @@
-﻿import 'package:app/core/constants.dart';
-import 'package:app/core/di/di.dart';
-import 'package:app/core/widgets/landlord_navigation_bottom.dart';
+﻿import 'package:core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../core/config/router/route_constants.dart';
+import '../../../../core/di/di.dart';
+import '../../../../core/widgets/landlord_navigation_bottom.dart';
 import '../blocs/property_list/property_list_bloc.dart';
 import '../blocs/delete_property/delete_property_bloc.dart';
 
@@ -17,7 +17,8 @@ class PropertyListPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => getIt<PropertyListBloc>()..add(PropertyListFetched()),
+          create: (_) =>
+              getIt<PropertyListBloc>()..add(const PropertyListFetched()),
         ),
         BlocProvider(create: (_) => getIt<DeletePropertyBloc>()),
       ],
@@ -48,26 +49,30 @@ class _PropertyListView extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16.0, top: 11.0, bottom: 11.0),
-            child: InkWell(
-              onTap: () => context.push(RoutePaths.createProperty),
-              borderRadius: BorderRadius.circular(5.0),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.blue700),
+            padding: const EdgeInsets.only(
+              right: 16.0,
+              top: 11.0,
+              bottom: 11.0,
+            ),
+            child: ElevatedButton.icon(
+              onPressed: () => context.push(RoutePaths.createProperty),
+              icon: const Icon(Icons.add, size: 16, color: AppColors.white),
+              label: const Text(
+                "Thêm nhà trọ",
+                style: TextStyle(
+                  fontFamily: 'Noto Sans',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: AppColors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.blue700,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                alignment: Alignment.center,
-                child: const Text(
-                  "+ Thêm nhà trọ",
-                  style: TextStyle(
-                    fontFamily: 'Noto Sans',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    color: AppColors.blue700,
-                  ),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
               ),
             ),
           ),
@@ -80,10 +85,12 @@ class _PropertyListView extends StatelessWidget {
       body: BlocConsumer<DeletePropertyBloc, DeletePropertyState>(
         listener: (context, deleteState) {
           if (deleteState is DeletePropertyLoadSuccess) {
-            context.read<PropertyListBloc>().add(PropertyListFetched());
+            context.read<PropertyListBloc>().add(const PropertyListFetched());
           } else if (deleteState is DeletePropertyLoadFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(deleteState.failure.message ?? 'Xóa thất bại')),
+              SnackBar(
+                content: Text(deleteState.failure.message),
+              ),
             );
           }
         },
@@ -98,10 +105,12 @@ class _PropertyListView extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(state.failure.message ?? 'Có lỗi xảy ra'),
+                      Text(state.failure.message),
                       const SizedBox(height: 12),
                       ElevatedButton(
-                        onPressed: () => context.read<PropertyListBloc>().add(PropertyListFetched()),
+                        onPressed: () => context.read<PropertyListBloc>().add(
+                          const PropertyListFetched(),
+                        ),
                         child: const Text('Thử lại'),
                       ),
                     ],
@@ -115,38 +124,61 @@ class _PropertyListView extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.home_outlined, size: 64, color: AppColors.slate300),
+                        const Icon(
+                          Icons.home_outlined,
+                          size: 64,
+                          color: AppColors.slate300,
+                        ),
                         const SizedBox(height: 12),
                         const Text(
                           'Chưa có nhà trọ nào',
-                          style: TextStyle(fontFamily: 'Nunito', fontSize: 16, color: AppColors.slate500),
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 16,
+                            color: AppColors.slate500,
+                          ),
                         ),
                         const SizedBox(height: 12),
                         ElevatedButton.icon(
-                          onPressed: () => context.push(RoutePaths.createProperty),
-                          icon: const Icon(Icons.add),
-                          label: const Text('Thêm nhà trọ'),
-                          style: ElevatedButton.styleFrom(backgroundColor: AppColors.blue700),
+                          onPressed: () =>
+                              context.push(RoutePaths.createProperty),
+                          icon: const Icon(Icons.add, color: AppColors.white),
+                          label: const Text(
+                            'Thêm nhà trọ',
+                            style: TextStyle(color: AppColors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.blue700,
+                          ),
                         ),
                       ],
                     ),
                   );
                 }
                 return RefreshIndicator(
-                  onRefresh: () async => context.read<PropertyListBloc>().add(PropertyListFetched()),
+                  onRefresh: () async => context.read<PropertyListBloc>().add(
+                    const PropertyListFetched(),
+                  ),
                   child: ListView.separated(
                     padding: const EdgeInsets.all(16.0),
                     itemCount: properties.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final p = properties[index];
                       return _PropertyCard(
                         id: p.id,
                         title: p.name,
-                        address: '${p.address}, ${p.ward}, ${p.district}, ${p.city}',
-                        onTap: () => context.push(RoutePaths.roomList, extra: {'propertyId': p.id, 'propertyName': p.name}),
-                        onUpdate: () => context.push(RoutePaths.updateProperty, extra: p),
-                        onDelete: () => context.read<DeletePropertyBloc>().add(DeletePropertySubmitted(id: p.id)),
+                        address:
+                            '${p.address}, ${p.ward}, ${p.district}, ${p.city}',
+                        onTap: () => context.push(
+                          RoutePaths.roomList,
+                          extra: {'propertyId': p.id, 'propertyName': p.name},
+                        ),
+                        onUpdate: () =>
+                            context.push(RoutePaths.updateProperty, extra: p),
+                        onDelete: () => context.read<DeletePropertyBloc>().add(
+                          DeletePropertySubmitted(id: p.id),
+                        ),
                       );
                     },
                   ),
@@ -192,15 +224,34 @@ class _PropertyCard extends StatelessWidget {
           border: Border.all(color: AppColors.slate200),
           borderRadius: BorderRadius.circular(5.0),
           boxShadow: [
-            BoxShadow(color: AppColors.black.withAlpha(13), blurRadius: 2, offset: const Offset(0, 1)),
+            BoxShadow(
+              color: AppColors.black.withAlpha(13),
+              blurRadius: 2,
+              offset: const Offset(0, 1),
+            ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontFamily: 'Nunito', fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.slate900)),
+            Text(
+              title,
+              style: const TextStyle(
+                fontFamily: 'Nunito',
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                color: AppColors.slate900,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text(address, style: const TextStyle(fontFamily: 'Noto Sans', fontSize: 13, color: AppColors.slate500)),
+            Text(
+              address,
+              style: const TextStyle(
+                fontFamily: 'Noto Sans',
+                fontSize: 13,
+                color: AppColors.slate500,
+              ),
+            ),
             const SizedBox(height: 16),
             const Divider(color: AppColors.slate100, height: 1),
             const SizedBox(height: 12),
@@ -212,13 +263,34 @@ class _PropertyCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24),
                   child: Container(
                     height: 30,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                    decoration: BoxDecoration(border: Border.all(color: AppColors.blue700), borderRadius: BorderRadius.circular(24)),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: const [
-                      Text("Cập nhật", style: TextStyle(fontFamily: 'Noto Sans', fontWeight: FontWeight.w600, fontSize: 12, color: AppColors.blue700)),
-                      SizedBox(width: 4),
-                      Icon(Icons.edit_square, size: 12, color: AppColors.blue700),
-                    ]),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.blue700),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Cập nhật",
+                          style: TextStyle(
+                            fontFamily: 'Noto Sans',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            color: AppColors.blue700,
+                          ),
+                        ),
+                        SizedBox(width: 4),
+                        Icon(
+                          Icons.edit_square,
+                          size: 12,
+                          color: AppColors.blue700,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -227,13 +299,34 @@ class _PropertyCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24),
                   child: Container(
                     height: 30,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                    decoration: BoxDecoration(border: Border.all(color: AppColors.red500), borderRadius: BorderRadius.circular(24)),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: const [
-                      Text("Xóa", style: TextStyle(fontFamily: 'Noto Sans', fontWeight: FontWeight.w600, fontSize: 12, color: AppColors.red500)),
-                      SizedBox(width: 4),
-                      Icon(Icons.delete_outline, size: 12, color: AppColors.red500),
-                    ]),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.red500),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Xóa",
+                          style: TextStyle(
+                            fontFamily: 'Noto Sans',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            color: AppColors.red500,
+                          ),
+                        ),
+                        SizedBox(width: 4),
+                        Icon(
+                          Icons.delete_outline,
+                          size: 12,
+                          color: AppColors.red500,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

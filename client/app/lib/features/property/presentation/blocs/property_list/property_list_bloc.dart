@@ -13,14 +13,17 @@ part 'property_list_state.dart';
 @injectable
 class PropertyListBloc extends Bloc<PropertyListEvent, PropertyListState> {
   PropertyListBloc({required GetPropertiesUsecase getPropertiesUsecase})
-      : _getPropertiesUsecase = getPropertiesUsecase,
-        super(const PropertyListInitial()) {
+    : _getPropertiesUsecase = getPropertiesUsecase,
+      super(const PropertyListInitial()) {
     on<PropertyListFetched>(_onFetched);
   }
 
   final GetPropertiesUsecase _getPropertiesUsecase;
 
-  Future<void> _onFetched(PropertyListFetched event, Emitter<PropertyListState> emit) async {
+  Future<void> _onFetched(
+    PropertyListFetched event,
+    Emitter<PropertyListState> emit,
+  ) async {
     emit(const PropertyListLoadInProgress());
     final result = await _getPropertiesUsecase(const NoParams());
     result.fold(
@@ -29,4 +32,3 @@ class PropertyListBloc extends Bloc<PropertyListEvent, PropertyListState> {
     );
   }
 }
-

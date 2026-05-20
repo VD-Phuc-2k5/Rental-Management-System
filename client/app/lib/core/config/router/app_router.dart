@@ -17,6 +17,8 @@ import '../../../features/room/presentation/pages/room_list_page.dart';
 import '../../../features/room/presentation/pages/create_room_page.dart';
 import '../../../features/room/presentation/pages/update_room_page.dart';
 import '../../../features/splash/presentation/pages/splash_page.dart';
+import '../../../screens/landlord-requests-screen/landlord_requests_screen.dart';
+import '../../../screens/landlord-payment-history/landlord_payment_history_screen.dart';
 import '../../widgets/error_page.dart';
 import 'go_router_refresh_stream.dart';
 import 'route_constants.dart';
@@ -30,7 +32,8 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
       final String location = state.matchedLocation;
 
       final isSplash = location == RoutePaths.splash;
-      final isAuthRoute = location == RoutePaths.login || location == RoutePaths.register;
+      final isAuthRoute =
+          location == RoutePaths.login || location == RoutePaths.register;
       final isForgotPassword = location == RoutePaths.forgotPassword;
 
       if (authStatus == AuthenticationStatus.unknown) {
@@ -49,7 +52,7 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
       GoRoute(
         path: RoutePaths.splash,
         name: RouteNames.splash,
-        builder: (_, __) => const SplashPage(),
+        builder: (_, _) => const SplashPage(),
       ),
       GoRoute(
         path: RoutePaths.register,
@@ -58,16 +61,19 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
           final extra = state.extra as Map<String, String>;
           final role = extra["role"] ?? "";
           switch (role) {
-            case 'user': return const RegisterPage();
-            case 'landlord': return const RegisterLandlordPage();
-            default: return const SplashPage();
+            case 'user':
+              return const RegisterPage();
+            case 'landlord':
+              return const RegisterLandlordPage();
+            default:
+              return const SplashPage();
           }
         },
       ),
       GoRoute(
         path: RoutePaths.login,
         name: RouteNames.login,
-        builder: (_, __) => const LoginPage(),
+        builder: (_, _) => const LoginPage(),
       ),
       GoRoute(
         path: RoutePaths.forgotPassword,
@@ -76,22 +82,29 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
           final extra = state.extra as Map<String, String>;
           final step = extra["step"] ?? "";
           switch (step) {
-            case "1": return const ForgotPasswordPage();
-            case "2": return VerifyOtpPage(email: extra["email"] ?? "");
-            case "3": return ResetPasswordPage(email: extra["email"] ?? "", otp: extra["otp"] ?? "");
-            default: return const SplashPage();
+            case "1":
+              return const ForgotPasswordPage();
+            case "2":
+              return VerifyOtpPage(email: extra["email"] ?? "");
+            case "3":
+              return ResetPasswordPage(
+                email: extra["email"] ?? "",
+                otp: extra["otp"] ?? "",
+              );
+            default:
+              return const SplashPage();
           }
         },
       ),
       GoRoute(
         path: RoutePaths.propertyList,
         name: RouteNames.propertyList,
-        builder: (_, __) => const PropertyListPage(),
+        builder: (_, _) => const PropertyListPage(),
       ),
       GoRoute(
         path: RoutePaths.createProperty,
         name: RouteNames.createProperty,
-        builder: (_, __) => const CreatePropertyPage(),
+        builder: (_, _) => const CreatePropertyPage(),
       ),
       GoRoute(
         path: RoutePaths.updateProperty,
@@ -128,7 +141,18 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
           return UpdateRoomPage(room: room);
         },
       ),
+      GoRoute(
+        path: RoutePaths.landlordRequests,
+        name: RouteNames.landlordRequests,
+        builder: (context, _) => const LandlordRequestsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.landlordPayments,
+        name: RouteNames.landlordPayments,
+        builder: (context, _) => const LandlordPaymentHistoryScreen(),
+      ),
     ],
-    errorBuilder: (BuildContext context, GoRouterState state) => ErrorPage(error: state.error),
+    errorBuilder: (BuildContext context, GoRouterState state) =>
+        ErrorPage(error: state.error),
   );
 }

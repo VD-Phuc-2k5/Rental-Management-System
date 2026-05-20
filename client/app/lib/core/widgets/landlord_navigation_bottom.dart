@@ -1,19 +1,17 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/landlord-payment-history/landlord_payment_history_screen.dart';
-import 'package:app/screens/landlord-requests-screen/landlord_requests_screen.dart';
-import 'package:app/screens/main-tab-screen/components/hostel_management_wrapper.dart';
-import 'package:app/screens/main-tab-screen/components/room_management_wrapper.dart';
+﻿import 'package:core/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../config/router/route_constants.dart';
 
 class LandlordNavigationBottom extends StatelessWidget {
-  final int currentIndex;
-  final Function(int)? onTap;
-
   const LandlordNavigationBottom({
     super.key,
     this.currentIndex = 0,
     this.onTap,
   });
+  final int currentIndex;
+  final Function(int)? onTap;
 
   final _items = const [
     BottomNavigationBarItem(
@@ -39,34 +37,17 @@ class LandlordNavigationBottom extends StatelessWidget {
   ];
 
   void _navigateByIndex(BuildContext context, int index) {
-    if (index == currentIndex) {
-      return;
-    }
-
+    if (index == currentIndex) return;
     switch (index) {
       case 0:
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HostelManagementWrapper()),
-        );
-        break;
       case 1:
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const RoomManagementWrapper()),
-        );
+        context.go(RoutePaths.propertyList);
         break;
       case 2:
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => const LandlordRequestsScreen(),
-          ),
-        );
+        context.go(RoutePaths.landlordRequests);
         break;
       case 3:
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => const LandlordPaymentHistoryScreen(),
-          ),
-        );
+        context.go(RoutePaths.landlordPayments);
         break;
       default:
         break;
@@ -76,13 +57,13 @@ class LandlordNavigationBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.white,
         boxShadow: [
           BoxShadow(
             color: AppColors.gray300,
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            offset: Offset(0, -2),
           ),
         ],
       ),

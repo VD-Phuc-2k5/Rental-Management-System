@@ -1,5 +1,7 @@
 ﻿part of 'create_room_bloc.dart';
+
 sealed class CreateRoomEvent {}
+
 class CreateRoomSubmitted extends CreateRoomEvent {
   CreateRoomSubmitted({
     required this.propertyId,

@@ -11,30 +11,34 @@ part 'create_room_state.dart';
 @injectable
 class CreateRoomBloc extends Bloc<CreateRoomEvent, CreateRoomState> {
   CreateRoomBloc({required CreateRoomUsecase createRoomUsecase})
-      : _createRoomUsecase = createRoomUsecase,
-        super(const CreateRoomInitial()) {
+    : _createRoomUsecase = createRoomUsecase,
+      super(const CreateRoomInitial()) {
     on<CreateRoomSubmitted>(_onSubmitted);
   }
 
   final CreateRoomUsecase _createRoomUsecase;
 
-  Future<void> _onSubmitted(CreateRoomSubmitted event, Emitter<CreateRoomState> emit) async {
+  Future<void> _onSubmitted(
+    CreateRoomSubmitted event,
+    Emitter<CreateRoomState> emit,
+  ) async {
     emit(const CreateRoomLoadInProgress());
-    final result = await _createRoomUsecase(CreateRoomParams(
-      propertyId: event.propertyId,
-      title: event.title,
-      areaSqm: event.areaSqm,
-      monthlyRent: event.monthlyRent,
-      depositAmount: event.depositAmount,
-      electricityRatePerKwh: event.electricityRatePerKwh,
-      waterRatePerM3: event.waterRatePerM3,
-      hasFurniture: event.hasFurniture,
-      description: event.description,
-    ));
+    final result = await _createRoomUsecase(
+      CreateRoomParams(
+        propertyId: event.propertyId,
+        title: event.title,
+        areaSqm: event.areaSqm,
+        monthlyRent: event.monthlyRent,
+        depositAmount: event.depositAmount,
+        electricityRatePerKwh: event.electricityRatePerKwh,
+        waterRatePerM3: event.waterRatePerM3,
+        hasFurniture: event.hasFurniture,
+        description: event.description,
+      ),
+    );
     result.fold(
       (failure) => emit(CreateRoomLoadFailure(failure: failure)),
       (data) => emit(CreateRoomLoadSuccess(data: data)),
     );
   }
 }
-

@@ -1,5 +1,7 @@
 ﻿part of 'update_room_bloc.dart';
+
 sealed class UpdateRoomEvent {}
+
 class UpdateRoomSubmitted extends UpdateRoomEvent {
   UpdateRoomSubmitted({
     required this.id,

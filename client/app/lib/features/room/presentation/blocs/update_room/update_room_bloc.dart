@@ -11,31 +11,35 @@ part 'update_room_state.dart';
 @injectable
 class UpdateRoomBloc extends Bloc<UpdateRoomEvent, UpdateRoomState> {
   UpdateRoomBloc({required UpdateRoomUsecase updateRoomUsecase})
-      : _updateRoomUsecase = updateRoomUsecase,
-        super(const UpdateRoomInitial()) {
+    : _updateRoomUsecase = updateRoomUsecase,
+      super(const UpdateRoomInitial()) {
     on<UpdateRoomSubmitted>(_onSubmitted);
   }
 
   final UpdateRoomUsecase _updateRoomUsecase;
 
-  Future<void> _onSubmitted(UpdateRoomSubmitted event, Emitter<UpdateRoomState> emit) async {
+  Future<void> _onSubmitted(
+    UpdateRoomSubmitted event,
+    Emitter<UpdateRoomState> emit,
+  ) async {
     emit(const UpdateRoomLoadInProgress());
-    final result = await _updateRoomUsecase(UpdateRoomParams(
-      id: event.id,
-      title: event.title,
-      status: event.status,
-      areaSqm: event.areaSqm,
-      monthlyRent: event.monthlyRent,
-      depositAmount: event.depositAmount,
-      electricityRatePerKwh: event.electricityRatePerKwh,
-      waterRatePerM3: event.waterRatePerM3,
-      hasFurniture: event.hasFurniture,
-      description: event.description,
-    ));
+    final result = await _updateRoomUsecase(
+      UpdateRoomParams(
+        id: event.id,
+        title: event.title,
+        status: event.status,
+        areaSqm: event.areaSqm,
+        monthlyRent: event.monthlyRent,
+        depositAmount: event.depositAmount,
+        electricityRatePerKwh: event.electricityRatePerKwh,
+        waterRatePerM3: event.waterRatePerM3,
+        hasFurniture: event.hasFurniture,
+        description: event.description,
+      ),
+    );
     result.fold(
       (failure) => emit(UpdateRoomLoadFailure(failure: failure)),
       (data) => emit(UpdateRoomLoadSuccess(data: data)),
     );
   }
 }
-

@@ -1,17 +1,20 @@
-﻿import 'package:app/core/constants.dart';
-import 'package:app/core/di/di.dart';
-import 'package:app/core/widgets/landlord_navigation_bottom.dart';
+﻿import 'package:core/constants.dart';
 import 'package:domain/room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../core/config/router/route_constants.dart';
+import '../../../../core/di/di.dart';
 import '../blocs/room_list/room_list_bloc.dart';
 import '../blocs/delete_room/delete_room_bloc.dart';
 
 class RoomListPage extends StatelessWidget {
-  const RoomListPage({super.key, required this.propertyId, required this.propertyName});
+  const RoomListPage({
+    super.key,
+    required this.propertyId,
+    required this.propertyName,
+  });
   final String propertyId;
   final String propertyName;
 
@@ -20,7 +23,9 @@ class RoomListPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => getIt<RoomListBloc>()..add(RoomListFetched(propertyId: propertyId)),
+          create: (_) =>
+              getIt<RoomListBloc>()
+                ..add(RoomListFetched(propertyId: propertyId)),
         ),
         BlocProvider(create: (_) => getIt<DeleteRoomBloc>()),
       ],
@@ -42,7 +47,7 @@ class _RoomListView extends StatelessWidget {
       if (i > 0 && (s.length - i) % 3 == 0) buf.write('.');
       buf.write(s[i]);
     }
-    return '${buf}đ';
+    return '$bufđ';
   }
 
   Color _statusColor(RoomStatus s) => switch (s) {
@@ -68,68 +73,136 @@ class _RoomListView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.gray25,
       appBar: AppBar(
-        backgroundColor: AppColors.white, elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.arrow_back, color: AppColors.slate900), onPressed: () => context.pop()),
+        backgroundColor: AppColors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.slate900),
+          onPressed: () => context.pop(),
+        ),
         titleSpacing: 0,
-        title: Text(propertyName, style: const TextStyle(color: AppColors.slate900, fontFamily: "Nunito", fontWeight: FontWeight.w700, fontSize: 18)),
+        title: Text(
+          propertyName,
+          style: const TextStyle(
+            color: AppColors.slate900,
+            fontFamily: "Nunito",
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16, top: 11, bottom: 11),
-            child: InkWell(
-              onTap: () => context.push(RoutePaths.createRoom, extra: {'propertyId': propertyId}),
-              borderRadius: BorderRadius.circular(5),
-              child: Container(
+            child: ElevatedButton.icon(
+              onPressed: () => context.push(
+                RoutePaths.createRoom,
+                extra: {'propertyId': propertyId},
+              ),
+              icon: const Icon(Icons.add, size: 16, color: AppColors.white),
+              label: const Text(
+                "Thêm phòng",
+                style: TextStyle(
+                  fontFamily: 'Noto Sans',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: AppColors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.blue700,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(border: Border.all(color: AppColors.blue700), borderRadius: BorderRadius.circular(5)),
-                alignment: Alignment.center,
-                child: const Text("+ Thêm phòng", style: TextStyle(fontFamily: 'Noto Sans', fontWeight: FontWeight.w500, fontSize: 14, color: AppColors.blue700)),
               ),
             ),
           ),
         ],
-        bottom: PreferredSize(preferredSize: const Size.fromHeight(1), child: Container(color: AppColors.slate200, height: 1)),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: AppColors.slate200, height: 1),
+        ),
       ),
       body: BlocConsumer<DeleteRoomBloc, DeleteRoomState>(
         listener: (context, state) {
           if (state is DeleteRoomLoadSuccess) {
-            context.read<RoomListBloc>().add(RoomListFetched(propertyId: propertyId));
+            context.read<RoomListBloc>().add(
+              RoomListFetched(propertyId: propertyId),
+            );
           } else if (state is DeleteRoomLoadFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.failure.message ?? 'Xóa thất bại')));
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.failure.message)));
           }
         },
         builder: (context, _) {
           return BlocBuilder<RoomListBloc, RoomListState>(
             builder: (context, state) {
-              if (state is RoomListLoadInProgress) return const Center(child: CircularProgressIndicator());
+              if (state is RoomListLoadInProgress) {
+                return const Center(child: CircularProgressIndicator());
+              }
               if (state is RoomListLoadFailure) {
-                return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Text(state.failure.message ?? 'Có lỗi xảy ra'),
-                  const SizedBox(height: 12),
-                  ElevatedButton(onPressed: () => context.read<RoomListBloc>().add(RoomListFetched(propertyId: propertyId)), child: const Text('Thử lại')),
-                ]));
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(state.failure.message),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        onPressed: () => context.read<RoomListBloc>().add(
+                          RoomListFetched(propertyId: propertyId),
+                        ),
+                        child: const Text('Thử lại'),
+                      ),
+                    ],
+                  ),
+                );
               }
               if (state is RoomListLoadSuccess) {
                 final rooms = state.data;
                 if (rooms.isEmpty) {
-                  return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    const Icon(Icons.door_front_door_outlined, size: 64, color: AppColors.slate300),
-                    const SizedBox(height: 12),
-                    const Text('Chưa có phòng nào', style: TextStyle(fontFamily: 'Nunito', fontSize: 16, color: AppColors.slate500)),
-                    const SizedBox(height: 12),
-                    ElevatedButton.icon(
-                      onPressed: () => context.push(RoutePaths.createRoom, extra: {'propertyId': propertyId}),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Thêm phòng'),
-                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.blue700),
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.door_front_door_outlined,
+                          size: 64,
+                          color: AppColors.slate300,
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Chưa có phòng nào',
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 16,
+                            color: AppColors.slate500,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        ElevatedButton.icon(
+                          onPressed: () => context.push(
+                            RoutePaths.createRoom,
+                            extra: {'propertyId': propertyId},
+                          ),
+                          icon: const Icon(Icons.add),
+                          label: const Text('Thêm phòng'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.blue700,
+                          ),
+                        ),
+                      ],
                     ),
-                  ]));
+                  );
                 }
                 return RefreshIndicator(
-                  onRefresh: () async => context.read<RoomListBloc>().add(RoomListFetched(propertyId: propertyId)),
+                  onRefresh: () async => context.read<RoomListBloc>().add(
+                    RoomListFetched(propertyId: propertyId),
+                  ),
                   child: ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: rooms.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (context, i) {
                       final r = rooms[i];
                       return Container(
@@ -138,42 +211,131 @@ class _RoomListView extends StatelessWidget {
                           color: AppColors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: AppColors.slate100),
-                          boxShadow: [BoxShadow(color: AppColors.black.withAlpha(13), blurRadius: 4, offset: const Offset(0, 2))],
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.black.withAlpha(13),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                decoration: BoxDecoration(color: AppColors.blue700, borderRadius: BorderRadius.circular(4)),
-                                child: Text("P.${r.title}", style: const TextStyle(fontFamily: "Nunito", fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.white)),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                decoration: BoxDecoration(color: _statusBg(r.status), borderRadius: BorderRadius.circular(9999)),
-                                child: Text(_statusLabel(r.status), style: TextStyle(fontFamily: "Nunito", fontWeight: FontWeight.w500, fontSize: 12, color: _statusColor(r.status))),
-                              ),
-                            ]),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.blue700,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    "P.${r.title}",
+                                    style: const TextStyle(
+                                      fontFamily: "Nunito",
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: _statusBg(r.status),
+                                    borderRadius: BorderRadius.circular(9999),
+                                  ),
+                                  child: Text(
+                                    _statusLabel(r.status),
+                                    style: TextStyle(
+                                      fontFamily: "Nunito",
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      color: _statusColor(r.status),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 8),
-                            Text('${r.areaSqm} m² · ${_formatPrice(r.monthlyRent)}/tháng',
-                              style: const TextStyle(fontFamily: 'Nunito', fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.blue700)),
+                            Text(
+                              '${r.areaSqm} m² · ${_formatPrice(r.monthlyRent)}/tháng',
+                              style: const TextStyle(
+                                fontFamily: 'Nunito',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                                color: AppColors.blue700,
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             const Divider(color: AppColors.slate100, height: 1),
                             const SizedBox(height: 8),
-                            Row(children: [
-                              Expanded(child: OutlinedButton(
-                                style: OutlinedButton.styleFrom(side: const BorderSide(color: AppColors.blue700), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)), padding: EdgeInsets.zero, minimumSize: const Size(0, 30)),
-                                onPressed: () => context.push(RoutePaths.updateRoom, extra: r),
-                                child: const Text("Cập nhật", style: TextStyle(fontFamily: "Inter", fontWeight: FontWeight.w600, fontSize: 12, color: AppColors.blue700)),
-                              )),
-                              const SizedBox(width: 8),
-                              Expanded(child: OutlinedButton(
-                                style: OutlinedButton.styleFrom(side: const BorderSide(color: AppColors.red500), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)), padding: EdgeInsets.zero, minimumSize: const Size(0, 30)),
-                                onPressed: () => context.read<DeleteRoomBloc>().add(DeleteRoomSubmitted(id: r.id)),
-                                child: const Text("Xóa", style: TextStyle(fontFamily: "Inter", fontWeight: FontWeight.w600, fontSize: 12, color: AppColors.red500)),
-                              )),
-                            ]),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(
+                                        color: AppColors.blue700,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                      minimumSize: const Size(0, 30),
+                                    ),
+                                    onPressed: () => context.push(
+                                      RoutePaths.updateRoom,
+                                      extra: r,
+                                    ),
+                                    child: const Text(
+                                      "Cập nhật",
+                                      style: TextStyle(
+                                        fontFamily: "Inter",
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12,
+                                        color: AppColors.blue700,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(
+                                        color: AppColors.red500,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                      minimumSize: const Size(0, 30),
+                                    ),
+                                    onPressed: () => context
+                                        .read<DeleteRoomBloc>()
+                                        .add(DeleteRoomSubmitted(id: r.id)),
+                                    child: const Text(
+                                      "Xóa",
+                                      style: TextStyle(
+                                        fontFamily: "Inter",
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12,
+                                        color: AppColors.red500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       );
@@ -186,7 +348,6 @@ class _RoomListView extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: const LandlordNavigationBottom(currentIndex: 1),
     );
   }
 }

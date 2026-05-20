@@ -11,14 +11,17 @@ part 'delete_room_state.dart';
 @injectable
 class DeleteRoomBloc extends Bloc<DeleteRoomEvent, DeleteRoomState> {
   DeleteRoomBloc({required DeleteRoomUsecase deleteRoomUsecase})
-      : _deleteRoomUsecase = deleteRoomUsecase,
-        super(const DeleteRoomInitial()) {
+    : _deleteRoomUsecase = deleteRoomUsecase,
+      super(const DeleteRoomInitial()) {
     on<DeleteRoomSubmitted>(_onSubmitted);
   }
 
   final DeleteRoomUsecase _deleteRoomUsecase;
 
-  Future<void> _onSubmitted(DeleteRoomSubmitted event, Emitter<DeleteRoomState> emit) async {
+  Future<void> _onSubmitted(
+    DeleteRoomSubmitted event,
+    Emitter<DeleteRoomState> emit,
+  ) async {
     emit(const DeleteRoomLoadInProgress());
     final result = await _deleteRoomUsecase(DeleteRoomParams(id: event.id));
     result.fold(
@@ -27,4 +30,3 @@ class DeleteRoomBloc extends Bloc<DeleteRoomEvent, DeleteRoomState> {
     );
   }
 }
-
