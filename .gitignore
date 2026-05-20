@@ -2,3 +2,6 @@
 .idea/
 .gitnexus/
 commands/
+.claude/
+.agents/
+skills-lock.json
