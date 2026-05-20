@@ -1,0 +1,28 @@
+name: data
+description: "The data layer shared across all apps"
+publish_to: "none"
+version: 0.0.1
+
+environment:
+  sdk: ^3.11.5
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  equatable: ^2.0.8
+  fpdart: ^1.2.0
+  json_annotation: ^4.10.0
+  http: ^1.6.0
+
+  core:
+    path: ../core
+  domain:
+    path: ../domain
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.11.0
+  json_serializable: ^6.12.0
