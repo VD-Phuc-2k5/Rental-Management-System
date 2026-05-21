@@ -32,7 +32,8 @@ class CreateRoomBloc extends Bloc<CreateRoomEvent, CreateRoomState> {
         depositAmount: event.depositAmount,
         electricityRatePerKwh: event.electricityRatePerKwh,
         waterRatePerM3: event.waterRatePerM3,
-        hasFurniture: event.hasFurniture,
+        includedAmenityCodes: event.includedAmenityCodes,
+        addonAmenities: event.addonAmenities,
         description: event.description,
       ),
     );

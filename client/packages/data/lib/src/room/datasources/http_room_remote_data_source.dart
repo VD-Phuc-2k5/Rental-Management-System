@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:core/constants.dart';
 import 'package:core/errors.dart';
 import 'package:data/room.dart';
+import 'package:domain/room.dart';
 import 'package:http/http.dart' as http;
 
 import 'room_remote_data_source.dart';
@@ -57,13 +58,19 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
     required String propertyId, required String token, required String title,
     required double areaSqm, required double monthlyRent, required double depositAmount,
     required double electricityRatePerKwh, required double waterRatePerM3,
-    required bool hasFurniture, String? description,
+    required List<String> includedAmenityCodes,
+    required List<RoomAddonAmenity> addonAmenities,
+    String? description,
   }) async {
     try {
       final body = <String, dynamic>{
         'title': title, 'area_sqm': areaSqm, 'monthly_rent': monthlyRent,
         'deposit_amount': depositAmount, 'electricity_rate_per_kwh': electricityRatePerKwh,
-        'water_rate_per_m3': waterRatePerM3, 'has_furniture': hasFurniture,
+        'water_rate_per_m3': waterRatePerM3,
+        'included_amenity_codes': includedAmenityCodes,
+        'addon_amenities': addonAmenities
+            .map((a) => {'code': a.code, 'monthly_price': a.monthlyPrice})
+            .toList(),
         if (description != null) 'description': description,
       };
       final response = await _client.post(
@@ -85,7 +92,10 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
   Future<RoomModel> updateRoom({
     required String id, required String token, String? title, String? status,
     double? areaSqm, double? monthlyRent, double? depositAmount,
-    double? electricityRatePerKwh, double? waterRatePerM3, bool? hasFurniture, String? description,
+    double? electricityRatePerKwh, double? waterRatePerM3,
+    List<String>? includedAmenityCodes,
+    List<RoomAddonAmenity>? addonAmenities,
+    String? description,
   }) async {
     try {
       final body = <String, dynamic>{
@@ -94,7 +104,11 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
         if (depositAmount != null) 'deposit_amount': depositAmount,
         if (electricityRatePerKwh != null) 'electricity_rate_per_kwh': electricityRatePerKwh,
         if (waterRatePerM3 != null) 'water_rate_per_m3': waterRatePerM3,
-        if (hasFurniture != null) 'has_furniture': hasFurniture,
+        if (includedAmenityCodes != null) 'included_amenity_codes': includedAmenityCodes,
+        if (addonAmenities != null)
+          'addon_amenities': addonAmenities
+              .map((a) => {'code': a.code, 'monthly_price': a.monthlyPrice})
+              .toList(),
         if (description != null) 'description': description,
       };
       final response = await _client.patch(

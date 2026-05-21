@@ -15,7 +15,8 @@ class UpdateRoomParams extends Equatable {
     this.depositAmount,
     this.electricityRatePerKwh,
     this.waterRatePerM3,
-    this.hasFurniture,
+    this.includedAmenityCodes,
+    this.addonAmenities,
     this.description,
   });
 
@@ -27,11 +28,12 @@ class UpdateRoomParams extends Equatable {
   final double? depositAmount;
   final double? electricityRatePerKwh;
   final double? waterRatePerM3;
-  final bool? hasFurniture;
+  final List<String>? includedAmenityCodes;
+  final List<RoomAddonAmenity>? addonAmenities;
   final String? description;
 
   @override
-  List<Object?> get props => [id, title, status, areaSqm, monthlyRent, depositAmount, electricityRatePerKwh, waterRatePerM3, hasFurniture, description];
+  List<Object?> get props => [id, title, status, areaSqm, monthlyRent, depositAmount, electricityRatePerKwh, waterRatePerM3, includedAmenityCodes, addonAmenities, description];
 }
 
 class UpdateRoomUsecase implements UseCase<RoomEntity, UpdateRoomParams> {
@@ -49,7 +51,8 @@ class UpdateRoomUsecase implements UseCase<RoomEntity, UpdateRoomParams> {
       depositAmount: params.depositAmount,
       electricityRatePerKwh: params.electricityRatePerKwh,
       waterRatePerM3: params.waterRatePerM3,
-      hasFurniture: params.hasFurniture,
+      includedAmenityCodes: params.includedAmenityCodes,
+      addonAmenities: params.addonAmenities,
       description: params.description,
     );
   }

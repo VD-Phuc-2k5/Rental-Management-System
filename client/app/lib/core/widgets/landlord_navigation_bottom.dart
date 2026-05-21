@@ -40,8 +40,10 @@ class LandlordNavigationBottom extends StatelessWidget {
     if (index == currentIndex) return;
     switch (index) {
       case 0:
-      case 1:
         context.go(RoutePaths.propertyList);
+        break;
+      case 1:
+        context.go(RoutePaths.roomTab);
         break;
       case 2:
         context.go(RoutePaths.landlordRequests);

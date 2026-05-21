@@ -14,7 +14,8 @@ abstract interface class RoomRepository {
     required double depositAmount,
     required double electricityRatePerKwh,
     required double waterRatePerM3,
-    required bool hasFurniture,
+    required List<String> includedAmenityCodes,
+    required List<RoomAddonAmenity> addonAmenities,
     String? description,
   });
   Future<Either<Failure, RoomEntity>> updateRoom({
@@ -26,7 +27,8 @@ abstract interface class RoomRepository {
     double? depositAmount,
     double? electricityRatePerKwh,
     double? waterRatePerM3,
-    bool? hasFurniture,
+    List<String>? includedAmenityCodes,
+    List<RoomAddonAmenity>? addonAmenities,
     String? description,
   });
   Future<Either<Failure, void>> deleteRoom({required String id});

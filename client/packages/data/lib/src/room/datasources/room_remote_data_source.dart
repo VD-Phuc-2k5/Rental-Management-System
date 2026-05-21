@@ -1,4 +1,5 @@
 ﻿import 'package:data/room.dart';
+import 'package:domain/room.dart';
 
 abstract interface class RoomRemoteDataSource {
   Future<List<RoomModel>> getRooms({required String propertyId, required String token});
@@ -12,7 +13,8 @@ abstract interface class RoomRemoteDataSource {
     required double depositAmount,
     required double electricityRatePerKwh,
     required double waterRatePerM3,
-    required bool hasFurniture,
+    required List<String> includedAmenityCodes,
+    required List<RoomAddonAmenity> addonAmenities,
     String? description,
   });
   Future<RoomModel> updateRoom({
@@ -25,7 +27,8 @@ abstract interface class RoomRemoteDataSource {
     double? depositAmount,
     double? electricityRatePerKwh,
     double? waterRatePerM3,
-    bool? hasFurniture,
+    List<String>? includedAmenityCodes,
+    List<RoomAddonAmenity>? addonAmenities,
     String? description,
   });
   Future<void> deleteRoom({required String id, required String token});

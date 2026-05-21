@@ -1,4 +1,6 @@
-﻿enum RoomStatus { available, occupied, maintenance }
+﻿import 'room_addon_amenity.dart';
+
+enum RoomStatus { available, occupied, maintenance }
 
 abstract class RoomEntity {
   RoomEntity({
@@ -11,7 +13,8 @@ abstract class RoomEntity {
     required this.depositAmount,
     required this.electricityRatePerKwh,
     required this.waterRatePerM3,
-    required this.hasFurniture,
+    required this.includedAmenityCodes,
+    required this.addonAmenities,
     this.description,
     required this.createdAt,
     required this.updatedAt,
@@ -26,7 +29,8 @@ abstract class RoomEntity {
   final double depositAmount;
   final double electricityRatePerKwh;
   final double waterRatePerM3;
-  final bool hasFurniture;
+  final List<String> includedAmenityCodes;
+  final List<RoomAddonAmenity> addonAmenities;
   final String? description;
   final String createdAt;
   final String updatedAt;

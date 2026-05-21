@@ -33,7 +33,8 @@ class UpdateRoomBloc extends Bloc<UpdateRoomEvent, UpdateRoomState> {
         depositAmount: event.depositAmount,
         electricityRatePerKwh: event.electricityRatePerKwh,
         waterRatePerM3: event.waterRatePerM3,
-        hasFurniture: event.hasFurniture,
+        includedAmenityCodes: event.includedAmenityCodes,
+        addonAmenities: event.addonAmenities,
         description: event.description,
       ),
     );

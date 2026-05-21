@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/di.dart';
 import '../blocs/update_room/update_room_bloc.dart';
+import '../widgets/room_amenity_selector.dart';
 
 class UpdateRoomPage extends StatelessWidget {
   const UpdateRoomPage({super.key, required this.room});
@@ -47,7 +48,12 @@ class _UpdateRoomViewState extends State<_UpdateRoomView> {
   late final _descCtrl = TextEditingController(
     text: widget.room.description ?? '',
   );
-  late bool _hasFurniture = widget.room.hasFurniture;
+  late Set<String> _includedCodes = Set<String>.from(
+    widget.room.includedAmenityCodes,
+  );
+  late Map<String, double> _addonPrices = {
+    for (final a in widget.room.addonAmenities) a.code: a.monthlyPrice,
+  };
   late RoomStatus _status = widget.room.status;
 
   @override
@@ -143,7 +149,8 @@ class _UpdateRoomViewState extends State<_UpdateRoomView> {
         depositAmount: deposit,
         electricityRatePerKwh: elec,
         waterRatePerM3: water,
-        hasFurniture: _hasFurniture,
+        includedAmenityCodes: _includedCodes.toList(),
+        addonAmenities: addonPricesToList(_addonPrices),
         description: _descCtrl.text.trim().isEmpty
             ? null
             : _descCtrl.text.trim(),
@@ -349,29 +356,12 @@ class _UpdateRoomViewState extends State<_UpdateRoomView> {
                       const SizedBox(height: 16),
                       const Divider(color: AppColors.slate100, thickness: 1),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Có nội thất",
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: AppColors.slate700,
-                            ),
-                          ),
-                          StatefulBuilder(
-                            builder: (ctx, setSt) => Switch(
-                              value: _hasFurniture,
-                              onChanged: (v) {
-                                setSt(() => _hasFurniture = v);
-                                setState(() {});
-                              },
-                              activeThumbColor: AppColors.blue700,
-                            ),
-                          ),
-                        ],
+                      RoomAmenitySelector(
+                        includedCodes: _includedCodes,
+                        addonPrices: _addonPrices,
+                        onIncludedChanged: (v) =>
+                            setState(() => _includedCodes = v),
+                        onAddonChanged: (v) => setState(() => _addonPrices = v),
                       ),
                       const SizedBox(height: 16),
                       _label("Mô tả (tùy chọn)"),

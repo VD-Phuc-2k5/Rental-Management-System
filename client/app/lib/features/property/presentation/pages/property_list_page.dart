@@ -1,4 +1,5 @@
 ﻿import 'package:core/constants.dart';
+import 'package:core/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -55,7 +56,14 @@ class _PropertyListView extends StatelessWidget {
               bottom: 11.0,
             ),
             child: ElevatedButton.icon(
-              onPressed: () => context.push(RoutePaths.createProperty),
+              onPressed: () async {
+                await context.push(RoutePaths.createProperty);
+                if (context.mounted) {
+                  context
+                      .read<PropertyListBloc>()
+                      .add(const PropertyListFetched());
+                }
+              },
               icon: const Icon(Icons.add, size: 16, color: AppColors.white),
               label: const Text(
                 "Thêm nhà trọ",
@@ -94,98 +102,135 @@ class _PropertyListView extends StatelessWidget {
             );
           }
         },
-        builder: (context, _) {
-          return BlocBuilder<PropertyListBloc, PropertyListState>(
-            builder: (context, state) {
-              if (state is PropertyListLoadInProgress) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (state is PropertyListLoadFailure) {
-                return Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(state.failure.message),
-                      const SizedBox(height: 12),
-                      ElevatedButton(
-                        onPressed: () => context.read<PropertyListBloc>().add(
-                          const PropertyListFetched(),
-                        ),
-                        child: const Text('Thử lại'),
+        builder: (context, deleteState) {
+          return Stack(
+            children: [
+              BlocBuilder<PropertyListBloc, PropertyListState>(
+                builder: (context, state) {
+                  if (state is PropertyListLoadInProgress) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.blue700,
                       ),
-                    ],
-                  ),
-                );
-              }
-              if (state is PropertyListLoadSuccess) {
-                final properties = state.data;
-                if (properties.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.home_outlined,
-                          size: 64,
-                          color: AppColors.slate300,
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          'Chưa có nhà trọ nào',
-                          style: TextStyle(
-                            fontFamily: 'Nunito',
-                            fontSize: 16,
-                            color: AppColors.slate500,
+                    );
+                  }
+                  if (state is PropertyListLoadFailure) {
+                    return Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(state.failure.message),
+                          const SizedBox(height: 12),
+                          ElevatedButton(
+                            onPressed: () =>
+                                context.read<PropertyListBloc>().add(
+                                  const PropertyListFetched(),
+                                ),
+                            child: const Text('Thử lại'),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        ElevatedButton.icon(
-                          onPressed: () =>
-                              context.push(RoutePaths.createProperty),
-                          icon: const Icon(Icons.add, color: AppColors.white),
-                          label: const Text(
-                            'Thêm nhà trọ',
-                            style: TextStyle(color: AppColors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.blue700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return RefreshIndicator(
-                  onRefresh: () async => context.read<PropertyListBloc>().add(
-                    const PropertyListFetched(),
-                  ),
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(16.0),
-                    itemCount: properties.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final p = properties[index];
-                      return _PropertyCard(
-                        id: p.id,
-                        title: p.name,
-                        address:
-                            '${p.address}, ${p.ward}, ${p.district}, ${p.city}',
-                        onTap: () => context.push(
-                          RoutePaths.roomList,
-                          extra: {'propertyId': p.id, 'propertyName': p.name},
-                        ),
-                        onUpdate: () =>
-                            context.push(RoutePaths.updateProperty, extra: p),
-                        onDelete: () => context.read<DeletePropertyBloc>().add(
-                          DeletePropertySubmitted(id: p.id),
+                        ],
+                      ),
+                    );
+                  }
+                  if (state is PropertyListLoadSuccess) {
+                    final properties = state.data;
+                    if (properties.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.home_outlined,
+                              size: 64,
+                              color: AppColors.slate300,
+                            ),
+                            const SizedBox(height: 12),
+                            const Text(
+                              'Chưa có nhà trọ nào',
+                              style: TextStyle(
+                                fontFamily: 'Nunito',
+                                fontSize: 16,
+                                color: AppColors.slate500,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            ElevatedButton.icon(
+                              onPressed: () async {
+                                await context.push(RoutePaths.createProperty);
+                                if (context.mounted) {
+                                  context
+                                      .read<PropertyListBloc>()
+                                      .add(const PropertyListFetched());
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.add,
+                                color: AppColors.white,
+                              ),
+                              label: const Text(
+                                'Thêm nhà trọ',
+                                style: TextStyle(color: AppColors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.blue700,
+                              ),
+                            ),
+                          ],
                         ),
                       );
-                    },
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
-            },
+                    }
+                    return RefreshIndicator(
+                      onRefresh: () async =>
+                          context.read<PropertyListBloc>().add(
+                            const PropertyListFetched(),
+                          ),
+                      child: ListView.separated(
+                        padding: const EdgeInsets.all(16.0),
+                        itemCount: properties.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final p = properties[index];
+                          return _PropertyCard(
+                            id: p.id,
+                            title: p.name,
+                            address:
+                                '${p.address}, ${p.ward}, ${p.district}, ${p.city}',
+                            onTap: () => context.push(
+                              RoutePaths.roomList,
+                              extra: {
+                                'propertyId': p.id,
+                                'propertyName': p.name,
+                              },
+                            ),
+                            onUpdate: () async {
+                              await context.push(
+                                RoutePaths.updateProperty,
+                                extra: p,
+                              );
+                              if (context.mounted) {
+                                context
+                                    .read<PropertyListBloc>()
+                                    .add(const PropertyListFetched());
+                              }
+                            },
+                            onDelete: () =>
+                                context.read<DeletePropertyBloc>().add(
+                                  DeletePropertySubmitted(id: p.id),
+                                ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+              if (deleteState is DeletePropertyLoadInProgress)
+                Container(
+                  color: Colors.black26,
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+            ],
           );
         },
       ),
@@ -295,7 +340,13 @@ class _PropertyCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 InkWell(
-                  onTap: onDelete,
+                  onTap: () {
+                    showDeleteDialog(context).then((confirm) {
+                      if (confirm == true) {
+                        onDelete();
+                      }
+                    });
+                  },
                   borderRadius: BorderRadius.circular(24),
                   child: Container(
                     height: 30,

@@ -1,4 +1,5 @@
 ﻿import 'package:core/constants.dart';
+import 'package:core/utils.dart';
 import 'package:domain/room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,6 +50,22 @@ class _RoomListView extends StatelessWidget {
     }
     return '$bufđ';
   }
+
+  String _amenityLabel(String code) => const {
+    'AC': 'Điều hòa',
+    'AIR_CONDITIONER': 'Điều hòa',
+    'BED': 'Giường',
+    'WASHING_MACHINE': 'Máy giặt',
+    'BALCONY': 'Ban công',
+    'WATER_HEATER': 'Nóng lạnh',
+    'FRIDGE': 'Tủ lạnh',
+    'TABLE_CHAIR': 'Bàn ghế',
+    'TV': 'TV',
+    'WARDROBE': 'Tủ quần áo',
+    'KITCHEN': 'Bếp',
+    'WIFI': 'Wifi',
+    'PRIVATE_BATHROOM': 'WC riêng',
+  }[code] ?? code;
 
   Color _statusColor(RoomStatus s) => switch (s) {
     RoomStatus.available => AppColors.green700,
@@ -129,10 +146,9 @@ class _RoomListView extends StatelessWidget {
             context.read<RoomListBloc>().add(
               RoomListFetched(propertyId: propertyId),
             );
+            showToast(message: 'Đã xóa phòng thành công', type: ToastType.success);
           } else if (state is DeleteRoomLoadFailure) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.failure.message)));
+            showToast(message: state.failure.message, type: ToastType.error);
           }
         },
         builder: (context, _) {
@@ -185,8 +201,11 @@ class _RoomListView extends StatelessWidget {
                             RoutePaths.createRoom,
                             extra: {'propertyId': propertyId},
                           ),
-                          icon: const Icon(Icons.add),
-                          label: const Text('Thêm phòng'),
+                          icon: const Icon(Icons.add, color: AppColors.white),
+                          label: const Text(
+                            'Thêm phòng',
+                            style: TextStyle(color: AppColors.white),
+                          ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.blue700,
                           ),
@@ -275,6 +294,71 @@ class _RoomListView extends StatelessWidget {
                                 color: AppColors.blue700,
                               ),
                             ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.account_balance_wallet_outlined,
+                                  size: 13,
+                                  color: AppColors.slate400,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Đặt cọc: ${_formatPrice(r.depositAmount)}',
+                                  style: const TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontSize: 12,
+                                    color: AppColors.slate500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (r.includedAmenityCodes.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              Wrap(
+                                spacing: 6,
+                                runSpacing: 4,
+                                children: r.includedAmenityCodes
+                                    .map(
+                                      (code) => Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 3,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.blue700.withAlpha(20),
+                                          borderRadius: BorderRadius.circular(9999),
+                                          border: Border.all(
+                                            color: AppColors.blue700.withAlpha(60),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          _amenityLabel(code),
+                                          style: const TextStyle(
+                                            fontFamily: 'Nunito',
+                                            fontSize: 11,
+                                            color: AppColors.blue700,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ],
+                            if (r.description != null &&
+                                r.description!.isNotEmpty) ...[
+                              const SizedBox(height: 6),
+                              Text(
+                                r.description!,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontFamily: 'Nunito',
+                                  fontSize: 12,
+                                  color: AppColors.slate400,
+                                ),
+                              ),
+                            ],
                             const SizedBox(height: 8),
                             const Divider(color: AppColors.slate100, height: 1),
                             const SizedBox(height: 8),
@@ -320,9 +404,15 @@ class _RoomListView extends StatelessWidget {
                                       padding: EdgeInsets.zero,
                                       minimumSize: const Size(0, 30),
                                     ),
-                                    onPressed: () => context
-                                        .read<DeleteRoomBloc>()
-                                        .add(DeleteRoomSubmitted(id: r.id)),
+                                    onPressed: () =>
+                                        showDeleteDialog(context).then((confirmed) {
+                                          if (confirmed == true &&
+                                              context.mounted) {
+                                            context.read<DeleteRoomBloc>().add(
+                                              DeleteRoomSubmitted(id: r.id),
+                                            );
+                                          }
+                                        }),
                                     child: const Text(
                                       "Xóa",
                                       style: TextStyle(

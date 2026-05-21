@@ -36,14 +36,18 @@ class RoomRepositoryImpl implements RoomRepository {
     required String propertyId, required String title, required double areaSqm,
     required double monthlyRent, required double depositAmount,
     required double electricityRatePerKwh, required double waterRatePerM3,
-    required bool hasFurniture, String? description,
+    required List<String> includedAmenityCodes,
+    required List<RoomAddonAmenity> addonAmenities,
+    String? description,
   }) async {
     try {
       final data = await _dataSource.createRoom(
         propertyId: propertyId, token: _getToken(), title: title, areaSqm: areaSqm,
         monthlyRent: monthlyRent, depositAmount: depositAmount,
         electricityRatePerKwh: electricityRatePerKwh, waterRatePerM3: waterRatePerM3,
-        hasFurniture: hasFurniture, description: description,
+        includedAmenityCodes: includedAmenityCodes,
+        addonAmenities: addonAmenities,
+        description: description,
       );
       return Right(data);
     } on ServerException catch (e) { return Left(ServerFailure(message: e.message));
@@ -55,7 +59,10 @@ class RoomRepositoryImpl implements RoomRepository {
   Future<Either<Failure, RoomEntity>> updateRoom({
     required String id, String? title, RoomStatus? status, double? areaSqm,
     double? monthlyRent, double? depositAmount, double? electricityRatePerKwh,
-    double? waterRatePerM3, bool? hasFurniture, String? description,
+    double? waterRatePerM3,
+    List<String>? includedAmenityCodes,
+    List<RoomAddonAmenity>? addonAmenities,
+    String? description,
   }) async {
     try {
       final statusStr = status != null ? status.name.toUpperCase() : null;
@@ -63,7 +70,9 @@ class RoomRepositoryImpl implements RoomRepository {
         id: id, token: _getToken(), title: title, status: statusStr,
         areaSqm: areaSqm, monthlyRent: monthlyRent, depositAmount: depositAmount,
         electricityRatePerKwh: electricityRatePerKwh, waterRatePerM3: waterRatePerM3,
-        hasFurniture: hasFurniture, description: description,
+        includedAmenityCodes: includedAmenityCodes,
+        addonAmenities: addonAmenities,
+        description: description,
       );
       return Right(data);
     } on ServerException catch (e) { return Left(ServerFailure(message: e.message));

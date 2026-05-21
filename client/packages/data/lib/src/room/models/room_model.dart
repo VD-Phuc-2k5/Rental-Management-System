@@ -11,7 +11,8 @@ class RoomModel extends RoomEntity {
     required super.depositAmount,
     required super.electricityRatePerKwh,
     required super.waterRatePerM3,
-    required super.hasFurniture,
+    required super.includedAmenityCodes,
+    required super.addonAmenities,
     super.description,
     required super.createdAt,
     required super.updatedAt,
@@ -27,7 +28,20 @@ class RoomModel extends RoomEntity {
     depositAmount: _parseDouble(json['deposit_amount']),
     electricityRatePerKwh: _parseDouble(json['electricity_rate_per_kwh']),
     waterRatePerM3: _parseDouble(json['water_rate_per_m3']),
-    hasFurniture: json['has_furniture'] as bool,
+    includedAmenityCodes: (json['included_amenity_codes'] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList() ??
+        [],
+    addonAmenities: (json['addon_amenities'] as List<dynamic>?)
+            ?.map((e) {
+              final m = e as Map<String, dynamic>;
+              return RoomAddonAmenity(
+                code: m['code'] as String,
+                monthlyPrice: _parseDouble(m['monthly_price']),
+              );
+            })
+            .toList() ??
+        [],
     description: json['description'] as String?,
     createdAt: json['createdAt'] as String,
     updatedAt: json['updatedAt'] as String,

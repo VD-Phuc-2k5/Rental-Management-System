@@ -10,6 +10,7 @@
   static const String roomList = '/rooms';
   static const String createRoom = '/rooms/create';
   static const String updateRoom = '/rooms/update';
+  static const String roomTab = '/rooms-tab';
   static const String landlordRequests = '/requests';
   static const String landlordPayments = '/payments';
 }
@@ -26,6 +27,7 @@ abstract class RouteNames {
   static const String roomList = 'room-list';
   static const String createRoom = 'create-room';
   static const String updateRoom = 'update-room';
+  static const String roomTab = 'room-tab';
   static const String landlordRequests = 'landlord-requests';
   static const String landlordPayments = 'landlord-payments';
 }

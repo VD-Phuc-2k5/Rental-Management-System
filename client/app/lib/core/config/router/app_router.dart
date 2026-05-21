@@ -14,6 +14,7 @@ import '../../../features/property/presentation/pages/property_list_page.dart';
 import '../../../features/property/presentation/pages/create_property_page.dart';
 import '../../../features/property/presentation/pages/update_property_page.dart';
 import '../../../features/room/presentation/pages/room_list_page.dart';
+import '../../../features/room/presentation/pages/room_tab_page.dart';
 import '../../../features/room/presentation/pages/create_room_page.dart';
 import '../../../features/room/presentation/pages/update_room_page.dart';
 import '../../../features/splash/presentation/pages/splash_page.dart';
@@ -113,6 +114,11 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
           final property = state.extra as PropertyEntity;
           return UpdatePropertyPage(property: property);
         },
+      ),
+      GoRoute(
+        path: RoutePaths.roomTab,
+        name: RouteNames.roomTab,
+        builder: (_, _) => const RoomTabPage(),
       ),
       GoRoute(
         path: RoutePaths.roomList,

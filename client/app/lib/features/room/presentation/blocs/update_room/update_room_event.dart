@@ -12,7 +12,8 @@ class UpdateRoomSubmitted extends UpdateRoomEvent {
     this.depositAmount,
     this.electricityRatePerKwh,
     this.waterRatePerM3,
-    this.hasFurniture,
+    this.includedAmenityCodes,
+    this.addonAmenities,
     this.description,
   });
   final String id;
@@ -23,6 +24,7 @@ class UpdateRoomSubmitted extends UpdateRoomEvent {
   final double? depositAmount;
   final double? electricityRatePerKwh;
   final double? waterRatePerM3;
-  final bool? hasFurniture;
+  final List<String>? includedAmenityCodes;
+  final List<RoomAddonAmenity>? addonAmenities;
   final String? description;
 }

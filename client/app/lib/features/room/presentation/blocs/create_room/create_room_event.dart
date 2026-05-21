@@ -11,7 +11,8 @@ class CreateRoomSubmitted extends CreateRoomEvent {
     required this.depositAmount,
     required this.electricityRatePerKwh,
     required this.waterRatePerM3,
-    required this.hasFurniture,
+    required this.includedAmenityCodes,
+    required this.addonAmenities,
     this.description,
   });
   final String propertyId;
@@ -21,6 +22,7 @@ class CreateRoomSubmitted extends CreateRoomEvent {
   final double depositAmount;
   final double electricityRatePerKwh;
   final double waterRatePerM3;
-  final bool hasFurniture;
+  final List<String> includedAmenityCodes;
+  final List<RoomAddonAmenity> addonAmenities;
   final String? description;
 }
