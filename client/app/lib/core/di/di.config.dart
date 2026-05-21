@@ -10,9 +10,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:data/auth.dart' as _i41;
+import 'package:data/profile.dart' as _i366;
 import 'package:data/property.dart' as _i83;
 import 'package:data/room.dart' as _i586;
 import 'package:domain/auth.dart' as _i378;
+import 'package:domain/profile.dart' as _i503;
 import 'package:domain/property.dart' as _i369;
 import 'package:domain/room.dart' as _i142;
 import 'package:get_it/get_it.dart' as _i174;
@@ -31,6 +33,10 @@ import '../../features/auth/presentation/blocs/register_landlord/register_landlo
     as _i165;
 import '../../features/auth/presentation/blocs/verify_otp/verify_otp_bloc.dart'
     as _i452;
+import '../../features/profile/presentation/blocs/get_profile/get_profile_bloc.dart'
+    as _i373;
+import '../../features/profile/presentation/blocs/update_profile/update_profile_bloc.dart'
+    as _i275;
 import '../../features/property/presentation/blocs/create_property/create_property_bloc.dart'
     as _i509;
 import '../../features/property/presentation/blocs/delete_property/delete_property_bloc.dart'
@@ -68,6 +74,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i586.RoomRemoteDataSource>(
       () => registerModule.roomRemoteDataSource,
     );
+    gh.lazySingleton<_i366.ProfileRemoteDataSource>(
+      () => registerModule.profileRemoteDataSource,
+    );
     gh.factory<_i378.RegisterUsecase>(() => registerModule.registerUseCase);
     gh.factory<_i378.RegisterLandlordUsecase>(
       () => registerModule.registerLandlordUsecase,
@@ -104,10 +113,30 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.close(),
     );
+    gh.lazySingleton<_i503.ProfileRepository>(
+      () => registerModule.profileRepository(
+        gh<_i366.ProfileRemoteDataSource>(),
+        gh<_i652.AuthenticationBloc>(),
+      ),
+    );
     gh.lazySingleton<_i142.RoomRepository>(
       () => registerModule.roomRepository(
         gh<_i586.RoomRemoteDataSource>(),
         gh<_i652.AuthenticationBloc>(),
+      ),
+    );
+    gh.factory<_i503.GetProfileUsecase>(() => registerModule.getProfileUsecase);
+    gh.factory<_i503.UpdateProfileUsecase>(
+      () => registerModule.updateProfileUsecase,
+    );
+    gh.factory<_i275.UpdateProfileBloc>(
+      () => _i275.UpdateProfileBloc(
+        updateProfileUsecase: gh<_i503.UpdateProfileUsecase>(),
+      ),
+    );
+    gh.factory<_i373.GetProfileBloc>(
+      () => _i373.GetProfileBloc(
+        getProfileUsecase: gh<_i503.GetProfileUsecase>(),
       ),
     );
     gh.singleton<_i583.GoRouter>(
@@ -212,6 +241,10 @@ class _$RegisterModule extends _i291.RegisterModule {
       _i586.HttpRoomRemoteDataSource(client: _getIt<_i519.Client>());
 
   @override
+  _i366.HttpProfileRemoteDataSource get profileRemoteDataSource =>
+      _i366.HttpProfileRemoteDataSource(client: _getIt<_i519.Client>());
+
+  @override
   _i378.RegisterUsecase get registerUseCase =>
       _i378.RegisterUsecase(authRepository: _getIt<_i378.AuthRepository>());
 
@@ -243,6 +276,17 @@ class _$RegisterModule extends _i291.RegisterModule {
   _i378.ResetPasswordUsecase get resetPasswordUsecase =>
       _i378.ResetPasswordUsecase(
         authRepository: _getIt<_i378.AuthRepository>(),
+      );
+
+  @override
+  _i503.GetProfileUsecase get getProfileUsecase => _i503.GetProfileUsecase(
+    profileRepository: _getIt<_i503.ProfileRepository>(),
+  );
+
+  @override
+  _i503.UpdateProfileUsecase get updateProfileUsecase =>
+      _i503.UpdateProfileUsecase(
+        profileRepository: _getIt<_i503.ProfileRepository>(),
       );
 
   @override

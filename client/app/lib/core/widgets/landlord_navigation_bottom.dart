@@ -51,6 +51,9 @@ class LandlordNavigationBottom extends StatelessWidget {
       case 3:
         context.go(RoutePaths.landlordPayments);
         break;
+      case 4:
+        context.go(RoutePaths.profile);
+        break;
       default:
         break;
     }

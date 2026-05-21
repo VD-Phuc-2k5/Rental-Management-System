@@ -1,10 +1,12 @@
 import 'package:app/core/constants.dart';
 import 'package:app/screens/booking-room-screen/my_booking_room_screen.dart';
 import 'package:app/screens/home-screen/home_screen.dart';
-import 'package:app/screens/profile-screen/profile_screen.dart';
 import 'package:app/screens/tenant-invoice-list-screen/tenant_invoice_list_screen.dart';
 import 'package:app/screens/tenant-maintenance-request-screen/tenant_maintenance_request_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../config/router/route_constants.dart';
 
 class TenantNavigationBottom extends StatelessWidget {
   final int currentIndex;
@@ -58,9 +60,7 @@ class TenantNavigationBottom extends StatelessWidget {
         );
         break;
       case 4:
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const ProfileScreen()));
+        context.go(RoutePaths.profile);
         break;
       default:
         Navigator.of(

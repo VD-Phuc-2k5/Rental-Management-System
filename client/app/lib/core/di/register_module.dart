@@ -1,7 +1,9 @@
 ﻿import 'package:data/auth.dart';
+import 'package:data/profile.dart';
 import 'package:data/property.dart';
 import 'package:data/room.dart';
 import 'package:domain/auth.dart';
+import 'package:domain/profile.dart';
 import 'package:domain/property.dart';
 import 'package:domain/room.dart';
 import 'package:injectable/injectable.dart';
@@ -57,6 +59,21 @@ abstract class RegisterModule {
         getToken: () => authBloc.state.user?.token ?? '',
       );
 
+  // profile datasource
+  @LazySingleton(as: ProfileRemoteDataSource)
+  HttpProfileRemoteDataSource get profileRemoteDataSource;
+
+  // profile repository — needs getToken callback wired to AuthenticationBloc
+  @LazySingleton(as: ProfileRepository)
+  ProfileRepositoryImpl profileRepository(
+    ProfileRemoteDataSource dataSource,
+    AuthenticationBloc authBloc,
+  ) =>
+      ProfileRepositoryImpl(
+        profileRemoteDataSource: dataSource,
+        getToken: () => authBloc.state.user?.token ?? '',
+      );
+
   // --- Domain (UseCases) ---
   // auth
   @injectable
@@ -95,6 +112,13 @@ abstract class RegisterModule {
 
   @injectable
   DeletePropertyUsecase get deletePropertyUsecase;
+
+  // profile
+  @injectable
+  GetProfileUsecase get getProfileUsecase;
+
+  @injectable
+  UpdateProfileUsecase get updateProfileUsecase;
 
   // room
   @injectable

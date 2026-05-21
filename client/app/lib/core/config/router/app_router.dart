@@ -1,4 +1,5 @@
-﻿import 'package:domain/property.dart';
+﻿import 'package:domain/profile.dart';
+import 'package:domain/property.dart';
 import 'package:domain/room.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +15,8 @@ import '../../../features/property/presentation/pages/property_list_page.dart';
 import '../../../features/property/presentation/pages/create_property_page.dart';
 import '../../../features/property/presentation/pages/update_property_page.dart';
 import '../../../features/room/presentation/pages/room_list_page.dart';
+import '../../../features/profile/presentation/pages/profile_page.dart';
+import '../../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../../features/room/presentation/pages/room_tab_page.dart';
 import '../../../features/room/presentation/pages/create_room_page.dart';
 import '../../../features/room/presentation/pages/update_room_page.dart';
@@ -145,6 +148,19 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         builder: (BuildContext context, GoRouterState state) {
           final room = state.extra as RoomEntity;
           return UpdateRoomPage(room: room);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.profile,
+        name: RouteNames.profile,
+        builder: (_, _) => const ProfilePage(),
+      ),
+      GoRoute(
+        path: RoutePaths.editProfile,
+        name: RouteNames.editProfile,
+        builder: (context, state) {
+          final profile = state.extra as UserProfileEntity;
+          return EditProfilePage(profile: profile);
         },
       ),
       GoRoute(
