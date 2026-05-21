@@ -110,10 +110,17 @@ class _RoomListView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 16, top: 11, bottom: 11),
             child: ElevatedButton.icon(
-              onPressed: () => context.push(
-                RoutePaths.createRoom,
-                extra: {'propertyId': propertyId},
-              ),
+              onPressed: () async {
+                await context.push(
+                  RoutePaths.createRoom,
+                  extra: {'propertyId': propertyId},
+                );
+                if (context.mounted) {
+                  context.read<RoomListBloc>().add(
+                    RoomListFetched(propertyId: propertyId),
+                  );
+                }
+              },
               icon: const Icon(Icons.add, size: 16, color: AppColors.white),
               label: const Text(
                 "Thêm phòng",
@@ -197,10 +204,17 @@ class _RoomListView extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         ElevatedButton.icon(
-                          onPressed: () => context.push(
-                            RoutePaths.createRoom,
-                            extra: {'propertyId': propertyId},
-                          ),
+                          onPressed: () async {
+                            await context.push(
+                              RoutePaths.createRoom,
+                              extra: {'propertyId': propertyId},
+                            );
+                            if (context.mounted) {
+                              context.read<RoomListBloc>().add(
+                                RoomListFetched(propertyId: propertyId),
+                              );
+                            }
+                          },
                           icon: const Icon(Icons.add, color: AppColors.white),
                           label: const Text(
                             'Thêm phòng',
@@ -376,10 +390,19 @@ class _RoomListView extends StatelessWidget {
                                       padding: EdgeInsets.zero,
                                       minimumSize: const Size(0, 30),
                                     ),
-                                    onPressed: () => context.push(
-                                      RoutePaths.updateRoom,
-                                      extra: r,
-                                    ),
+                                    onPressed: () async {
+                                      await context.push(
+                                        RoutePaths.updateRoom,
+                                        extra: r,
+                                      );
+                                      if (context.mounted) {
+                                        context.read<RoomListBloc>().add(
+                                          RoomListFetched(
+                                            propertyId: propertyId,
+                                          ),
+                                        );
+                                      }
+                                    },
                                     child: const Text(
                                       "Cập nhật",
                                       style: TextStyle(
