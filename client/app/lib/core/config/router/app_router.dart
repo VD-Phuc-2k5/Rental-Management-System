@@ -1,6 +1,7 @@
 ﻿import 'package:data/auth.dart';
 import 'package:domain/profile.dart';
 import 'package:domain/property.dart';
+import 'package:domain/rental_request.dart';
 import 'package:domain/room.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +27,9 @@ import '../../../features/room/presentation/pages/update_room_page.dart';
 import '../../../features/rental_request/presentation/pages/rental_request_page.dart';
 import '../../../features/rental_request/presentation/pages/my_rental_requests_page.dart';
 import '../../../features/rental_request/presentation/pages/contract_preview_page.dart';
+import '../../../features/rental_request/presentation/pages/landlord_incoming_requests_page.dart';
+import '../../../features/rental_request/presentation/pages/landlord_contracts_page.dart';
+import '../../../features/rental_request/presentation/pages/landlord_contract_edit_page.dart';
 import '../../../features/viewing_appointment/presentation/pages/schedule_viewing_page.dart';
 import '../../../features/viewing_appointment/presentation/pages/my_appointments_page.dart';
 import '../../../features/viewing_appointment/presentation/pages/landlord_viewing_appointments_page.dart';
@@ -250,6 +254,24 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         path: RoutePaths.landlordViewingAppointments,
         name: RouteNames.landlordViewingAppointments,
         builder: (_, _) => const LandlordViewingAppointmentsPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.landlordIncomingRequests,
+        name: RouteNames.landlordIncomingRequests,
+        builder: (_, _) => const LandlordIncomingRequestsPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.landlordContracts,
+        name: RouteNames.landlordContracts,
+        builder: (_, _) => const LandlordContractsPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.landlordContractEdit,
+        name: RouteNames.landlordContractEdit,
+        builder: (context, state) {
+          final contract = state.extra as ContractEntity;
+          return LandlordContractEditPage(contract: contract);
+        },
       ),
     ],
     errorBuilder: (BuildContext context, GoRouterState state) =>

@@ -57,6 +57,8 @@ import '../../features/rental_request/presentation/blocs/contract_detail/contrac
     as _i269;
 import '../../features/rental_request/presentation/blocs/create_rental_request/create_rental_request_bloc.dart'
     as _i715;
+import '../../features/rental_request/presentation/blocs/landlord_contract_list/landlord_contract_list_bloc.dart'
+    as _i116;
 import '../../features/rental_request/presentation/blocs/landlord_request_list/landlord_request_list_bloc.dart'
     as _i598;
 import '../../features/rental_request/presentation/blocs/my_contract_list/my_contract_list_bloc.dart'
@@ -330,6 +332,12 @@ extension GetItInjectableX on _i174.GetIt {
         createRentalRequestUsecase: gh<_i284.CreateRentalRequestUsecase>(),
       ),
     );
+    gh.factory<_i598.LandlordRequestListBloc>(
+      () => _i598.LandlordRequestListBloc(
+        getIncomingRequestsUsecase: gh<_i284.GetIncomingRequestsUsecase>(),
+        rejectRentalRequestUsecase: gh<_i284.RejectRentalRequestUsecase>(),
+      ),
+    );
     gh.factory<_i171.DeleteRoomBloc>(
       () => _i171.DeleteRoomBloc(
         deleteRoomUsecase: gh<_i142.DeleteRoomUsecase>(),
@@ -338,6 +346,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i621.CreateRoomBloc>(
       () => _i621.CreateRoomBloc(
         createRoomUsecase: gh<_i142.CreateRoomUsecase>(),
+      ),
+    );
+    gh.factory<_i116.LandlordContractListBloc>(
+      () => _i116.LandlordContractListBloc(
+        getLandlordContractsUsecase: gh<_i284.GetLandlordContractsUsecase>(),
       ),
     );
     gh.factory<_i507.MyRentalRequestListBloc>(
@@ -363,11 +376,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i779.AvailableRoomListBloc>(
       () => _i779.AvailableRoomListBloc(
         getAvailableRoomsUsecase: gh<_i142.GetAvailableRoomsUsecase>(),
-      ),
-    );
-    gh.factory<_i598.LandlordRequestListBloc>(
-      () => _i598.LandlordRequestListBloc(
-        getIncomingRequestsUsecase: gh<_i284.GetIncomingRequestsUsecase>(),
       ),
     );
     gh.factory<_i511.BrowseRoomDetailBloc>(

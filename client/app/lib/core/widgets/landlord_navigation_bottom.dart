@@ -46,7 +46,7 @@ class LandlordNavigationBottom extends StatelessWidget {
         context.go(RoutePaths.roomTab);
         break;
       case 2:
-        context.go(RoutePaths.landlordRequests);
+        context.go(RoutePaths.landlordViewingAppointments);
         break;
       case 3:
         context.go(RoutePaths.landlordPayments);

@@ -1,31 +1,29 @@
-import 'package:domain/viewing_appointment.dart';
+import 'package:domain/rental_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/config/router/route_constants.dart';
 import '../../../../core/constants.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/utils/sealed_class_state.dart';
-import '../../../../core/widgets/landlord_navigation_bottom.dart';
-import '../blocs/landlord_viewing_appointment_list/landlord_viewing_appointment_list_bloc.dart';
+import '../blocs/landlord_request_list/landlord_request_list_bloc.dart';
 
-class LandlordViewingAppointmentsPage extends StatelessWidget {
-  const LandlordViewingAppointmentsPage({super.key});
+class LandlordIncomingRequestsPage extends StatelessWidget {
+  const LandlordIncomingRequestsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<LandlordViewingAppointmentListBloc>()
-        ..add(LandlordViewingAppointmentListFetched()),
-      child: const _LandlordViewingAppointmentsView(),
+      create: (_) => getIt<LandlordRequestListBloc>()
+        ..add(LandlordRequestListFetched()),
+      child: const _LandlordIncomingRequestsView(),
     );
   }
 }
 
-class _LandlordViewingAppointmentsView extends StatelessWidget {
-  const _LandlordViewingAppointmentsView();
+class _LandlordIncomingRequestsView extends StatelessWidget {
+  const _LandlordIncomingRequestsView();
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +33,12 @@ class _LandlordViewingAppointmentsView extends StatelessWidget {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.blue700),
+          onPressed: () => context.pop(),
+        ),
         title: const Text(
-          'Lịch xem phòng',
+          'Yêu cầu thuê',
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 18,
@@ -47,31 +48,28 @@ class _LandlordViewingAppointmentsView extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.assignment_outlined, color: AppColors.blue700),
-            tooltip: 'Yêu cầu thuê',
-            onPressed: () => context.push(RoutePaths.landlordIncomingRequests),
+            icon:
+                const Icon(Icons.description_outlined, color: AppColors.blue700),
+            tooltip: 'Hợp đồng',
+            onPressed: () => context.push(RoutePaths.landlordContracts),
           ),
           IconButton(
             icon: const Icon(Icons.refresh, color: AppColors.blue700),
             onPressed: () => context
-                .read<LandlordViewingAppointmentListBloc>()
-                .add(LandlordViewingAppointmentListFetched()),
+                .read<LandlordRequestListBloc>()
+                .add(LandlordRequestListFetched()),
           ),
         ],
       ),
-      bottomNavigationBar: const LandlordNavigationBottom(currentIndex: 2),
-      body: BlocBuilder<LandlordViewingAppointmentListBloc,
-          LandlordViewingAppointmentListState>(
+      body: BlocBuilder<LandlordRequestListBloc, LandlordRequestListState>(
         builder: (context, state) {
           final list = state.currentOrPreviousData;
-          final isLoading =
-              state is LandlordViewingAppointmentListLoadInProgress;
+          final isLoading = state is LandlordRequestListLoadInProgress;
 
-          if (state is LandlordViewingAppointmentListInitial) {
+          if (state is LandlordRequestListInitial) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (state is LandlordViewingAppointmentListLoadFailure &&
-              list == null) {
+          if (state is LandlordRequestListLoadFailure && list == null) {
             return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -84,8 +82,8 @@ class _LandlordViewingAppointmentsView extends StatelessWidget {
                   const SizedBox(height: 12),
                   ElevatedButton(
                     onPressed: () => context
-                        .read<LandlordViewingAppointmentListBloc>()
-                        .add(LandlordViewingAppointmentListFetched()),
+                        .read<LandlordRequestListBloc>()
+                        .add(LandlordRequestListFetched()),
                     child: const Text('Thử lại'),
                   ),
                 ],
@@ -95,7 +93,7 @@ class _LandlordViewingAppointmentsView extends StatelessWidget {
           if (list != null && list.isEmpty) {
             return const Center(
               child: Text(
-                'Chưa có lịch xem phòng nào.',
+                'Chưa có yêu cầu thuê nào.',
                 style: TextStyle(color: AppColors.slate500),
               ),
             );
@@ -103,8 +101,8 @@ class _LandlordViewingAppointmentsView extends StatelessWidget {
           return RefreshIndicator(
             color: AppColors.blue700,
             onRefresh: () async => context
-                .read<LandlordViewingAppointmentListBloc>()
-                .add(LandlordViewingAppointmentListFetched()),
+                .read<LandlordRequestListBloc>()
+                .add(LandlordRequestListFetched()),
             child: Stack(
               children: [
                 ListView.separated(
@@ -112,7 +110,7 @@ class _LandlordViewingAppointmentsView extends StatelessWidget {
                   itemCount: list?.length ?? 0,
                   separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, index) =>
-                      _ViewingAppointmentCard(appointment: list![index]),
+                      _RentalRequestCard(request: list![index]),
                 ),
                 if (isLoading)
                   const Positioned(
@@ -130,18 +128,13 @@ class _LandlordViewingAppointmentsView extends StatelessWidget {
   }
 }
 
-class _ViewingAppointmentCard extends StatelessWidget {
-  const _ViewingAppointmentCard({required this.appointment});
+class _RentalRequestCard extends StatelessWidget {
+  const _RentalRequestCard({required this.request});
 
-  final ViewingAppointmentEntity appointment;
+  final RentalRequestEntity request;
 
   @override
   Widget build(BuildContext context) {
-    final scheduledDt = DateTime.tryParse(appointment.scheduledAt)?.toLocal();
-    final dateStr = scheduledDt != null
-        ? DateFormat('dd/MM/yyyy – HH:mm').format(scheduledDt)
-        : appointment.scheduledAt;
-
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -155,36 +148,38 @@ class _ViewingAppointmentCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.calendar_month,
+                const Icon(Icons.home_outlined,
                     size: 18, color: AppColors.blue700),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    dateStr,
+                    'Phòng: ${request.roomId}',
                     style: const TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: AppColors.black,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                _StatusChip(status: appointment.status),
+                const SizedBox(width: 8),
+                _StatusChip(status: request.status),
               ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
-              'Mã phòng: ${appointment.roomId}',
+              'Ngày gửi: ${request.createdAt.substring(0, 10)}',
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 12,
                 color: AppColors.slate500,
               ),
             ),
-            if (appointment.note != null && appointment.note!.isNotEmpty) ...[
+            if (request.note != null && request.note!.isNotEmpty) ...[
               const SizedBox(height: 4),
               Text(
-                'Ghi chú: ${appointment.note}',
+                'Ghi chú: ${request.note}',
                 style: const TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 12,
@@ -192,16 +187,15 @@ class _ViewingAppointmentCard extends StatelessWidget {
                 ),
               ),
             ],
-            if (appointment.status == ViewingAppointmentStatus.pending) ...[
+            if (request.status == RentalRequestStatus.pending) ...[
               const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => context
-                          .read<LandlordViewingAppointmentListBloc>()
-                          .add(LandlordViewingAppointmentRejected(
-                              id: appointment.id)),
+                          .read<LandlordRequestListBloc>()
+                          .add(LandlordRequestListRejected(id: request.id)),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.red500,
                         side: const BorderSide(color: AppColors.red500),
@@ -215,10 +209,8 @@ class _ViewingAppointmentCard extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () => context
-                          .read<LandlordViewingAppointmentListBloc>()
-                          .add(LandlordViewingAppointmentApproved(
-                              id: appointment.id)),
+                      onPressed: () =>
+                          context.push(RoutePaths.landlordContracts),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.blue700,
                         foregroundColor: Colors.white,
@@ -226,7 +218,7 @@ class _ViewingAppointmentCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text('Chấp nhận'),
+                      child: const Text('Xem HĐ'),
                     ),
                   ),
                 ],
@@ -242,32 +234,33 @@ class _ViewingAppointmentCard extends StatelessWidget {
 class _StatusChip extends StatelessWidget {
   const _StatusChip({required this.status});
 
-  final ViewingAppointmentStatus status;
+  final RentalRequestStatus status;
 
   @override
   Widget build(BuildContext context) {
     final (label, bg, fg) = switch (status) {
-      ViewingAppointmentStatus.pending => (
+      RentalRequestStatus.pending => (
           'Chờ duyệt',
           AppColors.amber100,
           AppColors.amber500,
         ),
-      ViewingAppointmentStatus.approved => (
-          'Đã duyệt',
+      RentalRequestStatus.accepted => (
+          'Đã chấp nhận',
           AppColors.green100,
           AppColors.green700,
         ),
-      ViewingAppointmentStatus.rejected => (
+      RentalRequestStatus.rejected => (
           'Từ chối',
           AppColors.red100,
           AppColors.red500,
         ),
-      ViewingAppointmentStatus.cancelled => (
-          'Đã huỷ',
-          AppColors.slate100,
-          AppColors.slate500,
+      RentalRequestStatus.contracted => (
+          'Đã ký HĐ',
+          AppColors.blue100,
+          AppColors.blue700,
         ),
     };
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(

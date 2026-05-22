@@ -23,6 +23,9 @@
   static const String myAppointments = '/my-appointments';
   static const String landlordViewingAppointments =
       '/landlord-viewing-appointments';
+  static const String landlordIncomingRequests = '/landlord-incoming-requests';
+  static const String landlordContracts = '/landlord-contracts';
+  static const String landlordContractEdit = '/landlord-contract-edit';
 }
 
 abstract class RouteNames {
@@ -50,4 +53,7 @@ abstract class RouteNames {
   static const String myAppointments = 'my-appointments';
   static const String landlordViewingAppointments =
       'landlord-viewing-appointments';
+  static const String landlordIncomingRequests = 'landlord-incoming-requests';
+  static const String landlordContracts = 'landlord-contracts';
+  static const String landlordContractEdit = 'landlord-contract-edit';
 }
