@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class IntroRoomCard extends StatelessWidget {
-  final String title;
-  final String address;
-  final String price;
-  final String? imageUrl;
-  final VoidCallback? onTap;
 
   const IntroRoomCard({
     super.key,
@@ -16,6 +11,11 @@ class IntroRoomCard extends StatelessWidget {
     this.imageUrl,
     this.onTap,
   });
+  final String title;
+  final String address;
+  final String price;
+  final String? imageUrl;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class IntroRoomCard extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) => Container(
                             color: AppColors.gray200,
-                            child: Icon(
+                            child: const Icon(
                               Icons.broken_image, 
                               color: AppColors.gray500
                             ),
@@ -72,7 +72,7 @@ class IntroRoomCard extends StatelessWidget {
                           children: [
                             Text(
                               title,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: "Inter",
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -83,7 +83,7 @@ class IntroRoomCard extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.location_on_outlined,
                                   size: 14,
                                   color: AppColors.gray500,
@@ -92,7 +92,7 @@ class IntroRoomCard extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     address,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: "Inter",
                                       fontSize: 12,
                                       color: AppColors.gray600,
@@ -111,14 +111,14 @@ class IntroRoomCard extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: price,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: "Inter",
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.blue700,
                               ),
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text: "/tháng",
                               style: TextStyle(
                                 fontFamily: "Inter",

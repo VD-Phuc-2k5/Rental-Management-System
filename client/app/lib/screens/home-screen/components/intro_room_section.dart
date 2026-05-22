@@ -1,6 +1,6 @@
-import 'package:app/screens/home-screen/components/intro_room_card.dart';
+import 'intro_room_card.dart';
 import 'package:flutter/material.dart';
-import 'package:app/screens/room-detail-screen/room_detail_screen.dart';
+import '../../room-detail-screen/room_detail_screen.dart';
 
 class IntroRoomSection extends StatelessWidget {
   const IntroRoomSection({super.key});
@@ -37,7 +37,7 @@ class IntroRoomSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (var room in _rooms)
+        for (final room in _rooms)
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: IntroRoomCard(
@@ -49,7 +49,7 @@ class IntroRoomSection extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => RoomDetailScreen(),
+                    builder: (context) => const RoomDetailScreen(),
                   ),
                 );
               },

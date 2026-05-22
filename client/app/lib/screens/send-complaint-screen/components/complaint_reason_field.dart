@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class ComplaintReasonField extends StatelessWidget {
   const ComplaintReasonField({super.key});
@@ -24,13 +24,13 @@ class ComplaintReasonField extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: AppColors.white),
           ),
-          child: TextField(
+          child: const TextField(
             maxLines: 6,
             decoration: InputDecoration(
               hintText: 'Mô tả chi tiết lý do bạn không hài lòng với kết quả sửa chữa...',
-              hintStyle: const TextStyle(color: Color(0xFF6B7280), height: 1.25),
+              hintStyle: TextStyle(color: Color(0xFF6B7280), height: 1.25),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.all(14),
+              contentPadding: EdgeInsets.all(14),
             ),
           ),
         ),

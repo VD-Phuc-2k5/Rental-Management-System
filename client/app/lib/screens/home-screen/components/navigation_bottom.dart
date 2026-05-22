@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class NavigationBottom extends StatelessWidget {
-  final int currentIndex;
-  final Function(int)? onTap;
 
   const NavigationBottom({
     super.key,
     this.currentIndex = 0,
     this.onTap,
   });
+  final int currentIndex;
+  final Function(int)? onTap;
 
   final _items = const [
     BottomNavigationBarItem(
@@ -37,9 +37,9 @@ class NavigationBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.white,
-        borderRadius: const BorderRadius.only(
+        borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
@@ -47,7 +47,7 @@ class NavigationBottom extends StatelessWidget {
           BoxShadow(
             color: AppColors.gray300,
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            offset: Offset(0, -2),
           ),
         ],
       ),

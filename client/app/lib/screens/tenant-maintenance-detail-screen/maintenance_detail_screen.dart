@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/widgets/common_appbar.dart';
+import '../../core/constants.dart';
+import '../../core/widgets/common_appbar.dart';
 
-import 'package:app/screens/tenant-maintenance-detail-screen/components/maintenance_notice_banner.dart';
-import 'package:app/screens/tenant-maintenance-detail-screen/components/worker_info_card.dart';
-import 'package:app/screens/tenant-maintenance-detail-screen/components/processing_timeline_card.dart';
-import 'package:app/screens/tenant-maintenance-detail-screen/components/issue_detail_card.dart';
-import 'package:app/screens/tenant-maintenance-detail-screen/components/maintenance_detail_bottom_bar.dart';
+import 'components/maintenance_notice_banner.dart';
+import 'components/worker_info_card.dart';
+import 'components/processing_timeline_card.dart';
+import 'components/issue_detail_card.dart';
+import 'components/maintenance_detail_bottom_bar.dart';
 
 class TenantMaintenanceDetailScreen extends StatelessWidget {
   const TenantMaintenanceDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppColors.grayBackground,
-      appBar: const CommonAppBar(title: 'Chi tiết sự cố'),
+      appBar: CommonAppBar(title: 'Chi tiết sự cố'),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 110),
+        padding: EdgeInsets.fromLTRB(16, 12, 16, 110),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             MaintenanceNoticeBanner(),
             SizedBox(height: 14),
 
@@ -40,7 +40,7 @@ class TenantMaintenanceDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const MaintenanceDetailBottomBar(),
+      bottomNavigationBar: MaintenanceDetailBottomBar(),
     );
   }
 }

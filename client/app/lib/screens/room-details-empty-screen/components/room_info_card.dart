@@ -1,10 +1,10 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class RoomInfoCard extends StatelessWidget {
-  final String roomNumber;
 
   const RoomInfoCard({super.key, required this.roomNumber});
+  final String roomNumber;
 
   Widget _buildUtilityItem(IconData icon, String label) {
     return Expanded(
@@ -81,8 +81,8 @@ class RoomInfoCard extends StatelessWidget {
                     color: AppColors.black.withAlpha(153),
                     borderRadius: BorderRadius.circular(6.0),
                   ),
-                  child: Row(
-                    children: const [
+                  child: const Row(
+                    children: [
                       Icon(
                         Icons.camera_alt_outlined,
                         color: AppColors.white,
@@ -125,8 +125,8 @@ class RoomInfoCard extends StatelessWidget {
                             color: AppColors.slate900,
                           ),
                         ),
-                        SizedBox(height: 2),
-                        Text(
+                        const SizedBox(height: 2),
+                        const Text(
                           "Tầng 3 - Tòa nhà Landmark",
                           style: TextStyle(
                             fontFamily: 'Inter',
@@ -137,9 +137,9 @@ class RoomInfoCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Column(
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: const [
+                      children: [
                         Text(
                           "3.500.000đ",
                           style: TextStyle(
@@ -164,8 +164,8 @@ class RoomInfoCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Icon(Icons.bolt, size: 16, color: AppColors.blue700),
                     SizedBox(width: 4),
                     Text(

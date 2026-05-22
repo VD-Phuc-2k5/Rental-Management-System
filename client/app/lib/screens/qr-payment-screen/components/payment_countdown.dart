@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class PaymentCountdown extends StatefulWidget {
-  final DateTime expiresAt;
-  final VoidCallback? onExpired;
 
   const PaymentCountdown({super.key, required this.expiresAt, this.onExpired});
+  final DateTime expiresAt;
+  final VoidCallback? onExpired;
 
   @override
   State<PaymentCountdown> createState() => _PaymentCountdownState();

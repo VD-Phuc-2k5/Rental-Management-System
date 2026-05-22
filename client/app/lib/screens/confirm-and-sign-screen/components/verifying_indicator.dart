@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class VerifyingIndicator extends StatelessWidget {
   const VerifyingIndicator({super.key});
 

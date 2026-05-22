@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class DepositSection extends StatelessWidget {
   const DepositSection({super.key});
 
@@ -34,8 +34,8 @@ class DepositSection extends StatelessWidget {
                     border: Border.all(color: const Color(0xFFE2E8F0)),
                     color: Colors.white,
                   ),
-                  child: Row(
-                    children: const [
+                  child: const Row(
+                    children: [
                       Icon(Icons.payments_outlined, color: AppColors.slate500),
                       SizedBox(width: 10),
                       Expanded(

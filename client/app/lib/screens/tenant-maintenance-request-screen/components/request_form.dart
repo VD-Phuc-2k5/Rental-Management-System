@@ -1,7 +1,7 @@
-import "package:app/core/constants.dart";
-import "package:app/screens/tenant-maintenance-request-screen/components/image_upload_section.dart";
-import "package:app/screens/tenant-maintenance-request-screen/components/labeled_text_field.dart";
-import "package:app/screens/tenant-maintenance-request-screen/components/priority_selector.dart";
+import "../../../core/constants.dart";
+import "image_upload_section.dart";
+import "labeled_text_field.dart";
+import "priority_selector.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
 
@@ -89,7 +89,7 @@ class _RequestFormState extends State<RequestForm> {
     });
 
     try {
-      // TODO: Implement API call to submit maintenance request
+      // TO DO: Implement API call to submit maintenance request
       // Example:
       // await maintenanceService.createRequest(
       //   title: _titleController.text.trim(),

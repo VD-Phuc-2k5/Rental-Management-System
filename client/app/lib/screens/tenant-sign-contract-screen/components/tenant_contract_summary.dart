@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class TenantContractSummaryCard extends StatelessWidget {
   const TenantContractSummaryCard({super.key});
 
@@ -9,11 +9,11 @@ class TenantContractSummaryCard extends StatelessWidget {
       elevation: 0,
       color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+      child: const Padding(
+        padding: EdgeInsets.fromLTRB(14, 14, 14, 14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             _HeroImage(),
             SizedBox(height: 12),
             _MetaTitle(),
@@ -60,13 +60,13 @@ class _HeroImage extends StatelessWidget {
             color: Colors.black.withValues(alpha: 0.25),
               ),
            ),
-            Positioned(
+            const Positioned(
               left: 14,
               bottom: 14,
               right: 14,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     'MÃ CĂN HỘ',
                     style: TextStyle(
@@ -100,8 +100,8 @@ class _MetaTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: const [
+    return const Row(
+      children: [
         Text('Ngày lập', style: TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w500,)),
         Spacer(),
         Text('24/10/2023', style: TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w600)),
@@ -115,9 +115,9 @@ class _InfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         Text(
           'THÔNG TIN CHÍNH',
           style: TextStyle(
@@ -138,10 +138,10 @@ class _InfoSection extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  final String label;
-  final String value;
 
   const _InfoRow({required this.label, required this.value});
+  final String label;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
@@ -160,10 +160,10 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _InfoRowBlue extends StatelessWidget {
-  final String label;
-  final String value;
 
   const _InfoRowBlue({required this.label, required this.value});
+  final String label;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
@@ -215,11 +215,11 @@ class _PreviewBox extends StatelessWidget {
           const SizedBox(height: 10),
           InkWell(
             onTap: () {},
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Text(
                     'Xem toàn bộ hợp đồng',
                     style: TextStyle(

@@ -1,10 +1,4 @@
 class ElectricWaterEntry {
-  final String hostelName;
-  final String roomNumber;
-  final int oldElectric;
-  final int newElectric;
-  final int oldWater;
-  final int newWater;
 
   const ElectricWaterEntry({
     required this.hostelName,
@@ -14,6 +8,24 @@ class ElectricWaterEntry {
     required this.oldWater,
     required this.newWater,
   });
+
+  /// Factory để parse từ JSON API
+  factory ElectricWaterEntry.fromJson(Map<String, dynamic> json) {
+    return ElectricWaterEntry(
+      hostelName: json['hostelName'] as String,
+      roomNumber: json['roomNumber'] as String,
+      oldElectric: json['oldElectric'] as int,
+      newElectric: json['newElectric'] as int,
+      oldWater: json['oldWater'] as int,
+      newWater: json['newWater'] as int,
+    );
+  }
+  final String hostelName;
+  final String roomNumber;
+  final int oldElectric;
+  final int newElectric;
+  final int oldWater;
+  final int newWater;
 
   /// Điện mới < điện cũ là lỗi
   bool get hasElectricError => newElectric < oldElectric;
@@ -36,18 +48,6 @@ class ElectricWaterEntry {
       );
     }
     return messages;
-  }
-
-  /// Factory để parse từ JSON API
-  factory ElectricWaterEntry.fromJson(Map<String, dynamic> json) {
-    return ElectricWaterEntry(
-      hostelName: json['hostelName'] as String,
-      roomNumber: json['roomNumber'] as String,
-      oldElectric: json['oldElectric'] as int,
-      newElectric: json['newElectric'] as int,
-      oldWater: json['oldWater'] as int,
-      newWater: json['newWater'] as int,
-    );
   }
 
   Map<String, dynamic> toJson() => {

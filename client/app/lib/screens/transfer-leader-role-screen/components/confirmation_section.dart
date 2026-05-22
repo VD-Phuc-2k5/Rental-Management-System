@@ -1,11 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmationSection extends StatelessWidget {
-  final bool isConfirmed;
-  final ValueChanged<bool> onChanged;
-  final VoidCallback onSubmit;
-  final bool isValid;
 
   const ConfirmationSection({
     super.key,
@@ -14,6 +10,10 @@ class ConfirmationSection extends StatelessWidget {
     required this.onSubmit,
     required this.isValid,
   });
+  final bool isConfirmed;
+  final ValueChanged<bool> onChanged;
+  final VoidCallback onSubmit;
+  final bool isValid;
 
   @override
   Widget build(BuildContext context) {

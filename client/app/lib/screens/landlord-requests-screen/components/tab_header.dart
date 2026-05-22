@@ -1,11 +1,7 @@
-import "package:app/core/constants.dart";
+import "../../../core/constants.dart";
 import "package:flutter/material.dart";
 
 class TabHeader extends StatelessWidget {
-  final int selectedIndex;
-  final Function(int) onTabSelected;
-  final List<String> tabs;
-  final List<int>? counts;
 
   const TabHeader({
     super.key,
@@ -14,12 +10,16 @@ class TabHeader extends StatelessWidget {
     required this.tabs,
     this.counts,
   });
+  final int selectedIndex;
+  final Function(int) onTabSelected;
+  final List<String> tabs;
+  final List<int>? counts;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 10.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(width: 1.0, color: AppColors.slate200),
         ),

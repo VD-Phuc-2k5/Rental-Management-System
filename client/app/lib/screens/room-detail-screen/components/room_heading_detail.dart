@@ -1,16 +1,16 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 import 'package:flutter/material.dart';
 
 class RoomHeadingDetail extends StatelessWidget {
-  final String title;
-  final double price;
 
   const RoomHeadingDetail({
     super.key,
     required this.title,
     required this.price,
   });
+  final String title;
+  final double price;
 
   @override
   Widget build(BuildContext context) {

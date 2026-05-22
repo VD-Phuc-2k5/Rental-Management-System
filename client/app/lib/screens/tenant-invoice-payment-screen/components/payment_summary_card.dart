@@ -1,17 +1,17 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/components/payment_models.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
+import 'payment_models.dart';
 import 'package:flutter/material.dart';
 
 class PaymentSummaryCard extends StatelessWidget {
-  final List<PaymentLineItemData> lineItems;
-  final int totalAmount;
 
   const PaymentSummaryCard({
     super.key,
     required this.lineItems,
     required this.totalAmount,
   });
+  final List<PaymentLineItemData> lineItems;
+  final int totalAmount;
 
   @override
   Widget build(BuildContext context) {

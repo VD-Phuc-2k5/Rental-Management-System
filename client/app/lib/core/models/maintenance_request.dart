@@ -3,15 +3,6 @@ import 'priority.dart';
 enum RequestStatus { pending, processing, completed, rejected }
 
 class MaintenanceRequest {
-  final String id;
-  final String title;
-  final String description;
-  final String location;
-  final Priority priority;
-  final RequestStatus status;
-  final DateTime createdAt;
-  final List<String> imageUrls;
-  final String? tenantName;
 
   MaintenanceRequest({
     required this.id,
@@ -24,6 +15,15 @@ class MaintenanceRequest {
     this.imageUrls = const [],
     this.tenantName,
   });
+  final String id;
+  final String title;
+  final String description;
+  final String location;
+  final Priority priority;
+  final RequestStatus status;
+  final DateTime createdAt;
+  final List<String> imageUrls;
+  final String? tenantName;
 }
 
 extension RequestStatusExtension on RequestStatus {

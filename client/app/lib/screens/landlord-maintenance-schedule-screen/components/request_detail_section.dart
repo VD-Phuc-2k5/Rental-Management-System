@@ -1,11 +1,11 @@
-import 'package:app/core/collapse_text.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/models/maintenance_request.dart';
+import '../../../core/collapse_text.dart';
+import '../../../core/constants.dart';
+import '../../../core/models/maintenance_request.dart';
 import 'package:flutter/material.dart';
 
 class RequestDetailSection extends StatelessWidget {
-  final MaintenanceRequest request;
   const RequestDetailSection({super.key, required this.request});
+  final MaintenanceRequest request;
 
   Widget _buildRequestHeader() {
     return Container(

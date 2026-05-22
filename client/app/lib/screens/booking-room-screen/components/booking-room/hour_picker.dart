@@ -1,10 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class HourPicker extends StatelessWidget {
-  final List<String> hours;
-  final String? selectedHour;
-  final ValueChanged<String> onHourSelected;
 
   const HourPicker({
     super.key,
@@ -12,13 +9,16 @@ class HourPicker extends StatelessWidget {
     this.selectedHour,
     required this.onHourSelected,
   });
+  final List<String> hours;
+  final String? selectedHour;
+  final ValueChanged<String> onHourSelected;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           "Chọn giờ",
           style: TextStyle(
             fontSize: 18,

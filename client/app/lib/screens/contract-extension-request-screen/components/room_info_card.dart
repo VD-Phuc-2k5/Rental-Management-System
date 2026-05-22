@@ -1,10 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class RoomInfoCard extends StatelessWidget {
-  final String roomName;
-  final String hostelName;
-  final String contractExpiryDate;
 
   const RoomInfoCard({
     super.key,
@@ -12,6 +9,9 @@ class RoomInfoCard extends StatelessWidget {
     required this.hostelName,
     required this.contractExpiryDate,
   });
+  final String roomName;
+  final String hostelName;
+  final String contractExpiryDate;
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +32,14 @@ class RoomInfoCard extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: AppColors.white,
-              border: Border(
+              border: const Border(
                 bottom: BorderSide(width: 1.0, color: AppColors.slate200),
               ),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.black.withAlpha(10),
                   blurRadius: 8,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -48,18 +48,18 @@ class RoomInfoCard extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.blue50,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.apartment, color: AppColors.blue700),
+                  child: const Icon(Icons.apartment, color: AppColors.blue700),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       roomName,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.blue950,
                         fontFamily: "Inter",
                         fontWeight: FontWeight.w700,
@@ -68,7 +68,7 @@ class RoomInfoCard extends StatelessWidget {
                     ),
                     Text(
                       hostelName,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: "Inter",
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
@@ -85,7 +85,7 @@ class RoomInfoCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
+                const Row(
                   spacing: 8.0,
                   children: [
                     Icon(Icons.event_busy, color: AppColors.slate500, size: 18),
@@ -102,7 +102,7 @@ class RoomInfoCard extends StatelessWidget {
                 ),
                 Text(
                   contractExpiryDate,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.red500,
                     fontFamily: "Inter",
                     fontWeight: FontWeight.w700,

@@ -1,15 +1,15 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class TenantInfoHeader extends StatelessWidget {
-  final int step;
-  final int total;
 
   const TenantInfoHeader({
     super.key,
     required this.step,
     required this.total,
   });
+  final int step;
+  final int total;
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +33,10 @@ class TenantInfoHeader extends StatelessWidget {
 }
 
 class _StepBar extends StatelessWidget {
-  final int current;
-  final int total;
 
   const _StepBar({required this.current, required this.total});
+  final int current;
+  final int total;
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +59,8 @@ class _StepBar extends StatelessWidget {
 }
 
 class _SectionTitle extends StatelessWidget {
-  final String text;
   const _SectionTitle({required this.text});
+  final String text;
 
   @override
   Widget build(BuildContext context) {

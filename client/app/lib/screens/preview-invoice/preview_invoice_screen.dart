@@ -1,19 +1,19 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/widgets/common_appbar.dart';
-import 'package:app/screens/preview-invoice/components/body.dart';
-import 'package:app/core/models/invoice_preview.dart';
+import '../../core/constants.dart';
+import '../../core/widgets/common_appbar.dart';
+import 'components/body.dart';
+import '../../core/models/invoice_preview.dart';
 import 'package:flutter/material.dart';
 
 class PreviewInvoiceScreen extends StatelessWidget {
-  final String monthLabel;
-
-  final List<InvoicePreview> invoices;
 
   const PreviewInvoiceScreen({
     super.key,
     required this.monthLabel,
     required this.invoices,
   });
+  final String monthLabel;
+
+  final List<InvoicePreview> invoices;
 
   @override
   Widget build(BuildContext context) {

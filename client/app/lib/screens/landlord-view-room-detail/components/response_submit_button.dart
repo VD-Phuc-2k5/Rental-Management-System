@@ -1,11 +1,8 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/widgets/primary_button.dart';
+import '../../../core/constants.dart';
+import '../../../core/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 
 class ResponseSubmitButton extends StatelessWidget {
-  final VoidCallback? onReject;
-  final VoidCallback? onConfirm;
-  final bool isLoading;
 
   const ResponseSubmitButton({
     super.key,
@@ -13,6 +10,9 @@ class ResponseSubmitButton extends StatelessWidget {
     this.onConfirm,
     this.isLoading = false,
   });
+  final VoidCallback? onReject;
+  final VoidCallback? onConfirm;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,6 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/landlord-payment-history/components/payment_summary_card.dart';
-import 'package:app/screens/landlord-payment-history/components/transaction_list_item.dart';
+import '../../../core/constants.dart';
+import 'payment_summary_card.dart';
+import 'transaction_list_item.dart';
 import 'package:flutter/material.dart';
 
 class LandlordPaymentHistoryBody extends StatefulWidget {

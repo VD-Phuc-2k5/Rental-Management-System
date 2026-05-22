@@ -1,11 +1,8 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 import 'models.dart';
 
 class MemberSelectionList extends StatelessWidget {
-  final List<RoomMember> members;
-  final String? selectedMemberId;
-  final ValueChanged<String> onMemberSelected;
 
   const MemberSelectionList({
     super.key,
@@ -13,6 +10,9 @@ class MemberSelectionList extends StatelessWidget {
     required this.selectedMemberId,
     required this.onMemberSelected,
   });
+  final List<RoomMember> members;
+  final String? selectedMemberId;
+  final ValueChanged<String> onMemberSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -42,21 +42,21 @@ class MemberSelectionList extends StatelessWidget {
 }
 
 class _MemberRadioTile extends StatelessWidget {
-  final RoomMember member;
-  final bool isSelected;
-  final VoidCallback onTap;
 
   const _MemberRadioTile({
     required this.member,
     required this.isSelected,
     required this.onTap,
   });
+  final RoomMember member;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   Widget _buildAvatar() {
     return Container(
       width: 48,
       height: 48,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
         color: AppColors.blue100,
       ),

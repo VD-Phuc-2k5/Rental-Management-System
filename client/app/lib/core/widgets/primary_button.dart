@@ -1,13 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../constants.dart';
 import 'package:flutter/material.dart';
 
 class PrimaryButton extends StatelessWidget {
-  final String label;
-  final VoidCallback? onPressed;
-  final bool isLoading;
-  final double? width;
-  final double height;
-  final double fontSize;
 
   const PrimaryButton({
     super.key,
@@ -18,6 +12,12 @@ class PrimaryButton extends StatelessWidget {
     this.height = 52,
     this.fontSize = 16,
   });
+  final String label;
+  final VoidCallback? onPressed;
+  final bool isLoading;
+  final double? width;
+  final double height;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {

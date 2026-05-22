@@ -1,5 +1,5 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/finish-contract-screen/finish_contract_screen.dart';
+import '../../../core/constants.dart';
+import '../../finish-contract-screen/finish_contract_screen.dart';
 import 'package:flutter/material.dart';
 
 class CancelContractBottomBar extends StatelessWidget {

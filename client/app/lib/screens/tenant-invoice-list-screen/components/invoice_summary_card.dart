@@ -1,14 +1,14 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_view_models.dart';
+import 'invoice_view_models.dart';
 
 class InvoiceSummaryCard extends StatelessWidget {
-  final InvoiceSummaryData invoice;
-  final VoidCallback? onPayNow;
 
   const InvoiceSummaryCard({super.key, required this.invoice, this.onPayNow});
+  final InvoiceSummaryData invoice;
+  final VoidCallback? onPayNow;
 
   String _getBillingMonth(String invoiceDueDate) {
     final DateTime date = DateFormat('dd/MM/yyyy').parse(invoiceDueDate);

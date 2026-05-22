@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class SearchFilter extends StatelessWidget {
   const SearchFilter({super.key});
@@ -11,10 +11,10 @@ class SearchFilter extends StatelessWidget {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
-          BoxShadow(
+          const BoxShadow(
             color: AppColors.gray300,
             blurRadius: 6,
-            offset: const Offset(0, 1),
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -22,11 +22,11 @@ class SearchFilter extends StatelessWidget {
         onChanged: (value) {},
         decoration: InputDecoration(
           hintText: "Tìm kiếm phòng trọ...",
-          hintStyle: TextStyle(color: AppColors.gray400),
-          prefixIcon: Icon(Icons.search, color: AppColors.gray500),
+          hintStyle: const TextStyle(color: AppColors.gray400),
+          prefixIcon: const Icon(Icons.search, color: AppColors.gray500),
           suffixIcon: IconButton(
             onPressed: () {},
-            icon: Icon(Icons.tune, color: AppColors.gray500),
+            icon: const Icon(Icons.tune, color: AppColors.gray500),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),

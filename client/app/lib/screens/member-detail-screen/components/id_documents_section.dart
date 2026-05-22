@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class IdDocumentsSection extends StatelessWidget {
   const IdDocumentsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'GIẤY TỜ TÙY THÂN',
           style: TextStyle(
             color: AppColors.slate400,
@@ -16,9 +16,9 @@ class IdDocumentsSection extends StatelessWidget {
             letterSpacing: 0.3,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(
-          children: const [
+          children: [
             Expanded(
               child: _DocTile(
                 title: 'MẶT TRƯỚC CCCD',
@@ -40,13 +40,13 @@ class IdDocumentsSection extends StatelessWidget {
 }
 
 class _DocTile extends StatelessWidget {
-  final String title;
-  final ImageProvider image;
 
   const _DocTile({
     required this.title,
     required this.image,
   });
+  final String title;
+  final ImageProvider image;
 
   @override
   Widget build(BuildContext context) {

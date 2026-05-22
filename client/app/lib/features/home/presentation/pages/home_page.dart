@@ -60,7 +60,7 @@ class _HomeViewState extends State<_HomeView> {
         elevation: 0,
         leadingWidth: 200,
         leading: const Padding(
-          padding: const EdgeInsets.only(left: 16),
+          padding: EdgeInsets.only(left: 16),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -84,7 +84,7 @@ class _HomeViewState extends State<_HomeView> {
                 const BoxShadow(
                   color: AppColors.gray300,
                   blurRadius: 1,
-                  offset: const Offset(0, 1),
+                  offset: Offset(0, 1),
                 ),
               ],
             ),

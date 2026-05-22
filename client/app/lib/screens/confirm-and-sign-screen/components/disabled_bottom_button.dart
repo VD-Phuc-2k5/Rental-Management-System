@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class DisabledBottomButton extends StatelessWidget {
-  final String text;
   const DisabledBottomButton({super.key, required this.text});
+  final String text;
 
   @override
   Widget build(BuildContext context) {

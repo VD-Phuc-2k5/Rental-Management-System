@@ -1,10 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class TechnicianInfoSection extends StatelessWidget {
-  final TextEditingController nameController;
-  final TextEditingController phoneController;
-  final TextEditingController notesController;
 
   const TechnicianInfoSection({
     super.key,
@@ -12,6 +9,9 @@ class TechnicianInfoSection extends StatelessWidget {
     required this.phoneController,
     required this.notesController,
   });
+  final TextEditingController nameController;
+  final TextEditingController phoneController;
+  final TextEditingController notesController;
 
   Widget _buildSectionHeader() {
     return const Text(

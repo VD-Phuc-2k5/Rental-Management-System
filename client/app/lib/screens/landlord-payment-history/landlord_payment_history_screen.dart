@@ -1,6 +1,6 @@
-import 'package:app/core/widgets/landlord_navigation_bottom.dart';
-import 'package:app/screens/landlord-payment-history/components/body.dart';
-import 'package:app/screens/landlord-payment-history/components/landlord_payment_history_app_bar.dart';
+import '../../core/widgets/landlord_navigation_bottom.dart';
+import 'components/body.dart';
+import 'components/landlord_payment_history_app_bar.dart';
 import 'package:flutter/material.dart';
 
 
@@ -9,10 +9,10 @@ class LandlordPaymentHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const LandlordPaymentHistoryAppBar(),
+    return const Scaffold(
+      appBar: LandlordPaymentHistoryAppBar(),
       body: LandlordPaymentHistoryBody(),
-      bottomNavigationBar: const LandlordNavigationBottom(currentIndex: 3),
+      bottomNavigationBar: LandlordNavigationBottom(currentIndex: 3),
     );
   }
 }

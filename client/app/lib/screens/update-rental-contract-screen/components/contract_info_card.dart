@@ -1,11 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ContractInfoCard extends StatelessWidget {
-  final String roomName;
-  final String roomImageAssetPath;
-  final String startDate;
-  final String endDate;
 
   const ContractInfoCard({
     super.key,
@@ -14,6 +10,10 @@ class ContractInfoCard extends StatelessWidget {
     required this.startDate,
     required this.endDate,
   });
+  final String roomName;
+  final String roomImageAssetPath;
+  final String startDate;
+  final String endDate;
 
   @override
   Widget build(BuildContext context) {
@@ -100,9 +100,9 @@ class ContractInfoCard extends StatelessWidget {
 }
 
 class _SectionTitle extends StatelessWidget {
-  final String text;
 
   const _SectionTitle({required this.text});
+  final String text;
 
   @override
   Widget build(BuildContext context) {

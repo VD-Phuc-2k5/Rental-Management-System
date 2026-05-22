@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class ContractPreviewFileCard extends StatelessWidget {
-  final ImageProvider previewImage;
   const ContractPreviewFileCard({super.key, required this.previewImage});
+  final ImageProvider previewImage;
   
   @override
   Widget build(BuildContext context) {
@@ -15,11 +15,11 @@ class ContractPreviewFileCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _HeaderRow(),
-            SizedBox(height: 12),
+            const _HeaderRow(),
+            const SizedBox(height: 12),
             _PreviewArea(image: previewImage),
-            SizedBox(height: 10),
-            _FileMetaRow(),
+            const SizedBox(height: 10),
+            const _FileMetaRow(),
           ],
         ),
       ),
@@ -65,8 +65,8 @@ class _HeaderRow extends StatelessWidget {
 }
 
 class _PreviewArea extends StatelessWidget {
-  final ImageProvider image;
   const _PreviewArea({required this.image});
+  final ImageProvider image;
 
   @override
   Widget build(BuildContext context) {
@@ -125,8 +125,8 @@ class _FileMetaRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: const [
+    return const Row(
+      children: [
         Expanded(
           child: Text(
             'HD-2026-0301-A301.pdf',

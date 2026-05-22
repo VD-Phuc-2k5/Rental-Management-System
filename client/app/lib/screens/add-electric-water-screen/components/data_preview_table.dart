@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/screens/add-electric-water-screen/models/electric_water_entry.dart';
+import '../../../core/constants.dart';
+import '../models/electric_water_entry.dart';
 
 class DataPreviewTable extends StatelessWidget {
-  final List<ElectricWaterEntry> entries;
 
   const DataPreviewTable({super.key, required this.entries});
+  final List<ElectricWaterEntry> entries;
 
   @override
   Widget build(BuildContext context) {

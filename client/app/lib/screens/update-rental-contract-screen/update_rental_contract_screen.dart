@@ -1,5 +1,5 @@
-import 'package:app/core/widgets/common_appbar.dart';
-import 'package:app/screens/update-rental-contract-screen/components/body.dart';
+import '../../core/widgets/common_appbar.dart';
+import 'components/body.dart';
 import 'package:flutter/material.dart';
 
 class UpdateRentalContractScreen extends StatelessWidget {
@@ -7,7 +7,7 @@ class UpdateRentalContractScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       appBar: CommonAppBar(title: "Cập nhật hợp đồng"),
       body: Body(),
     );

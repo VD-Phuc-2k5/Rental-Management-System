@@ -1,14 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ContractActionButton extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color backgroundColor;
-  final Color textColor;
-  final Color iconColor;
-  final VoidCallback onPressed;
 
   const ContractActionButton({
     super.key,
@@ -20,6 +13,13 @@ class ContractActionButton extends StatelessWidget {
     required this.iconColor,
     required this.onPressed,
   });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color backgroundColor;
+  final Color textColor;
+  final Color iconColor;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class SectionTitleRow extends StatelessWidget {
-  final IconData icon;
-  final String title;
 
   const SectionTitleRow({super.key, required this.icon, required this.title});
+  final IconData icon;
+  final String title;
 
   @override
   Widget build(BuildContext context) {

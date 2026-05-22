@@ -1,11 +1,4 @@
 class RoomRequest {
-  final String id;
-  final String tenantName;
-  final String phoneNumber;
-  final String roomInfo;
-  final String scheduledDate;
-  final String? note;
-  final String status;
 
   RoomRequest({
     required this.id,
@@ -16,4 +9,11 @@ class RoomRequest {
     this.note,
     required this.status,
   });
+  final String id;
+  final String tenantName;
+  final String phoneNumber;
+  final String roomInfo;
+  final String scheduledDate;
+  final String? note;
+  final String status;
 }

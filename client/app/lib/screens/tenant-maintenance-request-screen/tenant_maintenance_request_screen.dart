@@ -1,6 +1,6 @@
-import 'package:app/core/widgets/common_appbar.dart';
-import 'package:app/core/widgets/tenant_navigation_bottom.dart';
-import 'package:app/screens/tenant-maintenance-request-screen/components/body.dart';
+import '../../core/widgets/common_appbar.dart';
+import '../../core/widgets/tenant_navigation_bottom.dart';
+import 'components/body.dart';
 import 'package:flutter/material.dart';
 
 class TenantMaintenanceRequestScreen extends StatelessWidget {

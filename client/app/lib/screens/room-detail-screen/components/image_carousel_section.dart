@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class ImageCarouselSection extends StatefulWidget {
-  final List<String> imageUrls;
 
   const ImageCarouselSection({
     super.key,
     required this.imageUrls,
   });
+  final List<String> imageUrls;
 
   @override
   State<ImageCarouselSection> createState() => _ImageCarouselSectionState();
@@ -60,7 +60,7 @@ class _ImageCarouselSectionState extends State<ImageCarouselSection> {
         height: 280,
         child: Container(
           color: AppColors.slate200,
-          child: Center(
+          child: const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -69,7 +69,7 @@ class _ImageCarouselSectionState extends State<ImageCarouselSection> {
                   size: 64,
                   color: AppColors.slate400,
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Text(
                   'Chưa có hình ảnh',
                   style: TextStyle(
@@ -117,7 +117,7 @@ class _ImageCarouselSectionState extends State<ImageCarouselSection> {
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     color: AppColors.slate200,
-                    child: Center(
+                    child: const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -126,7 +126,7 @@ class _ImageCarouselSectionState extends State<ImageCarouselSection> {
                             size: 48,
                             color: AppColors.slate400,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text(
                             'Không thể tải hình ảnh',
                             style: TextStyle(
@@ -165,7 +165,7 @@ class _ImageCarouselSectionState extends State<ImageCarouselSection> {
                     ),
                   ],
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back,
                   color: AppColors.slate500,
                   size: 20,
@@ -194,7 +194,7 @@ class _ImageCarouselSectionState extends State<ImageCarouselSection> {
                     ),
                   ],
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.share_outlined,
                   color: AppColors.slate500,
                   size: 20,

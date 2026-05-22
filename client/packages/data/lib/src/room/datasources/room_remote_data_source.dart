@@ -1,4 +1,4 @@
-﻿import 'package:data/room.dart';
+import '../../../room.dart';
 import 'package:domain/room.dart';
 
 abstract interface class RoomRemoteDataSource {

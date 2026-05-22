@@ -1,14 +1,14 @@
-import "package:app/core/constants.dart";
-import "package:app/core/models/maintenance_request.dart";
-import "package:app/core/widgets/maintenance_request_card.dart";
-import 'package:app/core/models/priority.dart';
-import "package:app/screens/landlord-maintenance-schedule-screen/landlord_maintenance_schedule_screen.dart";
+import "../../../../core/constants.dart";
+import "../../../../core/models/maintenance_request.dart";
+import "../../../../core/widgets/maintenance_request_card.dart";
+import '../../../../core/models/priority.dart';
+import "../../../landlord-maintenance-schedule-screen/landlord_maintenance_schedule_screen.dart";
 import "package:flutter/material.dart";
 
 class ProcessRequestsList extends StatefulWidget {
-  final ValueChanged<int>? onCountChanged;
 
   const ProcessRequestsList({super.key, this.onCountChanged});
+  final ValueChanged<int>? onCountChanged;
 
   @override
   State<ProcessRequestsList> createState() => _ProcessRequestsListState();
@@ -99,12 +99,12 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
     }
 
     if (_requests.isEmpty) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.inbox_outlined, size: 80, color: AppColors.slate300),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               "Không có yêu cầu cần xử lý",
               style: TextStyle(
@@ -151,7 +151,7 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           color: AppColors.orange100,
           borderRadius: BorderRadius.circular(4),
         ),
-        child: Text(
+        child: const Text(
           "Chờ xử lý",
           style: TextStyle(
             fontSize: 12,
@@ -167,7 +167,7 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           color: AppColors.blue100,
           borderRadius: BorderRadius.circular(4),
         ),
-        child: Text(
+        child: const Text(
           "Chờ xác nhận",
           style: TextStyle(
             fontSize: 12,

@@ -1,12 +1,8 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../../core/constants.dart';
+import '../../../../core/format_currency.dart';
 import 'package:flutter/material.dart';
 
 class CardTitle extends StatelessWidget {
-  final String title;
-  final String? imageUrl;
-  final String address;
-  final double price;
 
   const CardTitle({
     super.key, 
@@ -15,6 +11,10 @@ class CardTitle extends StatelessWidget {
     required this.address,
     required this.price,
   });
+  final String title;
+  final String? imageUrl;
+  final String address;
+  final double price;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class CardTitle extends StatelessWidget {
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Container(
                         color: AppColors.gray200,
-                        child: Icon(
+                        child: const Icon(
                           Icons.broken_image,
                           color: AppColors.gray500,
                         ),

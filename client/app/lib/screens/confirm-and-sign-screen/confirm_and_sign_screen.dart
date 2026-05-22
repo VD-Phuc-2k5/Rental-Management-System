@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/widgets/common_appbar.dart';
+import '../../core/widgets/common_appbar.dart';
 
-import 'package:app/screens/confirm-and-sign-screen/components/verifying_indicator.dart';
-import 'package:app/screens/confirm-and-sign-screen/components/transaction_summary_card.dart';
-import 'package:app/screens/confirm-and-sign-screen/components/disabled_bottom_button.dart';
-import 'package:app/core/constants.dart';
+import 'components/verifying_indicator.dart';
+import 'components/transaction_summary_card.dart';
+import 'components/disabled_bottom_button.dart';
+import '../../core/constants.dart';
 class ConfirmAndSignScreen extends StatelessWidget {
   const ConfirmAndSignScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppColors.grayBackground,
-      appBar: const CommonAppBar(title: 'Xác nhận và ký hợp đồng'),
+      appBar: CommonAppBar(title: 'Xác nhận và ký hợp đồng'),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 18, 16, 120),
+        padding: EdgeInsets.fromLTRB(16, 18, 16, 120),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
+          children: [
             SizedBox(height: 10),
             VerifyingIndicator(),
             SizedBox(height: 16),
@@ -29,7 +29,7 @@ class ConfirmAndSignScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const DisabledBottomButton(text: 'Ký hợp đồng'),
+      bottomNavigationBar: DisabledBottomButton(text: 'Ký hợp đồng'),
     );
   }
 }

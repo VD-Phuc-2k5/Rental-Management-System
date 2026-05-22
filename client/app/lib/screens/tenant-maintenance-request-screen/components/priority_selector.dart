@@ -1,17 +1,17 @@
-import "package:app/core/constants.dart";
+import "../../../core/constants.dart";
 import "package:flutter/material.dart";
 
 enum Priority { low, medium, high }
 
 class PrioritySelector extends StatelessWidget {
-  final Priority selectedPriority;
-  final Function(Priority) onPrioritySelected;
 
   const PrioritySelector({
     super.key,
     required this.selectedPriority,
     required this.onPrioritySelected,
   });
+  final Priority selectedPriority;
+  final Function(Priority) onPrioritySelected;
 
   @override
   Widget build(BuildContext context) {

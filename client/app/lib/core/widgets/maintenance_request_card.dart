@@ -1,14 +1,11 @@
-import "package:app/core/collapse_text.dart";
-import "package:app/core/constants.dart";
-import "package:app/core/models/maintenance_request.dart";
-import 'package:app/core/models/priority.dart';
+import "../collapse_text.dart";
+import "../constants.dart";
+import "../models/maintenance_request.dart";
+import '../models/priority.dart';
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 
 class MaintenanceRequestCard extends StatelessWidget {
-  final MaintenanceRequest request;
-  final VoidCallback? onTap;
-  final Widget? actionButton;
 
   const MaintenanceRequestCard({
     super.key,
@@ -16,6 +13,9 @@ class MaintenanceRequestCard extends StatelessWidget {
     this.onTap,
     this.actionButton,
   });
+  final MaintenanceRequest request;
+  final VoidCallback? onTap;
+  final Widget? actionButton;
 
   @override
   Widget build(BuildContext context) {

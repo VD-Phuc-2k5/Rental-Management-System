@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 
 class PaymentHeading extends StatelessWidget {
   const PaymentHeading({

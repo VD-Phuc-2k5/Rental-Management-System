@@ -1,15 +1,9 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_item.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_view_models.dart';
+import '../../../core/constants.dart';
+import 'invoice_item.dart';
+import 'invoice_view_models.dart';
 import 'package:flutter/material.dart';
 
 class InvoiceHistorySection extends StatelessWidget {
-  final InvoiceHistoryState state;
-  final List<InvoiceHistoryItemData> items;
-  final ValueChanged<String>? onSearchChanged;
-  final ValueChanged<InvoiceHistoryItemData>? onItemTap;
-  final String searchHint;
-  final Widget? errorWidget;
 
   const InvoiceHistorySection({
     super.key,
@@ -20,6 +14,12 @@ class InvoiceHistorySection extends StatelessWidget {
     this.searchHint = 'Tìm kiếm hóa đơn...',
     this.errorWidget,
   });
+  final InvoiceHistoryState state;
+  final List<InvoiceHistoryItemData> items;
+  final ValueChanged<String>? onSearchChanged;
+  final ValueChanged<InvoiceHistoryItemData>? onItemTap;
+  final String searchHint;
+  final Widget? errorWidget;
 
   @override
   Widget build(BuildContext context) {

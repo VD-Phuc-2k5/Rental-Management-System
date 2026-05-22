@@ -1,14 +1,14 @@
-import 'package:app/core/widgets/common_appbar.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/body.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_detail_models.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/components/payment_models.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/tenant_invoice_payment_screen.dart';
+import '../../core/widgets/common_appbar.dart';
+import 'components/body.dart';
+import 'components/invoice_detail_models.dart';
+import '../tenant-invoice-payment-screen/components/payment_models.dart';
+import '../tenant-invoice-payment-screen/tenant_invoice_payment_screen.dart';
 import 'package:flutter/material.dart';
 
 class TenantInvoiceDetailScreen extends StatelessWidget {
-  final InvoiceDetailData? invoice;
 
   const TenantInvoiceDetailScreen({super.key, this.invoice});
+  final InvoiceDetailData? invoice;
 
   void _handlePayNow(BuildContext context) {
     if (invoice == null) return;
@@ -50,7 +50,7 @@ class TenantInvoiceDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: "Chi tiết hóa đơn"),
+      appBar: const CommonAppBar(title: "Chi tiết hóa đơn"),
       body: invoice != null
           ? Body(
               invoice: invoice!,

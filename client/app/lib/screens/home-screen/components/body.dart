@@ -1,7 +1,7 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/home-screen/components/filter_price.dart';
-import 'package:app/screens/home-screen/components/intro_room_section.dart';
-import 'package:app/screens/home-screen/components/search_filter.dart';
+import '../../../core/constants.dart';
+import 'filter_price.dart';
+import 'intro_room_section.dart';
+import 'search_filter.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenBody extends StatefulWidget {
@@ -28,7 +28,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               setState(() {
                 _selectedFilterIndex = index;
               });
-              // TODO: handle lọc theo giá
+              // TO DO: handle lọc theo giá
             },
           ),
           Padding(

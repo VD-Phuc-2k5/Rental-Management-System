@@ -1,6 +1,6 @@
-import 'package:app/screens/home-screen/home_screen.dart';
+import '../../home-screen/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class BackToHomeButton extends StatelessWidget {
   const BackToHomeButton({super.key});

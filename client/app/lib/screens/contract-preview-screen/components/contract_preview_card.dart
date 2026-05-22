@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/screens/tenant-sign-contract-screen/tenant_sign_contract_screen.dart';
+import '../../../core/constants.dart';
+import '../../tenant-sign-contract-screen/tenant_sign_contract_screen.dart';
+
 class ContractPreviewCard extends StatelessWidget {
   const ContractPreviewCard({super.key});
 
@@ -10,14 +11,17 @@ class ContractPreviewCard extends StatelessWidget {
       elevation: 0,
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 16, 14, 14),
+      child: const Padding(
+        padding: EdgeInsets.fromLTRB(14, 16, 14, 14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             _ContractHeader(),
             SizedBox(height: 12),
-            Divider(height: 1,color: AppColors.slate200,),
+            Divider(
+              height: 1,
+              color: AppColors.slate200,
+            ),
             SizedBox(height: 12),
 
             _SectionTitle(text: 'I. BÊN CHO THUÊ (BÊN A)'),
@@ -27,7 +31,10 @@ class ContractPreviewCard extends StatelessWidget {
             _InfoRow(label: 'Điện thoại:', value: '0912345678'),
 
             SizedBox(height: 14),
-            Divider(height: 1,color: AppColors.slate200,),
+            Divider(
+              height: 1,
+              color: AppColors.slate200,
+            ),
             SizedBox(height: 12),
 
             _SectionTitle(text: 'II. BÊN THUÊ (BÊN B)'),
@@ -37,30 +44,50 @@ class ContractPreviewCard extends StatelessWidget {
             _InfoRow(label: 'Điện thoại:', value: '0987654321'),
 
             SizedBox(height: 14),
-            Divider(height: 1,
-              color: AppColors.slate200,),
+            Divider(
+              height: 1,
+              color: AppColors.slate200,
+            ),
             SizedBox(height: 12),
 
             _SectionTitle(text: 'III. CHI TIẾT THUÊ'),
             SizedBox(height: 10),
-            _InfoRow(label: 'Địa chỉ:', value: 'Số 10, Ngõ 5, Đường Láng, Hà Nội'),
+            _InfoRow(
+              label: 'Địa chỉ:',
+              value: 'Số 10, Ngõ 5, Đường Láng, Hà Nội',
+            ),
             _InfoRow(label: 'Phòng số:', value: '302'),
             _InfoRowBlue(label: 'Giá thuê:', value: '3.000.000 VND/tháng'),
             _InfoRow(label: 'Thời hạn:', value: '12 tháng'),
 
             SizedBox(height: 14),
-            Divider(height: 1,color: AppColors.slate200,),
+            Divider(
+              height: 1,
+              color: AppColors.slate200,
+            ),
             SizedBox(height: 12),
 
             _SectionTitle(text: 'IV. ĐIỀU KHOẢN CHUNG'),
             SizedBox(height: 10),
-            _Bullet(text: '1. Bên B có trách nhiệm thanh toán tiền thuê nhà đúng hạn vào ngày 05 hàng tháng.'),
-            _Bullet(text: '2. Bên B phải giữ gìn vệ sinh chung, không gây ồn ào ảnh hưởng đến các phòng xung quanh sau 22h.'),
-            _Bullet(text: '3. Tài sản trong phòng nếu hỏng hóc do lỗi Bên B thì Bên B phải đền bù theo giá thị trường.'),
+            _Bullet(
+              text:
+                  '1. Bên B có trách nhiệm thanh toán tiền thuê nhà đúng hạn vào ngày 05 hàng tháng.',
+            ),
+            _Bullet(
+              text:
+                  '2. Bên B phải giữ gìn vệ sinh chung, không gây ồn ào ảnh hưởng đến các phòng xung quanh sau 22h.',
+            ),
+            _Bullet(
+              text:
+                  '3. Tài sản trong phòng nếu hỏng hóc do lỗi Bên B thì Bên B phải đền bù theo giá thị trường.',
+            ),
             _Bullet(text: '4. Hợp đồng có hiệu lực kể từ ngày ký.'),
 
             SizedBox(height: 14),
-            Divider(height: 1,color: AppColors.slate200,),
+            Divider(
+              height: 1,
+              color: AppColors.slate200,
+            ),
             SizedBox(height: 12),
 
             _Signatures(),
@@ -76,42 +103,47 @@ class _ContractHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-  child: Column(
-    children: const [
-      Text(
-        'HỢP ĐỒNG THUÊ TRỌ',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: AppColors.blue800,
-          fontWeight: FontWeight.w700,
-          fontSize: 20,
-          letterSpacing: 0.2,
-        ),
+    return const Center(
+      child: Column(
+        children: [
+          Text(
+            'HỢP ĐỒNG THUÊ TRỌ',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppColors.blue800,
+              fontWeight: FontWeight.w700,
+              fontSize: 20,
+              letterSpacing: 0.2,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'Số: 2023/HDTN-001',
+            style: TextStyle(
+              color: AppColors.slate500,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          SizedBox(height: 2),
+          Text(
+            'Hà Nội, ngày 24 tháng 10 năm 2023',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppColors.slate500,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
       ),
-      SizedBox(height: 6),
-      Text('Số: 2023/HDTN-001', style: TextStyle(color: AppColors.slate500,
-        fontSize: 12,
-        fontWeight: FontWeight.w400,
-      )),
-      SizedBox(height: 2),
-      Text(
-        'Hà Nội, ngày 24 tháng 10 năm 2023',
-        textAlign: TextAlign.center,
-        style: TextStyle(color: AppColors.slate500,
-          fontSize: 12,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-    ],
-  ),
-);
+    );
   }
 }
 
 class _SectionTitle extends StatelessWidget {
-  final String text;
   const _SectionTitle({required this.text});
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -126,10 +158,9 @@ class _SectionTitle extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.label, required this.value});
   final String label;
   final String value;
-
-  const _InfoRow({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -140,12 +171,21 @@ class _InfoRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 98,
-            child: Text(label, style: const TextStyle(color: AppColors.slate500,fontWeight: FontWeight.w400)),
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: AppColors.slate500,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w500),
+              style: const TextStyle(
+                color: AppColors.blue950,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
@@ -155,10 +195,9 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _InfoRowBlue extends StatelessWidget {
+  const _InfoRowBlue({required this.label, required this.value});
   final String label;
   final String value;
-
-  const _InfoRowBlue({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +208,13 @@ class _InfoRowBlue extends StatelessWidget {
         children: [
           SizedBox(
             width: 98,
-            child: Text(label, style: const TextStyle(color: AppColors.slate500,fontWeight: FontWeight.w400)),
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: AppColors.slate500,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           ),
           Expanded(
             child: Text(
@@ -187,8 +232,8 @@ class _InfoRowBlue extends StatelessWidget {
 }
 
 class _Bullet extends StatelessWidget {
-  final String text;
   const _Bullet({required this.text});
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -196,9 +241,12 @@ class _Bullet extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         text,
-        style: const TextStyle(color: AppColors.slate600, height: 1.35,
+        style: const TextStyle(
+          color: AppColors.slate600,
+          height: 1.35,
           fontWeight: FontWeight.w400,
-          fontSize: 12,),
+          fontSize: 12,
+        ),
       ),
     );
   }
@@ -209,10 +257,10 @@ class _Signatures extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
         Row(
-          children: const [
+          children: [
             Expanded(
               child: _SignatureBox(title: 'BÊN CHO THUÊ', name: 'Nguyễn Văn A'),
             ),
@@ -226,18 +274,11 @@ class _Signatures extends StatelessWidget {
     );
   }
 }
-void _goNext(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const TenantSignContractScreen()),
-    );
-  }
 
 class _SignatureBox extends StatelessWidget {
+  const _SignatureBox({required this.title, required this.name});
   final String title;
   final String name;
-
-  const _SignatureBox({required this.title, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +298,7 @@ class _SignatureBox extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: (){
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(

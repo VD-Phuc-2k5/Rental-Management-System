@@ -1,4 +1,4 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 Color _getStatusIconColor(String status) {
@@ -54,9 +54,6 @@ Color _getStatusTextBackground(String status) {
 }
 
 class RequestDetailCard extends StatelessWidget {
-  final String date;
-  final String? note;
-  final String status;
 
   const RequestDetailCard({
     super.key,
@@ -64,6 +61,9 @@ class RequestDetailCard extends StatelessWidget {
     this.note,
     required this.status,
   });
+  final String date;
+  final String? note;
+  final String status;
 
   @override
   Widget build(BuildContext context) {

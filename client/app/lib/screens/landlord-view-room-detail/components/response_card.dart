@@ -1,10 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ResponseCard extends StatefulWidget {
-  final String scheduledDate;
-  final ValueChanged<DateTime>? onDateTimeChanged;
-  final ValueChanged<String>? onNoteChanged;
 
   const ResponseCard({
     super.key,
@@ -12,6 +9,9 @@ class ResponseCard extends StatefulWidget {
     this.onDateTimeChanged,
     this.onNoteChanged,
   });
+  final String scheduledDate;
+  final ValueChanged<DateTime>? onDateTimeChanged;
+  final ValueChanged<String>? onNoteChanged;
 
   @override
   State<ResponseCard> createState() => _ResponseCardState();

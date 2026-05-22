@@ -1,17 +1,17 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/booking-room-screen/my_booking_room_screen.dart';
-import 'package:app/screens/tenant-invoice-list-screen/tenant_invoice_list_screen.dart';
-import 'package:app/screens/tenant-maintenance-request-screen/tenant_maintenance_request_screen.dart';
+import '../constants.dart';
+import '../../screens/booking-room-screen/my_booking_room_screen.dart';
+import '../../screens/tenant-invoice-list-screen/tenant_invoice_list_screen.dart';
+import '../../screens/tenant-maintenance-request-screen/tenant_maintenance_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../config/router/route_constants.dart';
 
 class TenantNavigationBottom extends StatelessWidget {
-  final int currentIndex;
-  final Function(int)? onTap;
 
   const TenantNavigationBottom({super.key, this.currentIndex = 0, this.onTap});
+  final int currentIndex;
+  final Function(int)? onTap;
 
   final _items = const [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: "Trang chủ"),
@@ -68,9 +68,9 @@ class TenantNavigationBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.white,
-        borderRadius: const BorderRadius.only(
+        borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
@@ -78,7 +78,7 @@ class TenantNavigationBottom extends StatelessWidget {
           BoxShadow(
             color: AppColors.gray300,
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            offset: Offset(0, -2),
           ),
         ],
       ),

@@ -8,15 +8,15 @@ class RegisterRentAppointmentSection extends StatelessWidget {
     return Card(
       elevation: 0,
       color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),side: BorderSide(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),side: const BorderSide(
         color: Color(0xFFDCE0E5),
       width: 1,
       )),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+      child: const Padding(
+        padding: EdgeInsets.fromLTRB(14, 14, 14, 14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
               'Thông tin lịch hẹn',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
@@ -47,22 +47,22 @@ class RegisterRentAppointmentSection extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String value;
 
   const _InfoRow({
     required this.icon,
     required this.title,
     required this.value,
   });
+  final IconData icon;
+  final String title;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: Color(0xFF647487), size: 20),
+        Icon(icon, color: const Color(0xFF647487), size: 20),
         const SizedBox(width: 10),
         Expanded(
           child: Column(

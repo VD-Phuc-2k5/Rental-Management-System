@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class ComplaintIssueInfoCard extends StatelessWidget {
-  final String issueTitle;
-  final String roomName;
-  final String statusLabel;
   const ComplaintIssueInfoCard({
     super.key,
     required this.issueTitle,
     required this.roomName,
     required this.statusLabel,
   });
+  final String issueTitle;
+  final String roomName;
+  final String statusLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class ComplaintIssueInfoCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'THÔNG TIN SỰ CỐ',
                     style: TextStyle(
                       color: Color(0xFF6B7280),
@@ -36,19 +36,19 @@ class ComplaintIssueInfoCard extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     issueTitle,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.blue700,
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     roomName,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.gray600,
                       fontWeight: FontWeight.w400,
                     ),
@@ -64,7 +64,7 @@ class ComplaintIssueInfoCard extends StatelessWidget {
               // ),
               child: Text(
                 statusLabel,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.gray600,
                   fontWeight: FontWeight.w700,
                   fontSize: 10,

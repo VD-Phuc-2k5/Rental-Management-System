@@ -1,5 +1,5 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/member-detail-screen/member_detail_screen.dart';
+import '../../../core/constants.dart';
+import '../../member-detail-screen/member_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class TenantListSection extends StatelessWidget {
@@ -129,12 +129,12 @@ class TenantListSection extends StatelessWidget {
           const SizedBox(height: 16),
           const Divider(color: AppColors.slate100, height: 1),
           const SizedBox(height: 16),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     "Ngày vào ở",
                     style: TextStyle(
@@ -157,7 +157,7 @@ class TenantListSection extends StatelessWidget {
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     "Giá thuê",
                     style: TextStyle(
@@ -178,7 +178,7 @@ class TenantListSection extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(width: 40),
+              SizedBox(width: 40),
             ],
           ),
         ],

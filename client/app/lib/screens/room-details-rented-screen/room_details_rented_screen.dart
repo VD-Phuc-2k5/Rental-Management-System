@@ -1,5 +1,5 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/widgets/common_appbar.dart';
+import '../../core/constants.dart';
+import '../../core/widgets/common_appbar.dart';
 import 'package:flutter/material.dart';
 
 import '../room-details-empty-screen/components/room_info_card.dart';
@@ -9,9 +9,9 @@ import 'components/rented_room_bottom_bar.dart';
 import 'components/tenant_list_section.dart';
 
 class RoomDetailsRentedScreen extends StatelessWidget {
-  final String roomNumber;
 
   const RoomDetailsRentedScreen({super.key, required this.roomNumber});
+  final String roomNumber;
 
   @override
   Widget build(BuildContext context) {

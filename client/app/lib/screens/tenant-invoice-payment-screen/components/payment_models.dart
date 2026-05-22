@@ -1,22 +1,18 @@
 enum PaymentMethodType { vnpay, momo }
 
 class PaymentLineItemData {
-  final String name;
-  final String? description;
-  final int amount;
 
   const PaymentLineItemData({
     required this.name,
     this.description,
     required this.amount,
   });
+  final String name;
+  final String? description;
+  final int amount;
 }
 
 class PaymentData {
-  final String invoiceId;
-  final String roomName;
-  final List<PaymentLineItemData> lineItems;
-  final int totalAmount;
 
   const PaymentData({
     required this.invoiceId,
@@ -24,14 +20,13 @@ class PaymentData {
     required this.lineItems,
     required this.totalAmount,
   });
+  final String invoiceId;
+  final String roomName;
+  final List<PaymentLineItemData> lineItems;
+  final int totalAmount;
 }
 
 class PaymentMethodOption {
-  final PaymentMethodType type;
-  final String name;
-  final String description;
-  final String iconName;
-  final bool isSelected;
 
   const PaymentMethodOption({
     required this.type,
@@ -40,6 +35,11 @@ class PaymentMethodOption {
     required this.iconName,
     required this.isSelected,
   });
+  final PaymentMethodType type;
+  final String name;
+  final String description;
+  final String iconName;
+  final bool isSelected;
 
   PaymentMethodOption copyWith({
     PaymentMethodType? type,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class MaintenanceDetailBottomBar extends StatelessWidget {
   const MaintenanceDetailBottomBar({super.key});

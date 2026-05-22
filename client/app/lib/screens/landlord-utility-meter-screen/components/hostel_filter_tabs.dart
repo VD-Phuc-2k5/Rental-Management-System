@@ -1,10 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class HostelFilterTabs extends StatelessWidget {
-  final List<String> hostels;
-  final String? selectedHostel;
-  final ValueChanged<String?>? onHostelSelected;
 
   const HostelFilterTabs({
     super.key,
@@ -12,6 +9,9 @@ class HostelFilterTabs extends StatelessWidget {
     this.selectedHostel,
     this.onHostelSelected,
   });
+  final List<String> hostels;
+  final String? selectedHostel;
+  final ValueChanged<String?>? onHostelSelected;
 
   @override
   Widget build(BuildContext context) {

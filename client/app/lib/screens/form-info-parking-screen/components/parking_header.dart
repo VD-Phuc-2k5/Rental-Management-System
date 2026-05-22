@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ParkingHeader extends StatelessWidget {
-  final int step;
-  final int total;
 
   const ParkingHeader({
     super.key,
     required this.step,
     required this.total,
   });
+  final int step;
+  final int total;
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +31,10 @@ class ParkingHeader extends StatelessWidget {
 }
 
 class _StepBar extends StatelessWidget {
-  final int current;
-  final int total;
 
   const _StepBar({required this.current, required this.total});
+  final int current;
+  final int total;
 
   @override
   Widget build(BuildContext context) {

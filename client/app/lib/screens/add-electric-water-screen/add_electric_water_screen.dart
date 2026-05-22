@@ -1,6 +1,6 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/widgets/common_appbar.dart';
-import 'package:app/screens/add-electric-water-screen/components/body.dart';
+import '../../core/constants.dart';
+import '../../core/widgets/common_appbar.dart';
+import 'components/body.dart';
 import 'package:flutter/material.dart';
 
 class AddElectricWaterScreen extends StatelessWidget {

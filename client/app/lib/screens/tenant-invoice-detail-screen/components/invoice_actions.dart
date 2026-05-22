@@ -1,11 +1,8 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_detail_models.dart';
+import '../../../core/constants.dart';
+import 'invoice_detail_models.dart';
 import 'package:flutter/material.dart';
 
 class InvoiceActions extends StatelessWidget {
-  final InvoiceStatus status;
-  final VoidCallback? onPayNow;
-  final VoidCallback? onDownloadPDF;
 
   const InvoiceActions({
     super.key,
@@ -13,6 +10,9 @@ class InvoiceActions extends StatelessWidget {
     this.onPayNow,
     this.onDownloadPDF,
   });
+  final InvoiceStatus status;
+  final VoidCallback? onPayNow;
+  final VoidCallback? onDownloadPDF;
 
   @override
   Widget build(BuildContext context) {

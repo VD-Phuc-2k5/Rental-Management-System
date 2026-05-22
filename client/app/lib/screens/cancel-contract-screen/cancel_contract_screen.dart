@@ -1,5 +1,5 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/widgets/common_appbar.dart';
+import '../../core/constants.dart';
+import '../../core/widgets/common_appbar.dart';
 import 'package:flutter/material.dart';
 
 import 'components/cancel_contract_bottom_bar.dart';
@@ -13,21 +13,21 @@ class CancelContractScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppColors.gray25,
-      appBar: const CommonAppBar(title: "Hủy hợp đồng"),
+      appBar: CommonAppBar(title: "Hủy hợp đồng"),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 16.0,
                 vertical: 20.0,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   WarningBox(),
                   SizedBox(height: 20),
 
@@ -41,7 +41,7 @@ class CancelContractScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const CancelContractBottomBar(),
+            CancelContractBottomBar(),
           ],
         ),
       ),

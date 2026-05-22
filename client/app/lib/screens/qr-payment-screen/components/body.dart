@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:app/screens/qr-payment-screen/components/download_button.dart';
-import 'package:app/screens/qr-payment-screen/components/payment_countdown.dart';
-import 'package:app/screens/qr-payment-screen/components/payment_heading.dart';
-import 'package:app/screens/qr-payment-screen/components/payment_qr.dart';
+import 'download_button.dart';
+import 'payment_countdown.dart';
+import 'payment_heading.dart';
+import 'payment_qr.dart';
 import 'package:flutter/material.dart';
 
 enum PaymentStatus { pending, success, failed }

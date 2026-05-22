@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/screens/form-info-agreement-services-screen/components/agreement_header.dart';
-import 'package:app/screens/form-info-agreement-services-screen/components/room_summary_card.dart';
-import 'package:app/screens/form-info-agreement-services-screen/components/section_title_row.dart';
-import 'package:app/screens/form-info-agreement-services-screen/components/rent_price_section.dart';
-import 'package:app/screens/form-info-agreement-services-screen/components/utilities_section.dart';
-import 'package:app/screens/form-info-agreement-services-screen/components/add_on_services_section.dart';
-import 'package:app/screens/form-info-agreement-services-screen/components/equipment_section.dart';
-import 'package:app/screens/form-info-agreement-services-screen/components/agreement_bottom_bar.dart';
-import 'package:app/screens/contract-preview-screen/contract_preview_screen.dart';
+import 'components/agreement_header.dart';
+import 'components/room_summary_card.dart';
+import 'components/section_title_row.dart';
+import 'components/rent_price_section.dart';
+import 'components/utilities_section.dart';
+import 'components/add_on_services_section.dart';
+import 'components/equipment_section.dart';
+import 'components/agreement_bottom_bar.dart';
+import '../contract-preview-screen/contract_preview_screen.dart';
 
 class AgreementUiScreen extends StatefulWidget {
   const AgreementUiScreen({super.key});

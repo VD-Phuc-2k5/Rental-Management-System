@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/screens/preview-invoice/components/info_banner.dart';
-import 'package:app/screens/preview-invoice/components/invoice_bottom_bar.dart';
-import 'package:app/screens/preview-invoice/components/invoice_card.dart';
-import 'package:app/core/models/invoice_preview.dart';
+import '../../../core/constants.dart';
+import 'info_banner.dart';
+import 'invoice_bottom_bar.dart';
+import 'invoice_card.dart';
+import '../../../core/models/invoice_preview.dart';
 
 class PreviewInvoceBody extends StatefulWidget {
-  final List<InvoicePreview> invoices;
-
   const PreviewInvoceBody({super.key, required this.invoices});
+  final List<InvoicePreview> invoices;
 
   @override
   State<PreviewInvoceBody> createState() => _PreviewInvoceBodyState();
@@ -50,11 +49,11 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
     });
   }
 
-  // TODO: Gọi API gửi hóa đơn cho các phòng được chọn
+  // TO DO: Gọi API gửi hóa đơn cho các phòng được chọn
   Future<void> _onSend() async {
     setState(() => _isSending = true);
 
-    // TODO: await invoiceApi.sendInvoices(
+    // TO DO: await invoiceApi.sendInvoices(
     //   widget.invoices
     //     .where((e) => _selectedIds.contains(e.id))
     //     .map((e) => e.id)
@@ -128,7 +127,7 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // TODO: open filter bottom sheet
+                        // TO DO: open filter bottom sheet
                       },
                       style: TextButton.styleFrom(
                         foregroundColor: AppColors.blue700,
@@ -155,7 +154,7 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                       isSelected: _selectedIds.contains(invoice.id),
                       onToggleSelect: (val) => _toggleOne(invoice.id, val),
                       onEdit: () {
-                        // TODO: navigate to edit invoice screen
+                        // TO DO: navigate to edit invoice screen
                       },
                     ),
                   ),

@@ -1,16 +1,10 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 import 'package:flutter/material.dart';
 
 enum TransactionStatus { paid, pending }
 
 class TransactionListItem extends StatelessWidget {
-  final String roomName;
-  final String tenantName;
-  final String paymentMethod;
-  final String timeOrDeadline;
-  final int amount;
-  final TransactionStatus status;
 
   const TransactionListItem({
     super.key,
@@ -21,6 +15,12 @@ class TransactionListItem extends StatelessWidget {
     required this.amount,
     required this.status,
   });
+  final String roomName;
+  final String tenantName;
+  final String paymentMethod;
+  final String timeOrDeadline;
+  final int amount;
+  final TransactionStatus status;
 
   bool get _isPaid => status == TransactionStatus.paid;
 
@@ -33,10 +33,10 @@ class TransactionListItem extends StatelessWidget {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(5),
         boxShadow: [
-          BoxShadow(
+          const BoxShadow(
             color: AppColors.gray200,
             blurRadius: 6,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -125,9 +125,9 @@ class TransactionListItem extends StatelessWidget {
 }
 
 class _LeadingIcon extends StatelessWidget {
-  final bool isPaid;
 
   const _LeadingIcon({required this.isPaid});
+  final bool isPaid;
 
   @override
   Widget build(BuildContext context) {

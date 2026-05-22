@@ -1,15 +1,15 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class LoginRequiredModal extends StatelessWidget {
-  final VoidCallback? onLoginPressed;
-  final VoidCallback? onRegisterPressed;
 
   const LoginRequiredModal({
     super.key,
     this.onLoginPressed,
     this.onRegisterPressed,
   });
+  final VoidCallback? onLoginPressed;
+  final VoidCallback? onRegisterPressed;
 
   static void show(
     BuildContext context, {
@@ -30,7 +30,7 @@ class LoginRequiredModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
@@ -56,18 +56,18 @@ class LoginRequiredModal extends StatelessWidget {
           Container(
             width: 64,
             height: 64,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.blue50,
               shape: BoxShape.circle,
             ),
-            child: Icon(
+            child: const Icon(
               Icons.lock_outline,
               size: 32,
               color: AppColors.blue700,
             ),
           ),
           const SizedBox(height: 16),
-          Text(
+          const Text(
             'Vui lòng đăng nhập',
             style: TextStyle(
               fontFamily: 'Inter',
@@ -77,8 +77,8 @@ class LoginRequiredModal extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 32),
             child: Text(
               'Bạn cần đăng nhập hoặc đăng ký tài khoản để đặt lịch xem phòng này.',
               textAlign: TextAlign.center,
@@ -110,7 +110,7 @@ class LoginRequiredModal extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Đăng nhập',
                   style: TextStyle(
                     fontFamily: 'Inter',
@@ -134,7 +134,7 @@ class LoginRequiredModal extends StatelessWidget {
                 },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.slate700,
-                  side: BorderSide(
+                  side: const BorderSide(
                     color: AppColors.slate300,
                     width: 1.5,
                   ),
@@ -143,7 +143,7 @@ class LoginRequiredModal extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Đăng ký',
                   style: TextStyle(
                     fontFamily: 'Inter',

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class PaymentQr extends StatelessWidget {
   const PaymentQr({super.key});
@@ -17,7 +17,7 @@ class PaymentQr extends StatelessWidget {
           BoxShadow(
             color: AppColors.black.withAlpha(13),
             blurRadius: 2,
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
           ),
         ],
       ),

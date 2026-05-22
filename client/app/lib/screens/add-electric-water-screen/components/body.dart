@@ -1,10 +1,10 @@
-import 'package:app/core/models/invoice_preview.dart';
-import 'package:app/screens/preview-invoice/preview_invoice_screen.dart';
+import '../../../core/models/invoice_preview.dart';
+import '../../preview-invoice/preview_invoice_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:app/screens/add-electric-water-screen/components/bottom_action_bar.dart';
-import 'package:app/screens/add-electric-water-screen/components/data_preview_table.dart';
-import 'package:app/screens/add-electric-water-screen/components/upload_section.dart';
-import 'package:app/screens/add-electric-water-screen/models/electric_water_entry.dart';
+import 'bottom_action_bar.dart';
+import 'data_preview_table.dart';
+import 'upload_section.dart';
+import '../models/electric_water_entry.dart';
 
 class AddElectricWaterBody extends StatefulWidget {
   const AddElectricWaterBody({super.key});
@@ -121,20 +121,19 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
   Future<void> _onNext() async {
     setState(() => _isSubmitting = true);
 
-    // TODO: Gọi API lưu chỉ số điện nước
+    // TO DO: Gọi API lưu chỉ số điện nước
     await Future.delayed(const Duration(seconds: 1));
 
     setState(() => _isSubmitting = false);
 
     if (mounted) {
-      Navigator.of(context)
-        .push(MaterialPageRoute(
-          builder: (_) => 
-            PreviewInvoiceScreen(
-              monthLabel: "Tháng 02/2026", 
-              invoices: _mockInvoices
-            )
-        )
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => PreviewInvoiceScreen(
+            monthLabel: "Tháng 02/2026",
+            invoices: _mockInvoices,
+          ),
+        ),
       );
     }
   }

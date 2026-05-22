@@ -1,7 +1,7 @@
-import 'package:app/screens/home-screen/components/body.dart';
-import 'package:app/core/widgets/tenant_navigation_bottom.dart';
+import 'components/body.dart';
+import '../../core/widgets/tenant_navigation_bottom.dart';
 import "package:flutter/material.dart";
-import 'package:app/core/constants.dart';
+import '../../core/constants.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,8 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         leadingWidth: 200,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 16),
+        leading: const Padding(
+          padding: EdgeInsets.only(left: 16),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -42,10 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
               color: AppColors.white,
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
-                BoxShadow(
+                const BoxShadow(
                   color: AppColors.gray300,
                   blurRadius: 1,
-                  offset: const Offset(0, 1),
+                  offset: Offset(0, 1),
                 ),
               ],
             ),

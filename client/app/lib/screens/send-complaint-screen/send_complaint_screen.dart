@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/widgets/common_appbar.dart';
+import '../../core/constants.dart';
+import '../../core/widgets/common_appbar.dart';
 
 import 'components/complaint_issue_info_card.dart';
 import 'components/complaint_reason_field.dart';
@@ -13,14 +13,14 @@ class SendComplaintScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppColors.grayBackground,
-      appBar: const CommonAppBar(title: 'Gửi khiếu nại'),
+      appBar: CommonAppBar(title: 'Gửi khiếu nại'),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 120),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             ComplaintIssueInfoCard(
               issueTitle: 'Hỏng vòi nước',
               roomName: 'Phòng 302 - Nhà A1',
@@ -38,7 +38,7 @@ class SendComplaintScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const ComplaintBottomBar(),
+      bottomNavigationBar: ComplaintBottomBar(),
     );
   }
 }

@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CalendarHeader extends StatelessWidget {
-  final DateTime currentMonth;
-  final VoidCallback onPrevious;
-  final VoidCallback onNext;
 
   const CalendarHeader({
     super.key,
@@ -12,6 +9,9 @@ class CalendarHeader extends StatelessWidget {
     required this.onPrevious,
     required this.onNext,
   });
+  final DateTime currentMonth;
+  final VoidCallback onPrevious;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {

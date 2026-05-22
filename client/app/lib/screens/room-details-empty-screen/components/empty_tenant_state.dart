@@ -1,4 +1,4 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class EmptyTenantState extends StatelessWidget {

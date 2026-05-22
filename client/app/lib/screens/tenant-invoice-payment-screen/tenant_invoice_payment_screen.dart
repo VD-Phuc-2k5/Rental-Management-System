@@ -1,18 +1,18 @@
-import "package:app/core/widgets/common_appbar.dart";
-import "package:app/screens/qr-payment-screen/qr_payment_screen.dart";
-import "package:app/screens/tenant-invoice-payment-screen/components/body.dart";
-import "package:app/screens/tenant-invoice-payment-screen/components/payment_models.dart";
+import "../../core/widgets/common_appbar.dart";
+import "../qr-payment-screen/qr_payment_screen.dart";
+import "components/body.dart";
+import "components/payment_models.dart";
 import "package:flutter/material.dart";
 
 class TenantInvoicePaymentScreen extends StatelessWidget {
-  final String appbarTitle;
-  final PaymentData? paymentData;
 
   const TenantInvoicePaymentScreen({
     super.key,
     required this.appbarTitle,
     this.paymentData,
   });
+  final String appbarTitle;
+  final PaymentData? paymentData;
 
   static const PaymentData _defaultPaymentData = PaymentData(
     invoiceId: 'INV-001',

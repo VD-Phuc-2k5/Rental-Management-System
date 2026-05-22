@@ -1,4 +1,4 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class FinishContractBottomBar extends StatelessWidget {
@@ -28,9 +28,9 @@ class FinishContractBottomBar extends StatelessWidget {
               ),
               elevation: 0,
             ),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Text(
                   "Xác nhận hoàn cọc & kết thúc",
                   style: TextStyle(

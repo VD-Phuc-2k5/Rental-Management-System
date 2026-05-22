@@ -1,11 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class CalendarDayCell extends StatelessWidget {
-  final DateTime date;
-  final bool isSelected;
-  final bool isPast;
-  final VoidCallback onTap;
 
   const CalendarDayCell({
     super.key,
@@ -14,6 +10,10 @@ class CalendarDayCell extends StatelessWidget {
     required this.isPast,
     required this.onTap,
   });
+  final DateTime date;
+  final bool isSelected;
+  final bool isPast;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

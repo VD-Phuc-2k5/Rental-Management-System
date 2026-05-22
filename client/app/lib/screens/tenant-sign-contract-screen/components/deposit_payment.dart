@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
-import 'package:app/screens/deposit-payment-method-screen/deposit_payment_method_screen.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
+import '../../deposit-payment-method-screen/deposit_payment_method_screen.dart';
 class DepositPaymentCard extends StatelessWidget {
   const DepositPaymentCard({super.key});
 
@@ -42,14 +42,14 @@ class DepositPaymentCard extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                Text(
+                const Text(
                   'Số tiền cọc cần đóng:',
                   style: TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w500,fontSize: 16),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   formatVND(depositAmount),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.blue700,
                     fontWeight: FontWeight.w800,
                     fontSize: 18,

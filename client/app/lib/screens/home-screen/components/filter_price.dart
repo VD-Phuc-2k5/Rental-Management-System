@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class FilterPrice extends StatelessWidget {
-  final int currentIndex;
-  final Function(int)? onTap;
 
   const FilterPrice({
     super.key,
     this.currentIndex = 0,
     this.onTap,
   });
+  final int currentIndex;
+  final Function(int)? onTap;
 
   @override
   Widget build(BuildContext context) {

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AgreementHeader extends StatelessWidget {
-  final int step;
-  final int total;
 
   const AgreementHeader({
     super.key,
     required this.step,
     required this.total,
   });
+  final int step;
+  final int total;
 
   @override
   Widget build(BuildContext context) {

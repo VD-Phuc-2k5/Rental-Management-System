@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/screens/contract-status-screen/components/contract_status_top_card.dart';
-import 'package:app/screens/contract-status-screen/components/contract_preview_file_card.dart';
-import 'package:app/screens/contract-status-screen/components/contract_status_actions.dart';
+import 'components/contract_status_top_card.dart';
+import 'components/contract_preview_file_card.dart';
+import 'components/contract_status_actions.dart';
 
 class ContractStatusScreen extends StatelessWidget {
   const ContractStatusScreen({super.key});
@@ -27,17 +27,17 @@ class ContractStatusScreen extends StatelessWidget {
               fontSize: 20),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 14, 16, 20),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16, 14, 16, 20),
         child: Column(
-          children: const [
-            const ContractStatusTopCard(
+          children: [
+            ContractStatusTopCard(
               tenantName: 'Nguyễn Văn A',
               sentTime: '10:30, 01/03/2026',
             ),
             SizedBox(height: 14),
             ContractPreviewFileCard(
-              previewImage: const AssetImage('assets/images/preview_contract.png'),
+              previewImage: AssetImage('assets/images/preview_contract.png'),
             ),
             SizedBox(height: 18),
             ContractStatusActions(),

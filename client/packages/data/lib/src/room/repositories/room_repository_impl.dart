@@ -1,4 +1,4 @@
-﻿import 'package:core/errors.dart';
+import 'package:core/errors.dart';
 import 'package:domain/room.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -65,7 +65,7 @@ class RoomRepositoryImpl implements RoomRepository {
     String? description,
   }) async {
     try {
-      final statusStr = status != null ? status.name.toUpperCase() : null;
+      final statusStr = status?.name.toUpperCase();
       final data = await _dataSource.updateRoom(
         id: id, token: _getToken(), title: title, status: statusStr,
         areaSqm: areaSqm, monthlyRent: monthlyRent, depositAmount: depositAmount,

@@ -1,8 +1,8 @@
-import 'package:app/core/widgets/primary_button.dart';
-import 'package:app/screens/booking-room-screen/components/my-booking-room/empty-room/empty_logo.dart';
-import 'package:app/screens/home-screen/home_screen.dart';
-import 'package:app/screens/booking-room-screen/components/my-booking-room/empty-room/empty_title.dart';
-import 'package:app/screens/booking-room-screen/components/my-booking-room/has-room/my_room_card.dart';
+import '../../../../core/widgets/primary_button.dart';
+import 'empty-room/empty_logo.dart';
+import '../../../home-screen/home_screen.dart';
+import 'empty-room/empty_title.dart';
+import 'has-room/my_room_card.dart';
 import 'package:flutter/material.dart';
 
 class RoomBody extends StatelessWidget {

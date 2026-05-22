@@ -1,4 +1,4 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ContractInfoSection extends StatelessWidget {
@@ -23,8 +23,8 @@ class ContractInfoSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: const [
+          const Row(
+            children: [
               Icon(
                 Icons.description_outlined,
                 color: AppColors.blue400,
@@ -57,10 +57,10 @@ class ContractInfoSection extends StatelessWidget {
                   size: 32,
                 ),
                 const SizedBox(width: 12),
-                Expanded(
+                const Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         "HD_Phong101_v2.pdf",
                         style: TextStyle(
@@ -98,9 +98,9 @@ class ContractInfoSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text(
                 "Ngày hết hạn",
                 style: TextStyle(

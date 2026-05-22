@@ -1,14 +1,8 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 import 'package:flutter/material.dart';
 
 class InvoiceItem extends StatelessWidget {
-  final String billingMonth;
-  final String paidAt;
-  final int amount;
-  final String statusLabel;
-  final bool isPaid;
-  final VoidCallback? onTap;
 
   const InvoiceItem({
     super.key,
@@ -19,6 +13,12 @@ class InvoiceItem extends StatelessWidget {
     required this.isPaid,
     this.onTap,
   });
+  final String billingMonth;
+  final String paidAt;
+  final int amount;
+  final String statusLabel;
+  final bool isPaid;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

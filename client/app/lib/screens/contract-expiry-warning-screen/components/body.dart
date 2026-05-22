@@ -1,10 +1,10 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/contract-extension-request-screen/contract_extension_request_screen.dart';
-import 'package:app/screens/home-screen/home_screen.dart';
-import 'package:app/screens/contract-expiry-warning-screen/components/contract_action_button.dart';
-import 'package:app/screens/contract-expiry-warning-screen/components/contract_expiry_header.dart';
-import 'package:app/screens/contract-expiry-warning-screen/components/countdown_widget.dart';
-import 'package:app/screens/update-rental-contract-screen/update_rental_contract_screen.dart';
+import '../../../core/constants.dart';
+import '../../contract-extension-request-screen/contract_extension_request_screen.dart';
+import '../../home-screen/home_screen.dart';
+import 'contract_action_button.dart';
+import 'contract_expiry_header.dart';
+import 'countdown_widget.dart';
+import '../../update-rental-contract-screen/update_rental_contract_screen.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
@@ -61,7 +61,7 @@ class Body extends StatelessWidget {
 
     if (!context.mounted) return;
 
-    Navigator.of(
+    await Navigator.of(
       context,
     ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
   }

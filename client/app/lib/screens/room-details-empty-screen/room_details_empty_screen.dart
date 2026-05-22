@@ -1,6 +1,6 @@
-import 'package:app/core/constants.dart';
+import '../../core/constants.dart';
 // 1. Import cái AppBar dùng chung của Phúc
-import 'package:app/core/widgets/common_appbar.dart';
+import '../../core/widgets/common_appbar.dart';
 import 'package:flutter/material.dart';
 
 import 'components/empty_tenant_state.dart';
@@ -8,9 +8,9 @@ import 'components/room_details_bottom_bar.dart';
 import 'components/room_info_card.dart';
 
 class RoomDetailsEmptyScreen extends StatelessWidget {
-  final String roomNumber;
 
   const RoomDetailsEmptyScreen({super.key, required this.roomNumber});
+  final String roomNumber;
 
   @override
   Widget build(BuildContext context) {

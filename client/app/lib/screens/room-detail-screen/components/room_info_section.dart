@@ -1,14 +1,8 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 import 'package:flutter/material.dart';
 
 class RoomInfoSection extends StatelessWidget {
-  final double electricPrice;
-  final double waterPrice;
-  final String address;
-  final double area;
-  final int bedrooms;
-  final bool hasFurniture;
 
   const RoomInfoSection({
     super.key,
@@ -19,6 +13,12 @@ class RoomInfoSection extends StatelessWidget {
     required this.bedrooms,
     this.hasFurniture = false,
   });
+  final double electricPrice;
+  final double waterPrice;
+  final String address;
+  final double area;
+  final int bedrooms;
+  final bool hasFurniture;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class RoomInfoSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(
+            const Icon(
               Icons.bolt_outlined,
               size: 20,
               color: AppColors.blue700,
@@ -35,7 +35,7 @@ class RoomInfoSection extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               'Điện: ${formatVND(electricPrice.toInt())}/kWh',
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -43,7 +43,7 @@ class RoomInfoSection extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 24),
-            Icon(
+            const Icon(
               Icons.water_drop_outlined,
               size: 20,
               color: AppColors.blue700,
@@ -51,7 +51,7 @@ class RoomInfoSection extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               'Nước: ${formatVND(waterPrice.toInt())}/m3',
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -70,7 +70,7 @@ class RoomInfoSection extends StatelessWidget {
                 color: AppColors.slate100,
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.location_on_outlined,
                 size: 20,
                 color: AppColors.blue700,
@@ -80,7 +80,7 @@ class RoomInfoSection extends StatelessWidget {
             Expanded(
               child: Text(
                 address,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -137,7 +137,7 @@ class RoomInfoSection extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Inter',
               fontSize: 14,
               fontWeight: FontWeight.w500,

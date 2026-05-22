@@ -1,21 +1,21 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class UtilityItem {
-  final IconData icon;
-  final String label;
 
   const UtilityItem({
     required this.icon,
     required this.label,
   });
+  final IconData icon;
+  final String label;
 }
 
 final List<UtilityItem> utilities = [
-  UtilityItem(icon: Icons.wifi, label: 'Wi-Fi'),
-  UtilityItem(icon: Icons.ac_unit, label: 'Điều hòa'),
-  UtilityItem(icon: Icons.local_parking, label: 'Bãi đỗ xe'),
-  UtilityItem(icon: Icons.hot_tub, label: 'Bình nóng lạnh'),
+  const UtilityItem(icon: Icons.wifi, label: 'Wi-Fi'),
+  const UtilityItem(icon: Icons.ac_unit, label: 'Điều hòa'),
+  const UtilityItem(icon: Icons.local_parking, label: 'Bãi đỗ xe'),
+  const UtilityItem(icon: Icons.hot_tub, label: 'Bình nóng lạnh'),
 ];
 
 class RoomUtilitySection extends StatelessWidget {
@@ -26,7 +26,7 @@ class RoomUtilitySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Tiện ích',
           style: TextStyle(
             fontFamily: 'Nunito',
@@ -71,7 +71,7 @@ class RoomUtilitySection extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Noto Sans',
             fontSize: 12,
             fontWeight: FontWeight.w400,

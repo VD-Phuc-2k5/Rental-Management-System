@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class MaintenanceNoticeBanner extends StatelessWidget {
   const MaintenanceNoticeBanner({super.key});
@@ -13,9 +13,9 @@ class MaintenanceNoticeBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: AppColors.amber100,width: 1),
       ),
-      child: Row(
+      child: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Icon(Icons.info_outline_rounded, color: AppColors.yellow600),
           SizedBox(width: 10),
           Expanded(

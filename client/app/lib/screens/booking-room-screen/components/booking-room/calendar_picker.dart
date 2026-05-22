@@ -4,14 +4,14 @@ import 'calendar_day_header.dart';
 import 'calendar_day_cell.dart';
 
 class CustomCalendarPicker extends StatefulWidget {
-  final DateTime? initialDate;
-  final ValueChanged<DateTime>? onDateSelected;
 
   const CustomCalendarPicker({
     super.key,
     this.initialDate,
     this.onDateSelected,
   });
+  final DateTime? initialDate;
+  final ValueChanged<DateTime>? onDateSelected;
 
   @override
   State<CustomCalendarPicker> createState() =>

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class ProcessingTimelineCard extends StatelessWidget {
   const ProcessingTimelineCard({super.key});
@@ -10,11 +10,11 @@ class ProcessingTimelineCard extends StatelessWidget {
       elevation: 0,
       color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+      child: const Padding(
+        padding: EdgeInsets.fromLTRB(14, 14, 14, 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
               'TIẾN ĐỘ XỬ LÝ',
               style: TextStyle(
@@ -60,10 +60,6 @@ class ProcessingTimelineCard extends StatelessWidget {
 enum _TimelineState { done, current, todo }
 
 class _TimelineItem extends StatelessWidget {
-  final _TimelineState state;
-  final String title;
-  final String subtitle;
-  final bool isLast;
 
   const _TimelineItem({
     required this.state,
@@ -71,6 +67,10 @@ class _TimelineItem extends StatelessWidget {
     required this.subtitle,
     required this.isLast,
   });
+  final _TimelineState state;
+  final String title;
+  final String subtitle;
+  final bool isLast;
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +143,7 @@ class _TimelineItem extends StatelessWidget {
                   const SizedBox(height: 3),
                   Text(
                     subtitle,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.slate500,
                       fontWeight: FontWeight.w400,
                       fontSize: 12,

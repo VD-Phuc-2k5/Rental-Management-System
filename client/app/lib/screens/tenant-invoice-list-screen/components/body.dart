@@ -1,16 +1,9 @@
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_history_section.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_summary_card.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_view_models.dart';
+import 'invoice_history_section.dart';
+import 'invoice_summary_card.dart';
+import 'invoice_view_models.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
-  final InvoiceSummaryData latestInvoice;
-  final InvoiceHistoryState historyState;
-  final List<InvoiceHistoryItemData> historyItems;
-  final VoidCallback? onPayNow;
-  final ValueChanged<String>? onSearchChanged;
-  final ValueChanged<InvoiceHistoryItemData>? onHistoryItemTap;
-  final Widget? historyErrorWidget;
 
   const Body({
     super.key,
@@ -48,6 +41,13 @@ class Body extends StatelessWidget {
     this.onHistoryItemTap,
     this.historyErrorWidget,
   });
+  final InvoiceSummaryData latestInvoice;
+  final InvoiceHistoryState historyState;
+  final List<InvoiceHistoryItemData> historyItems;
+  final VoidCallback? onPayNow;
+  final ValueChanged<String>? onSearchChanged;
+  final ValueChanged<InvoiceHistoryItemData>? onHistoryItemTap;
+  final Widget? historyErrorWidget;
 
   @override
   Widget build(BuildContext context) {

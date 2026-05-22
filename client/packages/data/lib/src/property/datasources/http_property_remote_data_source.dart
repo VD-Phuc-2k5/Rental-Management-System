@@ -1,12 +1,11 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:core/constants.dart';
 import 'package:core/errors.dart';
-import 'package:data/property.dart';
+import '../../../property.dart';
 import 'package:http/http.dart' as http;
 
-import 'property_remote_data_source.dart';
 
 class HttpPropertyRemoteDataSource implements PropertyRemoteDataSource {
   HttpPropertyRemoteDataSource({required http.Client client}) : _client = client;

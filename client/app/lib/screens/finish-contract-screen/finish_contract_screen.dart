@@ -1,5 +1,5 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/widgets/common_appbar.dart';
+import '../../core/constants.dart';
+import '../../core/widgets/common_appbar.dart';
 import 'package:flutter/material.dart';
 
 import 'components/calculation_section.dart';
@@ -12,18 +12,18 @@ class FinishContractScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppColors.gray25,
-      appBar: const CommonAppBar(title: "Kết thúc hợp đồng"),
+      appBar: CommonAppBar(title: "Kết thúc hợp đồng"),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   ContractInfoCard(),
                   SizedBox(height: 24),
 
@@ -34,7 +34,7 @@ class FinishContractScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const FinishContractBottomBar(),
+            FinishContractBottomBar(),
           ],
         ),
       ),

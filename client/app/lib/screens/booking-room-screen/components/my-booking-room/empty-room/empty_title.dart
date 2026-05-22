@@ -1,4 +1,4 @@
-import 'package:app/core/constants.dart';
+import '../../../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class EmptyTitle extends StatelessWidget {
@@ -6,7 +6,7 @@ class EmptyTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
         Text(
           "Bạn chưa có lịch hẹn nào",
@@ -17,7 +17,7 @@ class EmptyTitle extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           "Hãy tìm kiếm và đặt lịch xem phòng ngay để tìm được nơi ở ưng ý nhất.",
           textAlign: TextAlign.center,

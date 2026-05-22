@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class ContractBottomBar extends StatelessWidget {
-  final String text;
-  final VoidCallback? onNext;
   const ContractBottomBar({
     super.key,
     required this.text,
     this.onNext,
   });
+  final String text;
+  final VoidCallback? onNext;
 
   @override
   Widget build(BuildContext context) {

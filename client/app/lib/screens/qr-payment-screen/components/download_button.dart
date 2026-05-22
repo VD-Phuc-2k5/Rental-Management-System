@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class DownloadButton extends StatelessWidget {
   const DownloadButton({super.key});
@@ -25,12 +25,12 @@ class DownloadButton extends StatelessWidget {
               onPressed: () {
                 // TO DO: handle to save QR Image
               },
-              child: Row(
+              child: const Row(
                 spacing: 4.0,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.download, color: AppColors.blue700),
-                  const Text(
+                  Icon(Icons.download, color: AppColors.blue700),
+                  Text(
                     "Lưu mã QR",
                     style: TextStyle(
                       fontFamily: "Inter",

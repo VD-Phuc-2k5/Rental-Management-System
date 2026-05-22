@@ -1,4 +1,4 @@
-﻿import 'package:data/property.dart';
+import '../../../property.dart';
 
 abstract interface class PropertyRemoteDataSource {
   Future<List<PropertyModel>> getProperties({required String token});

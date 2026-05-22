@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class InfoNoticeBanner extends StatelessWidget {
   const InfoNoticeBanner({super.key});
 
@@ -14,7 +14,7 @@ class InfoNoticeBanner extends StatelessWidget {
       ),
       child: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Icon(Icons.info_outline_rounded, color: AppColors.blue700),
           SizedBox(width: 10),
           Expanded(

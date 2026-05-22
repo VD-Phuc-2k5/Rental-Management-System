@@ -1,15 +1,15 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/landlord-utility-meter-screen/components/hostel_filter_tabs.dart';
-import 'package:app/screens/landlord-utility-meter-screen/components/month_selector.dart';
-import 'package:app/screens/landlord-utility-meter-screen/components/room_meter_card.dart';
-import 'package:app/screens/landlord-utility-meter-screen/components/utility_meter_examples.dart';
-import 'package:app/screens/landlord-utility-meter-screen/components/utility_meter_models.dart';
+import '../../../core/constants.dart';
+import 'hostel_filter_tabs.dart';
+import 'month_selector.dart';
+import 'room_meter_card.dart';
+import 'utility_meter_examples.dart';
+import 'utility_meter_models.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatefulWidget {
-  final UtilityMeterUpdateData? initialData;
 
   const Body({super.key, this.initialData});
+  final UtilityMeterUpdateData? initialData;
 
   @override
   State<Body> createState() => _BodyState();
@@ -26,7 +26,7 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     _data = widget.initialData ?? UtilityMeterExamples.february2026;
-    _roomsMap = {for (var room in _data.rooms) room.id: room};
+    _roomsMap = {for (final room in _data.rooms) room.id: room};
   }
 
   @override
@@ -138,12 +138,12 @@ class _BodyState extends State<Body> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.inbox_outlined, size: 64, color: AppColors.slate300),
-          const SizedBox(height: 16.0),
+          SizedBox(height: 16.0),
           Text(
             "Không có phòng nào",
             style: TextStyle(

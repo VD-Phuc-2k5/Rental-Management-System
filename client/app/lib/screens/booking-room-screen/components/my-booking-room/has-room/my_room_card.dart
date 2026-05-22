@@ -1,15 +1,10 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/register-rent-screen/register_rent_screen.dart';
+import '../../../../../core/constants.dart';
+import '../../../../register-rent-screen/register_rent_screen.dart';
 import 'package:flutter/material.dart';
 
 enum BookingStatus { pending, confirmed, cancelled }
 
 class MyRoom {
-  final String imageUrl;
-  final String roomName;
-  final String address;
-  final String bookingTime;
-  final BookingStatus status;
 
   MyRoom({
     required this.imageUrl,
@@ -18,6 +13,11 @@ class MyRoom {
     required this.bookingTime,
     required this.status,
   });
+  final String imageUrl;
+  final String roomName;
+  final String address;
+  final String bookingTime;
+  final BookingStatus status;
 }
 
 class MyRoomCard extends StatelessWidget {
@@ -74,7 +74,7 @@ class MyRoomCard extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: rooms.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        separatorBuilder: (_, _) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final room = rooms[index];
 

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class ComplaintImagesSection extends StatelessWidget {
   const ComplaintImagesSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Hình ảnh minh chứng',
           style: TextStyle(
             color: AppColors.gray800,
@@ -17,18 +17,18 @@ class ComplaintImagesSection extends StatelessWidget {
             fontSize: 16,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(
           children: [
-            const Expanded(child: _UploadBox(onPressed: null)),
+            Expanded(child: _UploadBox(onPressed: null)),
             SizedBox(width: 12),
-            const Expanded(child: _UploadBox(onPressed: null)),
+            Expanded(child: _UploadBox(onPressed: null)),
             SizedBox(width: 12),
-            const Expanded(child: _UploadBox(onPressed: null)),
+            Expanded(child: _UploadBox(onPressed: null)),
           ],
         ),
-        const SizedBox(height: 10),
-        const Padding(
+        SizedBox(height: 10),
+        Padding(
           padding: EdgeInsets.only(top: 5, bottom: 10),
           child: Text(
             '* Tải lên tối đa 3 ảnh minh chứng tình trạng hiện tại.',
@@ -45,8 +45,8 @@ class ComplaintImagesSection extends StatelessWidget {
 }
 
 class _UploadBox extends StatelessWidget {
-  final VoidCallback? onPressed;
   const _UploadBox({this.onPressed});
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {

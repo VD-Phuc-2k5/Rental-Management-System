@@ -1,11 +1,12 @@
-import 'package:app/screens/payment-success-screen/components/heading_icon.dart';
-import 'package:app/screens/payment-success-screen/components/heading_title.dart';
-import 'package:app/screens/payment-success-screen/components/back_to_home_button.dart';
+import 'heading_icon.dart';
+import 'heading_title.dart';
+import 'back_to_home_button.dart';
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 
 class Body extends StatelessWidget {
+  const Body({super.key, required this.price});
   final int price;
   final TextStyle paymentLabelStyle = const TextStyle(
     color: AppColors.slate500,
@@ -19,7 +20,6 @@ class Body extends StatelessWidget {
     fontWeight: FontWeight.w700,
     fontSize: 16,
   );
-  const Body({super.key, required this.price});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class Body extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5.0),
                     boxShadow: [
                       BoxShadow(
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                         blurRadius: 2,
                         color: AppColors.black.withAlpha(13),
                       ),
@@ -92,9 +92,9 @@ class Body extends StatelessWidget {
               ],
             ),
           ),
-          Column(
+          const Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [const BackToHomeButton()],
+            children: [BackToHomeButton()],
           ),
         ],
       ),

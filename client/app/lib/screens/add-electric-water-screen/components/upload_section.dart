@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class UploadSection extends StatelessWidget {
+
+  const UploadSection({
+    super.key,
+    this.onFilePicked,
+    this.selectedFileName,
+    this.isLoading = false,
+  });
   /// Callback khi người dùng nhấn "Chọn file".
   /// Nhận path file được chọn (null nếu huỷ).
   final ValueChanged<String?>? onFilePicked;
@@ -11,13 +18,6 @@ class UploadSection extends StatelessWidget {
 
   /// Đang upload / xử lý
   final bool isLoading;
-
-  const UploadSection({
-    super.key,
-    this.onFilePicked,
-    this.selectedFileName,
-    this.isLoading = false,
-  });
 
   @override
   Widget build(BuildContext context) {

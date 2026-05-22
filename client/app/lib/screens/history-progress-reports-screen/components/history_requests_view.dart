@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/models/maintenance_request.dart';
-import 'package:app/core/models/priority.dart';
-import 'package:app/core/widgets/maintenance_request_card.dart';
+import '../../../core/models/maintenance_request.dart';
+import '../../../core/models/priority.dart';
+import '../../../core/widgets/maintenance_request_card.dart';
 
 class HistoryRequestsView extends StatelessWidget {
   const HistoryRequestsView({super.key});

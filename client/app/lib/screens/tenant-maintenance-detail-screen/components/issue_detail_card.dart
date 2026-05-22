@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class IssueDetailCard extends StatelessWidget {
-  final String issueImage1;
-  final String issueImage2;
   const IssueDetailCard({
     super.key,
     required this.issueImage1,
     required this.issueImage2,
   });
+  final String issueImage1;
+  final String issueImage2;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class IssueDetailCard extends StatelessWidget {
                 Expanded(
                   child: _PhotoTile(assetPath: issueImage1),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: _PhotoTile(assetPath: issueImage2),
                 ),
@@ -82,8 +82,8 @@ class IssueDetailCard extends StatelessWidget {
 }
 
 class _PhotoTile extends StatelessWidget {
-  final String assetPath;
   const _PhotoTile({required this.assetPath});
+  final String assetPath;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +96,7 @@ class _PhotoTile extends StatelessWidget {
         child: Image.asset(
           assetPath,
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => const Center(
+          errorBuilder: (_, _, _) => const Center(
             child: Icon(Icons.image_not_supported_outlined, color: AppColors.slate500),
           ),
         ),

@@ -1,13 +1,13 @@
-import 'package:app/core/constants.dart';
+import '../../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class NoteSection extends StatelessWidget {
-  final TextEditingController controller;
 
   const NoteSection({
     super.key,
     required this.controller,
   });
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +54,11 @@ class NoteSection extends StatelessWidget {
             contentPadding: const EdgeInsets.all(8),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: AppColors.slate200, width: 2),
+              borderSide: const BorderSide(color: AppColors.slate200, width: 2),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: AppColors.blue700, width: 2),
+              borderSide: const BorderSide(color: AppColors.blue700, width: 2),
             ),
           ),
         ),

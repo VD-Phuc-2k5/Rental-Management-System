@@ -1,11 +1,11 @@
-import 'package:app/core/widgets/common_appbar.dart';
-import 'package:app/core/widgets/tenant_navigation_bottom.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_detail_examples.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/tenant_invoice_detail_screen.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/body.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_view_models.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/components/payment_models.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/tenant_invoice_payment_screen.dart';
+import '../../core/widgets/common_appbar.dart';
+import '../../core/widgets/tenant_navigation_bottom.dart';
+import '../tenant-invoice-detail-screen/components/invoice_detail_examples.dart';
+import '../tenant-invoice-detail-screen/tenant_invoice_detail_screen.dart';
+import 'components/body.dart';
+import 'components/invoice_view_models.dart';
+import '../tenant-invoice-payment-screen/components/payment_models.dart';
+import '../tenant-invoice-payment-screen/tenant_invoice_payment_screen.dart';
 import 'package:flutter/material.dart';
 
 class TenantInvoiceListScreen extends StatelessWidget {
@@ -63,12 +63,12 @@ class TenantInvoiceListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: "Hóa đơn của tôi"),
+      appBar: const CommonAppBar(title: "Hóa đơn của tôi"),
       body: Body(
         onHistoryItemTap: (item) => _navigateToInvoiceDetail(context, item),
         onPayNow: () => _navigateToPayment(context),
       ),
-      bottomNavigationBar: TenantNavigationBottom(currentIndex: 3),
+      bottomNavigationBar: const TenantNavigationBottom(currentIndex: 3),
     );
   }
 }

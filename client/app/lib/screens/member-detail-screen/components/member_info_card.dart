@@ -1,56 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-class MemberInfoCard extends StatelessWidget {
-  final String title;
-  final List<_InfoRowData> rows;
+import '../../../core/constants.dart';
 
+class MemberInfoCard extends StatelessWidget {
   const MemberInfoCard({
     super.key,
     required this.title,
     required this.rows,
   });
 
-   MemberInfoCard.contact({
+  MemberInfoCard.contact({
     super.key,
     String? phoneNumber,
-    String? email,})
-      : title = 'THÔNG TIN LIÊN HỆ',
-        rows =  [
-          _InfoRowData(
-            icon: Icons.call,
-            label: 'Số điện thoại',
-            value: phoneNumber ?? '',
-          ),
-          _InfoRowData(
-            icon: Icons.mail_outline,
-            label: 'Email',
-            value: email ?? '',
-          ),
-        ];
+    String? email,
+  }) : title = 'THÔNG TIN LIÊN HỆ',
+       rows = [
+         _InfoRowData(
+           icon: Icons.call,
+           label: 'Số điện thoại',
+           value: phoneNumber ?? '',
+         ),
+         _InfoRowData(
+           icon: Icons.mail_outline,
+           label: 'Email',
+           value: email ?? '',
+         ),
+       ];
 
   MemberInfoCard.identity({
     super.key,
     String? idNumber,
     String? dateOfBirth,
-    String? address,})
-      : title = 'THÔNG TIN ĐỊNH DANH',
-        rows = [
-          _InfoRowData(
-            icon: Icons.badge_outlined,
-            label: 'Số CCCD / CMND',
-            value: idNumber ?? '',
-          ),
-          _InfoRowData(
-            icon: Icons.cake_outlined,
-            label: 'Ngày sinh',
-            value: dateOfBirth ?? '',
-          ),
-          _InfoRowData(
-            icon: Icons.location_on_outlined,
-            label: 'Địa chỉ thường trú',
-            value: address ?? '',
-          ),
-        ];
+    String? address,
+  }) : title = 'THÔNG TIN ĐỊNH DANH',
+       rows = [
+         _InfoRowData(
+           icon: Icons.badge_outlined,
+           label: 'Số CCCD / CMND',
+           value: idNumber ?? '',
+         ),
+         _InfoRowData(
+           icon: Icons.cake_outlined,
+           label: 'Ngày sinh',
+           value: dateOfBirth ?? '',
+         ),
+         _InfoRowData(
+           icon: Icons.location_on_outlined,
+           label: 'Địa chỉ thường trú',
+           value: address ?? '',
+         ),
+       ];
+  final String title;
+  // ignore: library_private_types_in_public_api
+  final List<_InfoRowData> rows;
 
   @override
   Widget build(BuildContext context) {
@@ -81,20 +82,19 @@ class MemberInfoCard extends StatelessWidget {
 }
 
 class _InfoRowData {
-  final IconData icon;
-  final String label;
-  final String value;
-
   const _InfoRowData({
     required this.icon,
     required this.label,
     required this.value,
   });
+  final IconData icon;
+  final String label;
+  final String value;
 }
 
 class _InfoRow extends StatelessWidget {
-  final _InfoRowData data;
   const _InfoRow(this.data);
+  final _InfoRowData data;
 
   @override
   Widget build(BuildContext context) {

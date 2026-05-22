@@ -1,4 +1,4 @@
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_detail_models.dart';
+import 'invoice_detail_models.dart';
 
 /// Example data for testing different invoice states
 class InvoiceDetailExamples {

@@ -1,4 +1,4 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -71,7 +71,7 @@ class _ChecklistSectionState extends State<ChecklistSection> {
                   child: Switch(
                     value: isGood,
                     onChanged: onChanged,
-                    activeColor: AppColors.white,
+                    activeThumbColor: AppColors.white,
                     activeTrackColor: AppColors.green500,
                     inactiveThumbColor: AppColors.white,
                     inactiveTrackColor: AppColors.slate200,

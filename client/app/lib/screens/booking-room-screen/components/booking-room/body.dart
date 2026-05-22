@@ -1,16 +1,10 @@
-import 'package:app/screens/booking-room-screen/components/booking-room/calendar_picker.dart';
-import 'package:app/screens/booking-room-screen/components/booking-room/card_title.dart';
-import 'package:app/screens/booking-room-screen/components/booking-room/hour_picker.dart';
-import 'package:app/screens/booking-room-screen/components/booking-room/note_section.dart';
+import 'calendar_picker.dart';
+import 'card_title.dart';
+import 'hour_picker.dart';
+import 'note_section.dart';
 import 'package:flutter/material.dart';
 
 class BookingRoomBody extends StatelessWidget {
-  final List<String> hours;
-  final DateTime selectedDate;
-  final String selectedHour;
-  final TextEditingController noteController;
-  final ValueChanged<DateTime> onDateSelected;
-  final ValueChanged<String> onHourSelected;
 
   const BookingRoomBody({
     super.key,
@@ -21,6 +15,12 @@ class BookingRoomBody extends StatelessWidget {
     required this.onDateSelected,
     required this.onHourSelected,
   });
+  final List<String> hours;
+  final DateTime selectedDate;
+  final String selectedHour;
+  final TextEditingController noteController;
+  final ValueChanged<DateTime> onDateSelected;
+  final ValueChanged<String> onHourSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class BookingRoomBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CardTitle(
+          const CardTitle(
             title: "Phòng trọ cao cấp Q1", 
             imageUrl: "https://file4.batdongsan.com.vn/2025/12/23/20251223125240-cf4d_wm.jpg", 
             address: "123 Đường Nguyễn Huệ, Quận 1, TP.HCM", 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class RegisterRentHeader extends StatelessWidget implements PreferredSizeWidget {
-  final VoidCallback onBack;
 
   const RegisterRentHeader({super.key, required this.onBack});
+  final VoidCallback onBack;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

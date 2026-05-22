@@ -1,10 +1,10 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class MonthSelector extends StatelessWidget {
-  final String currentMonth;
 
   const MonthSelector({super.key, required this.currentMonth});
+  final String currentMonth;
 
   @override
   Widget build(BuildContext context) {
