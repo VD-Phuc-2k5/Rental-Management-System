@@ -59,6 +59,21 @@ abstract class RegisterModule {
         getToken: () => authBloc.state.user?.token ?? '',
       );
 
+  // browse room datasource
+  @LazySingleton(as: BrowseRoomRemoteDataSource)
+  HttpBrowseRoomRemoteDataSource get browseRoomRemoteDataSource;
+
+  // browse room repository
+  @LazySingleton(as: BrowseRoomRepository)
+  BrowseRoomRepositoryImpl browseRoomRepository(
+    BrowseRoomRemoteDataSource dataSource,
+    AuthenticationBloc authBloc,
+  ) =>
+      BrowseRoomRepositoryImpl(
+        browseRoomRemoteDataSource: dataSource,
+        getToken: () => authBloc.state.user?.token ?? '',
+      );
+
   // profile datasource
   @LazySingleton(as: ProfileRemoteDataSource)
   HttpProfileRemoteDataSource get profileRemoteDataSource;
@@ -119,6 +134,13 @@ abstract class RegisterModule {
 
   @injectable
   UpdateProfileUsecase get updateProfileUsecase;
+
+  // browse room
+  @injectable
+  GetAvailableRoomsUsecase get getAvailableRoomsUsecase;
+
+  @injectable
+  GetBrowseRoomDetailUsecase get getBrowseRoomDetailUsecase;
 
   // room
   @injectable

@@ -5,15 +5,22 @@ import {
   CreateRoomInput,
   UpdateRoomInput,
 } from '../domain/repositories/room.repository';
-import { RoomEntity, RoomStatus } from '../domain/entities/room.entity';
-import { rooms } from 'src/shared/infrastructure/database/schema';
-import { eq } from 'drizzle-orm';
+import {
+  RoomEntity,
+  RoomImage,
+  RoomStatus,
+} from '../domain/entities/room.entity';
+import { rooms, roomImages } from 'src/shared/infrastructure/database/schema';
+import { eq, inArray } from 'drizzle-orm';
 
 @Injectable()
 export class DrizzleRoomRepository implements RoomRepository {
   constructor(private readonly drizzleService: DrizzleService) {}
 
-  private toEntity(row: typeof rooms.$inferSelect): RoomEntity {
+  private toEntity(
+    row: typeof rooms.$inferSelect,
+    images: RoomImage[] = [],
+  ): RoomEntity {
     return new RoomEntity(
       row.id,
       row.propertyId,
@@ -31,6 +38,7 @@ export class DrizzleRoomRepository implements RoomRepository {
         [],
       row.createdAt!.toISOString(),
       row.updatedAt!.toISOString(),
+      images,
     );
   }
 
@@ -51,7 +59,25 @@ export class DrizzleRoomRepository implements RoomRepository {
         addon_amenities: input.addon_amenities ?? [],
       })
       .returning();
-    return this.toEntity(row);
+
+    let images: RoomImage[] = [];
+    if (input.images && input.images.length > 0) {
+      images = await this.drizzleService.db
+        .insert(roomImages)
+        .values(
+          input.images.map((img, idx) => ({
+            roomId: row.id,
+            url: img.url,
+            sortOrder: img.sortOrder ?? idx,
+          })),
+        )
+        .returning()
+        .then((rows) =>
+          rows.map((r) => ({ id: r.id, url: r.url, sortOrder: r.sortOrder })),
+        );
+    }
+
+    return this.toEntity(row, images);
   }
 
   async findAllByPropertyId(propertyId: string): Promise<RoomEntity[]> {
@@ -59,7 +85,23 @@ export class DrizzleRoomRepository implements RoomRepository {
       .select()
       .from(rooms)
       .where(eq(rooms.propertyId, propertyId));
-    return rows.map((r) => this.toEntity(r));
+
+    if (rows.length === 0) return [];
+
+    const roomIds = rows.map((r) => r.id);
+    const imgRows = await this.drizzleService.db
+      .select()
+      .from(roomImages)
+      .where(inArray(roomImages.roomId, roomIds));
+
+    const imgMap = new Map<string, RoomImage[]>();
+    for (const img of imgRows) {
+      const list = imgMap.get(img.roomId) ?? [];
+      list.push({ id: img.id, url: img.url, sortOrder: img.sortOrder });
+      imgMap.set(img.roomId, list);
+    }
+
+    return rows.map((r) => this.toEntity(r, imgMap.get(r.id) ?? []));
   }
 
   async findById(id: string): Promise<RoomEntity | null> {
@@ -67,7 +109,21 @@ export class DrizzleRoomRepository implements RoomRepository {
       .select()
       .from(rooms)
       .where(eq(rooms.id, id));
-    return row ? this.toEntity(row) : null;
+
+    if (!row) return null;
+
+    const imgRows = await this.drizzleService.db
+      .select()
+      .from(roomImages)
+      .where(eq(roomImages.roomId, id));
+
+    const images: RoomImage[] = imgRows.map((r) => ({
+      id: r.id,
+      url: r.url,
+      sortOrder: r.sortOrder,
+    }));
+
+    return this.toEntity(row, images);
   }
 
   async updateRoom(id: string, input: UpdateRoomInput): Promise<RoomEntity> {
@@ -100,7 +156,41 @@ export class DrizzleRoomRepository implements RoomRepository {
       .set(updateData)
       .where(eq(rooms.id, id))
       .returning();
-    return this.toEntity(row);
+
+    let images: RoomImage[] = [];
+    if (input.images !== undefined) {
+      await this.drizzleService.db
+        .delete(roomImages)
+        .where(eq(roomImages.roomId, id));
+
+      if (input.images.length > 0) {
+        images = await this.drizzleService.db
+          .insert(roomImages)
+          .values(
+            input.images.map((img, idx) => ({
+              roomId: id,
+              url: img.url,
+              sortOrder: img.sortOrder ?? idx,
+            })),
+          )
+          .returning()
+          .then((rows) =>
+            rows.map((r) => ({ id: r.id, url: r.url, sortOrder: r.sortOrder })),
+          );
+      }
+    } else {
+      const imgRows = await this.drizzleService.db
+        .select()
+        .from(roomImages)
+        .where(eq(roomImages.roomId, id));
+      images = imgRows.map((r) => ({
+        id: r.id,
+        url: r.url,
+        sortOrder: r.sortOrder,
+      }));
+    }
+
+    return this.toEntity(row, images);
   }
 
   async deleteRoom(id: string): Promise<void> {

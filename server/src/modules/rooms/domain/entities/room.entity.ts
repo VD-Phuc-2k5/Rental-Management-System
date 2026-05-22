@@ -2,6 +2,8 @@
 
 export type RoomAddonAmenity = { code: string; monthly_price: number };
 
+export type RoomImage = { id: string; url: string; sortOrder: number };
+
 export class RoomEntity {
   constructor(
     public readonly id: string,
@@ -19,5 +21,6 @@ export class RoomEntity {
     public readonly addon_amenities: RoomAddonAmenity[],
     public readonly createdAt: string,
     public readonly updatedAt: string,
+    public readonly images: RoomImage[] = [],
   ) {}
 }

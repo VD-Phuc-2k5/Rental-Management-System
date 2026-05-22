@@ -16,6 +16,7 @@ export type CreateRoomInput = {
   description?: string;
   included_amenity_codes?: string[];
   addon_amenities?: RoomAddonAmenity[];
+  images?: Array<{ url: string; sortOrder?: number }>;
 };
 
 export type UpdateRoomInput = {
@@ -30,6 +31,7 @@ export type UpdateRoomInput = {
   description?: string;
   included_amenity_codes?: string[];
   addon_amenities?: RoomAddonAmenity[];
+  images?: Array<{ url: string; sortOrder?: number }>;
 };
 
 export abstract class RoomRepository {

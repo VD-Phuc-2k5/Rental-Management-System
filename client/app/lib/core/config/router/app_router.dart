@@ -1,4 +1,5 @@
-﻿import 'package:domain/profile.dart';
+﻿import 'package:data/auth.dart';
+import 'package:domain/profile.dart';
 import 'package:domain/property.dart';
 import 'package:domain/room.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ import '../../../features/property/presentation/pages/property_list_page.dart';
 import '../../../features/property/presentation/pages/create_property_page.dart';
 import '../../../features/property/presentation/pages/update_property_page.dart';
 import '../../../features/room/presentation/pages/room_list_page.dart';
+import '../../../features/home/presentation/pages/home_page.dart';
+import '../../../features/home/presentation/pages/room_detail_page.dart';
 import '../../../features/profile/presentation/pages/profile_page.dart';
 import '../../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../../features/room/presentation/pages/room_tab_page.dart';
@@ -45,7 +48,21 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
       }
 
       if (authStatus == AuthenticationStatus.authenticated) {
-        if (isSplash || isAuthRoute) return RoutePaths.propertyList;
+        if (isSplash || isAuthRoute) {
+          final authUser = authBloc.state.user;
+          String role = '';
+          if (authUser is AuthModel) {
+            final raw = authUser.user.role;
+            if (raw is List && raw.isNotEmpty) {
+              role = raw.first.toString();
+            } else if (raw is String) {
+              role = raw;
+            }
+          }
+          return role == 'landlord'
+              ? RoutePaths.propertyList
+              : RoutePaths.home;
+        }
       } else {
         if (!isAuthRoute && !isForgotPassword) return RoutePaths.login;
       }
@@ -148,6 +165,22 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         builder: (BuildContext context, GoRouterState state) {
           final room = state.extra as RoomEntity;
           return UpdateRoomPage(room: room);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.home,
+        name: RouteNames.home,
+        builder: (_, _) => const HomePage(),
+      ),
+      GoRoute(
+        path: RoutePaths.roomDetail,
+        name: RouteNames.roomDetail,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return RoomDetailPage(
+            roomId: extra['roomId'] as String,
+            isLandlord: extra['isLandlord'] as bool? ?? false,
+          );
         },
       ),
       GoRoute(

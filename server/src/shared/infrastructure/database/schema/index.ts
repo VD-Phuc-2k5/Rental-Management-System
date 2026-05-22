@@ -4,3 +4,4 @@ export * from './properties.schema';
 export * from './amenity.schema';
 export * from './room.schema';
 export * from './room_amenity.schema';
+export * from './room_images.schema';

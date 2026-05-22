@@ -20,6 +20,19 @@ export class AddonAmenityDto {
   monthly_price!: number;
 }
 
+export class RoomImageDto {
+  @IsString()
+  @ApiProperty({ example: 'https://storage.example.com/rooms/img.jpg' })
+  url!: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Type(() => Number)
+  @ApiPropertyOptional({ example: 0 })
+  sortOrder?: number;
+}
+
 export class CreateRoomDto {
   @IsNotEmpty()
   @IsString()
@@ -83,4 +96,15 @@ export class CreateRoomDto {
   @Type(() => AddonAmenityDto)
   @ApiPropertyOptional({ example: [{ code: 'TV', monthly_price: 50000 }] })
   addon_amenities?: AddonAmenityDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => RoomImageDto)
+  @ApiPropertyOptional({
+    example: [
+      { url: 'https://storage.example.com/rooms/img.jpg', sortOrder: 0 },
+    ],
+  })
+  images?: RoomImageDto[];
 }

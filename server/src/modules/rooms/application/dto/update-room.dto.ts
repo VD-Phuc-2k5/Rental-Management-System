@@ -10,7 +10,7 @@
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { AddonAmenityDto } from './create-room.dto';
+import { AddonAmenityDto, RoomImageDto } from './create-room.dto';
 
 export type RoomStatus = 'AVAILABLE' | 'OCCUPIED' | 'MAINTENANCE';
 
@@ -82,4 +82,15 @@ export class UpdateRoomDto {
   @Type(() => AddonAmenityDto)
   @ApiPropertyOptional({ example: [{ code: 'TV', monthly_price: 50000 }] })
   addon_amenities?: AddonAmenityDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => RoomImageDto)
+  @ApiPropertyOptional({
+    example: [
+      { url: 'https://storage.example.com/rooms/img.jpg', sortOrder: 0 },
+    ],
+  })
+  images?: RoomImageDto[];
 }

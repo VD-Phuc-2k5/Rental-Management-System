@@ -33,6 +33,10 @@ import '../../features/auth/presentation/blocs/register_landlord/register_landlo
     as _i165;
 import '../../features/auth/presentation/blocs/verify_otp/verify_otp_bloc.dart'
     as _i452;
+import '../../features/home/presentation/blocs/available_room_list/available_room_list_bloc.dart'
+    as _i779;
+import '../../features/home/presentation/blocs/browse_room_detail/browse_room_detail_bloc.dart'
+    as _i511;
 import '../../features/profile/presentation/blocs/get_profile/get_profile_bloc.dart'
     as _i373;
 import '../../features/profile/presentation/blocs/update_profile/update_profile_bloc.dart'
@@ -70,6 +74,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i378.AuthRepository>(() => registerModule.authRepository);
     gh.lazySingleton<_i83.PropertyRemoteDataSource>(
       () => registerModule.propertyRemoteDataSource,
+    );
+    gh.lazySingleton<_i586.BrowseRoomRemoteDataSource>(
+      () => registerModule.browseRoomRemoteDataSource,
     );
     gh.lazySingleton<_i586.RoomRemoteDataSource>(
       () => registerModule.roomRemoteDataSource,
@@ -134,6 +141,12 @@ extension GetItInjectableX on _i174.GetIt {
         updateProfileUsecase: gh<_i503.UpdateProfileUsecase>(),
       ),
     );
+    gh.lazySingleton<_i142.BrowseRoomRepository>(
+      () => registerModule.browseRoomRepository(
+        gh<_i586.BrowseRoomRemoteDataSource>(),
+        gh<_i652.AuthenticationBloc>(),
+      ),
+    );
     gh.factory<_i373.GetProfileBloc>(
       () => _i373.GetProfileBloc(
         getProfileUsecase: gh<_i503.GetProfileUsecase>(),
@@ -166,6 +179,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i652.AuthenticationBloc>(),
       ),
     );
+    gh.factory<_i142.GetAvailableRoomsUsecase>(
+      () => registerModule.getAvailableRoomsUsecase,
+    );
+    gh.factory<_i142.GetBrowseRoomDetailUsecase>(
+      () => registerModule.getBrowseRoomDetailUsecase,
+    );
     gh.factory<_i187.RoomListBloc>(
       () => _i187.RoomListBloc(getRoomsUsecase: gh<_i142.GetRoomsUsecase>()),
     );
@@ -193,6 +212,16 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i369.DeletePropertyUsecase>(
       () => registerModule.deletePropertyUsecase,
+    );
+    gh.factory<_i779.AvailableRoomListBloc>(
+      () => _i779.AvailableRoomListBloc(
+        getAvailableRoomsUsecase: gh<_i142.GetAvailableRoomsUsecase>(),
+      ),
+    );
+    gh.factory<_i511.BrowseRoomDetailBloc>(
+      () => _i511.BrowseRoomDetailBloc(
+        getBrowseRoomDetailUsecase: gh<_i142.GetBrowseRoomDetailUsecase>(),
+      ),
     );
     gh.factory<_i1054.UpdatePropertyBloc>(
       () => _i1054.UpdatePropertyBloc(
@@ -235,6 +264,10 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i83.HttpPropertyRemoteDataSource get propertyRemoteDataSource =>
       _i83.HttpPropertyRemoteDataSource(client: _getIt<_i519.Client>());
+
+  @override
+  _i586.HttpBrowseRoomRemoteDataSource get browseRoomRemoteDataSource =>
+      _i586.HttpBrowseRoomRemoteDataSource(client: _getIt<_i519.Client>());
 
   @override
   _i586.HttpRoomRemoteDataSource get roomRemoteDataSource =>
@@ -308,6 +341,18 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i142.DeleteRoomUsecase get deleteRoomUsecase =>
       _i142.DeleteRoomUsecase(roomRepository: _getIt<_i142.RoomRepository>());
+
+  @override
+  _i142.GetAvailableRoomsUsecase get getAvailableRoomsUsecase =>
+      _i142.GetAvailableRoomsUsecase(
+        browseRoomRepository: _getIt<_i142.BrowseRoomRepository>(),
+      );
+
+  @override
+  _i142.GetBrowseRoomDetailUsecase get getBrowseRoomDetailUsecase =>
+      _i142.GetBrowseRoomDetailUsecase(
+        browseRoomRepository: _getIt<_i142.BrowseRoomRepository>(),
+      );
 
   @override
   _i369.GetPropertiesUsecase get getPropertiesUsecase =>

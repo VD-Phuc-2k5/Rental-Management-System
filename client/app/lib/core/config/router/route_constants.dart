@@ -15,6 +15,7 @@
   static const String landlordPayments = '/payments';
   static const String profile = '/profile';
   static const String editProfile = '/profile/edit';
+  static const String roomDetail = '/room-detail';
 }
 
 abstract class RouteNames {
@@ -34,4 +35,5 @@ abstract class RouteNames {
   static const String landlordPayments = 'landlord-payments';
   static const String profile = 'profile';
   static const String editProfile = 'edit-profile';
+  static const String roomDetail = 'room-detail';
 }
