@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { and, eq, gte, inArray, lte } from 'drizzle-orm';
 import { DrizzleService } from 'src/shared/infrastructure/database/drizzle.service';
-import { properties, roomImages, rooms, users } from 'src/shared/infrastructure/database/schema';
+import {
+  properties,
+  roomImages,
+  rooms,
+  users,
+} from 'src/shared/infrastructure/database/schema';
 import {
   AvailableRoomEntity,
   BrowseRoomDetailEntity,
@@ -16,7 +21,9 @@ import {
 export class DrizzleBrowseRoomRepository implements BrowseRoomRepository {
   constructor(private readonly drizzleService: DrizzleService) {}
 
-  async findAvailable(filters: BrowseRoomFilters): Promise<AvailableRoomEntity[]> {
+  async findAvailable(
+    filters: BrowseRoomFilters,
+  ): Promise<AvailableRoomEntity[]> {
     const conditions = [eq(rooms.status, 'AVAILABLE')];
     if (filters.minRent !== undefined)
       conditions.push(gte(rooms.monthly_rent, String(filters.minRent)));
@@ -53,7 +60,8 @@ export class DrizzleBrowseRoomRepository implements BrowseRoomRepository {
 
     const firstImageMap = new Map<string, string>();
     for (const img of images) {
-      if (!firstImageMap.has(img.roomId)) firstImageMap.set(img.roomId, img.url);
+      if (!firstImageMap.has(img.roomId))
+        firstImageMap.set(img.roomId, img.url);
     }
 
     return rows.map(
@@ -112,7 +120,8 @@ export class DrizzleBrowseRoomRepository implements BrowseRoomRepository {
       r.has_furniture,
       r.description ?? null,
       r.included_amenity_codes ?? [],
-      (r.addon_amenities as Array<{ code: string; monthly_price: number }>) ?? [],
+      (r.addon_amenities as Array<{ code: string; monthly_price: number }>) ??
+        [],
       row.propertyId,
       row.propertyName,
       `${row.address}, ${row.ward}, ${row.district}, ${row.city}`,

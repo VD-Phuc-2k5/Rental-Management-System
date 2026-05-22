@@ -16,6 +16,13 @@
   static const String profile = '/profile';
   static const String editProfile = '/profile/edit';
   static const String roomDetail = '/room-detail';
+  static const String rentalRequest = '/rental-request';
+  static const String myRequests = '/my-requests';
+  static const String contractPreview = '/contract-preview';
+  static const String scheduleViewing = '/schedule-viewing';
+  static const String myAppointments = '/my-appointments';
+  static const String landlordViewingAppointments =
+      '/landlord-viewing-appointments';
 }
 
 abstract class RouteNames {
@@ -36,4 +43,11 @@ abstract class RouteNames {
   static const String profile = 'profile';
   static const String editProfile = 'edit-profile';
   static const String roomDetail = 'room-detail';
+  static const String rentalRequest = 'rental-request';
+  static const String myRequests = 'my-requests';
+  static const String contractPreview = 'contract-preview';
+  static const String scheduleViewing = 'schedule-viewing';
+  static const String myAppointments = 'my-appointments';
+  static const String landlordViewingAppointments =
+      'landlord-viewing-appointments';
 }

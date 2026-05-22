@@ -1,5 +1,4 @@
 import '../constants.dart';
-import '../../screens/booking-room-screen/my_booking_room_screen.dart';
 import '../../screens/tenant-invoice-list-screen/tenant_invoice_list_screen.dart';
 import '../../screens/tenant-maintenance-request-screen/tenant_maintenance_request_screen.dart';
 import 'package:flutter/material.dart';
@@ -40,9 +39,7 @@ class TenantNavigationBottom extends StatelessWidget {
         context.go(RoutePaths.home);
         break;
       case 1:
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const MyBookingRoomScreen()));
+        context.go(RoutePaths.myAppointments);
         break;
       case 2:
         Navigator.of(context).push(

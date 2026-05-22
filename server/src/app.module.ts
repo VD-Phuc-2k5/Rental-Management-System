@@ -10,6 +10,8 @@ import { SupabaseModule } from './shared/infrastructure/supabase/supabase.module
 import { PropertiesModule } from './modules/properties/presentation/properties.module';
 import { RedisModule } from './shared/infrastructure/redis/redis.module';
 import { RoomsModule } from './modules/rooms/presentation/room.module';
+import { RentalRequestsModule } from './modules/rental-requests/presentation/rental-request.module';
+import { ViewingAppointmentsModule } from './modules/viewing-appointments/presentation/viewing-appointment.module';
 
 @Module({
   imports: [
@@ -26,9 +28,10 @@ import { RoomsModule } from './modules/rooms/presentation/room.module';
     AuthModule,
     PropertiesModule,
     RoomsModule,
+    RentalRequestsModule,
+    ViewingAppointmentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
-

@@ -23,6 +23,12 @@ import '../../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../../features/room/presentation/pages/room_tab_page.dart';
 import '../../../features/room/presentation/pages/create_room_page.dart';
 import '../../../features/room/presentation/pages/update_room_page.dart';
+import '../../../features/rental_request/presentation/pages/rental_request_page.dart';
+import '../../../features/rental_request/presentation/pages/my_rental_requests_page.dart';
+import '../../../features/rental_request/presentation/pages/contract_preview_page.dart';
+import '../../../features/viewing_appointment/presentation/pages/schedule_viewing_page.dart';
+import '../../../features/viewing_appointment/presentation/pages/my_appointments_page.dart';
+import '../../../features/viewing_appointment/presentation/pages/landlord_viewing_appointments_page.dart';
 import '../../../features/splash/presentation/pages/splash_page.dart';
 import '../../../screens/landlord-requests-screen/landlord_requests_screen.dart';
 import '../../../screens/landlord-payment-history/landlord_payment_history_screen.dart';
@@ -205,6 +211,45 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         path: RoutePaths.landlordPayments,
         name: RouteNames.landlordPayments,
         builder: (context, _) => const LandlordPaymentHistoryScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.rentalRequest,
+        name: RouteNames.rentalRequest,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, String>;
+          return RentalRequestPage(roomId: extra['roomId'] ?? '');
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.myRequests,
+        name: RouteNames.myRequests,
+        builder: (_, _) => const MyRentalRequestsPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.contractPreview,
+        name: RouteNames.contractPreview,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, String>;
+          return ContractPreviewPage(contractId: extra['contractId'] ?? '');
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.scheduleViewing,
+        name: RouteNames.scheduleViewing,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, String>;
+          return ScheduleViewingPage(roomId: extra['roomId'] ?? '');
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.myAppointments,
+        name: RouteNames.myAppointments,
+        builder: (_, _) => const MyAppointmentsPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.landlordViewingAppointments,
+        name: RouteNames.landlordViewingAppointments,
+        builder: (_, _) => const LandlordViewingAppointmentsPage(),
       ),
     ],
     errorBuilder: (BuildContext context, GoRouterState state) =>

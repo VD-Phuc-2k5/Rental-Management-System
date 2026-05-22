@@ -1,5 +1,8 @@
 import { Inject } from '@nestjs/common';
-import { BrowseRoomRepository, BrowseRoomFilters } from '../../domain/repositories/browse-room.repository';
+import {
+  BrowseRoomRepository,
+  BrowseRoomFilters,
+} from '../../domain/repositories/browse-room.repository';
 import { AvailableRoomEntity } from '../../domain/entities/browse-room.entity';
 
 export class GetAvailableRoomsService {

@@ -1,11 +1,15 @@
 ﻿import 'package:data/auth.dart';
 import 'package:data/profile.dart';
 import 'package:data/property.dart';
+import 'package:data/rental_request.dart';
 import 'package:data/room.dart';
+import 'package:data/viewing_appointment.dart';
 import 'package:domain/auth.dart';
 import 'package:domain/profile.dart';
 import 'package:domain/property.dart';
+import 'package:domain/rental_request.dart';
 import 'package:domain/room.dart';
+import 'package:domain/viewing_appointment.dart';
 import 'package:injectable/injectable.dart';
 import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
@@ -89,6 +93,36 @@ abstract class RegisterModule {
         getToken: () => authBloc.state.user?.token ?? '',
       );
 
+  // rental request datasource
+  @LazySingleton(as: RentalRequestRemoteDataSource)
+  HttpRentalRequestRemoteDataSource get rentalRequestRemoteDataSource;
+
+  // rental request repository — needs getToken callback wired to AuthenticationBloc
+  @LazySingleton(as: RentalRequestRepository)
+  RentalRequestRepositoryImpl rentalRequestRepository(
+    RentalRequestRemoteDataSource dataSource,
+    AuthenticationBloc authBloc,
+  ) =>
+      RentalRequestRepositoryImpl(
+        rentalRequestRemoteDataSource: dataSource,
+        getToken: () => authBloc.state.user?.token ?? '',
+      );
+
+  // viewing appointment datasource
+  @LazySingleton(as: ViewingAppointmentRemoteDataSource)
+  HttpViewingAppointmentRemoteDataSource get viewingAppointmentRemoteDataSource;
+
+  // viewing appointment repository
+  @LazySingleton(as: ViewingAppointmentRepository)
+  ViewingAppointmentRepositoryImpl viewingAppointmentRepository(
+    ViewingAppointmentRemoteDataSource dataSource,
+    AuthenticationBloc authBloc,
+  ) =>
+      ViewingAppointmentRepositoryImpl(
+        viewingAppointmentRemoteDataSource: dataSource,
+        getToken: () => authBloc.state.user?.token ?? '',
+      );
+
   // --- Domain (UseCases) ---
   // auth
   @injectable
@@ -157,4 +191,63 @@ abstract class RegisterModule {
 
   @injectable
   DeleteRoomUsecase get deleteRoomUsecase;
+
+  // rental request
+  @injectable
+  CreateRentalRequestUsecase get createRentalRequestUsecase;
+
+  @injectable
+  GetMyRentalRequestsUsecase get getMyRentalRequestsUsecase;
+
+  @injectable
+  CancelRentalRequestUsecase get cancelRentalRequestUsecase;
+
+  @injectable
+  GetIncomingRequestsUsecase get getIncomingRequestsUsecase;
+
+  @injectable
+  RejectRentalRequestUsecase get rejectRentalRequestUsecase;
+
+  @injectable
+  GetMyContractsUsecase get getMyContractsUsecase;
+
+  @injectable
+  GetLandlordContractsUsecase get getLandlordContractsUsecase;
+
+  @injectable
+  GetContractDetailUsecase get getContractDetailUsecase;
+
+  @injectable
+  UpdateContractUsecase get updateContractUsecase;
+
+  @injectable
+  SendContractUsecase get sendContractUsecase;
+
+  @injectable
+  SignContractUsecase get signContractUsecase;
+
+  @injectable
+  CancelContractUsecase get cancelContractUsecase;
+
+  @injectable
+  FinishContractUsecase get finishContractUsecase;
+
+  // viewing appointment
+  @injectable
+  CreateViewingAppointmentUsecase get createViewingAppointmentUsecase;
+
+  @injectable
+  GetMyViewingAppointmentsUsecase get getMyViewingAppointmentsUsecase;
+
+  @injectable
+  GetLandlordViewingAppointmentsUsecase get getLandlordViewingAppointmentsUsecase;
+
+  @injectable
+  ApproveViewingAppointmentUsecase get approveViewingAppointmentUsecase;
+
+  @injectable
+  RejectViewingAppointmentUsecase get rejectViewingAppointmentUsecase;
+
+  @injectable
+  CancelViewingAppointmentUsecase get cancelViewingAppointmentUsecase;
 }

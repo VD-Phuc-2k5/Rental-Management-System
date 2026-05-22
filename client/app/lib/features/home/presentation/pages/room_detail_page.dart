@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/collapse_text.dart';
+import '../../../../core/config/router/route_constants.dart';
 import '../../../../core/constants.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/format_currency.dart';
@@ -157,7 +158,10 @@ class _RoomDetailView extends StatelessWidget {
               if (state is! BrowseRoomDetailLoadSuccess) {
                 return const SizedBox.shrink();
               }
-              return _ConfirmBookRoomBar(price: state.data.monthlyRent);
+              return _ConfirmBookRoomBar(
+                price: state.data.monthlyRent,
+                roomId: roomId,
+              );
             },
           ),
     );
@@ -816,9 +820,10 @@ class _RoomAmenitiesSection extends StatelessWidget {
 }
 
 class _ConfirmBookRoomBar extends StatelessWidget {
-  const _ConfirmBookRoomBar({required this.price});
+  const _ConfirmBookRoomBar({required this.price, required this.roomId});
 
   final double price;
+  final String roomId;
 
   @override
   Widget build(BuildContext context) {
@@ -879,7 +884,10 @@ class _ConfirmBookRoomBar extends StatelessWidget {
               child: SizedBox(
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => context.pushNamed(
+                    RouteNames.scheduleViewing,
+                    extra: {'roomId': roomId},
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.blue700,
                     foregroundColor: Colors.white,

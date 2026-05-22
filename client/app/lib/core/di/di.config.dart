@@ -12,11 +12,15 @@
 import 'package:data/auth.dart' as _i41;
 import 'package:data/profile.dart' as _i366;
 import 'package:data/property.dart' as _i83;
+import 'package:data/rental_request.dart' as _i411;
 import 'package:data/room.dart' as _i586;
+import 'package:data/viewing_appointment.dart' as _i1022;
 import 'package:domain/auth.dart' as _i378;
 import 'package:domain/profile.dart' as _i503;
 import 'package:domain/property.dart' as _i369;
+import 'package:domain/rental_request.dart' as _i284;
 import 'package:domain/room.dart' as _i142;
+import 'package:domain/viewing_appointment.dart' as _i278;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:go_router/go_router.dart' as _i583;
 import 'package:http/http.dart' as _i519;
@@ -49,6 +53,16 @@ import '../../features/property/presentation/blocs/property_list/property_list_b
     as _i327;
 import '../../features/property/presentation/blocs/update_property/update_property_bloc.dart'
     as _i1054;
+import '../../features/rental_request/presentation/blocs/contract_detail/contract_detail_bloc.dart'
+    as _i269;
+import '../../features/rental_request/presentation/blocs/create_rental_request/create_rental_request_bloc.dart'
+    as _i715;
+import '../../features/rental_request/presentation/blocs/landlord_request_list/landlord_request_list_bloc.dart'
+    as _i598;
+import '../../features/rental_request/presentation/blocs/my_contract_list/my_contract_list_bloc.dart'
+    as _i267;
+import '../../features/rental_request/presentation/blocs/my_rental_request_list/my_rental_request_list_bloc.dart'
+    as _i507;
 import '../../features/room/presentation/blocs/create_room/create_room_bloc.dart'
     as _i621;
 import '../../features/room/presentation/blocs/delete_room/delete_room_bloc.dart'
@@ -57,6 +71,14 @@ import '../../features/room/presentation/blocs/room_list/room_list_bloc.dart'
     as _i187;
 import '../../features/room/presentation/blocs/update_room/update_room_bloc.dart'
     as _i746;
+import '../../features/viewing_appointment/presentation/blocs/create_viewing_appointment/create_viewing_appointment_bloc.dart'
+    as _i619;
+import '../../features/viewing_appointment/presentation/blocs/landlord_viewing_appointment_list/landlord_viewing_appointment_list_bloc.dart'
+    as _i445;
+import '../../features/viewing_appointment/presentation/blocs/my_viewing_appointment_list/my_viewing_appointment_list_bloc.dart'
+    as _i500;
+import '../../features/viewing_appointment/presentation/blocs/schedule_viewing/schedule_viewing_bloc.dart'
+    as _i324;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -68,6 +90,9 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule(this);
     gh.singleton<_i519.Client>(() => registerModule.httpClient);
+    gh.lazySingleton<_i1022.ViewingAppointmentRemoteDataSource>(
+      () => registerModule.viewingAppointmentRemoteDataSource,
+    );
     gh.lazySingleton<_i41.AuthRemoteDataSource>(
       () => registerModule.authRemoteDataSource,
     );
@@ -77,6 +102,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i586.BrowseRoomRemoteDataSource>(
       () => registerModule.browseRoomRemoteDataSource,
+    );
+    gh.lazySingleton<_i411.RentalRequestRemoteDataSource>(
+      () => registerModule.rentalRequestRemoteDataSource,
     );
     gh.lazySingleton<_i586.RoomRemoteDataSource>(
       () => registerModule.roomRemoteDataSource,
@@ -152,14 +180,52 @@ extension GetItInjectableX on _i174.GetIt {
         getProfileUsecase: gh<_i503.GetProfileUsecase>(),
       ),
     );
+    gh.lazySingleton<_i278.ViewingAppointmentRepository>(
+      () => registerModule.viewingAppointmentRepository(
+        gh<_i1022.ViewingAppointmentRemoteDataSource>(),
+        gh<_i652.AuthenticationBloc>(),
+      ),
+    );
     gh.singleton<_i583.GoRouter>(
       () => registerModule.router(gh<_i652.AuthenticationBloc>()),
+    );
+    gh.factory<_i278.CreateViewingAppointmentUsecase>(
+      () => registerModule.createViewingAppointmentUsecase,
+    );
+    gh.factory<_i278.GetMyViewingAppointmentsUsecase>(
+      () => registerModule.getMyViewingAppointmentsUsecase,
+    );
+    gh.factory<_i278.GetLandlordViewingAppointmentsUsecase>(
+      () => registerModule.getLandlordViewingAppointmentsUsecase,
+    );
+    gh.factory<_i278.ApproveViewingAppointmentUsecase>(
+      () => registerModule.approveViewingAppointmentUsecase,
+    );
+    gh.factory<_i278.RejectViewingAppointmentUsecase>(
+      () => registerModule.rejectViewingAppointmentUsecase,
+    );
+    gh.factory<_i278.CancelViewingAppointmentUsecase>(
+      () => registerModule.cancelViewingAppointmentUsecase,
     );
     gh.factory<_i517.RegisterBloc>(
       () => _i517.RegisterBloc(registerUsecase: gh<_i378.RegisterUsecase>()),
     );
     gh.factory<_i1018.LoginBloc>(
       () => _i1018.LoginBloc(loginUsecase: gh<_i378.LoginUsecase>()),
+    );
+    gh.factory<_i500.MyViewingAppointmentListBloc>(
+      () => _i500.MyViewingAppointmentListBloc(
+        getMyViewingAppointmentsUsecase:
+            gh<_i278.GetMyViewingAppointmentsUsecase>(),
+        cancelViewingAppointmentUsecase:
+            gh<_i278.CancelViewingAppointmentUsecase>(),
+      ),
+    );
+    gh.lazySingleton<_i284.RentalRequestRepository>(
+      () => registerModule.rentalRequestRepository(
+        gh<_i411.RentalRequestRemoteDataSource>(),
+        gh<_i652.AuthenticationBloc>(),
+      ),
     );
     gh.factory<_i142.GetRoomsUsecase>(() => registerModule.getRoomsUsecase);
     gh.factory<_i142.GetRoomByIdUsecase>(
@@ -168,6 +234,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i142.CreateRoomUsecase>(() => registerModule.createRoomUsecase);
     gh.factory<_i142.UpdateRoomUsecase>(() => registerModule.updateRoomUsecase);
     gh.factory<_i142.DeleteRoomUsecase>(() => registerModule.deleteRoomUsecase);
+    gh.factory<_i445.LandlordViewingAppointmentListBloc>(
+      () => _i445.LandlordViewingAppointmentListBloc(
+        getLandlordViewingAppointmentsUsecase:
+            gh<_i278.GetLandlordViewingAppointmentsUsecase>(),
+        approveViewingAppointmentUsecase:
+            gh<_i278.ApproveViewingAppointmentUsecase>(),
+        rejectViewingAppointmentUsecase:
+            gh<_i278.RejectViewingAppointmentUsecase>(),
+      ),
+    );
     gh.factory<_i746.UpdateRoomBloc>(
       () => _i746.UpdateRoomBloc(
         updateRoomUsecase: gh<_i142.UpdateRoomUsecase>(),
@@ -179,14 +255,80 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i652.AuthenticationBloc>(),
       ),
     );
+    gh.factory<_i284.CreateRentalRequestUsecase>(
+      () => registerModule.createRentalRequestUsecase,
+    );
+    gh.factory<_i284.GetMyRentalRequestsUsecase>(
+      () => registerModule.getMyRentalRequestsUsecase,
+    );
+    gh.factory<_i284.CancelRentalRequestUsecase>(
+      () => registerModule.cancelRentalRequestUsecase,
+    );
+    gh.factory<_i284.GetIncomingRequestsUsecase>(
+      () => registerModule.getIncomingRequestsUsecase,
+    );
+    gh.factory<_i284.RejectRentalRequestUsecase>(
+      () => registerModule.rejectRentalRequestUsecase,
+    );
+    gh.factory<_i284.GetMyContractsUsecase>(
+      () => registerModule.getMyContractsUsecase,
+    );
+    gh.factory<_i284.GetLandlordContractsUsecase>(
+      () => registerModule.getLandlordContractsUsecase,
+    );
+    gh.factory<_i284.GetContractDetailUsecase>(
+      () => registerModule.getContractDetailUsecase,
+    );
+    gh.factory<_i284.UpdateContractUsecase>(
+      () => registerModule.updateContractUsecase,
+    );
+    gh.factory<_i284.SendContractUsecase>(
+      () => registerModule.sendContractUsecase,
+    );
+    gh.factory<_i284.SignContractUsecase>(
+      () => registerModule.signContractUsecase,
+    );
+    gh.factory<_i284.CancelContractUsecase>(
+      () => registerModule.cancelContractUsecase,
+    );
+    gh.factory<_i284.FinishContractUsecase>(
+      () => registerModule.finishContractUsecase,
+    );
+    gh.factory<_i269.ContractDetailBloc>(
+      () => _i269.ContractDetailBloc(
+        getContractDetailUsecase: gh<_i284.GetContractDetailUsecase>(),
+      ),
+    );
     gh.factory<_i142.GetAvailableRoomsUsecase>(
       () => registerModule.getAvailableRoomsUsecase,
     );
     gh.factory<_i142.GetBrowseRoomDetailUsecase>(
       () => registerModule.getBrowseRoomDetailUsecase,
     );
+    gh.factory<_i619.CreateViewingAppointmentBloc>(
+      () => _i619.CreateViewingAppointmentBloc(
+        createViewingAppointmentUsecase:
+            gh<_i278.CreateViewingAppointmentUsecase>(),
+      ),
+    );
+    gh.factory<_i324.ScheduleViewingBloc>(
+      () => _i324.ScheduleViewingBloc(
+        createViewingAppointmentUsecase:
+            gh<_i278.CreateViewingAppointmentUsecase>(),
+      ),
+    );
+    gh.factory<_i267.MyContractListBloc>(
+      () => _i267.MyContractListBloc(
+        getMyContractsUsecase: gh<_i284.GetMyContractsUsecase>(),
+      ),
+    );
     gh.factory<_i187.RoomListBloc>(
       () => _i187.RoomListBloc(getRoomsUsecase: gh<_i142.GetRoomsUsecase>()),
+    );
+    gh.factory<_i715.CreateRentalRequestBloc>(
+      () => _i715.CreateRentalRequestBloc(
+        createRentalRequestUsecase: gh<_i284.CreateRentalRequestUsecase>(),
+      ),
     );
     gh.factory<_i171.DeleteRoomBloc>(
       () => _i171.DeleteRoomBloc(
@@ -196,6 +338,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i621.CreateRoomBloc>(
       () => _i621.CreateRoomBloc(
         createRoomUsecase: gh<_i142.CreateRoomUsecase>(),
+      ),
+    );
+    gh.factory<_i507.MyRentalRequestListBloc>(
+      () => _i507.MyRentalRequestListBloc(
+        getMyRentalRequestsUsecase: gh<_i284.GetMyRentalRequestsUsecase>(),
       ),
     );
     gh.factory<_i369.GetPropertiesUsecase>(
@@ -216,6 +363,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i779.AvailableRoomListBloc>(
       () => _i779.AvailableRoomListBloc(
         getAvailableRoomsUsecase: gh<_i142.GetAvailableRoomsUsecase>(),
+      ),
+    );
+    gh.factory<_i598.LandlordRequestListBloc>(
+      () => _i598.LandlordRequestListBloc(
+        getIncomingRequestsUsecase: gh<_i284.GetIncomingRequestsUsecase>(),
       ),
     );
     gh.factory<_i511.BrowseRoomDetailBloc>(
@@ -253,6 +405,13 @@ class _$RegisterModule extends _i291.RegisterModule {
   final _i174.GetIt _getIt;
 
   @override
+  _i1022.HttpViewingAppointmentRemoteDataSource
+  get viewingAppointmentRemoteDataSource =>
+      _i1022.HttpViewingAppointmentRemoteDataSource(
+        client: _getIt<_i519.Client>(),
+      );
+
+  @override
   _i41.HttpAuthRemoteDataSource get authRemoteDataSource =>
       _i41.HttpAuthRemoteDataSource(client: _getIt<_i519.Client>());
 
@@ -268,6 +427,10 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i586.HttpBrowseRoomRemoteDataSource get browseRoomRemoteDataSource =>
       _i586.HttpBrowseRoomRemoteDataSource(client: _getIt<_i519.Client>());
+
+  @override
+  _i411.HttpRentalRequestRemoteDataSource get rentalRequestRemoteDataSource =>
+      _i411.HttpRentalRequestRemoteDataSource(client: _getIt<_i519.Client>());
 
   @override
   _i586.HttpRoomRemoteDataSource get roomRemoteDataSource =>
@@ -323,6 +486,43 @@ class _$RegisterModule extends _i291.RegisterModule {
       );
 
   @override
+  _i278.CreateViewingAppointmentUsecase get createViewingAppointmentUsecase =>
+      _i278.CreateViewingAppointmentUsecase(
+        repo: _getIt<_i278.ViewingAppointmentRepository>(),
+      );
+
+  @override
+  _i278.GetMyViewingAppointmentsUsecase get getMyViewingAppointmentsUsecase =>
+      _i278.GetMyViewingAppointmentsUsecase(
+        repo: _getIt<_i278.ViewingAppointmentRepository>(),
+      );
+
+  @override
+  _i278.GetLandlordViewingAppointmentsUsecase
+  get getLandlordViewingAppointmentsUsecase =>
+      _i278.GetLandlordViewingAppointmentsUsecase(
+        repo: _getIt<_i278.ViewingAppointmentRepository>(),
+      );
+
+  @override
+  _i278.ApproveViewingAppointmentUsecase get approveViewingAppointmentUsecase =>
+      _i278.ApproveViewingAppointmentUsecase(
+        repo: _getIt<_i278.ViewingAppointmentRepository>(),
+      );
+
+  @override
+  _i278.RejectViewingAppointmentUsecase get rejectViewingAppointmentUsecase =>
+      _i278.RejectViewingAppointmentUsecase(
+        repo: _getIt<_i278.ViewingAppointmentRepository>(),
+      );
+
+  @override
+  _i278.CancelViewingAppointmentUsecase get cancelViewingAppointmentUsecase =>
+      _i278.CancelViewingAppointmentUsecase(
+        repo: _getIt<_i278.ViewingAppointmentRepository>(),
+      );
+
+  @override
   _i142.GetRoomsUsecase get getRoomsUsecase =>
       _i142.GetRoomsUsecase(roomRepository: _getIt<_i142.RoomRepository>());
 
@@ -341,6 +541,84 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i142.DeleteRoomUsecase get deleteRoomUsecase =>
       _i142.DeleteRoomUsecase(roomRepository: _getIt<_i142.RoomRepository>());
+
+  @override
+  _i284.CreateRentalRequestUsecase get createRentalRequestUsecase =>
+      _i284.CreateRentalRequestUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.GetMyRentalRequestsUsecase get getMyRentalRequestsUsecase =>
+      _i284.GetMyRentalRequestsUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.CancelRentalRequestUsecase get cancelRentalRequestUsecase =>
+      _i284.CancelRentalRequestUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.GetIncomingRequestsUsecase get getIncomingRequestsUsecase =>
+      _i284.GetIncomingRequestsUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.RejectRentalRequestUsecase get rejectRentalRequestUsecase =>
+      _i284.RejectRentalRequestUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.GetMyContractsUsecase get getMyContractsUsecase =>
+      _i284.GetMyContractsUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.GetLandlordContractsUsecase get getLandlordContractsUsecase =>
+      _i284.GetLandlordContractsUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.GetContractDetailUsecase get getContractDetailUsecase =>
+      _i284.GetContractDetailUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.UpdateContractUsecase get updateContractUsecase =>
+      _i284.UpdateContractUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.SendContractUsecase get sendContractUsecase =>
+      _i284.SendContractUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.SignContractUsecase get signContractUsecase =>
+      _i284.SignContractUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.CancelContractUsecase get cancelContractUsecase =>
+      _i284.CancelContractUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.FinishContractUsecase get finishContractUsecase =>
+      _i284.FinishContractUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
 
   @override
   _i142.GetAvailableRoomsUsecase get getAvailableRoomsUsecase =>

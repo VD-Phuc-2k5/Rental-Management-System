@@ -1,4 +1,7 @@
-import { AvailableRoomEntity, BrowseRoomDetailEntity } from '../entities/browse-room.entity';
+import {
+  AvailableRoomEntity,
+  BrowseRoomDetailEntity,
+} from '../entities/browse-room.entity';
 
 export type BrowseRoomFilters = {
   minRent?: number;
@@ -6,6 +9,8 @@ export type BrowseRoomFilters = {
 };
 
 export abstract class BrowseRoomRepository {
-  abstract findAvailable(filters: BrowseRoomFilters): Promise<AvailableRoomEntity[]>;
+  abstract findAvailable(
+    filters: BrowseRoomFilters,
+  ): Promise<AvailableRoomEntity[]>;
   abstract findDetailById(id: string): Promise<BrowseRoomDetailEntity | null>;
 }

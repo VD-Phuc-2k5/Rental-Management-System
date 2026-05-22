@@ -34,6 +34,10 @@ export class BrowseRoomDetailEntity {
     public readonly fullAddress: string,
     public readonly landlordName: string,
     public readonly landlordAvatarUrl: string | null,
-    public readonly images: Array<{ id: string; url: string; sortOrder: number }>,
+    public readonly images: Array<{
+      id: string;
+      url: string;
+      sortOrder: number;
+    }>,
   ) {}
 }
