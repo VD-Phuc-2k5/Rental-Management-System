@@ -15,6 +15,8 @@ class UpdateRoomSubmitted extends UpdateRoomEvent {
     this.includedAmenityCodes,
     this.addonAmenities,
     this.description,
+    this.images,
+    this.parkingFees,
   });
   final String id;
   final String? title;
@@ -27,4 +29,6 @@ class UpdateRoomSubmitted extends UpdateRoomEvent {
   final List<String>? includedAmenityCodes;
   final List<RoomAddonAmenity>? addonAmenities;
   final String? description;
+  final List<({String url, int sortOrder})>? images;
+  final RoomParkingFees? parkingFees;
 }

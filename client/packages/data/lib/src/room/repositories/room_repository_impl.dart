@@ -39,6 +39,8 @@ class RoomRepositoryImpl implements RoomRepository {
     required List<String> includedAmenityCodes,
     required List<RoomAddonAmenity> addonAmenities,
     String? description,
+    List<({String url, int sortOrder})>? images,
+    RoomParkingFees? parkingFees,
   }) async {
     try {
       final data = await _dataSource.createRoom(
@@ -48,6 +50,8 @@ class RoomRepositoryImpl implements RoomRepository {
         includedAmenityCodes: includedAmenityCodes,
         addonAmenities: addonAmenities,
         description: description,
+        images: images,
+        parkingFees: parkingFees,
       );
       return Right(data);
     } on ServerException catch (e) { return Left(ServerFailure(message: e.message));
@@ -63,6 +67,8 @@ class RoomRepositoryImpl implements RoomRepository {
     List<String>? includedAmenityCodes,
     List<RoomAddonAmenity>? addonAmenities,
     String? description,
+    List<({String url, int sortOrder})>? images,
+    RoomParkingFees? parkingFees,
   }) async {
     try {
       final statusStr = status?.name.toUpperCase();
@@ -73,6 +79,8 @@ class RoomRepositoryImpl implements RoomRepository {
         includedAmenityCodes: includedAmenityCodes,
         addonAmenities: addonAmenities,
         description: description,
+        images: images,
+        parkingFees: parkingFees,
       );
       return Right(data);
     } on ServerException catch (e) { return Left(ServerFailure(message: e.message));

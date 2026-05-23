@@ -47,6 +47,10 @@ export const rooms = pgTable('rooms', {
     .$type<Array<{ code: string; monthly_price: number }>>()
     .notNull()
     .default([]),
+  parking_fees: jsonb('parking_fees')
+    .$type<{ bicycle: number; motorbike: number; car: number }>()
+    .notNull()
+    .default({ bicycle: 50000, motorbike: 150000, car: 1000000 }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .defaultNow()

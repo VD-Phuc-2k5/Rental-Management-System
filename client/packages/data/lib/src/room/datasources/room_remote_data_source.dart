@@ -16,6 +16,8 @@ abstract interface class RoomRemoteDataSource {
     required List<String> includedAmenityCodes,
     required List<RoomAddonAmenity> addonAmenities,
     String? description,
+    List<({String url, int sortOrder})>? images,
+    RoomParkingFees? parkingFees,
   });
   Future<RoomModel> updateRoom({
     required String id,
@@ -30,6 +32,8 @@ abstract interface class RoomRemoteDataSource {
     List<String>? includedAmenityCodes,
     List<RoomAddonAmenity>? addonAmenities,
     String? description,
+    List<({String url, int sortOrder})>? images,
+    RoomParkingFees? parkingFees,
   });
   Future<void> deleteRoom({required String id, required String token});
 }

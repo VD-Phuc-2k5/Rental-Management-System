@@ -36,6 +36,8 @@ class UpdateRoomBloc extends Bloc<UpdateRoomEvent, UpdateRoomState> {
         includedAmenityCodes: event.includedAmenityCodes,
         addonAmenities: event.addonAmenities,
         description: event.description,
+        images: event.images,
+        parkingFees: event.parkingFees,
       ),
     );
     result.fold(

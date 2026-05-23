@@ -26,7 +26,12 @@ class CreateRentalRequestBloc
   ) async {
     emit(const CreateRentalRequestLoadInProgress());
     final result = await _usecase(
-      CreateRentalRequestParams(roomId: event.roomId, note: event.note),
+      CreateRentalRequestParams(
+        roomId: event.roomId,
+        note: event.note,
+        memberInfo: event.memberInfo,
+        parkingInfo: event.parkingInfo,
+      ),
     );
     result.fold(
       (failure) => emit(CreateRentalRequestLoadFailure(failure: failure)),

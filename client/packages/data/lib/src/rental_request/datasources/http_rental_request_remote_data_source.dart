@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:core/constants.dart';
 import 'package:core/errors.dart';
+import 'package:domain/rental_request.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/contract_member_model.dart';
 import '../models/contract_model.dart';
 import '../models/rental_request_model.dart';
 import 'rental_request_remote_data_source.dart';
@@ -32,11 +34,17 @@ class HttpRentalRequestRemoteDataSource
     required String token,
     required String roomId,
     String? note,
+    List<MemberInfo> memberInfo = const [],
+    List<VehicleInfo> parkingInfo = const [],
   }) async {
     try {
       final body = <String, dynamic>{
         'roomId': roomId,
         'note': ?note,
+        if (memberInfo.isNotEmpty)
+          'memberInfo': memberInfo.map((m) => m.toJson()).toList(),
+        if (parkingInfo.isNotEmpty)
+          'parkingInfo': parkingInfo.map((v) => v.toJson()).toList(),
       };
       final response = await _client.post(
         Uri.parse('$baseUrl/rental-requests'),
@@ -340,6 +348,57 @@ class HttpRentalRequestRemoteDataSource
     try {
       final response = await _client.post(
         Uri.parse('$baseUrl/landlord/contracts/$id/finish'),
+        headers: _headers(token),
+      );
+      if (response.statusCode == 200) return;
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<ContractMemberModel>> getContractMembers({
+    required String token,
+    required String contractId,
+  }) async {
+    try {
+      final response = await _client.get(
+        Uri.parse('$baseUrl/contracts/$contractId/members'),
+        headers: _headers(token),
+      );
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        return (json['data'] as List)
+            .map((e) => ContractMemberModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> removeContractMember({
+    required String token,
+    required String contractId,
+    required String memberId,
+  }) async {
+    try {
+      final response = await _client.delete(
+        Uri.parse('$baseUrl/contracts/$contractId/members/$memberId'),
         headers: _headers(token),
       );
       if (response.statusCode == 200) return;

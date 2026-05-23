@@ -18,6 +18,7 @@ export class ContractEntity {
     public readonly deposit: string,
     public readonly status: ContractStatus,
     public readonly terms: string | null,
+    public readonly momoNumber: string | null,
     public readonly sentAt: Date | null,
     public readonly signedAt: Date | null,
     public readonly cancelledAt: Date | null,

@@ -30,6 +30,7 @@ dependencies:
   fpdart: ^1.2.0
 
   # UI & Utilities
+  url_launcher: ^6.3.0
   cached_network_image: ^3.4.1
   image_picker: ^1.2.1
   intl: ^0.20.2

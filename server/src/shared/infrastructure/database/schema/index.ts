@@ -7,4 +7,5 @@ export * from './room_amenity.schema';
 export * from './room_images.schema';
 export * from './rental-request.schema';
 export * from './contract.schema';
+export * from './contract-member.schema';
 export * from './viewing-appointment.schema';

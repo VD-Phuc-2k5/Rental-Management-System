@@ -25,6 +25,7 @@ import '../../../features/room/presentation/pages/room_tab_page.dart';
 import '../../../features/room/presentation/pages/create_room_page.dart';
 import '../../../features/room/presentation/pages/update_room_page.dart';
 import '../../../features/rental_request/presentation/pages/rental_request_page.dart';
+import '../../../features/rental_request/presentation/pages/rental_request_wizard_page.dart';
 import '../../../features/rental_request/presentation/pages/my_rental_requests_page.dart';
 import '../../../features/rental_request/presentation/pages/contract_preview_page.dart';
 import '../../../features/rental_request/presentation/pages/landlord_incoming_requests_page.dart';
@@ -271,6 +272,14 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         builder: (context, state) {
           final contract = state.extra as ContractEntity;
           return LandlordContractEditPage(contract: contract);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.rentalRequestWizard,
+        name: RouteNames.rentalRequestWizard,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, String>;
+          return RentalRequestWizardPage(roomId: extra['roomId'] ?? '');
         },
       ),
     ],

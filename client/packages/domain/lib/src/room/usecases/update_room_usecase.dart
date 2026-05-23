@@ -18,6 +18,8 @@ class UpdateRoomParams extends Equatable {
     this.includedAmenityCodes,
     this.addonAmenities,
     this.description,
+    this.images,
+    this.parkingFees,
   });
 
   final String id;
@@ -31,9 +33,11 @@ class UpdateRoomParams extends Equatable {
   final List<String>? includedAmenityCodes;
   final List<RoomAddonAmenity>? addonAmenities;
   final String? description;
+  final List<({String url, int sortOrder})>? images;
+  final RoomParkingFees? parkingFees;
 
   @override
-  List<Object?> get props => [id, title, status, areaSqm, monthlyRent, depositAmount, electricityRatePerKwh, waterRatePerM3, includedAmenityCodes, addonAmenities, description];
+  List<Object?> get props => [id, title, status, areaSqm, monthlyRent, depositAmount, electricityRatePerKwh, waterRatePerM3, includedAmenityCodes, addonAmenities, description, images, parkingFees];
 }
 
 class UpdateRoomUsecase implements UseCase<RoomEntity, UpdateRoomParams> {
@@ -54,6 +58,8 @@ class UpdateRoomUsecase implements UseCase<RoomEntity, UpdateRoomParams> {
       includedAmenityCodes: params.includedAmenityCodes,
       addonAmenities: params.addonAmenities,
       description: params.description,
+      images: params.images,
+      parkingFees: params.parkingFees,
     );
   }
 }

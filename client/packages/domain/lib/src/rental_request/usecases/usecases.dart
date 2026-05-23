@@ -11,3 +11,5 @@ export 'send_contract_usecase.dart';
 export 'sign_contract_usecase.dart';
 export 'cancel_contract_usecase.dart';
 export 'finish_contract_usecase.dart';
+export 'get_contract_members_usecase.dart';
+export 'remove_contract_member_usecase.dart';

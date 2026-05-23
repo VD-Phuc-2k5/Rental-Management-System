@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:core/constants.dart';
 import 'package:core/errors.dart';
@@ -29,8 +28,8 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
         return (json['data'] as List).map((e) => RoomModel.fromJson(e as Map<String, dynamic>)).toList();
       }
       throw ServerException(message: json['message'] as String? ?? 'Error');
-    } on SocketException { throw const NetworkException();
-    } on FormatException { throw const UnknownException(message: 'Invalid response format');
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
       if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
       throw UnknownException(message: e.toString());
@@ -44,8 +43,8 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 200) return RoomModel.fromJson(json['data'] as Map<String, dynamic>);
       throw ServerException(message: json['message'] as String? ?? 'Error');
-    } on SocketException { throw const NetworkException();
-    } on FormatException { throw const UnknownException(message: 'Invalid response format');
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
       if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
       throw UnknownException(message: e.toString());
@@ -60,6 +59,8 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
     required List<String> includedAmenityCodes,
     required List<RoomAddonAmenity> addonAmenities,
     String? description,
+    List<({String url, int sortOrder})>? images,
+    RoomParkingFees? parkingFees,
   }) async {
     try {
       final body = <String, dynamic>{
@@ -71,6 +72,9 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
             .map((a) => {'code': a.code, 'monthly_price': a.monthlyPrice})
             .toList(),
         'description': ?description,
+        if (images != null)
+          'images': images.map((i) => {'url': i.url, 'sortOrder': i.sortOrder}).toList(),
+        if (parkingFees != null) 'parking_fees': parkingFees.toJson(),
       };
       final response = await _client.post(
         Uri.parse('$baseUrl/properties/$propertyId/rooms'),
@@ -79,8 +83,8 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 201) return RoomModel.fromJson(json['data'] as Map<String, dynamic>);
       throw ServerException(message: json['message'] as String? ?? 'Error');
-    } on SocketException { throw const NetworkException();
-    } on FormatException { throw const UnknownException(message: 'Invalid response format');
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
       if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
       throw UnknownException(message: e.toString());
@@ -95,6 +99,8 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
     List<String>? includedAmenityCodes,
     List<RoomAddonAmenity>? addonAmenities,
     String? description,
+    List<({String url, int sortOrder})>? images,
+    RoomParkingFees? parkingFees,
   }) async {
     try {
       final body = <String, dynamic>{
@@ -109,6 +115,9 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
               .map((a) => {'code': a.code, 'monthly_price': a.monthlyPrice})
               .toList(),
         'description': ?description,
+        if (images != null)
+          'images': images.map((i) => {'url': i.url, 'sortOrder': i.sortOrder}).toList(),
+        if (parkingFees != null) 'parking_fees': parkingFees.toJson(),
       };
       final response = await _client.patch(
         Uri.parse('$baseUrl/rooms/$id'), headers: _headers(token), body: jsonEncode(body),
@@ -116,8 +125,8 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 200) return RoomModel.fromJson(json['data'] as Map<String, dynamic>);
       throw ServerException(message: json['message'] as String? ?? 'Error');
-    } on SocketException { throw const NetworkException();
-    } on FormatException { throw const UnknownException(message: 'Invalid response format');
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
       if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
       throw UnknownException(message: e.toString());
@@ -131,8 +140,8 @@ class HttpRoomRemoteDataSource implements RoomRemoteDataSource {
       if (response.statusCode == 200) return;
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       throw ServerException(message: json['message'] as String? ?? 'Error');
-    } on SocketException { throw const NetworkException();
-    } on FormatException { throw const UnknownException(message: 'Invalid response format');
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
       if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
       throw UnknownException(message: e.toString());

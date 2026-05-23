@@ -9,6 +9,8 @@ class RentalRequestModel extends RentalRequestEntity {
     required super.createdAt,
     required super.updatedAt,
     super.note,
+    super.memberInfo,
+    super.parkingInfo,
   });
 
   factory RentalRequestModel.fromJson(Map<String, dynamic> json) =>
@@ -20,6 +22,14 @@ class RentalRequestModel extends RentalRequestEntity {
         note: json['note'] as String?,
         createdAt: json['createdAt'] as String,
         updatedAt: json['updatedAt'] as String,
+        memberInfo: (json['memberInfo'] as List<dynamic>?)
+                ?.map((e) => MemberInfo.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            const [],
+        parkingInfo: (json['parkingInfo'] as List<dynamic>?)
+                ?.map((e) => VehicleInfo.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            const [],
       );
 }
 

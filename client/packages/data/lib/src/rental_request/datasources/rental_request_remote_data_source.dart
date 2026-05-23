@@ -1,3 +1,6 @@
+import 'package:domain/rental_request.dart';
+
+import '../models/contract_member_model.dart';
 import '../models/contract_model.dart';
 import '../models/rental_request_model.dart';
 
@@ -6,6 +9,8 @@ abstract interface class RentalRequestRemoteDataSource {
     required String token,
     required String roomId,
     String? note,
+    List<MemberInfo> memberInfo,
+    List<VehicleInfo> parkingInfo,
   });
 
   Future<List<RentalRequestModel>> getMyRentalRequests({required String token});
@@ -42,4 +47,15 @@ abstract interface class RentalRequestRemoteDataSource {
   Future<void> cancelContract({required String token, required String id});
 
   Future<void> finishContract({required String token, required String id});
+
+  Future<List<ContractMemberModel>> getContractMembers({
+    required String token,
+    required String contractId,
+  });
+
+  Future<void> removeContractMember({
+    required String token,
+    required String contractId,
+    required String memberId,
+  });
 }

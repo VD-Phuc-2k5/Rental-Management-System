@@ -28,6 +28,7 @@ export class DrizzleContractRepository implements ContractRepository {
       row.deposit,
       row.status as ContractStatus,
       row.terms,
+      row.momoNumber,
       row.sentAt,
       row.signedAt,
       row.cancelledAt,

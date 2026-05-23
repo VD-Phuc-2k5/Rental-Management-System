@@ -10,7 +10,11 @@
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { AddonAmenityDto, RoomImageDto } from './create-room.dto';
+import {
+  AddonAmenityDto,
+  ParkingFeesDto,
+  RoomImageDto,
+} from './create-room.dto';
 
 export type RoomStatus = 'AVAILABLE' | 'OCCUPIED' | 'MAINTENANCE';
 
@@ -93,4 +97,12 @@ export class UpdateRoomDto {
     ],
   })
   images?: RoomImageDto[];
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ParkingFeesDto)
+  @ApiPropertyOptional({
+    example: { bicycle: 50000, motorbike: 150000, car: 1000000 },
+  })
+  parking_fees?: ParkingFeesDto;
 }

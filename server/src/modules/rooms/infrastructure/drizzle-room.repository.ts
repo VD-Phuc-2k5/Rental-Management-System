@@ -6,6 +6,7 @@ import {
   UpdateRoomInput,
 } from '../domain/repositories/room.repository';
 import {
+  ParkingFees,
   RoomEntity,
   RoomImage,
   RoomStatus,
@@ -21,6 +22,12 @@ export class DrizzleRoomRepository implements RoomRepository {
     row: typeof rooms.$inferSelect,
     images: RoomImage[] = [],
   ): RoomEntity {
+    const defaultFees: ParkingFees = {
+      bicycle: 50000,
+      motorbike: 150000,
+      car: 1000000,
+    };
+    const parkingFees = (row.parking_fees as ParkingFees | null) ?? defaultFees;
     return new RoomEntity(
       row.id,
       row.propertyId,
@@ -39,6 +46,7 @@ export class DrizzleRoomRepository implements RoomRepository {
       row.createdAt!.toISOString(),
       row.updatedAt!.toISOString(),
       images,
+      parkingFees,
     );
   }
 
@@ -57,6 +65,11 @@ export class DrizzleRoomRepository implements RoomRepository {
         description: input.description,
         included_amenity_codes: input.included_amenity_codes ?? [],
         addon_amenities: input.addon_amenities ?? [],
+        parking_fees: input.parking_fees ?? {
+          bicycle: 50000,
+          motorbike: 150000,
+          car: 1000000,
+        },
       })
       .returning();
 
@@ -150,6 +163,8 @@ export class DrizzleRoomRepository implements RoomRepository {
       updateData.included_amenity_codes = input.included_amenity_codes;
     if (input.addon_amenities !== undefined)
       updateData.addon_amenities = input.addon_amenities;
+    if (input.parking_fees !== undefined)
+      updateData.parking_fees = input.parking_fees;
 
     const [row] = await this.drizzleService.db
       .update(rooms)

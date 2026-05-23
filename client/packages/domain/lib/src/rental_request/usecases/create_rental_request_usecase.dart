@@ -6,13 +6,20 @@ import 'package:fpdart/fpdart.dart';
 import '../../../rental_request.dart';
 
 class CreateRentalRequestParams extends Equatable {
-  const CreateRentalRequestParams({required this.roomId, this.note});
+  const CreateRentalRequestParams({
+    required this.roomId,
+    this.note,
+    this.memberInfo = const [],
+    this.parkingInfo = const [],
+  });
 
   final String roomId;
   final String? note;
+  final List<MemberInfo> memberInfo;
+  final List<VehicleInfo> parkingInfo;
 
   @override
-  List<Object?> get props => [roomId, note];
+  List<Object?> get props => [roomId, note, memberInfo, parkingInfo];
 }
 
 class CreateRentalRequestUsecase
@@ -30,6 +37,8 @@ class CreateRentalRequestUsecase
     return _repo.createRentalRequest(
       roomId: params.roomId,
       note: params.note,
+      memberInfo: params.memberInfo,
+      parkingInfo: params.parkingInfo,
     );
   }
 }

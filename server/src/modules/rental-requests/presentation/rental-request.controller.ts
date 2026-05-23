@@ -22,6 +22,8 @@ import { GetMyContractsService } from '../application/services/get-my-contracts.
 import { GetContractDetailService } from '../application/services/get-contract-detail.service';
 import { SignContractService } from '../application/services/sign-contract.service';
 import { CancelContractService } from '../application/services/cancel-contract.service';
+import { GetContractMembersService } from '../application/services/get-contract-members.service';
+import { RemoveContractMemberService } from '../application/services/remove-contract-member.service';
 
 @ApiTags('rental-requests')
 @Controller()
@@ -35,6 +37,8 @@ export class RentalRequestController {
     private readonly getContractDetailService: GetContractDetailService,
     private readonly signContractService: SignContractService,
     private readonly cancelContractService: CancelContractService,
+    private readonly getContractMembersService: GetContractMembersService,
+    private readonly removeContractMemberService: RemoveContractMemberService,
   ) {}
 
   @Post('rental-requests')
@@ -47,6 +51,8 @@ export class RentalRequestController {
       user.id,
       dto.roomId,
       dto.note ?? null,
+      dto.memberInfo ?? [],
+      dto.parkingInfo ?? [],
     );
   }
 
@@ -96,5 +102,27 @@ export class RentalRequestController {
     @CurrentUser() user: { id: string },
   ) {
     return this.cancelContractService.execute(id, user.id);
+  }
+
+  @Get('contracts/:id/members')
+  async getContractMembers(
+    @Param('id') id: string,
+    @CurrentUser() user: { id: string },
+  ) {
+    return this.getContractMembersService.execute(id, user.id);
+  }
+
+  @Delete('contracts/:contractId/members/:memberId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeContractMember(
+    @Param('contractId') contractId: string,
+    @Param('memberId') memberId: string,
+    @CurrentUser() user: { id: string },
+  ) {
+    await this.removeContractMemberService.execute(
+      contractId,
+      memberId,
+      user.id,
+    );
   }
 }

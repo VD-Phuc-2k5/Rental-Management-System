@@ -1,4 +1,5 @@
 ﻿import {
+  ParkingFees,
   RoomAddonAmenity,
   RoomEntity,
   RoomStatus,
@@ -17,6 +18,7 @@ export type CreateRoomInput = {
   included_amenity_codes?: string[];
   addon_amenities?: RoomAddonAmenity[];
   images?: Array<{ url: string; sortOrder?: number }>;
+  parking_fees?: ParkingFees;
 };
 
 export type UpdateRoomInput = {
@@ -32,6 +34,7 @@ export type UpdateRoomInput = {
   included_amenity_codes?: string[];
   addon_amenities?: RoomAddonAmenity[];
   images?: Array<{ url: string; sortOrder?: number }>;
+  parking_fees?: ParkingFees;
 };
 
 export abstract class RoomRepository {

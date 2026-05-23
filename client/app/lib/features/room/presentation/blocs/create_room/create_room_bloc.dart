@@ -35,6 +35,8 @@ class CreateRoomBloc extends Bloc<CreateRoomEvent, CreateRoomState> {
         includedAmenityCodes: event.includedAmenityCodes,
         addonAmenities: event.addonAmenities,
         description: event.description,
+        images: event.images,
+        parkingFees: event.parkingFees,
       ),
     );
     result.fold(

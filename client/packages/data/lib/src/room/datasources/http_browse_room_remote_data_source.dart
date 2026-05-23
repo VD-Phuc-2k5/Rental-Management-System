@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:core/constants.dart';
 import 'package:core/errors.dart';
@@ -42,8 +41,6 @@ class HttpBrowseRoomRemoteDataSource implements BrowseRoomRemoteDataSource {
             .toList();
       }
       throw ServerException(message: json['message'] as String? ?? 'Error');
-    } on SocketException {
-      throw const NetworkException();
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
@@ -68,8 +65,6 @@ class HttpBrowseRoomRemoteDataSource implements BrowseRoomRemoteDataSource {
             json['data'] as Map<String, dynamic>);
       }
       throw ServerException(message: json['message'] as String? ?? 'Error');
-    } on SocketException {
-      throw const NetworkException();
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {

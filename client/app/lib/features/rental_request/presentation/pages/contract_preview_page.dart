@@ -2,6 +2,7 @@ import 'package:domain/rental_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/constants.dart';
 import '../../../../core/di/di.dart';
@@ -116,11 +117,56 @@ class _ContractDetail extends StatelessWidget {
                     label: 'Điều khoản',
                     value: contract.terms!,
                   ),
+                const SizedBox(height: 8),
+                _MembersSection(contractId: contract.id),
               ],
             ),
           ),
         ),
-        if (contract.status == ContractStatus.sent)
+        if (contract.status == ContractStatus.sent) ...[
+          if (contract.momoNumber != null)
+            SafeArea(
+              top: false,
+              minimum: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: OutlinedButton.icon(
+                  onPressed: () async {
+                    final uri = Uri.parse(
+                      'momo://transfer?phone=${contract.momoNumber}',
+                    );
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri);
+                    } else {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Không thể mở ứng dụng MoMo'),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.payment, color: Color(0xFFAE2070)),
+                  label: Text(
+                    'Chuyển cọc qua MoMo (${contract.momoNumber})',
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFFAE2070),
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Color(0xFFAE2070)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           SafeArea(
             top: false,
             child: Padding(
@@ -154,6 +200,7 @@ class _ContractDetail extends StatelessWidget {
               ),
             ),
           ),
+        ],
       ],
     );
   }
@@ -204,6 +251,93 @@ class _ContractField extends StatelessWidget {
           const Divider(color: AppColors.slate200, height: 1),
         ],
       ),
+    );
+  }
+}
+
+class _MembersSection extends StatefulWidget {
+  const _MembersSection({required this.contractId});
+
+  final String contractId;
+
+  @override
+  State<_MembersSection> createState() => _MembersSectionState();
+}
+
+class _MembersSectionState extends State<_MembersSection> {
+  late final Future<List<ContractMemberEntity>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = getIt<GetContractMembersUsecase>()
+        .call(GetContractMembersParams(contractId: widget.contractId))
+        .then(
+          (result) => result.fold(
+            (_) => <ContractMemberEntity>[],
+            (members) => members,
+          ),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<ContractMemberEntity>>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final members = snapshot.data ?? [];
+        if (members.isEmpty) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Thành viên',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 13,
+                color: AppColors.slate500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            ...members.where((m) => m.leftAt == null).map(
+                  (m) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        Icon(
+                          m.isRoomLeader ? Icons.star : Icons.person,
+                          size: 16,
+                          color: m.isRoomLeader
+                              ? AppColors.amber500
+                              : AppColors.slate500,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            m.fullName +
+                                (m.isRoomLeader ? ' (Trưởng phòng)' : ''),
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 14,
+                              color: AppColors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            const SizedBox(height: 8),
+            const Divider(color: AppColors.slate200, height: 1),
+          ],
+        );
+      },
     );
   }
 }

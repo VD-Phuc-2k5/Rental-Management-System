@@ -1,10 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DrizzleService } from 'src/shared/infrastructure/database/drizzle.service';
-import { rooms, properties } from 'src/shared/infrastructure/database/schema';
+import {
+  rooms,
+  properties,
+  contractMembers,
+} from 'src/shared/infrastructure/database/schema';
 import { RentalRequestRepository } from '../../domain/repositories/rental-request.repository';
 import { ContractRepository } from '../../domain/repositories/contract.repository';
-import { RentalRequestEntity } from '../../domain/entities/rental-request.entity';
+import {
+  RentalRequestEntity,
+  MemberInfo,
+  VehicleInfo,
+} from '../../domain/entities/rental-request.entity';
 
 @Injectable()
 export class CreateRentalRequestService {
@@ -18,6 +26,8 @@ export class CreateRentalRequestService {
     tenantId: string,
     roomId: string,
     note: string | null,
+    memberInfo: MemberInfo[] = [],
+    parkingInfo: VehicleInfo[] = [],
   ): Promise<RentalRequestEntity> {
     const [room] = await this.drizzle.db
       .select({
@@ -37,7 +47,13 @@ export class CreateRentalRequestService {
 
     if (!prop) throw new NotFoundException('Property not found');
 
-    const request = await this.rentalRequestRepo.create(tenantId, roomId, note);
+    const request = await this.rentalRequestRepo.create(
+      tenantId,
+      roomId,
+      note,
+      memberInfo,
+      parkingInfo,
+    );
 
     const today = new Date();
     const startDate = today.toISOString().split('T')[0];
@@ -45,7 +61,7 @@ export class CreateRentalRequestService {
       .toISOString()
       .split('T')[0];
 
-    await this.contractRepo.create(
+    const contract = await this.contractRepo.create(
       request.id,
       roomId,
       tenantId,
@@ -55,6 +71,20 @@ export class CreateRentalRequestService {
       room.monthlyRent,
       room.depositAmount,
     );
+
+    if (memberInfo.length > 0) {
+      await this.drizzle.db.insert(contractMembers).values(
+        memberInfo.map((m) => ({
+          contractId: contract.id,
+          fullName: m.fullName,
+          phone: m.phone ?? null,
+          identityNumber: m.identityNumber ?? null,
+          email: m.email ?? null,
+          address: m.address ?? null,
+          isRoomLeader: m.isRoomLeader,
+        })),
+      );
+    }
 
     return request;
   }

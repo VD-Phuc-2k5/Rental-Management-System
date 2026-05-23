@@ -1,4 +1,11 @@
-import { pgTable, uuid, text, timestamp, pgEnum } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  pgEnum,
+  jsonb,
+} from 'drizzle-orm/pg-core';
 import { users } from './users.schema';
 import { rooms } from './room.schema';
 
@@ -18,6 +25,8 @@ export const rentalRequests = pgTable('rental_requests', {
     .notNull()
     .references(() => rooms.id, { onDelete: 'cascade' }),
   note: text('note'),
+  memberInfo: jsonb('member_info').notNull().default([]),
+  parkingInfo: jsonb('parking_info').notNull().default([]),
   status: rentalRequestStatusEnum('status').notNull().default('pending'),
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()

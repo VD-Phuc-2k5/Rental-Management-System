@@ -296,6 +296,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i284.FinishContractUsecase>(
       () => registerModule.finishContractUsecase,
     );
+    gh.factory<_i284.GetContractMembersUsecase>(
+      () => registerModule.getContractMembersUsecase,
+    );
+    gh.factory<_i284.RemoveContractMemberUsecase>(
+      () => registerModule.removeContractMemberUsecase,
+    );
     gh.factory<_i269.ContractDetailBloc>(
       () => _i269.ContractDetailBloc(
         getContractDetailUsecase: gh<_i284.GetContractDetailUsecase>(),
@@ -625,6 +631,18 @@ class _$RegisterModule extends _i291.RegisterModule {
   @override
   _i284.FinishContractUsecase get finishContractUsecase =>
       _i284.FinishContractUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.GetContractMembersUsecase get getContractMembersUsecase =>
+      _i284.GetContractMembersUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.RemoveContractMemberUsecase get removeContractMemberUsecase =>
+      _i284.RemoveContractMemberUsecase(
         rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
       );
 

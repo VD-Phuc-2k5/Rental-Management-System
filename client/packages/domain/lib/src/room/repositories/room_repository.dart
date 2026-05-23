@@ -17,6 +17,8 @@ abstract interface class RoomRepository {
     required List<String> includedAmenityCodes,
     required List<RoomAddonAmenity> addonAmenities,
     String? description,
+    List<({String url, int sortOrder})>? images,
+    RoomParkingFees? parkingFees,
   });
   Future<Either<Failure, RoomEntity>> updateRoom({
     required String id,
@@ -30,6 +32,8 @@ abstract interface class RoomRepository {
     List<String>? includedAmenityCodes,
     List<RoomAddonAmenity>? addonAmenities,
     String? description,
+    List<({String url, int sortOrder})>? images,
+    RoomParkingFees? parkingFees,
   });
   Future<Either<Failure, void>> deleteRoom({required String id});
 }

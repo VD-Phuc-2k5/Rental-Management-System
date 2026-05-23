@@ -1,10 +1,16 @@
-import { RentalRequestEntity } from '../entities/rental-request.entity';
+import {
+  RentalRequestEntity,
+  MemberInfo,
+  VehicleInfo,
+} from '../entities/rental-request.entity';
 
 export abstract class RentalRequestRepository {
   abstract create(
     tenantId: string,
     roomId: string,
     note: string | null,
+    memberInfo?: MemberInfo[],
+    parkingInfo?: VehicleInfo[],
   ): Promise<RentalRequestEntity>;
   abstract findByTenantId(tenantId: string): Promise<RentalRequestEntity[]>;
   abstract findById(id: string): Promise<RentalRequestEntity | null>;

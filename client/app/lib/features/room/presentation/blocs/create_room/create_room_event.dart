@@ -14,6 +14,8 @@ class CreateRoomSubmitted extends CreateRoomEvent {
     required this.includedAmenityCodes,
     required this.addonAmenities,
     this.description,
+    this.images,
+    this.parkingFees,
   });
   final String propertyId;
   final String title;
@@ -25,4 +27,6 @@ class CreateRoomSubmitted extends CreateRoomEvent {
   final List<String> includedAmenityCodes;
   final List<RoomAddonAmenity> addonAmenities;
   final String? description;
+  final List<({String url, int sortOrder})>? images;
+  final RoomParkingFees? parkingFees;
 }

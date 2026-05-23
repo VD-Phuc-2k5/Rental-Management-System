@@ -17,6 +17,8 @@ class CreateRoomParams extends Equatable {
     required this.includedAmenityCodes,
     required this.addonAmenities,
     this.description,
+    this.images,
+    this.parkingFees,
   });
 
   final String propertyId;
@@ -29,9 +31,11 @@ class CreateRoomParams extends Equatable {
   final List<String> includedAmenityCodes;
   final List<RoomAddonAmenity> addonAmenities;
   final String? description;
+  final List<({String url, int sortOrder})>? images;
+  final RoomParkingFees? parkingFees;
 
   @override
-  List<Object?> get props => [propertyId, title, areaSqm, monthlyRent, depositAmount, electricityRatePerKwh, waterRatePerM3, includedAmenityCodes, addonAmenities, description];
+  List<Object?> get props => [propertyId, title, areaSqm, monthlyRent, depositAmount, electricityRatePerKwh, waterRatePerM3, includedAmenityCodes, addonAmenities, description, images, parkingFees];
 }
 
 class CreateRoomUsecase implements UseCase<RoomEntity, CreateRoomParams> {
@@ -51,6 +55,8 @@ class CreateRoomUsecase implements UseCase<RoomEntity, CreateRoomParams> {
       includedAmenityCodes: params.includedAmenityCodes,
       addonAmenities: params.addonAmenities,
       description: params.description,
+      images: params.images,
+      parkingFees: params.parkingFees,
     );
   }
 }

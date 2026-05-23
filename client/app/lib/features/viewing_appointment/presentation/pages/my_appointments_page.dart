@@ -1,8 +1,10 @@
 import 'package:domain/viewing_appointment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/config/router/route_constants.dart';
 import '../../../../core/constants.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/utils/sealed_class_state.dart';
@@ -174,6 +176,32 @@ class _AppointmentCard extends StatelessWidget {
                   fontFamily: 'Inter',
                   fontSize: 12,
                   color: AppColors.slate500,
+                ),
+              ),
+            ],
+            if (appointment.status == ViewingAppointmentStatus.approved) ...[
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => context.pushNamed(
+                    RouteNames.rentalRequestWizard,
+                    extra: {'roomId': appointment.roomId},
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.blue700,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'Thuê trọ',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
             ],

@@ -12,6 +12,7 @@ import { RedisModule } from './shared/infrastructure/redis/redis.module';
 import { RoomsModule } from './modules/rooms/presentation/room.module';
 import { RentalRequestsModule } from './modules/rental-requests/presentation/rental-request.module';
 import { ViewingAppointmentsModule } from './modules/viewing-appointments/presentation/viewing-appointment.module';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ViewingAppointmentsModule } from './modules/viewing-appointments/presen
     RoomsModule,
     RentalRequestsModule,
     ViewingAppointmentsModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

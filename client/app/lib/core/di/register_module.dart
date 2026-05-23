@@ -232,6 +232,12 @@ abstract class RegisterModule {
   @injectable
   FinishContractUsecase get finishContractUsecase;
 
+  @injectable
+  GetContractMembersUsecase get getContractMembersUsecase;
+
+  @injectable
+  RemoveContractMemberUsecase get removeContractMemberUsecase;
+
   // viewing appointment
   @injectable
   CreateViewingAppointmentUsecase get createViewingAppointmentUsecase;

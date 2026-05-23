@@ -18,12 +18,16 @@ class RentalRequestRepositoryImpl implements RentalRequestRepository {
   Future<Either<Failure, RentalRequestEntity>> createRentalRequest({
     required String roomId,
     String? note,
+    List<MemberInfo> memberInfo = const [],
+    List<VehicleInfo> parkingInfo = const [],
   }) async {
     try {
       final data = await _dataSource.createRentalRequest(
         token: _getToken(),
         roomId: roomId,
         note: note,
+        memberInfo: memberInfo,
+        parkingInfo: parkingInfo,
       );
       return Right(data);
     } on ServerException catch (e) {
@@ -211,6 +215,46 @@ class RentalRequestRepositoryImpl implements RentalRequestRepository {
   Future<Either<Failure, void>> finishContract({required String id}) async {
     try {
       await _dataSource.finishContract(token: _getToken(), id: id);
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ContractMemberEntity>>> getContractMembers({
+    required String contractId,
+  }) async {
+    try {
+      final data = await _dataSource.getContractMembers(
+        token: _getToken(),
+        contractId: contractId,
+      );
+      return Right(data);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> removeContractMember({
+    required String contractId,
+    required String memberId,
+  }) async {
+    try {
+      await _dataSource.removeContractMember(
+        token: _getToken(),
+        contractId: contractId,
+        memberId: memberId,
+      );
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

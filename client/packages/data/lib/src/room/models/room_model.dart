@@ -1,5 +1,7 @@
 ﻿import 'package:domain/room.dart';
 
+import '../models/room_image_model.dart';
+
 class RoomModel extends RoomEntity {
   RoomModel({
     required super.id,
@@ -16,6 +18,8 @@ class RoomModel extends RoomEntity {
     super.description,
     required super.createdAt,
     required super.updatedAt,
+    super.images = const [],
+    super.parkingFees = const RoomParkingFees(),
   });
 
   factory RoomModel.fromJson(Map<String, dynamic> json) => RoomModel(
@@ -45,6 +49,13 @@ class RoomModel extends RoomEntity {
     description: json['description'] as String?,
     createdAt: json['createdAt'] as String,
     updatedAt: json['updatedAt'] as String,
+    images: (json['images'] as List<dynamic>?)
+            ?.map((e) => RoomImageModel.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [],
+    parkingFees: json['parking_fees'] != null
+        ? RoomParkingFees.fromJson(json['parking_fees'] as Map<String, dynamic>)
+        : const RoomParkingFees(),
   );
 }
 

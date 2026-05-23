@@ -7,8 +7,10 @@ import { RentalRequestController } from './rental-request.controller';
 import { LandlordRentalRequestController } from './landlord-rental-request.controller';
 import { DrizzleRentalRequestRepository } from '../infrastructure/drizzle-rental-request.repository';
 import { DrizzleContractRepository } from '../infrastructure/drizzle-contract.repository';
+import { DrizzleContractMemberRepository } from '../infrastructure/drizzle-contract-member.repository';
 import { RentalRequestRepository } from '../domain/repositories/rental-request.repository';
 import { ContractRepository } from '../domain/repositories/contract.repository';
+import { ContractMemberRepository } from '../domain/repositories/contract-member.repository';
 import { CreateRentalRequestService } from '../application/services/create-rental-request.service';
 import { GetMyRentalRequestsService } from '../application/services/get-my-rental-requests.service';
 import { CancelRentalRequestService } from '../application/services/cancel-rental-request.service';
@@ -22,6 +24,8 @@ import { GetLandlordContractsService } from '../application/services/get-landlor
 import { UpdateContractService } from '../application/services/update-contract.service';
 import { SendContractService } from '../application/services/send-contract.service';
 import { FinishContractService } from '../application/services/finish-contract.service';
+import { GetContractMembersService } from '../application/services/get-contract-members.service';
+import { RemoveContractMemberService } from '../application/services/remove-contract-member.service';
 
 @Module({
   imports: [DrizzleModule, SupabaseModule],
@@ -34,6 +38,10 @@ import { FinishContractService } from '../application/services/finish-contract.s
       useClass: DrizzleRentalRequestRepository,
     },
     { provide: ContractRepository, useClass: DrizzleContractRepository },
+    {
+      provide: ContractMemberRepository,
+      useClass: DrizzleContractMemberRepository,
+    },
     CreateRentalRequestService,
     GetMyRentalRequestsService,
     CancelRentalRequestService,
@@ -47,6 +55,8 @@ import { FinishContractService } from '../application/services/finish-contract.s
     UpdateContractService,
     SendContractService,
     FinishContractService,
+    GetContractMembersService,
+    RemoveContractMemberService,
   ],
 })
 export class RentalRequestsModule {}
