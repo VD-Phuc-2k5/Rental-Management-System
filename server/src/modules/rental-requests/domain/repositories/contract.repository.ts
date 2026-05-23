@@ -34,4 +34,7 @@ export abstract class ContractRepository {
     status: ContractEntity['status'],
     timestampField?: 'sentAt' | 'signedAt' | 'cancelledAt' | 'finishedAt',
   ): Promise<ContractEntity>;
+  abstract findByRoomId(roomId: string): Promise<ContractEntity[]>;
+  abstract deleteById(id: string): Promise<void>;
+  abstract findCancelledBefore(date: Date): Promise<ContractEntity[]>;
 }

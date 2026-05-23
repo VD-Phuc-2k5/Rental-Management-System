@@ -23,7 +23,6 @@ export class DrizzleRoomRepository implements RoomRepository {
     images: RoomImage[] = [],
   ): RoomEntity {
     const defaultFees: ParkingFees = {
-      bicycle: 50000,
       motorbike: 150000,
       car: 1000000,
     };
@@ -66,7 +65,6 @@ export class DrizzleRoomRepository implements RoomRepository {
         included_amenity_codes: input.included_amenity_codes ?? [],
         addon_amenities: input.addon_amenities ?? [],
         parking_fees: input.parking_fees ?? {
-          bicycle: 50000,
           motorbike: 150000,
           car: 1000000,
         },

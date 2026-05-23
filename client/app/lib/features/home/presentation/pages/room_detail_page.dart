@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:domain/room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -118,6 +119,7 @@ class _RoomDetailView extends StatelessWidget {
                             address: data.fullAddress,
                             area: data.areaSqm,
                             hasFurniture: data.hasFurniture,
+                            parkingFees: data.parkingFees,
                           ),
                           if (data.includedAmenityCodes.isNotEmpty ||
                               data.addonAmenities.isNotEmpty) ...[
@@ -392,6 +394,7 @@ class _RoomInfoSection extends StatelessWidget {
     required this.address,
     required this.area,
     required this.hasFurniture,
+    this.parkingFees = const RoomParkingFees(),
   });
 
   final double electricPrice;
@@ -399,6 +402,7 @@ class _RoomInfoSection extends StatelessWidget {
   final String address;
   final double area;
   final bool hasFurniture;
+  final RoomParkingFees parkingFees;
 
   @override
   Widget build(BuildContext context) {
@@ -426,6 +430,40 @@ class _RoomInfoSection extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               'Nước: ${formatVND(waterPrice.toInt())}/m3',
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                color: AppColors.black,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            const Icon(Icons.motorcycle, size: 20, color: AppColors.blue700),
+            const SizedBox(width: 8),
+            Text(
+              'Xe máy: ${formatVND(parkingFees.motorbike.toInt())}/tháng',
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                color: AppColors.black,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            const Icon(
+              Icons.directions_car,
+              size: 20,
+              color: AppColors.blue700,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Ô tô: ${formatVND(parkingFees.car.toInt())}/tháng',
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,

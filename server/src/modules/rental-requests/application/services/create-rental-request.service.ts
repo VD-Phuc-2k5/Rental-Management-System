@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DrizzleService } from 'src/shared/infrastructure/database/drizzle.service';
 import {
@@ -46,6 +50,16 @@ export class CreateRentalRequestService {
       .where(eq(properties.id, room.propertyId));
 
     if (!prop) throw new NotFoundException('Property not found');
+
+    const existingContracts = await this.contractRepo.findByRoomId(roomId);
+    const hasActiveContract = existingContracts.some((c) =>
+      ['draft', 'sent', 'signed'].includes(c.status),
+    );
+    if (hasActiveContract) {
+      throw new BadRequestException(
+        'Room already has an active contract. Please wait until it is resolved.',
+      );
+    }
 
     const request = await this.rentalRequestRepo.create(
       tenantId,

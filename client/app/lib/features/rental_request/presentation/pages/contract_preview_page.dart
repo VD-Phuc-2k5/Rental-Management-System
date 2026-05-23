@@ -1,4 +1,5 @@
 import 'package:domain/rental_request.dart';
+import 'package:domain/room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,8 +22,9 @@ class ContractPreviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<ContractDetailBloc>()
-        ..add(ContractDetailFetched(contractId: contractId)),
+      create: (_) =>
+          getIt<ContractDetailBloc>()
+            ..add(ContractDetailFetched(contractId: contractId)),
       child: _ContractPreviewView(isLandlord: isLandlord),
     );
   }
@@ -59,19 +61,19 @@ class _ContractPreviewView extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             ContractDetailLoadInProgress() => const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: CircularProgressIndicator(),
+            ),
             ContractDetailLoadFailure(:final failure) => Center(
-                child: Text(
-                  failure.toString(),
-                  style: const TextStyle(color: AppColors.red500),
-                  textAlign: TextAlign.center,
-                ),
+              child: Text(
+                failure.toString(),
+                style: const TextStyle(color: AppColors.red500),
+                textAlign: TextAlign.center,
               ),
+            ),
             ContractDetailLoadSuccess(:final data) => _ContractContent(
-                contract: data,
-                isLandlord: isLandlord,
-              ),
+              contract: data,
+              isLandlord: isLandlord,
+            ),
             _ => const SizedBox.shrink(),
           };
         },
@@ -92,6 +94,7 @@ class _ContractContent extends StatefulWidget {
 
 class _ContractContentState extends State<_ContractContent> {
   late final Future<List<ContractMemberEntity>> _membersFuture;
+  late final Future<BrowseRoomDetailEntity?> _roomDetailFuture;
 
   @override
   void initState() {
@@ -104,6 +107,9 @@ class _ContractContentState extends State<_ContractContent> {
             (members) => members,
           ),
         );
+    _roomDetailFuture = getIt<GetBrowseRoomDetailUsecase>()
+        .call(GetBrowseRoomDetailParams(id: widget.contract.roomId))
+        .then((result) => result.fold((_) => null, (room) => room));
   }
 
   int _monthsBetween(String startDate, String endDate) {
@@ -141,6 +147,8 @@ class _ContractContentState extends State<_ContractContent> {
                     ),
                     const SizedBox(height: 16),
                     _DepositCard(deposit: contract.deposit),
+                    const SizedBox(height: 16),
+                    _ServiceRatesCard(roomDetailFuture: _roomDetailFuture),
                   ],
                 ),
               ),
@@ -341,8 +349,9 @@ class _DepositCard extends StatelessWidget {
         Card(
           elevation: 0,
           color: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Column(
@@ -460,6 +469,69 @@ class _SendBottomBar extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ServiceRatesCard extends StatelessWidget {
+  const _ServiceRatesCard({required this.roomDetailFuture});
+
+  final Future<BrowseRoomDetailEntity?> roomDetailFuture;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<BrowseRoomDetailEntity?>(
+      future: roomDetailFuture,
+      builder: (context, snapshot) {
+        final room = snapshot.data;
+        if (room == null) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Bảng giá dịch vụ',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: AppColors.blue950,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Card(
+              elevation: 0,
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  children: [
+                    _InfoRow(
+                      label: 'Điện (kWh):',
+                      value: formatCurrency(room.electricityRatePerKwh),
+                    ),
+                    _InfoRow(
+                      label: 'Nước (m³):',
+                      value: formatCurrency(room.waterRatePerM3),
+                    ),
+                    if (room.parkingFees.motorbike > 0)
+                      _InfoRow(
+                        label: 'Xe máy/tháng:',
+                        value: formatCurrency(room.parkingFees.motorbike),
+                      ),
+                    if (room.parkingFees.car > 0)
+                      _InfoRow(
+                        label: 'Ô tô/tháng:',
+                        value: formatCurrency(room.parkingFees.car),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -4,7 +4,7 @@ export type RoomAddonAmenity = { code: string; monthly_price: number };
 
 export type RoomImage = { id: string; url: string; sortOrder: number };
 
-export type ParkingFees = { bicycle: number; motorbike: number; car: number };
+export type ParkingFees = { motorbike: number; car: number };
 
 export class RoomEntity {
   constructor(
@@ -25,7 +25,6 @@ export class RoomEntity {
     public readonly updatedAt: string,
     public readonly images: RoomImage[] = [],
     public readonly parking_fees: ParkingFees = {
-      bicycle: 50000,
       motorbike: 150000,
       car: 1000000,
     },

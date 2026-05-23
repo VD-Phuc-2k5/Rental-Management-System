@@ -12,7 +12,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
 export class ParkingFeesDto {
-  @IsNumber() @Min(0) bicycle!: number;
   @IsNumber() @Min(0) motorbike!: number;
   @IsNumber() @Min(0) car!: number;
 }
@@ -118,7 +117,7 @@ export class CreateRoomDto {
   @ValidateNested()
   @Type(() => ParkingFeesDto)
   @ApiPropertyOptional({
-    example: { bicycle: 50000, motorbike: 150000, car: 1000000 },
+    example: { motorbike: 150000, car: 1000000 },
   })
   parking_fees?: ParkingFeesDto;
 }

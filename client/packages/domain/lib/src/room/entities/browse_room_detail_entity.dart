@@ -22,6 +22,7 @@ abstract class BrowseRoomDetailEntity {
     required this.images,
     this.description,
     this.landlordAvatarUrl,
+    this.parkingFees = const RoomParkingFees(),
   });
 
   final String id;
@@ -42,4 +43,5 @@ abstract class BrowseRoomDetailEntity {
   final String landlordName;
   final String? landlordAvatarUrl;
   final List<RoomImageEntity> images;
+  final RoomParkingFees parkingFees;
 }

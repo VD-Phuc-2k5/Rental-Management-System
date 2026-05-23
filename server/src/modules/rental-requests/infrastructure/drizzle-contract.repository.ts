@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { and, eq, lt } from 'drizzle-orm';
 import { DrizzleService } from 'src/shared/infrastructure/database/drizzle.service';
 import { contracts } from 'src/shared/infrastructure/database/schema';
 import {
@@ -128,5 +128,27 @@ export class DrizzleContractRepository implements ContractRepository {
       .where(eq(contracts.id, id))
       .returning();
     return this.toEntity(row);
+  }
+
+  async findByRoomId(roomId: string): Promise<ContractEntity[]> {
+    const rows = await this.drizzle.db
+      .select()
+      .from(contracts)
+      .where(eq(contracts.roomId, roomId));
+    return rows.map(this.toEntity.bind(this));
+  }
+
+  async deleteById(id: string): Promise<void> {
+    await this.drizzle.db.delete(contracts).where(eq(contracts.id, id));
+  }
+
+  async findCancelledBefore(date: Date): Promise<ContractEntity[]> {
+    const rows = await this.drizzle.db
+      .select()
+      .from(contracts)
+      .where(
+        and(eq(contracts.status, 'cancelled'), lt(contracts.cancelledAt, date)),
+      );
+    return rows.map(this.toEntity.bind(this));
   }
 }

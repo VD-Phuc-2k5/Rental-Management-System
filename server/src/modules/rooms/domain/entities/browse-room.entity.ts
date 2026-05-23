@@ -1,4 +1,4 @@
-import { RoomAddonAmenity, RoomStatus } from './room.entity';
+import { ParkingFees, RoomAddonAmenity, RoomStatus } from './room.entity';
 
 export class AvailableRoomEntity {
   constructor(
@@ -39,5 +39,9 @@ export class BrowseRoomDetailEntity {
       url: string;
       sortOrder: number;
     }>,
+    public readonly parkingFees: ParkingFees = {
+      motorbike: 150000,
+      car: 1000000,
+    },
   ) {}
 }

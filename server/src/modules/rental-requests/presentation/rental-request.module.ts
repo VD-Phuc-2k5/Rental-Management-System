@@ -26,6 +26,7 @@ import { SendContractService } from '../application/services/send-contract.servi
 import { FinishContractService } from '../application/services/finish-contract.service';
 import { GetContractMembersService } from '../application/services/get-contract-members.service';
 import { RemoveContractMemberService } from '../application/services/remove-contract-member.service';
+import { ContractCleanupService } from '../application/services/contract-cleanup.service';
 
 @Module({
   imports: [DrizzleModule, SupabaseModule],
@@ -57,6 +58,7 @@ import { RemoveContractMemberService } from '../application/services/remove-cont
     FinishContractService,
     GetContractMembersService,
     RemoveContractMemberService,
+    ContractCleanupService,
   ],
 })
 export class RentalRequestsModule {}

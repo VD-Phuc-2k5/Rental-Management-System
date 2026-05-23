@@ -1,6 +1,5 @@
 import '../../../core/constants.dart';
 import '../../contract-extension-request-screen/contract_extension_request_screen.dart';
-import '../../home-screen/home_screen.dart';
 import 'contract_action_button.dart';
 import 'contract_expiry_header.dart';
 import 'countdown_widget.dart';
@@ -60,10 +59,6 @@ class Body extends StatelessWidget {
     await controller.closed;
 
     if (!context.mounted) return;
-
-    await Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
   }
 
   Widget _buildActionButtons(BuildContext context) {

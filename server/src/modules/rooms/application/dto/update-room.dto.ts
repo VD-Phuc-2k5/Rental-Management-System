@@ -102,7 +102,7 @@ export class UpdateRoomDto {
   @ValidateNested()
   @Type(() => ParkingFeesDto)
   @ApiPropertyOptional({
-    example: { bicycle: 50000, motorbike: 150000, car: 1000000 },
+    example: { motorbike: 150000, car: 1000000 },
   })
   parking_fees?: ParkingFeesDto;
 }

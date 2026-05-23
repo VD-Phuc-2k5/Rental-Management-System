@@ -5,26 +5,23 @@ enum RoomStatus { available, occupied, maintenance }
 
 class RoomParkingFees {
   const RoomParkingFees({
-    this.bicycle = 50000,
     this.motorbike = 150000,
     this.car = 1000000,
   });
 
-  factory RoomParkingFees.fromJson(Map<String, dynamic> json) => RoomParkingFees(
-        bicycle: (json['bicycle'] as num?)?.toDouble() ?? 50000,
+  factory RoomParkingFees.fromJson(Map<String, dynamic> json) =>
+      RoomParkingFees(
         motorbike: (json['motorbike'] as num?)?.toDouble() ?? 150000,
         car: (json['car'] as num?)?.toDouble() ?? 1000000,
       );
 
-  final double bicycle;
   final double motorbike;
   final double car;
 
   Map<String, dynamic> toJson() => {
-        'bicycle': bicycle,
-        'motorbike': motorbike,
-        'car': car,
-      };
+    'motorbike': motorbike,
+    'car': car,
+  };
 }
 
 abstract class RoomEntity {

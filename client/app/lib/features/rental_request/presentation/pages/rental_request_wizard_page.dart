@@ -16,23 +16,20 @@ import '../blocs/create_rental_request/create_rental_request_bloc.dart';
 
 // ── Vehicle type ──────────────────────────────────────────────────────────────
 
-enum _VehicleType { bicycle, motorbike, car }
+enum _VehicleType { motorbike, car }
 
 extension _VehicleTypeX on _VehicleType {
   String get label => switch (this) {
-    _VehicleType.bicycle => 'Xe đạp',
     _VehicleType.motorbike => 'Xe máy',
     _VehicleType.car => 'Ô tô',
   };
 
   IconData get icon => switch (this) {
-    _VehicleType.bicycle => Icons.pedal_bike,
     _VehicleType.motorbike => Icons.two_wheeler,
     _VehicleType.car => Icons.directions_car,
   };
 
   double feeFrom(RoomParkingFees? fees) => switch (this) {
-    _VehicleType.bicycle => fees?.bicycle ?? 50000,
     _VehicleType.motorbike => fees?.motorbike ?? 150000,
     _VehicleType.car => fees?.car ?? 1000000,
   };
@@ -69,7 +66,7 @@ class _WizardViewState extends State<_WizardView> {
   bool _hasParking = false;
   final List<_VehicleForm> _vehicles = [];
   final _noteCtl = TextEditingController();
-  RoomEntity? _room;
+  BrowseRoomDetailEntity? _room;
 
   @override
   void initState() {
@@ -78,8 +75,8 @@ class _WizardViewState extends State<_WizardView> {
   }
 
   Future<void> _fetchRoom() async {
-    final result = await getIt<GetRoomByIdUsecase>()(
-      GetRoomByIdParams(id: widget.roomId),
+    final result = await getIt<GetBrowseRoomDetailUsecase>()(
+      GetBrowseRoomDetailParams(id: widget.roomId),
     );
     result.fold((_) {}, (room) {
       if (mounted) setState(() => _room = room);
@@ -228,7 +225,12 @@ class _WizardViewState extends State<_WizardView> {
               parkingFees: _room?.parkingFees,
               onChanged: () => setState(() {}),
             ),
-            _NoteStep(noteCtl: _noteCtl, room: _room),
+            _NoteStep(
+              noteCtl: _noteCtl,
+              room: _room,
+              vehicles: _vehicles,
+              hasParking: _hasParking,
+            ),
           ],
         ),
         bottomNavigationBar:
@@ -688,6 +690,17 @@ class _MemberCardState extends State<_MemberCard> {
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
                   initialDate: DateTime(2000, 1, 1),
+                  builder: (context, child) {
+                    return Theme(
+                      data: Theme.of(context).copyWith(
+                        colorScheme: const ColorScheme.light(
+                          primary: AppColors.blue700,
+                          onPrimary: AppColors.white,
+                        ),
+                      ),
+                      child: child!,
+                    );
+                  },
                 );
                 if (picked != null && context.mounted) {
                   widget.form.dobCtl.text =
@@ -1255,10 +1268,17 @@ class _SquareBtn extends StatelessWidget {
 // ── Step 2: Note & Confirm ────────────────────────────────────────────────────
 
 class _NoteStep extends StatelessWidget {
-  const _NoteStep({required this.noteCtl, this.room});
+  const _NoteStep({
+    required this.noteCtl,
+    required this.vehicles,
+    required this.hasParking,
+    this.room,
+  });
 
   final TextEditingController noteCtl;
-  final RoomEntity? room;
+  final BrowseRoomDetailEntity? room;
+  final List<_VehicleForm> vehicles;
+  final bool hasParking;
 
   String _fmt(num v) {
     final s = v.toInt().toString();
@@ -1313,21 +1333,34 @@ class _NoteStep extends StatelessWidget {
                     value: _fmt(r.electricityRatePerKwh),
                   ),
                   _PriceRow(label: 'Nước (m³)', value: _fmt(r.waterRatePerM3)),
-                  if (r.parkingFees.bicycle > 0)
-                    _PriceRow(
-                      label: 'Gửi xe đạp/tháng',
-                      value: _fmt(r.parkingFees.bicycle),
+                  if (hasParking && vehicles.isNotEmpty) ...[
+                    Builder(
+                      builder: (_) {
+                        final motorbikeQty = vehicles
+                            .where((v) => v.type == _VehicleType.motorbike)
+                            .fold(0, (s, v) => s + v.quantity);
+                        final carQty = vehicles
+                            .where((v) => v.type == _VehicleType.car)
+                            .fold(0, (s, v) => s + v.quantity);
+                        return Column(
+                          children: [
+                            if (motorbikeQty > 0)
+                              _PriceRow(
+                                label: 'Gửi xe máy/tháng (×$motorbikeQty)',
+                                value: _fmt(
+                                  r.parkingFees.motorbike * motorbikeQty,
+                                ),
+                              ),
+                            if (carQty > 0)
+                              _PriceRow(
+                                label: 'Gửi ô tô/tháng (×$carQty)',
+                                value: _fmt(r.parkingFees.car * carQty),
+                              ),
+                          ],
+                        );
+                      },
                     ),
-                  if (r.parkingFees.motorbike > 0)
-                    _PriceRow(
-                      label: 'Gửi xe máy/tháng',
-                      value: _fmt(r.parkingFees.motorbike),
-                    ),
-                  if (r.parkingFees.car > 0)
-                    _PriceRow(
-                      label: 'Gửi ô tô/tháng',
-                      value: _fmt(r.parkingFees.car),
-                    ),
+                  ],
                   if (r.addonAmenities.isNotEmpty) ...[
                     const Divider(height: 20),
                     const Text(

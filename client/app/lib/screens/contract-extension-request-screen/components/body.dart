@@ -5,7 +5,6 @@ import 'new_start_date_picker.dart';
 import 'note_input_field.dart';
 import 'room_info_card.dart';
 import 'submit_button.dart';
-import '../../home-screen/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatefulWidget {
@@ -96,13 +95,6 @@ class _BodyState extends State<Body> {
         );
 
         // Navigate back after success
-        Future.delayed(const Duration(seconds: 1), () {
-          if (mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
-            );
-          }
-        });
       }
     });
   }

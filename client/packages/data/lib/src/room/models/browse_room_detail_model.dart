@@ -22,6 +22,7 @@ class BrowseRoomDetailModel extends BrowseRoomDetailEntity {
     required super.images,
     super.description,
     super.landlordAvatarUrl,
+    super.parkingFees,
   });
 
   factory BrowseRoomDetailModel.fromJson(Map<String, dynamic> json) =>
@@ -46,7 +47,9 @@ class BrowseRoomDetailModel extends BrowseRoomDetailEntity {
                   final m = e as Map<String, dynamic>;
                   return RoomAddonAmenity(
                     code: m['code'] as String,
-                    monthlyPrice: _parseDouble(m['monthlyPrice']),
+                    monthlyPrice: _parseDouble(
+                      m['monthly_price'] ?? m['monthlyPrice'],
+                    ),
                   );
                 })
                 .toList() ??
@@ -61,6 +64,10 @@ class BrowseRoomDetailModel extends BrowseRoomDetailEntity {
                     RoomImageModel.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
+        parkingFees: json['parkingFees'] != null
+            ? RoomParkingFees.fromJson(
+                json['parkingFees'] as Map<String, dynamic>)
+            : const RoomParkingFees(),
       );
 }
 

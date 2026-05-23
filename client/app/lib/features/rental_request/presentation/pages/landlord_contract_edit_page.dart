@@ -41,15 +41,18 @@ class _LandlordContractEditViewState extends State<_LandlordContractEditView> {
   void initState() {
     super.initState();
     _startDateController = TextEditingController(
-        text: widget.contract.startDate.substring(0, 10));
-    _endDateController =
-        TextEditingController(text: widget.contract.endDate.substring(0, 10));
+      text: widget.contract.startDate.substring(0, 10),
+    );
+    _endDateController = TextEditingController(
+      text: widget.contract.endDate.substring(0, 10),
+    );
     _rentController = TextEditingController(
-        text: widget.contract.monthlyRent.toStringAsFixed(0));
+      text: widget.contract.monthlyRent.toStringAsFixed(0),
+    );
     _depositController = TextEditingController(
-        text: widget.contract.deposit.toStringAsFixed(0));
-    _termsController =
-        TextEditingController(text: widget.contract.terms ?? '');
+      text: widget.contract.deposit.toStringAsFixed(0),
+    );
+    _termsController = TextEditingController(text: widget.contract.terms ?? '');
   }
 
   @override
@@ -94,24 +97,28 @@ class _LandlordContractEditViewState extends State<_LandlordContractEditView> {
     final result = await getIt<UpdateContractUsecase>().call(_buildParams());
     if (!mounted) return;
     result.fold(
-      (failure) => ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(failure.toString()))),
-      (_) => ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Đã lưu thay đổi'))),
+      (failure) => ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(failure.toString()))),
+      (_) => ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Đã lưu thay đổi'))),
     );
     setState(() => _isSaving = false);
   }
 
   Future<void> _send() async {
     setState(() => _isSending = true);
-    final updateResult =
-        await getIt<UpdateContractUsecase>().call(_buildParams());
+    final updateResult = await getIt<UpdateContractUsecase>().call(
+      _buildParams(),
+    );
     if (!mounted) return;
     final didUpdate = updateResult.isRight();
     if (!didUpdate) {
       updateResult.fold(
-        (failure) => ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(failure.toString()))),
+        (failure) => ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(failure.toString()))),
         (_) {},
       );
       setState(() => _isSending = false);
@@ -122,8 +129,9 @@ class _LandlordContractEditViewState extends State<_LandlordContractEditView> {
     );
     if (!mounted) return;
     sendResult.fold(
-      (failure) => ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(failure.toString()))),
+      (failure) => ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(failure.toString()))),
       (_) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Đã gửi hợp đồng cho thuê nhân!')),
@@ -214,38 +222,15 @@ class _LandlordContractEditViewState extends State<_LandlordContractEditView> {
                           height: 20,
                           width: 20,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: AppColors.blue700),
+                            strokeWidth: 2,
+                            color: AppColors.blue700,
+                          ),
                         )
                       : const Text(
                           'Lưu thay đổi',
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : _send,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.blue700,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  child: _isSending
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          'Gửi cho thuê nhân',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -299,8 +284,10 @@ class _DateField extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(color: AppColors.blue700),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
           ),
         ),
       ],
@@ -342,8 +329,10 @@ class _NumberField extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(color: AppColors.blue700),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
           ),
         ),
       ],
@@ -385,8 +374,10 @@ class _TermsField extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(color: AppColors.blue700),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
           ),
         ),
       ],

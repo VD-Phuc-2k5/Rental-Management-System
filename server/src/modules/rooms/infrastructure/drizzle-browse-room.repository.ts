@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { and, eq, gte, inArray, lte } from 'drizzle-orm';
+import { and, eq, gte, inArray, lte, notInArray } from 'drizzle-orm';
 import { DrizzleService } from 'src/shared/infrastructure/database/drizzle.service';
 import {
+  contracts,
   properties,
   roomImages,
   rooms,
@@ -24,7 +25,17 @@ export class DrizzleBrowseRoomRepository implements BrowseRoomRepository {
   async findAvailable(
     filters: BrowseRoomFilters,
   ): Promise<AvailableRoomEntity[]> {
+    // Rooms with a 'sent' contract are awaiting tenant signature — hide from list
+    const roomsWithSentContract = await this.drizzleService.db
+      .select({ roomId: contracts.roomId })
+      .from(contracts)
+      .where(eq(contracts.status, 'sent'));
+
+    const blockedRoomIds = roomsWithSentContract.map((r) => r.roomId);
+
     const conditions = [eq(rooms.status, 'AVAILABLE')];
+    if (blockedRoomIds.length > 0)
+      conditions.push(notInArray(rooms.id, blockedRoomIds));
     if (filters.minRent !== undefined)
       conditions.push(gte(rooms.monthly_rent, String(filters.minRent)));
     if (filters.maxRent !== undefined)
@@ -108,6 +119,10 @@ export class DrizzleBrowseRoomRepository implements BrowseRoomRepository {
       .orderBy(roomImages.sortOrder);
 
     const { room: r } = row;
+    const defaultParkingFees = {
+      motorbike: 150000,
+      car: 1000000,
+    };
     return new BrowseRoomDetailEntity(
       r.id,
       r.title,
@@ -128,6 +143,8 @@ export class DrizzleBrowseRoomRepository implements BrowseRoomRepository {
       row.landlordName,
       row.landlordAvatarUrl ?? null,
       imgs.map((i) => ({ id: i.id, url: i.url, sortOrder: i.sortOrder })),
+      (r.parking_fees as { motorbike: number; car: number }) ??
+        defaultParkingFees,
     );
   }
 }
