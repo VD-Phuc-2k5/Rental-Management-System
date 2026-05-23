@@ -21,6 +21,7 @@ export class DrizzleRentalRequestRepository implements RentalRequestRepository {
       row.id,
       row.tenantId,
       row.roomId,
+      row.landlordId ?? null,
       row.note,
       (row.memberInfo as MemberInfo[]) ?? [],
       (row.parkingInfo as VehicleInfo[]) ?? [],
@@ -33,13 +34,14 @@ export class DrizzleRentalRequestRepository implements RentalRequestRepository {
   async create(
     tenantId: string,
     roomId: string,
+    landlordId: string,
     note: string | null,
     memberInfo: MemberInfo[] = [],
     parkingInfo: VehicleInfo[] = [],
   ): Promise<RentalRequestEntity> {
     const [row] = await this.drizzle.db
       .insert(rentalRequests)
-      .values({ tenantId, roomId, note, memberInfo, parkingInfo })
+      .values({ tenantId, roomId, landlordId, note, memberInfo, parkingInfo })
       .returning();
     return this.toEntity(row);
   }

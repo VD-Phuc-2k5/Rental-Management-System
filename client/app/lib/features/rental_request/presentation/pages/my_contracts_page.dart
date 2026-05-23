@@ -8,23 +8,22 @@ import '../../../../core/constants.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/format_currency.dart';
 import '../../../../core/utils/sealed_class_state.dart';
-import '../blocs/landlord_contract_list/landlord_contract_list_bloc.dart';
+import '../blocs/my_contract_list/my_contract_list_bloc.dart';
 
-class LandlordContractsPage extends StatelessWidget {
-  const LandlordContractsPage({super.key});
+class MyContractsPage extends StatelessWidget {
+  const MyContractsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          getIt<LandlordContractListBloc>()..add(LandlordContractListFetched()),
-      child: const _LandlordContractsView(),
+      create: (_) => getIt<MyContractListBloc>()..add(MyContractListFetched()),
+      child: const _MyContractsView(),
     );
   }
 }
 
-class _LandlordContractsView extends StatelessWidget {
-  const _LandlordContractsView();
+class _MyContractsView extends StatelessWidget {
+  const _MyContractsView();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class _LandlordContractsView extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: const Text(
-          'Hợp đồng',
+          'Hợp đồng của tôi',
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 18,
@@ -50,21 +49,20 @@ class _LandlordContractsView extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh, color: AppColors.blue700),
-            onPressed: () => context.read<LandlordContractListBloc>().add(
-              LandlordContractListFetched(),
-            ),
+            onPressed: () =>
+                context.read<MyContractListBloc>().add(MyContractListFetched()),
           ),
         ],
       ),
-      body: BlocBuilder<LandlordContractListBloc, LandlordContractListState>(
+      body: BlocBuilder<MyContractListBloc, MyContractListState>(
         builder: (context, state) {
           final list = state.currentOrPreviousData;
-          final isLoading = state is LandlordContractListLoadInProgress;
+          final isLoading = state is MyContractListLoadInProgress;
 
-          if (state is LandlordContractListInitial) {
+          if (state is MyContractListInitial) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (state is LandlordContractListLoadFailure && list == null) {
+          if (state is MyContractListLoadFailure && list == null) {
             return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -77,8 +75,8 @@ class _LandlordContractsView extends StatelessWidget {
                   const SizedBox(height: 12),
                   ElevatedButton(
                     onPressed: () => context
-                        .read<LandlordContractListBloc>()
-                        .add(LandlordContractListFetched()),
+                        .read<MyContractListBloc>()
+                        .add(MyContractListFetched()),
                     child: const Text('Thử lại'),
                   ),
                 ],
@@ -95,9 +93,8 @@ class _LandlordContractsView extends StatelessWidget {
           }
           return RefreshIndicator(
             color: AppColors.blue700,
-            onRefresh: () async => context.read<LandlordContractListBloc>().add(
-              LandlordContractListFetched(),
-            ),
+            onRefresh: () async =>
+                context.read<MyContractListBloc>().add(MyContractListFetched()),
             child: Stack(
               children: [
                 ListView.separated(
@@ -105,7 +102,7 @@ class _LandlordContractsView extends StatelessWidget {
                   itemCount: list?.length ?? 0,
                   separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (context, index) =>
-                      _ContractCard(contract: list![index]),
+                      _MyContractCard(contract: list![index]),
                 ),
                 if (isLoading)
                   const Positioned(
@@ -123,8 +120,8 @@ class _LandlordContractsView extends StatelessWidget {
   }
 }
 
-class _ContractCard extends StatelessWidget {
-  const _ContractCard({required this.contract});
+class _MyContractCard extends StatelessWidget {
+  const _MyContractCard({required this.contract});
 
   final ContractEntity contract;
 
@@ -133,11 +130,10 @@ class _ContractCard extends StatelessWidget {
     return InkWell(
       onTap: () => context.push(
         RoutePaths.contractPreview,
-        extra: {'contractId': contract.id, 'isLandlord': true},
+        extra: {'contractId': contract.id, 'isLandlord': false},
       ),
       borderRadius: BorderRadius.circular(12),
       child: Card(
-        color: AppColors.white,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -150,11 +146,8 @@ class _ContractCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(
-                    Icons.description_outlined,
-                    size: 18,
-                    color: AppColors.blue700,
-                  ),
+                  const Icon(Icons.description_outlined,
+                      size: 18, color: AppColors.blue700),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -190,16 +183,16 @@ class _ContractCard extends StatelessWidget {
                   color: AppColors.slate500,
                 ),
               ),
-              if (contract.status == ContractStatus.draft) ...[
+              if (contract.status == ContractStatus.sent) ...[
                 const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    icon: const Icon(Icons.edit_outlined, size: 16),
-                    label: const Text('Chỉnh sửa & Gửi'),
+                    icon: const Icon(Icons.edit_note, size: 16),
+                    label: const Text('Xem & Ký hợp đồng'),
                     onPressed: () => context.push(
-                      RoutePaths.landlordContractEdit,
-                      extra: contract,
+                      RoutePaths.contractPreview,
+                      extra: {'contractId': contract.id, 'isLandlord': false},
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.blue700,
@@ -228,30 +221,30 @@ class _ContractStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final (label, bg, fg) = switch (status) {
       ContractStatus.draft => (
-        'Bản nháp',
-        AppColors.slate100,
-        AppColors.slate500,
-      ),
+          'Bản nháp',
+          AppColors.slate100,
+          AppColors.slate500,
+        ),
       ContractStatus.sent => (
-        'Chờ ký',
-        AppColors.amber100,
-        AppColors.amber500,
-      ),
+          'Chờ ký',
+          AppColors.amber100,
+          AppColors.amber500,
+        ),
       ContractStatus.signed => (
-        'Đã ký',
-        AppColors.green100,
-        AppColors.green700,
-      ),
+          'Đã ký',
+          AppColors.green100,
+          AppColors.green700,
+        ),
       ContractStatus.cancelled => (
-        'Đã huỷ',
-        AppColors.red100,
-        AppColors.red500,
-      ),
+          'Đã huỷ',
+          AppColors.red100,
+          AppColors.red500,
+        ),
       ContractStatus.finished => (
-        'Kết thúc',
-        AppColors.blue100,
-        AppColors.blue700,
-      ),
+          'Kết thúc',
+          AppColors.blue100,
+          AppColors.blue700,
+        ),
     };
 
     return Container(

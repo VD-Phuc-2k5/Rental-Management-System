@@ -1,7 +1,9 @@
 ﻿import 'package:core/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../blocs/new_requests/new_requests_cubit.dart';
 import '../config/router/route_constants.dart';
 
 class LandlordNavigationBottom extends StatelessWidget {
@@ -12,29 +14,6 @@ class LandlordNavigationBottom extends StatelessWidget {
   });
   final int currentIndex;
   final Function(int)? onTap;
-
-  final _items = const [
-    BottomNavigationBarItem(
-      icon: Icon(Icons.dashboard_outlined),
-      label: "Tổng quan",
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.door_front_door_outlined),
-      label: "Phòng",
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.check_circle_outline),
-      label: "Yêu cầu",
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.receipt_long_outlined),
-      label: "Hóa đơn",
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.account_circle_outlined),
-      label: "Hồ sơ",
-    ),
-  ];
 
   void _navigateByIndex(BuildContext context, int index) {
     if (index == currentIndex) return;
@@ -72,9 +51,61 @@ class LandlordNavigationBottom extends StatelessWidget {
           ),
         ],
       ),
-      child: BottomNavigationBar(
-        landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-        items: _items,
+      child: BlocBuilder<NewRequestsCubit, NewRequestsState>(
+        builder: (context, requestsState) => BottomNavigationBar(
+          landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
+          items: [
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_outlined),
+              label: "Tổng quan",
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.door_front_door_outlined),
+              label: "Phòng",
+            ),
+            BottomNavigationBarItem(
+              icon: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.check_circle_outline),
+                  if (requestsState.count > 0)
+                    Positioned(
+                      right: -4,
+                      top: -4,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 14,
+                          minHeight: 14,
+                        ),
+                        child: Text(
+                          '${requestsState.count}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              label: "Yêu cầu",
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long_outlined),
+              label: "Hóa đơn",
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_outlined),
+              label: "Hồ sơ",
+            ),
+          ],
         currentIndex: currentIndex,
         onTap: (index) {
           if (onTap != null) {
@@ -93,6 +124,7 @@ class LandlordNavigationBottom extends StatelessWidget {
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
         iconSize: 28,
+      ),
       ),
     );
   }

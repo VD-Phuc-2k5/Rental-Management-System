@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/blocs/new_requests/new_requests_cubit.dart';
 import '../../../../core/config/router/route_constants.dart';
 import '../../../../core/constants.dart';
 import '../../../../core/di/di.dart';
@@ -17,8 +18,9 @@ class LandlordViewingAppointmentsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<LandlordViewingAppointmentListBloc>()
-        ..add(LandlordViewingAppointmentListFetched()),
+      create: (_) =>
+          getIt<LandlordViewingAppointmentListBloc>()
+            ..add(LandlordViewingAppointmentListFetched()),
       child: const _LandlordViewingAppointmentsView(),
     );
   }
@@ -29,102 +31,132 @@ class _LandlordViewingAppointmentsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Lịch xem phòng',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: AppColors.black,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.assignment_outlined, color: AppColors.blue700),
-            tooltip: 'Yêu cầu thuê',
-            onPressed: () => context.push(RoutePaths.landlordIncomingRequests),
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh, color: AppColors.blue700),
-            onPressed: () => context
-                .read<LandlordViewingAppointmentListBloc>()
-                .add(LandlordViewingAppointmentListFetched()),
-          ),
-        ],
-      ),
-      bottomNavigationBar: const LandlordNavigationBottom(currentIndex: 2),
-      body: BlocBuilder<LandlordViewingAppointmentListBloc,
-          LandlordViewingAppointmentListState>(
-        builder: (context, state) {
-          final list = state.currentOrPreviousData;
-          final isLoading =
-              state is LandlordViewingAppointmentListLoadInProgress;
-
-          if (state is LandlordViewingAppointmentListInitial) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is LandlordViewingAppointmentListLoadFailure &&
-              list == null) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    state.failure.toString(),
-                    style: const TextStyle(color: AppColors.red500),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  ElevatedButton(
-                    onPressed: () => context
-                        .read<LandlordViewingAppointmentListBloc>()
-                        .add(LandlordViewingAppointmentListFetched()),
-                    child: const Text('Thử lại'),
-                  ),
-                ],
-              ),
-            );
-          }
-          if (list != null && list.isEmpty) {
-            return const Center(
-              child: Text(
-                'Chưa có lịch xem phòng nào.',
-                style: TextStyle(color: AppColors.slate500),
-              ),
-            );
-          }
-          return RefreshIndicator(
-            color: AppColors.blue700,
-            onRefresh: () async => context
-                .read<LandlordViewingAppointmentListBloc>()
-                .add(LandlordViewingAppointmentListFetched()),
-            child: Stack(
-              children: [
-                ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: list?.length ?? 0,
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) =>
-                      _ViewingAppointmentCard(appointment: list![index]),
-                ),
-                if (isLoading)
-                  const Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: LinearProgressIndicator(color: AppColors.blue700),
-                  ),
-              ],
+    return BlocListener<NewRequestsCubit, NewRequestsState>(
+      listenWhen: (prev, curr) => curr.count > prev.count,
+      listener: (context, state) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Có yêu cầu thuê phòng mới!'),
+            backgroundColor: AppColors.blue700,
+            action: SnackBarAction(
+              label: 'Xem',
+              textColor: Colors.white,
+              onPressed: () {
+                context.read<NewRequestsCubit>().clearBadge();
+                context.push(RoutePaths.landlordIncomingRequests);
+              },
             ),
-          );
-        },
+          ),
+        );
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: const Text(
+            'Lịch xem phòng',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: AppColors.black,
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.assignment_outlined,
+                color: AppColors.blue700,
+              ),
+              tooltip: 'Yêu cầu thuê',
+              onPressed: () {
+                context.read<NewRequestsCubit>().clearBadge();
+                context.push(RoutePaths.landlordIncomingRequests);
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh, color: AppColors.blue700),
+              onPressed: () => context
+                  .read<LandlordViewingAppointmentListBloc>()
+                  .add(LandlordViewingAppointmentListFetched()),
+            ),
+          ],
+        ),
+        bottomNavigationBar: const LandlordNavigationBottom(currentIndex: 2),
+        body:
+            BlocBuilder<
+              LandlordViewingAppointmentListBloc,
+              LandlordViewingAppointmentListState
+            >(
+              builder: (context, state) {
+                final list = state.currentOrPreviousData;
+                final isLoading =
+                    state is LandlordViewingAppointmentListLoadInProgress;
+
+                if (state is LandlordViewingAppointmentListInitial) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state is LandlordViewingAppointmentListLoadFailure &&
+                    list == null) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          state.failure.toString(),
+                          style: const TextStyle(color: AppColors.red500),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                        ElevatedButton(
+                          onPressed: () => context
+                              .read<LandlordViewingAppointmentListBloc>()
+                              .add(LandlordViewingAppointmentListFetched()),
+                          child: const Text('Thử lại'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                if (list != null && list.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'Chưa có lịch xem phòng nào.',
+                      style: TextStyle(color: AppColors.slate500),
+                    ),
+                  );
+                }
+                return RefreshIndicator(
+                  color: AppColors.blue700,
+                  onRefresh: () async => context
+                      .read<LandlordViewingAppointmentListBloc>()
+                      .add(LandlordViewingAppointmentListFetched()),
+                  child: Stack(
+                    children: [
+                      ListView.separated(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: list?.length ?? 0,
+                        separatorBuilder: (_, _) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) =>
+                            _ViewingAppointmentCard(appointment: list![index]),
+                      ),
+                      if (isLoading)
+                        const Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          child: LinearProgressIndicator(
+                            color: AppColors.blue700,
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              },
+            ),
       ),
     );
   }
@@ -143,6 +175,7 @@ class _ViewingAppointmentCard extends StatelessWidget {
         : appointment.scheduledAt;
 
     return Card(
+      color: AppColors.white,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -155,8 +188,11 @@ class _ViewingAppointmentCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.calendar_month,
-                    size: 18, color: AppColors.blue700),
+                const Icon(
+                  Icons.calendar_month,
+                  size: 18,
+                  color: AppColors.blue700,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -200,8 +236,11 @@ class _ViewingAppointmentCard extends StatelessWidget {
                     child: OutlinedButton(
                       onPressed: () => context
                           .read<LandlordViewingAppointmentListBloc>()
-                          .add(LandlordViewingAppointmentRejected(
-                              id: appointment.id)),
+                          .add(
+                            LandlordViewingAppointmentRejected(
+                              id: appointment.id,
+                            ),
+                          ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.red500,
                         side: const BorderSide(color: AppColors.red500),
@@ -217,8 +256,11 @@ class _ViewingAppointmentCard extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () => context
                           .read<LandlordViewingAppointmentListBloc>()
-                          .add(LandlordViewingAppointmentApproved(
-                              id: appointment.id)),
+                          .add(
+                            LandlordViewingAppointmentApproved(
+                              id: appointment.id,
+                            ),
+                          ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.blue700,
                         foregroundColor: Colors.white,
@@ -248,25 +290,25 @@ class _StatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final (label, bg, fg) = switch (status) {
       ViewingAppointmentStatus.pending => (
-          'Chờ duyệt',
-          AppColors.amber100,
-          AppColors.amber500,
-        ),
+        'Chờ duyệt',
+        AppColors.amber100,
+        AppColors.amber500,
+      ),
       ViewingAppointmentStatus.approved => (
-          'Đã duyệt',
-          AppColors.green100,
-          AppColors.green700,
-        ),
+        'Đã duyệt',
+        AppColors.green100,
+        AppColors.green700,
+      ),
       ViewingAppointmentStatus.rejected => (
-          'Từ chối',
-          AppColors.red100,
-          AppColors.red500,
-        ),
+        'Từ chối',
+        AppColors.red100,
+        AppColors.red500,
+      ),
       ViewingAppointmentStatus.cancelled => (
-          'Đã huỷ',
-          AppColors.slate100,
-          AppColors.slate500,
-        ),
+        'Đã huỷ',
+        AppColors.slate100,
+        AppColors.slate500,
+      ),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

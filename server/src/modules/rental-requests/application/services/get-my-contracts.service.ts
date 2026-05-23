@@ -7,6 +7,7 @@ export class GetMyContractsService {
   constructor(private readonly contractRepo: ContractRepository) {}
 
   async execute(tenantId: string): Promise<ContractEntity[]> {
-    return this.contractRepo.findByTenantId(tenantId);
+    const contracts = await this.contractRepo.findByTenantId(tenantId);
+    return contracts.filter((c) => c.status !== 'cancelled');
   }
 }

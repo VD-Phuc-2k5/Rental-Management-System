@@ -28,6 +28,7 @@ import '../../../features/rental_request/presentation/pages/rental_request_page.
 import '../../../features/rental_request/presentation/pages/rental_request_wizard_page.dart';
 import '../../../features/rental_request/presentation/pages/my_rental_requests_page.dart';
 import '../../../features/rental_request/presentation/pages/contract_preview_page.dart';
+import '../../../features/rental_request/presentation/pages/my_contracts_page.dart';
 import '../../../features/rental_request/presentation/pages/landlord_incoming_requests_page.dart';
 import '../../../features/rental_request/presentation/pages/landlord_contracts_page.dart';
 import '../../../features/rental_request/presentation/pages/landlord_contract_edit_page.dart';
@@ -234,8 +235,11 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
         path: RoutePaths.contractPreview,
         name: RouteNames.contractPreview,
         builder: (context, state) {
-          final extra = state.extra as Map<String, String>;
-          return ContractPreviewPage(contractId: extra['contractId'] ?? '');
+          final extra = state.extra as Map<String, dynamic>;
+          return ContractPreviewPage(
+            contractId: extra['contractId'] as String? ?? '',
+            isLandlord: extra['isLandlord'] as bool? ?? false,
+          );
         },
       ),
       GoRoute(
@@ -273,6 +277,11 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
           final contract = state.extra as ContractEntity;
           return LandlordContractEditPage(contract: contract);
         },
+      ),
+      GoRoute(
+        path: RoutePaths.myContracts,
+        name: RouteNames.myContracts,
+        builder: (_, _) => const MyContractsPage(),
       ),
       GoRoute(
         path: RoutePaths.rentalRequestWizard,

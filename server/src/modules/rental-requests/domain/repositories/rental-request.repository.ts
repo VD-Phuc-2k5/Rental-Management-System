@@ -8,6 +8,7 @@ export abstract class RentalRequestRepository {
   abstract create(
     tenantId: string,
     roomId: string,
+    landlordId: string,
     note: string | null,
     memberInfo?: MemberInfo[],
     parkingInfo?: VehicleInfo[],

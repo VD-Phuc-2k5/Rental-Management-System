@@ -15,8 +15,8 @@ class LandlordIncomingRequestsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<LandlordRequestListBloc>()
-        ..add(LandlordRequestListFetched()),
+      create: (_) =>
+          getIt<LandlordRequestListBloc>()..add(LandlordRequestListFetched()),
       child: const _LandlordIncomingRequestsView(),
     );
   }
@@ -48,16 +48,18 @@ class _LandlordIncomingRequestsView extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon:
-                const Icon(Icons.description_outlined, color: AppColors.blue700),
+            icon: const Icon(
+              Icons.description_outlined,
+              color: AppColors.blue700,
+            ),
             tooltip: 'Hợp đồng',
             onPressed: () => context.push(RoutePaths.landlordContracts),
           ),
           IconButton(
             icon: const Icon(Icons.refresh, color: AppColors.blue700),
-            onPressed: () => context
-                .read<LandlordRequestListBloc>()
-                .add(LandlordRequestListFetched()),
+            onPressed: () => context.read<LandlordRequestListBloc>().add(
+              LandlordRequestListFetched(),
+            ),
           ),
         ],
       ),
@@ -100,9 +102,9 @@ class _LandlordIncomingRequestsView extends StatelessWidget {
           }
           return RefreshIndicator(
             color: AppColors.blue700,
-            onRefresh: () async => context
-                .read<LandlordRequestListBloc>()
-                .add(LandlordRequestListFetched()),
+            onRefresh: () async => context.read<LandlordRequestListBloc>().add(
+              LandlordRequestListFetched(),
+            ),
             child: Stack(
               children: [
                 ListView.separated(
@@ -136,6 +138,7 @@ class _RentalRequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: AppColors.white,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -148,8 +151,11 @@ class _RentalRequestCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.home_outlined,
-                    size: 18, color: AppColors.blue700),
+                const Icon(
+                  Icons.home_outlined,
+                  size: 18,
+                  color: AppColors.blue700,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -240,25 +246,25 @@ class _StatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final (label, bg, fg) = switch (status) {
       RentalRequestStatus.pending => (
-          'Chờ duyệt',
-          AppColors.amber100,
-          AppColors.amber500,
-        ),
+        'Chờ duyệt',
+        AppColors.amber100,
+        AppColors.amber500,
+      ),
       RentalRequestStatus.accepted => (
-          'Đã chấp nhận',
-          AppColors.green100,
-          AppColors.green700,
-        ),
+        'Đã chấp nhận',
+        AppColors.green100,
+        AppColors.green700,
+      ),
       RentalRequestStatus.rejected => (
-          'Từ chối',
-          AppColors.red100,
-          AppColors.red500,
-        ),
+        'Từ chối',
+        AppColors.red100,
+        AppColors.red500,
+      ),
       RentalRequestStatus.contracted => (
-          'Đã ký HĐ',
-          AppColors.blue100,
-          AppColors.blue700,
-        ),
+        'Đã ký HĐ',
+        AppColors.blue100,
+        AppColors.blue700,
+      ),
     };
 
     return Container(

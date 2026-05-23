@@ -1,7 +1,9 @@
 import 'package:domain/rental_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/config/router/route_constants.dart';
 import '../../../../core/constants.dart';
 import '../../../../core/di/di.dart';
 import '../blocs/my_rental_request_list/my_rental_request_list_bloc.dart';
@@ -43,6 +45,14 @@ class _MyRentalRequestsView extends StatelessWidget {
             color: AppColors.black,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.description_outlined,
+                color: AppColors.blue700),
+            tooltip: 'Hợp đồng của tôi',
+            onPressed: () => context.push(RoutePaths.myContracts),
+          ),
+        ],
       ),
       body: BlocBuilder<MyRentalRequestListBloc, MyRentalRequestListState>(
         builder: (context, state) {

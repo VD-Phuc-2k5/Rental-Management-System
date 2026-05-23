@@ -16,6 +16,9 @@ dependencies:
   http: ^1.6.0
   flutter_dotenv: ^6.0.0
 
+  # Supabase (Realtime notifications)
+  supabase_flutter: ^2.8.4
+
   # State Management
   get_it: ^9.2.0
   injectable: ^2.7.1+4

@@ -284,7 +284,7 @@ class HttpRentalRequestRemoteDataSource
         Uri.parse('$baseUrl/landlord/contracts/$id/send'),
         headers: _headers(token),
       );
-      if (response.statusCode == 200) return;
+      if (response.statusCode >= 200 && response.statusCode < 300) return;
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       _handleError(response.statusCode, json);
     } on SocketException {
@@ -304,7 +304,7 @@ class HttpRentalRequestRemoteDataSource
         Uri.parse('$baseUrl/contracts/$id/sign'),
         headers: _headers(token),
       );
-      if (response.statusCode == 200) return;
+      if (response.statusCode >= 200 && response.statusCode < 300) return;
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       _handleError(response.statusCode, json);
     } on SocketException {
@@ -327,7 +327,7 @@ class HttpRentalRequestRemoteDataSource
         Uri.parse('$baseUrl/contracts/$id/cancel'),
         headers: _headers(token),
       );
-      if (response.statusCode == 200) return;
+      if (response.statusCode >= 200 && response.statusCode < 300) return;
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       _handleError(response.statusCode, json);
     } on SocketException {
@@ -350,7 +350,7 @@ class HttpRentalRequestRemoteDataSource
         Uri.parse('$baseUrl/landlord/contracts/$id/finish'),
         headers: _headers(token),
       );
-      if (response.statusCode == 200) return;
+      if (response.statusCode >= 200 && response.statusCode < 300) return;
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       _handleError(response.statusCode, json);
     } on SocketException {

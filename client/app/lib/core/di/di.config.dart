@@ -81,6 +81,7 @@ import '../../features/viewing_appointment/presentation/blocs/my_viewing_appoint
     as _i500;
 import '../../features/viewing_appointment/presentation/blocs/schedule_viewing/schedule_viewing_bloc.dart'
     as _i324;
+import '../blocs/new_requests/new_requests_cubit.dart' as _i773;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -250,6 +251,10 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i746.UpdateRoomBloc(
         updateRoomUsecase: gh<_i142.UpdateRoomUsecase>(),
       ),
+    );
+    gh.singleton<_i773.NewRequestsCubit>(
+      () => _i773.NewRequestsCubit(gh<_i652.AuthenticationBloc>()),
+      dispose: (i) => i.close(),
     );
     gh.lazySingleton<_i369.PropertyRepository>(
       () => registerModule.propertyRepository(

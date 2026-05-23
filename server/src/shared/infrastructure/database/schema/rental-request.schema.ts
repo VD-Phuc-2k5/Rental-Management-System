@@ -24,6 +24,9 @@ export const rentalRequests = pgTable('rental_requests', {
   roomId: uuid('room_id')
     .notNull()
     .references(() => rooms.id, { onDelete: 'cascade' }),
+  landlordId: uuid('landlord_id').references(() => users.id, {
+    onDelete: 'set null',
+  }),
   note: text('note'),
   memberInfo: jsonb('member_info').notNull().default([]),
   parkingInfo: jsonb('parking_info').notNull().default([]),

@@ -80,6 +80,16 @@ export class DrizzleContractRepository implements ContractRepository {
     return rows.map(this.toEntity.bind(this));
   }
 
+  async findByRentalRequestId(
+    rentalRequestId: string,
+  ): Promise<ContractEntity | null> {
+    const [row] = await this.drizzle.db
+      .select()
+      .from(contracts)
+      .where(eq(contracts.rentalRequestId, rentalRequestId));
+    return row ? this.toEntity(row) : null;
+  }
+
   async findById(id: string): Promise<ContractEntity | null> {
     const [row] = await this.drizzle.db
       .select()

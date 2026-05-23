@@ -8,6 +8,7 @@ export interface MemberInfo {
   fullName: string;
   phone?: string;
   identityNumber?: string;
+  identityImageUrl?: string;
   email?: string;
   address?: string;
   dateOfBirth?: string;
@@ -25,6 +26,7 @@ export class RentalRequestEntity {
     public readonly id: string,
     public readonly tenantId: string,
     public readonly roomId: string,
+    public readonly landlordId: string | null,
     public readonly note: string | null,
     public readonly memberInfo: MemberInfo[],
     public readonly parkingInfo: VehicleInfo[],

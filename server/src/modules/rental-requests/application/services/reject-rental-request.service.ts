@@ -8,11 +8,13 @@ import { eq } from 'drizzle-orm';
 import { DrizzleService } from 'src/shared/infrastructure/database/drizzle.service';
 import { rooms, properties } from 'src/shared/infrastructure/database/schema';
 import { RentalRequestRepository } from '../../domain/repositories/rental-request.repository';
+import { ContractRepository } from '../../domain/repositories/contract.repository';
 
 @Injectable()
 export class RejectRentalRequestService {
   constructor(
     private readonly rentalRequestRepo: RentalRequestRepository,
+    private readonly contractRepo: ContractRepository,
     private readonly drizzle: DrizzleService,
   ) {}
 
@@ -36,5 +38,14 @@ export class RejectRentalRequestService {
       throw new ForbiddenException();
 
     await this.rentalRequestRepo.updateStatus(requestId, 'rejected');
+
+    const contract = await this.contractRepo.findByRentalRequestId(requestId);
+    if (contract && contract.status === 'draft') {
+      await this.contractRepo.updateStatus(
+        contract.id,
+        'cancelled',
+        'cancelledAt',
+      );
+    }
   }
 }

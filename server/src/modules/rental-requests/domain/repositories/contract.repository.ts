@@ -21,6 +21,9 @@ export abstract class ContractRepository {
   ): Promise<ContractEntity>;
   abstract findByTenantId(tenantId: string): Promise<ContractEntity[]>;
   abstract findByLandlordId(landlordId: string): Promise<ContractEntity[]>;
+  abstract findByRentalRequestId(
+    rentalRequestId: string,
+  ): Promise<ContractEntity | null>;
   abstract findById(id: string): Promise<ContractEntity | null>;
   abstract update(
     id: string,

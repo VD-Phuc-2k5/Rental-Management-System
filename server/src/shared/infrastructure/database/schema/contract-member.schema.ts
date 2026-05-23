@@ -12,6 +12,8 @@ export const contractMembers = pgTable('contract_members', {
   email: text('email'),
   address: text('address'),
   isRoomLeader: boolean('is_room_leader').notNull().default(false),
+  identityImageUrl: text('identity_image_url'),
+  dateOfBirth: text('date_of_birth'),
   leftAt: timestamp('left_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()

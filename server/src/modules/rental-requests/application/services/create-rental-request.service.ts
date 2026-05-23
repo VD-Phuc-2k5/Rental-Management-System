@@ -50,6 +50,7 @@ export class CreateRentalRequestService {
     const request = await this.rentalRequestRepo.create(
       tenantId,
       roomId,
+      prop.landlorerId,
       note,
       memberInfo,
       parkingInfo,
@@ -82,6 +83,8 @@ export class CreateRentalRequestService {
           email: m.email ?? null,
           address: m.address ?? null,
           isRoomLeader: m.isRoomLeader,
+          identityImageUrl: m.identityImageUrl ?? null,
+          dateOfBirth: m.dateOfBirth ?? null,
         })),
       );
     }
