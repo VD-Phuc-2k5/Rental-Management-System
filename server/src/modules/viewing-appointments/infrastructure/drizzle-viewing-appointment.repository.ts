@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DrizzleService } from 'src/shared/infrastructure/database/drizzle.service';
-import { viewingAppointments } from 'src/shared/infrastructure/database/schema';
+import {
+  properties,
+  rooms,
+  viewingAppointments,
+} from 'src/shared/infrastructure/database/schema';
 import {
   ViewingAppointmentEntity,
   ViewingAppointmentStatus,
@@ -9,9 +13,7 @@ import {
 import { ViewingAppointmentRepository } from '../domain/repositories/viewing-appointment.repository';
 
 @Injectable()
-export class DrizzleViewingAppointmentRepository
-  implements ViewingAppointmentRepository
-{
+export class DrizzleViewingAppointmentRepository implements ViewingAppointmentRepository {
   constructor(private readonly drizzle: DrizzleService) {}
 
   private toEntity(
@@ -44,11 +46,49 @@ export class DrizzleViewingAppointmentRepository
 
   async findByTenantId(tenantId: string): Promise<ViewingAppointmentEntity[]> {
     const rows = await this.drizzle.db
-      .select()
+      .select({
+        id: viewingAppointments.id,
+        tenantId: viewingAppointments.tenantId,
+        roomId: viewingAppointments.roomId,
+        scheduledAt: viewingAppointments.scheduledAt,
+        status: viewingAppointments.status,
+        note: viewingAppointments.note,
+        createdAt: viewingAppointments.createdAt,
+        updatedAt: viewingAppointments.updatedAt,
+        roomTitle: rooms.title,
+        roomMonthlyRent: rooms.monthly_rent,
+        propertyAddress: properties.address,
+        propertyWard: properties.ward,
+        propertyDistrict: properties.district,
+        propertyCity: properties.city,
+      })
       .from(viewingAppointments)
+      .leftJoin(rooms, eq(viewingAppointments.roomId, rooms.id))
+      .leftJoin(properties, eq(rooms.propertyId, properties.id))
       .where(eq(viewingAppointments.tenantId, tenantId))
       .orderBy(viewingAppointments.scheduledAt);
-    return rows.map(this.toEntity.bind(this));
+
+    return rows.map(
+      (r) =>
+        new ViewingAppointmentEntity(
+          r.id,
+          r.tenantId,
+          r.roomId,
+          r.scheduledAt,
+          r.status as ViewingAppointmentStatus,
+          r.note,
+          r.createdAt,
+          r.updatedAt,
+          r.roomTitle ?? undefined,
+          r.propertyAddress &&
+            r.propertyWard &&
+            r.propertyDistrict &&
+            r.propertyCity
+            ? `${r.propertyAddress}, ${r.propertyWard}, ${r.propertyDistrict}, ${r.propertyCity}`
+            : undefined,
+          r.roomMonthlyRent ?? undefined,
+        ),
+    );
   }
 
   async findByRoomId(roomId: string): Promise<ViewingAppointmentEntity[]> {

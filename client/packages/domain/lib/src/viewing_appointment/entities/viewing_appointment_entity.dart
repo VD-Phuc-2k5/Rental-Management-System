@@ -10,6 +10,9 @@ abstract class ViewingAppointmentEntity {
     required this.createdAt,
     required this.updatedAt,
     this.note,
+    this.roomTitle,
+    this.roomAddress,
+    this.roomMonthlyRent,
   });
 
   final String id;
@@ -20,4 +23,7 @@ abstract class ViewingAppointmentEntity {
   final String? note;
   final String createdAt;
   final String updatedAt;
+  final String? roomTitle;
+  final String? roomAddress;
+  final String? roomMonthlyRent;
 }

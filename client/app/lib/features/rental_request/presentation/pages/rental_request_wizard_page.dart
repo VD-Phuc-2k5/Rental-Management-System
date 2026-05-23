@@ -549,6 +549,8 @@ class _MemberCardState extends State<_MemberCard> {
         imageQuality: 85,
       );
       if (xfile == null || !mounted) return;
+      final bytes = await xfile.readAsBytes();
+      if (!mounted) return;
       final token = context.read<AuthenticationBloc>().state.user?.token ?? '';
       final request =
           http.MultipartRequest(
@@ -556,22 +558,32 @@ class _MemberCardState extends State<_MemberCard> {
               Uri.parse('$baseUrl/upload/image?bucket=identity-images'),
             )
             ..headers['Authorization'] = 'Bearer $token'
-            ..files.add(await http.MultipartFile.fromPath('file', xfile.path));
+            ..files.add(
+              http.MultipartFile.fromBytes('file', bytes, filename: xfile.name),
+            );
       final response = await request.send();
       if (!mounted) return;
-      final body =
-          jsonDecode(await response.stream.bytesToString())
-              as Map<String, dynamic>;
-      final url = (body['data'] as Map<String, dynamic>)['url'] as String?;
-      if (url != null) {
-        widget.form.identityImageUrl = url;
-        widget.onChanged();
-        setState(() {});
+      final bodyStr = await response.stream.bytesToString();
+      final body = jsonDecode(bodyStr) as Map<String, dynamic>;
+      if (response.statusCode == 201) {
+        final url = (body['data'] as Map<String, dynamic>)['url'] as String?;
+        if (url != null) {
+          widget.form.identityImageUrl = url;
+          widget.onChanged();
+          setState(() {});
+        }
+      } else {
+        final msg = body['message'] as String? ?? 'Lỗi không xác định';
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Tải ảnh thất bại: $msg')),
+          );
+        }
       }
-    } catch (_) {
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Tải ảnh căn cước thất bại')),
+          SnackBar(content: Text('Tải ảnh căn cước thất bại: $e')),
         );
       }
     } finally {
@@ -768,9 +780,15 @@ class _MemberCardState extends State<_MemberCard> {
                         height: 16,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Icon(Icons.upload_file_outlined),
+                    : const Icon(
+                        Icons.upload_file_outlined,
+                        color: AppColors.blue700,
+                      ),
                 label: Text(
                   idUrl == null ? 'Tải lên ảnh CCCD' : 'Thay ảnh CCCD',
+                  style: const TextStyle(
+                    color: AppColors.blue700,
+                  ),
                 ),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFFDCE0E5)),

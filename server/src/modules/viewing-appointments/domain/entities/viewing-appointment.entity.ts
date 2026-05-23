@@ -14,5 +14,8 @@ export class ViewingAppointmentEntity {
     public readonly note: string | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
+    public readonly roomTitle?: string,
+    public readonly roomAddress?: string,
+    public readonly roomMonthlyRent?: string,
   ) {}
 }

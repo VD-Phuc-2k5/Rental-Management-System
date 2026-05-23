@@ -17,8 +17,9 @@ class MyAppointmentsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<MyViewingAppointmentListBloc>()
-        ..add(MyViewingAppointmentListFetched()),
+      create: (_) =>
+          getIt<MyViewingAppointmentListBloc>()
+            ..add(MyViewingAppointmentListFetched()),
       child: const _MyAppointmentsView(),
     );
   }
@@ -46,82 +47,90 @@ class _MyAppointmentsView extends StatelessWidget {
           ),
         ),
         actions: [
-          BlocBuilder<MyViewingAppointmentListBloc,
-              MyViewingAppointmentListState>(
+          BlocBuilder<
+            MyViewingAppointmentListBloc,
+            MyViewingAppointmentListState
+          >(
             builder: (context, state) => IconButton(
               icon: const Icon(Icons.refresh, color: AppColors.blue700),
-              onPressed: () => context
-                  .read<MyViewingAppointmentListBloc>()
-                  .add(MyViewingAppointmentListFetched()),
+              onPressed: () => context.read<MyViewingAppointmentListBloc>().add(
+                MyViewingAppointmentListFetched(),
+              ),
             ),
           ),
         ],
       ),
       bottomNavigationBar: const TenantNavigationBottom(currentIndex: 1),
-      body: BlocBuilder<MyViewingAppointmentListBloc,
-          MyViewingAppointmentListState>(
-        builder: (context, state) {
-          final list = state.currentOrPreviousData;
-          final isLoading = state is MyViewingAppointmentListLoadInProgress;
+      body:
+          BlocBuilder<
+            MyViewingAppointmentListBloc,
+            MyViewingAppointmentListState
+          >(
+            builder: (context, state) {
+              final list = state.currentOrPreviousData;
+              final isLoading = state is MyViewingAppointmentListLoadInProgress;
 
-          if (state is MyViewingAppointmentListInitial) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is MyViewingAppointmentListLoadFailure && list == null) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    state.failure.toString(),
-                    style: const TextStyle(color: AppColors.red500),
-                    textAlign: TextAlign.center,
+              if (state is MyViewingAppointmentListInitial) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is MyViewingAppointmentListLoadFailure &&
+                  list == null) {
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        state.failure.toString(),
+                        style: const TextStyle(color: AppColors.red500),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        onPressed: () => context
+                            .read<MyViewingAppointmentListBloc>()
+                            .add(MyViewingAppointmentListFetched()),
+                        child: const Text('Thử lại'),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 12),
-                  ElevatedButton(
-                    onPressed: () => context
-                        .read<MyViewingAppointmentListBloc>()
-                        .add(MyViewingAppointmentListFetched()),
-                    child: const Text('Thử lại'),
+                );
+              }
+              if (list != null && list.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'Bạn chưa có lịch xem phòng nào.',
+                    style: TextStyle(color: AppColors.slate500),
                   ),
-                ],
-              ),
-            );
-          }
-          if (list != null && list.isEmpty) {
-            return const Center(
-              child: Text(
-                'Bạn chưa có lịch xem phòng nào.',
-                style: TextStyle(color: AppColors.slate500),
-              ),
-            );
-          }
-          return RefreshIndicator(
-            color: AppColors.blue700,
-            onRefresh: () async => context
-                .read<MyViewingAppointmentListBloc>()
-                .add(MyViewingAppointmentListFetched()),
-            child: Stack(
-              children: [
-                ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: list?.length ?? 0,
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) =>
-                      _AppointmentCard(appointment: list![index]),
+                );
+              }
+              return RefreshIndicator(
+                color: AppColors.blue700,
+                onRefresh: () async => context
+                    .read<MyViewingAppointmentListBloc>()
+                    .add(MyViewingAppointmentListFetched()),
+                child: Stack(
+                  children: [
+                    ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: list?.length ?? 0,
+                      separatorBuilder: (_, _) => const SizedBox(height: 12),
+                      itemBuilder: (context, index) =>
+                          _AppointmentCard(appointment: list![index]),
+                    ),
+                    if (isLoading)
+                      const Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: LinearProgressIndicator(
+                          color: AppColors.blue700,
+                        ),
+                      ),
+                  ],
                 ),
-                if (isLoading)
-                  const Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: LinearProgressIndicator(color: AppColors.blue700),
-                  ),
-              ],
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
     );
   }
 }
@@ -131,6 +140,18 @@ class _AppointmentCard extends StatelessWidget {
 
   final ViewingAppointmentEntity appointment;
 
+  String _formatRent(String rent) {
+    final value = double.tryParse(rent);
+    if (value == null) return rent;
+    final formatted = value
+        .toStringAsFixed(0)
+        .replaceAllMapped(
+          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+          (m) => '${m[1]}.',
+        );
+    return '$formatted đ/tháng';
+  }
+
   @override
   Widget build(BuildContext context) {
     final scheduledDt = DateTime.tryParse(appointment.scheduledAt)?.toLocal();
@@ -139,6 +160,7 @@ class _AppointmentCard extends StatelessWidget {
         : appointment.scheduledAt;
 
     return Card(
+      color: Colors.white,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -150,33 +172,106 @@ class _AppointmentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.calendar_month,
-                    size: 18, color: AppColors.blue700),
-                const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    dateStr,
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (appointment.roomTitle != null) ...[
+                        Text(
+                          appointment.roomTitle!,
+                          style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                      ],
+                      if (appointment.roomMonthlyRent != null) ...[
+                        Text(
+                          _formatRent(appointment.roomMonthlyRent!),
+                          style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.blue700,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
                 _StatusChip(status: appointment.status),
               ],
             ),
-            if (appointment.note != null && appointment.note!.isNotEmpty) ...[
+            if (appointment.roomAddress != null) ...[
               const SizedBox(height: 6),
-              Text(
-                'Ghi chú: ${appointment.note}',
-                style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 12,
-                  color: AppColors.slate500,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.location_on_outlined,
+                    size: 14,
+                    color: AppColors.slate400,
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      appointment.roomAddress!,
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 12,
+                        color: AppColors.slate500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(
+                  Icons.calendar_month,
+                  size: 14,
+                  color: AppColors.slate400,
                 ),
+                const SizedBox(width: 4),
+                Text(
+                  dateStr,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 13,
+                    color: AppColors.slate600,
+                  ),
+                ),
+              ],
+            ),
+            if (appointment.note != null && appointment.note!.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.notes_outlined,
+                    size: 14,
+                    color: AppColors.slate400,
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      appointment.note!,
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 12,
+                        color: AppColors.slate500,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
             if (appointment.status == ViewingAppointmentStatus.approved) ...[
@@ -240,25 +335,25 @@ class _StatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final (label, bg, fg) = switch (status) {
       ViewingAppointmentStatus.pending => (
-          'Chờ duyệt',
-          AppColors.amber100,
-          AppColors.amber500,
-        ),
+        'Chờ duyệt',
+        AppColors.amber100,
+        AppColors.amber500,
+      ),
       ViewingAppointmentStatus.approved => (
-          'Đã duyệt',
-          AppColors.green100,
-          AppColors.green700,
-        ),
+        'Đã duyệt',
+        AppColors.green100,
+        AppColors.green700,
+      ),
       ViewingAppointmentStatus.rejected => (
-          'Từ chối',
-          AppColors.red100,
-          AppColors.red500,
-        ),
+        'Từ chối',
+        AppColors.red100,
+        AppColors.red500,
+      ),
       ViewingAppointmentStatus.cancelled => (
-          'Đã huỷ',
-          AppColors.slate100,
-          AppColors.slate500,
-        ),
+        'Đã huỷ',
+        AppColors.slate100,
+        AppColors.slate500,
+      ),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

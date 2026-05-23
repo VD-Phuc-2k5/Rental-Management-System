@@ -11,14 +11,14 @@ import 'viewing_appointment_remote_data_source.dart';
 class HttpViewingAppointmentRemoteDataSource
     implements ViewingAppointmentRemoteDataSource {
   HttpViewingAppointmentRemoteDataSource({required http.Client client})
-      : _client = client;
+    : _client = client;
 
   final http.Client _client;
 
   Map<String, String> _headers(String token) => {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
 
   Never _handleError(int statusCode, Map<String, dynamic> json) {
     throw ServerException(
@@ -37,7 +37,7 @@ class HttpViewingAppointmentRemoteDataSource
       final body = <String, dynamic>{
         'roomId': roomId,
         'scheduledAt': scheduledAt,
-        if (note != null) 'note': note,
+        'note': ?note,
       };
       final response = await _client.post(
         Uri.parse('$baseUrl/viewing-appointments'),
@@ -47,7 +47,8 @@ class HttpViewingAppointmentRemoteDataSource
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 201) {
         return ViewingAppointmentModel.fromJson(
-            json['data'] as Map<String, dynamic>);
+          json['data'] as Map<String, dynamic>,
+        );
       }
       _handleError(response.statusCode, json);
     } on SocketException {
@@ -55,7 +56,11 @@ class HttpViewingAppointmentRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -72,7 +77,10 @@ class HttpViewingAppointmentRemoteDataSource
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 200) {
         return (json['data'] as List)
-            .map((e) => ViewingAppointmentModel.fromJson(e as Map<String, dynamic>))
+            .map(
+              (e) =>
+                  ViewingAppointmentModel.fromJson(e as Map<String, dynamic>),
+            )
             .toList();
       }
       _handleError(response.statusCode, json);
@@ -81,7 +89,11 @@ class HttpViewingAppointmentRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -98,7 +110,10 @@ class HttpViewingAppointmentRemoteDataSource
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 200) {
         return (json['data'] as List)
-            .map((e) => ViewingAppointmentModel.fromJson(e as Map<String, dynamic>))
+            .map(
+              (e) =>
+                  ViewingAppointmentModel.fromJson(e as Map<String, dynamic>),
+            )
             .toList();
       }
       _handleError(response.statusCode, json);
@@ -107,7 +122,11 @@ class HttpViewingAppointmentRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -124,7 +143,9 @@ class HttpViewingAppointmentRemoteDataSource
       );
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return ViewingAppointmentModel.fromJson(json['data'] as Map<String, dynamic>);
+        return ViewingAppointmentModel.fromJson(
+          json['data'] as Map<String, dynamic>,
+        );
       }
       _handleError(response.statusCode, json);
     } on SocketException {
@@ -132,7 +153,11 @@ class HttpViewingAppointmentRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -149,7 +174,9 @@ class HttpViewingAppointmentRemoteDataSource
       );
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return ViewingAppointmentModel.fromJson(json['data'] as Map<String, dynamic>);
+        return ViewingAppointmentModel.fromJson(
+          json['data'] as Map<String, dynamic>,
+        );
       }
       _handleError(response.statusCode, json);
     } on SocketException {
@@ -157,7 +184,11 @@ class HttpViewingAppointmentRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -180,7 +211,11 @@ class HttpViewingAppointmentRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
