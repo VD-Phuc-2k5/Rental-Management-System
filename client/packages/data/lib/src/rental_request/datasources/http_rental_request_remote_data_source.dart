@@ -8,20 +8,21 @@ import 'package:http/http.dart' as http;
 
 import '../models/contract_member_model.dart';
 import '../models/contract_model.dart';
+import '../models/vnpay_payment_model.dart';
 import '../models/rental_request_model.dart';
 import 'rental_request_remote_data_source.dart';
 
 class HttpRentalRequestRemoteDataSource
     implements RentalRequestRemoteDataSource {
   HttpRentalRequestRemoteDataSource({required http.Client client})
-      : _client = client;
+    : _client = client;
 
   final http.Client _client;
 
   Map<String, String> _headers(String token) => {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
 
   Never _handleError(int statusCode, Map<String, dynamic> json) {
     throw ServerException(
@@ -53,7 +54,9 @@ class HttpRentalRequestRemoteDataSource
       );
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 201) {
-        return RentalRequestModel.fromJson(json['data'] as Map<String, dynamic>);
+        return RentalRequestModel.fromJson(
+          json['data'] as Map<String, dynamic>,
+        );
       }
       _handleError(response.statusCode, json);
     } on SocketException {
@@ -61,7 +64,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -87,7 +94,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -110,7 +121,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -136,7 +151,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -159,7 +178,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -183,7 +206,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -209,7 +236,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -234,7 +265,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -253,8 +288,8 @@ class HttpRentalRequestRemoteDataSource
       final body = <String, dynamic>{
         'startDate': ?startDate,
         'endDate': ?endDate,
-        'monthlyRent': ?monthlyRent,
-        'deposit': ?deposit,
+        if (monthlyRent != null) 'monthlyRent': monthlyRent.toStringAsFixed(0),
+        if (deposit != null) 'deposit': deposit.toStringAsFixed(0),
         'terms': ?terms,
       };
       final response = await _client.patch(
@@ -272,7 +307,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -292,7 +331,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -312,7 +355,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -335,7 +382,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -358,7 +409,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -385,7 +440,11 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }
@@ -409,7 +468,134 @@ class HttpRentalRequestRemoteDataSource
     } on FormatException {
       throw const UnknownException(message: 'Invalid response format');
     } catch (e) {
-      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<VnpayPaymentModel> createVnpayDepositPayment({
+    required String token,
+    required String contractId,
+  }) async {
+    try {
+      final response = await _client.post(
+        Uri.parse('$baseUrl/payments/vnpay/create-deposit'),
+        headers: _headers(token),
+        body: jsonEncode({'contractId': contractId}),
+      );
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return VnpayPaymentModel.fromJson(json['data'] as Map<String, dynamic>);
+      }
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<ContractModel>> getRoomContracts({
+    required String token,
+    required String roomId,
+  }) async {
+    try {
+      final response = await _client.get(
+        Uri.parse('$baseUrl/landlord/rooms/$roomId/contracts'),
+        headers: _headers(token),
+      );
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        return (json['data'] as List)
+            .map((e) => ContractModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<RentalRequestModel> getRentalRequestById({
+    required String token,
+    required String id,
+  }) async {
+    try {
+      final response = await _client.get(
+        Uri.parse('$baseUrl/rental-requests/$id'),
+        headers: _headers(token),
+      );
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        return RentalRequestModel.fromJson(
+          json['data'] as Map<String, dynamic>,
+        );
+      }
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<ContractModel> getContractByRentalRequestId({
+    required String token,
+    required String rentalRequestId,
+  }) async {
+    try {
+      final response = await _client.get(
+        Uri.parse(
+          '$baseUrl/landlord/rental-requests/$rentalRequestId/contract',
+        ),
+        headers: _headers(token),
+      );
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        return ContractModel.fromJson(json['data'] as Map<String, dynamic>);
+      }
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
       throw UnknownException(message: e.toString());
     }
   }

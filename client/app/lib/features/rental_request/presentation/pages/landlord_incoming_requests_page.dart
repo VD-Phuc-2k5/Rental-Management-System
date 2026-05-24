@@ -25,6 +25,16 @@ class LandlordIncomingRequestsPage extends StatelessWidget {
 class _LandlordIncomingRequestsView extends StatelessWidget {
   const _LandlordIncomingRequestsView();
 
+  // Hide rejected requests that are older than 24 hours.
+  List<RentalRequestEntity> _filterVisible(List<RentalRequestEntity> list) {
+    final cutoff = DateTime.now().subtract(const Duration(hours: 24));
+    return list.where((r) {
+      if (r.status != RentalRequestStatus.rejected) return true;
+      final updatedAt = DateTime.tryParse(r.updatedAt);
+      return updatedAt != null && updatedAt.isAfter(cutoff);
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +75,8 @@ class _LandlordIncomingRequestsView extends StatelessWidget {
       ),
       body: BlocBuilder<LandlordRequestListBloc, LandlordRequestListState>(
         builder: (context, state) {
-          final list = state.currentOrPreviousData;
+          final raw = state.currentOrPreviousData;
+          final list = raw != null ? _filterVisible(raw) : null;
           final isLoading = state is LandlordRequestListLoadInProgress;
 
           if (state is LandlordRequestListInitial) {
@@ -130,13 +141,102 @@ class _LandlordIncomingRequestsView extends StatelessWidget {
   }
 }
 
-class _RentalRequestCard extends StatelessWidget {
+class _RentalRequestCard extends StatefulWidget {
   const _RentalRequestCard({required this.request});
 
   final RentalRequestEntity request;
 
   @override
+  State<_RentalRequestCard> createState() => _RentalRequestCardState();
+}
+
+enum _ContractAction { view, edit }
+
+class _RentalRequestCardState extends State<_RentalRequestCard> {
+  _ContractAction? _loadingAction;
+
+  bool get _isLoadingContract => _loadingAction != null;
+
+  String _formatDateDMY(String raw) {
+    final parsed = DateTime.tryParse(raw);
+    if (parsed == null) {
+      final trimmed = raw.length >= 10 ? raw.substring(0, 10) : raw;
+      return trimmed.replaceAll('-', '/');
+    }
+    final day = parsed.day.toString().padLeft(2, '0');
+    final month = parsed.month.toString().padLeft(2, '0');
+    return '$day/$month/${parsed.year}';
+  }
+
+  String get _senderName {
+    final members = widget.request.memberInfo;
+    final leader = members.where((m) => m.isRoomLeader).firstOrNull;
+    return (leader ?? members.firstOrNull)?.fullName ?? 'Không rõ';
+  }
+
+  String get _roomDisplay => widget.request.roomTitle ?? widget.request.roomId;
+
+  bool get _hasContract =>
+      widget.request.status == RentalRequestStatus.pending ||
+      widget.request.status == RentalRequestStatus.accepted ||
+      widget.request.status == RentalRequestStatus.contracted;
+
+  Future<void> _withContract(
+    BuildContext context,
+    _ContractAction action,
+    Future<void> Function(ContractEntity contract) onSuccess,
+  ) async {
+    if (_isLoadingContract) return;
+    setState(() => _loadingAction = action);
+    try {
+      final result = await getIt<GetContractByRentalRequestIdUsecase>()(
+        GetContractByRentalRequestIdParams(
+          rentalRequestId: widget.request.id,
+        ),
+      );
+      if (!mounted) return;
+      await result.fold(
+        (failure) async {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(failure.toString())),
+          );
+        },
+        onSuccess,
+      );
+    } finally {
+      if (mounted) setState(() => _loadingAction = null);
+    }
+  }
+
+  Future<void> _openContract(BuildContext context) async {
+    await _withContract(
+      context,
+      _ContractAction.view,
+      (contract) async {
+        await context.push(
+          RoutePaths.contractPreview,
+          extra: {'contractId': contract.id, 'isLandlord': true},
+        );
+      },
+    );
+  }
+
+  Future<void> _openContractEditor(BuildContext context) async {
+    await _withContract(
+      context,
+      _ContractAction.edit,
+      (contract) async {
+        await context.push(
+          RoutePaths.landlordContractEdit,
+          extra: contract,
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final request = widget.request;
     return Card(
       color: AppColors.white,
       elevation: 0,
@@ -159,7 +259,7 @@ class _RentalRequestCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Phòng: ${request.roomId}',
+                    'Phòng: $_roomDisplay',
                     style: const TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 14,
@@ -173,9 +273,18 @@ class _RentalRequestCard extends StatelessWidget {
                 _StatusChip(status: request.status),
               ],
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Text(
-              'Ngày gửi: ${request.createdAt.substring(0, 10)}',
+              'Người gửi: $_senderName',
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 12,
+                color: AppColors.slate500,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'Ngày gửi: ${_formatDateDMY(request.createdAt)}',
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 12,
@@ -193,41 +302,115 @@ class _RentalRequestCard extends StatelessWidget {
                 ),
               ),
             ],
-            if (request.status == RentalRequestStatus.pending) ...[
+            if (request.status == RentalRequestStatus.pending ||
+                _hasContract) ...[
               const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => context
-                          .read<LandlordRequestListBloc>()
-                          .add(LandlordRequestListRejected(id: request.id)),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.red500,
-                        side: const BorderSide(color: AppColors.red500),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.slate50,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    if (request.status == RentalRequestStatus.pending)
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: _isLoadingContract
+                              ? null
+                              : () =>
+                                    context.read<LandlordRequestListBloc>().add(
+                                      LandlordRequestListRejected(
+                                        id: request.id,
+                                      ),
+                                    ),
+                          icon: const Icon(Icons.close_rounded, size: 16),
+                          label: const Text('Từ chối'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.red500,
+                            side: const BorderSide(color: AppColors.red500),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                         ),
                       ),
-                      child: const Text('Từ chối'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () =>
-                          context.push(RoutePaths.landlordContracts),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.blue700,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                    if (request.status == RentalRequestStatus.pending &&
+                        _hasContract)
+                      const SizedBox(height: 8),
+                    if (_hasContract)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: _isLoadingContract
+                                  ? null
+                                  : () => _openContract(context),
+                              icon: _loadingAction == _ContractAction.view
+                                  ? const SizedBox(
+                                      height: 14,
+                                      width: 14,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: AppColors.blue700,
+                                      ),
+                                    )
+                                  : const Icon(
+                                      Icons.visibility_outlined,
+                                      size: 16,
+                                    ),
+                              label: Text(
+                                _loadingAction == _ContractAction.view
+                                    ? 'Đang tải...'
+                                    : 'Xem HĐ',
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AppColors.blue700,
+                                side: const BorderSide(
+                                  color: AppColors.blue700,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: _isLoadingContract
+                                  ? null
+                                  : () => _openContractEditor(context),
+                              icon: _loadingAction == _ContractAction.edit
+                                  ? const SizedBox(
+                                      height: 14,
+                                      width: 14,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Icon(Icons.edit_outlined, size: 16),
+                              label: Text(
+                                _loadingAction == _ContractAction.edit
+                                    ? 'Đang tải...'
+                                    : 'Cập nhật HĐ',
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.blue700,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: const Text('Xem HĐ'),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ],

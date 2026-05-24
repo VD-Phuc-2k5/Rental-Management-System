@@ -3,7 +3,6 @@ import 'payment_models.dart';
 import 'package:flutter/material.dart';
 
 class PaymentMethodOptionWidget extends StatelessWidget {
-
   const PaymentMethodOptionWidget({
     super.key,
     required this.option,
@@ -44,8 +43,8 @@ class PaymentMethodOptionWidget extends StatelessWidget {
       case PaymentMethodType.vnpay:
         iconData = Icons.qr_code;
         break;
-      case PaymentMethodType.momo:
-        iconData = Icons.account_balance_wallet;
+      case PaymentMethodType.bankTransfer:
+        iconData = Icons.account_balance_rounded;
         break;
     }
 

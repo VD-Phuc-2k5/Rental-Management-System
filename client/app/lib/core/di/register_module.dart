@@ -42,11 +42,10 @@ abstract class RegisterModule {
   PropertyRepositoryImpl propertyRepository(
     PropertyRemoteDataSource dataSource,
     AuthenticationBloc authBloc,
-  ) =>
-      PropertyRepositoryImpl(
-        propertyRemoteDataSource: dataSource,
-        getToken: () => authBloc.state.user?.token ?? '',
-      );
+  ) => PropertyRepositoryImpl(
+    propertyRemoteDataSource: dataSource,
+    getToken: () => authBloc.state.user?.token ?? '',
+  );
 
   // room datasource
   @LazySingleton(as: RoomRemoteDataSource)
@@ -57,11 +56,10 @@ abstract class RegisterModule {
   RoomRepositoryImpl roomRepository(
     RoomRemoteDataSource dataSource,
     AuthenticationBloc authBloc,
-  ) =>
-      RoomRepositoryImpl(
-        roomRemoteDataSource: dataSource,
-        getToken: () => authBloc.state.user?.token ?? '',
-      );
+  ) => RoomRepositoryImpl(
+    roomRemoteDataSource: dataSource,
+    getToken: () => authBloc.state.user?.token ?? '',
+  );
 
   // browse room datasource
   @LazySingleton(as: BrowseRoomRemoteDataSource)
@@ -72,11 +70,10 @@ abstract class RegisterModule {
   BrowseRoomRepositoryImpl browseRoomRepository(
     BrowseRoomRemoteDataSource dataSource,
     AuthenticationBloc authBloc,
-  ) =>
-      BrowseRoomRepositoryImpl(
-        browseRoomRemoteDataSource: dataSource,
-        getToken: () => authBloc.state.user?.token ?? '',
-      );
+  ) => BrowseRoomRepositoryImpl(
+    browseRoomRemoteDataSource: dataSource,
+    getToken: () => authBloc.state.user?.token ?? '',
+  );
 
   // profile datasource
   @LazySingleton(as: ProfileRemoteDataSource)
@@ -87,11 +84,10 @@ abstract class RegisterModule {
   ProfileRepositoryImpl profileRepository(
     ProfileRemoteDataSource dataSource,
     AuthenticationBloc authBloc,
-  ) =>
-      ProfileRepositoryImpl(
-        profileRemoteDataSource: dataSource,
-        getToken: () => authBloc.state.user?.token ?? '',
-      );
+  ) => ProfileRepositoryImpl(
+    profileRemoteDataSource: dataSource,
+    getToken: () => authBloc.state.user?.token ?? '',
+  );
 
   // rental request datasource
   @LazySingleton(as: RentalRequestRemoteDataSource)
@@ -102,11 +98,10 @@ abstract class RegisterModule {
   RentalRequestRepositoryImpl rentalRequestRepository(
     RentalRequestRemoteDataSource dataSource,
     AuthenticationBloc authBloc,
-  ) =>
-      RentalRequestRepositoryImpl(
-        rentalRequestRemoteDataSource: dataSource,
-        getToken: () => authBloc.state.user?.token ?? '',
-      );
+  ) => RentalRequestRepositoryImpl(
+    rentalRequestRemoteDataSource: dataSource,
+    getToken: () => authBloc.state.user?.token ?? '',
+  );
 
   // viewing appointment datasource
   @LazySingleton(as: ViewingAppointmentRemoteDataSource)
@@ -117,11 +112,10 @@ abstract class RegisterModule {
   ViewingAppointmentRepositoryImpl viewingAppointmentRepository(
     ViewingAppointmentRemoteDataSource dataSource,
     AuthenticationBloc authBloc,
-  ) =>
-      ViewingAppointmentRepositoryImpl(
-        viewingAppointmentRemoteDataSource: dataSource,
-        getToken: () => authBloc.state.user?.token ?? '',
-      );
+  ) => ViewingAppointmentRepositoryImpl(
+    viewingAppointmentRemoteDataSource: dataSource,
+    getToken: () => authBloc.state.user?.token ?? '',
+  );
 
   // --- Domain (UseCases) ---
   // auth
@@ -238,6 +232,15 @@ abstract class RegisterModule {
   @injectable
   RemoveContractMemberUsecase get removeContractMemberUsecase;
 
+  @injectable
+  CreateVnpayPaymentUsecase get createVnpayPaymentUsecase;
+
+  @injectable
+  GetRentalRequestByIdUsecase get getRentalRequestByIdUsecase;
+
+  @injectable
+  GetContractByRentalRequestIdUsecase get getContractByRentalRequestIdUsecase;
+
   // viewing appointment
   @injectable
   CreateViewingAppointmentUsecase get createViewingAppointmentUsecase;
@@ -246,7 +249,8 @@ abstract class RegisterModule {
   GetMyViewingAppointmentsUsecase get getMyViewingAppointmentsUsecase;
 
   @injectable
-  GetLandlordViewingAppointmentsUsecase get getLandlordViewingAppointmentsUsecase;
+  GetLandlordViewingAppointmentsUsecase
+  get getLandlordViewingAppointmentsUsecase;
 
   @injectable
   ApproveViewingAppointmentUsecase get approveViewingAppointmentUsecase;

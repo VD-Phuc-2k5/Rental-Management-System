@@ -1,7 +1,6 @@
-enum PaymentMethodType { vnpay, momo }
+enum PaymentMethodType { vnpay, bankTransfer }
 
 class PaymentLineItemData {
-
   const PaymentLineItemData({
     required this.name,
     this.description,
@@ -13,7 +12,6 @@ class PaymentLineItemData {
 }
 
 class PaymentData {
-
   const PaymentData({
     required this.invoiceId,
     required this.roomName,
@@ -27,7 +25,6 @@ class PaymentData {
 }
 
 class PaymentMethodOption {
-
   const PaymentMethodOption({
     required this.type,
     required this.name,

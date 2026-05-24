@@ -19,6 +19,7 @@ import { GetLandlordContractsService } from '../application/services/get-landlor
 import { UpdateContractService } from '../application/services/update-contract.service';
 import { SendContractService } from '../application/services/send-contract.service';
 import { FinishContractService } from '../application/services/finish-contract.service';
+import { GetContractByRentalRequestService } from '../application/services/get-contract-by-rental-request.service';
 
 @ApiTags('landlord-rental-requests')
 @Controller('landlord')
@@ -32,6 +33,7 @@ export class LandlordRentalRequestController {
     private readonly updateContractService: UpdateContractService,
     private readonly sendContractService: SendContractService,
     private readonly finishContractService: FinishContractService,
+    private readonly getContractByRentalRequestService: GetContractByRentalRequestService,
   ) {}
 
   @Get('rental-requests')
@@ -76,5 +78,16 @@ export class LandlordRentalRequestController {
     @CurrentUser() user: { id: string },
   ) {
     return this.finishContractService.execute(id, user.id);
+  }
+
+  @Get('rental-requests/:rentalRequestId/contract')
+  async getContractByRentalRequest(
+    @Param('rentalRequestId') rentalRequestId: string,
+    @CurrentUser() user: { id: string },
+  ) {
+    return this.getContractByRentalRequestService.execute(
+      rentalRequestId,
+      user.id,
+    );
   }
 }

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/blocs/new_requests/new_requests_cubit.dart';
+import 'core/blocs/pending_contract/pending_contract_cubit.dart';
 import 'core/di/di.dart';
 import 'features/auth/presentation/blocs/authentication/authentication_bloc.dart';
 
@@ -31,6 +32,7 @@ class MainApp extends StatelessWidget {
       providers: [
         BlocProvider.value(value: getIt<AuthenticationBloc>()),
         BlocProvider.value(value: getIt<NewRequestsCubit>()),
+        BlocProvider.value(value: getIt<PendingContractCubit>()),
       ],
       child: BlocListener<AuthenticationBloc, AuthenticationState>(
         listenWhen: (previous, current) => previous.status != current.status,

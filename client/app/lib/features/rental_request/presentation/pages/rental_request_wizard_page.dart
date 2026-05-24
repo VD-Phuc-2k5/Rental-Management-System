@@ -1001,7 +1001,6 @@ class _VehicleFormCard extends StatefulWidget {
 class _VehicleFormCardState extends State<_VehicleFormCard> {
   _VehicleType _type = _VehicleType.motorbike;
   final _plateCtl = TextEditingController();
-  int _quantity = 1;
 
   @override
   void dispose() {
@@ -1030,13 +1029,12 @@ class _VehicleFormCardState extends State<_VehicleFormCard> {
     }
     final form = _VehicleForm()
       ..type = _type
-      ..quantity = _quantity;
+      ..quantity = 1;
     form.plateCtl.text = plate;
     widget.onAdd(form);
     setState(() {
       _plateCtl.clear();
       _type = _VehicleType.motorbike;
-      _quantity = 1;
     });
   }
 
@@ -1135,40 +1133,6 @@ class _VehicleFormCardState extends State<_VehicleFormCard> {
             ),
             const SizedBox(height: 12),
             const Text(
-              'Số lượng xe',
-              style: TextStyle(
-                color: AppColors.blue900,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                _SquareBtn(
-                  icon: Icons.remove,
-                  onTap: _quantity <= 1
-                      ? null
-                      : () => setState(() => _quantity--),
-                ),
-                const SizedBox(width: 18),
-                Text(
-                  '$_quantity',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18,
-                    color: AppColors.blue900,
-                  ),
-                ),
-                const SizedBox(width: 18),
-                _SquareBtn(
-                  icon: Icons.add,
-                  filled: true,
-                  onTap: () => setState(() => _quantity++),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            const Text(
               'Phí gửi xe/tháng',
               style: TextStyle(
                 color: AppColors.blue900,
@@ -1189,7 +1153,7 @@ class _VehicleFormCardState extends State<_VehicleFormCard> {
                   Expanded(
                     child: Text(
                       _formatMoney(
-                        (_type.feeFrom(widget.parkingFees) * _quantity).toInt(),
+                        _type.feeFrom(widget.parkingFees).toInt(),
                       ),
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
@@ -1232,38 +1196,6 @@ class _VehicleFormCardState extends State<_VehicleFormCard> {
   }
 }
 
-class _SquareBtn extends StatelessWidget {
-  const _SquareBtn({
-    required this.icon,
-    required this.onTap,
-    this.filled = false,
-  });
-
-  final IconData icon;
-  final VoidCallback? onTap;
-  final bool filled;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: 42,
-        height: 42,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: filled ? const Color(0xFF195AA4) : Colors.white,
-          border: Border.all(color: const Color(0xFF195AA4)),
-        ),
-        child: Icon(
-          icon,
-          color: filled ? Colors.white : const Color(0xFF195AA4),
-        ),
-      ),
-    );
-  }
-}
 
 // ── Step 2: Note & Confirm ────────────────────────────────────────────────────
 
@@ -1443,7 +1375,7 @@ class _NoteStep extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Sau khi gửi, chủ trọ sẽ xem xét và gửi hợp đồng. '
-                  'Trưởng phòng cần ký hợp đồng và chuyển tiền đặt cọc qua MoMo.',
+                  'Trưởng phòng cần ký hợp đồng và chuyển tiền đặt cọc qua VNPay.',
                   style: TextStyle(fontSize: 12, color: AppColors.blue700),
                 ),
               ),

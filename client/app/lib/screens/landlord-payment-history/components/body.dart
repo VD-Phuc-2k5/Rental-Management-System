@@ -27,21 +27,21 @@ class _LandlordPaymentHistoryBodyState
     {
       'roomName': 'Phòng 205',
       'tenantName': 'Trần Thị B',
-      'paymentMethod': 'MoMo',
+      'paymentMethod': 'VNPay',
       'time': '17:45 hôm qua',
       'amount': 3500000,
     },
     {
       'roomName': 'Phòng 205',
       'tenantName': 'Trần Thị B',
-      'paymentMethod': 'MoMo',
+      'paymentMethod': 'VNPay',
       'time': '17:45 hôm qua',
       'amount': 3500000,
     },
     {
       'roomName': 'Phòng 205',
       'tenantName': 'Trần Thị B',
-      'paymentMethod': 'MoMo',
+      'paymentMethod': 'VNPay',
       'time': '17:45 hôm qua',
       'amount': 3500000,
     },
@@ -57,17 +57,19 @@ class _LandlordPaymentHistoryBodyState
   ];
 
   List<Map<String, dynamic>> get _filteredPaid => _paidTransactions
-      .where((t) =>
-          '${t['roomName']} ${t['tenantName']}'
-              .toLowerCase()
-              .contains(_query.toLowerCase()))
+      .where(
+        (t) => '${t['roomName']} ${t['tenantName']}'.toLowerCase().contains(
+          _query.toLowerCase(),
+        ),
+      )
       .toList();
 
   List<Map<String, dynamic>> get _filteredPending => _pendingTransactions
-      .where((t) =>
-          '${t['roomName']} ${t['tenantName']}'
-              .toLowerCase()
-              .contains(_query.toLowerCase()))
+      .where(
+        (t) => '${t['roomName']} ${t['tenantName']}'.toLowerCase().contains(
+          _query.toLowerCase(),
+        ),
+      )
       .toList();
 
   int get _totalCollected =>
@@ -114,26 +116,37 @@ class _LandlordPaymentHistoryBodyState
                 child: TextField(
                   controller: _searchController,
                   onChanged: (v) => setState(() => _query = v),
-                  style:
-                      const TextStyle(fontSize: 14, color: AppColors.gray800),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: AppColors.gray800,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Tìm kiếm hóa đơn',
                     hintStyle: const TextStyle(
-                        fontSize: 14, color: AppColors.slate400),
-                    prefixIcon: const Icon(Icons.search_rounded,
-                        color: AppColors.slate400, size: 20),
+                      fontSize: 14,
+                      color: AppColors.slate400,
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search_rounded,
+                      color: AppColors.slate400,
+                      size: 20,
+                    ),
                     contentPadding: const EdgeInsets.symmetric(vertical: 12),
                     filled: true,
                     fillColor: AppColors.white,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide:
-                          const BorderSide(color: AppColors.gray200, width: 1),
+                      borderSide: const BorderSide(
+                        color: AppColors.gray200,
+                        width: 1,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide:
-                          const BorderSide(color: AppColors.blue400, width: 1.5),
+                      borderSide: const BorderSide(
+                        color: AppColors.blue400,
+                        width: 1.5,
+                      ),
                     ),
                   ),
                 ),
@@ -145,8 +158,7 @@ class _LandlordPaymentHistoryBodyState
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Text(
                     'Không tìm thấy giao dịch.',
-                    style:
-                        TextStyle(fontSize: 13, color: AppColors.slate400),
+                    style: TextStyle(fontSize: 13, color: AppColors.slate400),
                   ),
                 )
               else
@@ -191,8 +203,7 @@ class _LandlordPaymentHistoryBodyState
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Text(
                     'Không có hóa đơn chưa thanh toán.',
-                    style:
-                        TextStyle(fontSize: 13, color: AppColors.slate400),
+                    style: TextStyle(fontSize: 13, color: AppColors.slate400),
                   ),
                 )
               else

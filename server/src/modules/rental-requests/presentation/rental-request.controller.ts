@@ -24,6 +24,7 @@ import { SignContractService } from '../application/services/sign-contract.servi
 import { CancelContractService } from '../application/services/cancel-contract.service';
 import { GetContractMembersService } from '../application/services/get-contract-members.service';
 import { RemoveContractMemberService } from '../application/services/remove-contract-member.service';
+import { GetRentalRequestByIdService } from '../application/services/get-rental-request-by-id.service';
 
 @ApiTags('rental-requests')
 @Controller()
@@ -39,6 +40,7 @@ export class RentalRequestController {
     private readonly cancelContractService: CancelContractService,
     private readonly getContractMembersService: GetContractMembersService,
     private readonly removeContractMemberService: RemoveContractMemberService,
+    private readonly getRentalRequestByIdService: GetRentalRequestByIdService,
   ) {}
 
   @Post('rental-requests')
@@ -60,6 +62,15 @@ export class RentalRequestController {
   @Roles('tenant')
   async getMyRentalRequests(@CurrentUser() user: { id: string }) {
     return this.getMyRentalRequestsService.execute(user.id);
+  }
+
+  @Get('rental-requests/:id')
+  @Roles('tenant')
+  async getRentalRequestById(
+    @Param('id') id: string,
+    @CurrentUser() user: { id: string },
+  ) {
+    return this.getRentalRequestByIdService.execute(id, user.id);
   }
 
   @Delete('rental-requests/:id')

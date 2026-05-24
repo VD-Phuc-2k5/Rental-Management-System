@@ -79,6 +79,7 @@ abstract class RentalRequestEntity {
     this.note,
     this.memberInfo = const [],
     this.parkingInfo = const [],
+    this.roomTitle,
   });
 
   final String id;
@@ -90,4 +91,5 @@ abstract class RentalRequestEntity {
   final RentalRequestStatus status;
   final String createdAt;
   final String updatedAt;
+  final String? roomTitle;
 }

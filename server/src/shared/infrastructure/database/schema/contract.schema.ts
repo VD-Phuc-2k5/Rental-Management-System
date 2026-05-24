@@ -43,7 +43,7 @@ export const contracts = pgTable('contracts', {
   signedAt: timestamp('signed_at', { withTimezone: true }),
   cancelledAt: timestamp('cancelled_at', { withTimezone: true }),
   finishedAt: timestamp('finished_at', { withTimezone: true }),
-  momoNumber: text('momo_number'),
+  vnpayNumber: text('vnpay_number'),
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),

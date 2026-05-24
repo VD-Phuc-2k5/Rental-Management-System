@@ -13,6 +13,7 @@ import { RoomsModule } from './modules/rooms/presentation/room.module';
 import { RentalRequestsModule } from './modules/rental-requests/presentation/rental-request.module';
 import { ViewingAppointmentsModule } from './modules/viewing-appointments/presentation/viewing-appointment.module';
 import { UploadModule } from './modules/upload/upload.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UploadModule } from './modules/upload/upload.module';
     RentalRequestsModule,
     ViewingAppointmentsModule,
     UploadModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

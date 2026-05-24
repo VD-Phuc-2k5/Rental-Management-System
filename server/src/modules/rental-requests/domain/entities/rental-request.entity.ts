@@ -33,5 +33,6 @@ export class RentalRequestEntity {
     public readonly status: RentalRequestStatus,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
+    public readonly roomTitle: string | null = null,
   ) {}
 }

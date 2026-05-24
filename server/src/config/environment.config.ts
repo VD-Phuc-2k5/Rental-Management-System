@@ -10,9 +10,16 @@ export type EnvironmentVariables = {
   SMTP_PASS: string;
   SMTP_FROM: string;
   SMTP_SECURE?: string;
+  VNPAY_TMN_CODE: string;
+  VNPAY_HASH_SECRET: string;
+  VNPAY_BASE_URL: string;
+  VNPAY_IPN_URL: string;
+  VNPAY_RETURN_URL: string;
 };
 
-export function validateEnvironment(config: Record<string, unknown>): EnvironmentVariables {
+export function validateEnvironment(
+  config: Record<string, unknown>,
+): EnvironmentVariables {
   const supabaseUrl = config.SUPABASE_URL;
   const supabaseServiceRoleKey = config.SUPABASE_SERVICE_ROLE_KEY;
   const databaseUrl = config.DATABASE_URL;
@@ -28,7 +35,10 @@ export function validateEnvironment(config: Record<string, unknown>): Environmen
     throw new Error('SUPABASE_URL is required');
   }
 
-  if (typeof supabaseServiceRoleKey !== 'string' || supabaseServiceRoleKey.trim().length === 0) {
+  if (
+    typeof supabaseServiceRoleKey !== 'string' ||
+    supabaseServiceRoleKey.trim().length === 0
+  ) {
     throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
   }
 
@@ -82,5 +92,13 @@ export function validateEnvironment(config: Record<string, unknown>): Environmen
     SMTP_PASS: smtpPass,
     SMTP_FROM: smtpFrom,
     SMTP_SECURE: typeof smtpSecure === 'string' ? smtpSecure : undefined,
+    VNPAY_TMN_CODE: (config.VNPAY_TMN_CODE as string) ?? '',
+    VNPAY_HASH_SECRET: (config.VNPAY_HASH_SECRET as string) ?? '',
+    VNPAY_BASE_URL:
+      (config.VNPAY_BASE_URL as string) ??
+      'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
+    VNPAY_IPN_URL: (config.VNPAY_IPN_URL as string) ?? '',
+    VNPAY_RETURN_URL:
+      (config.VNPAY_RETURN_URL as string) ?? 'app://vnpay-result',
   };
 }

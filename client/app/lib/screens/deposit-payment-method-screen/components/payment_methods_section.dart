@@ -31,7 +31,7 @@ class _PaymentMethodsSectionState extends State<PaymentMethodsSection> {
         const SizedBox(height: 12),
 
         PaymentMethodTile(
-          title: 'Ví điện tử MoMo',
+          title: 'Thanh toán nhanh qua VNPay',
           subtitle: 'Miễn phí giao dịch',
           icon: Icons.account_balance_wallet_outlined,
           selected: selectedIndex == 0,

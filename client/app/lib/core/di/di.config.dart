@@ -57,6 +57,8 @@ import '../../features/rental_request/presentation/blocs/contract_detail/contrac
     as _i269;
 import '../../features/rental_request/presentation/blocs/create_rental_request/create_rental_request_bloc.dart'
     as _i715;
+import '../../features/rental_request/presentation/blocs/deposit_payment/deposit_payment_cubit.dart'
+    as _i260;
 import '../../features/rental_request/presentation/blocs/landlord_contract_list/landlord_contract_list_bloc.dart'
     as _i116;
 import '../../features/rental_request/presentation/blocs/landlord_request_list/landlord_request_list_bloc.dart'
@@ -82,6 +84,7 @@ import '../../features/viewing_appointment/presentation/blocs/my_viewing_appoint
 import '../../features/viewing_appointment/presentation/blocs/schedule_viewing/schedule_viewing_bloc.dart'
     as _i324;
 import '../blocs/new_requests/new_requests_cubit.dart' as _i773;
+import '../blocs/pending_contract/pending_contract_cubit.dart' as _i958;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -307,6 +310,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i284.RemoveContractMemberUsecase>(
       () => registerModule.removeContractMemberUsecase,
     );
+    gh.factory<_i284.CreateVnpayPaymentUsecase>(
+      () => registerModule.createVnpayPaymentUsecase,
+    );
+    gh.factory<_i284.GetRentalRequestByIdUsecase>(
+      () => registerModule.getRentalRequestByIdUsecase,
+    );
+    gh.factory<_i284.GetContractByRentalRequestIdUsecase>(
+      () => registerModule.getContractByRentalRequestIdUsecase,
+    );
     gh.factory<_i269.ContractDetailBloc>(
       () => _i269.ContractDetailBloc(
         getContractDetailUsecase: gh<_i284.GetContractDetailUsecase>(),
@@ -335,6 +347,13 @@ extension GetItInjectableX on _i174.GetIt {
         getMyContractsUsecase: gh<_i284.GetMyContractsUsecase>(),
       ),
     );
+    gh.singleton<_i958.PendingContractCubit>(
+      () => _i958.PendingContractCubit(
+        gh<_i284.GetMyContractsUsecase>(),
+        gh<_i652.AuthenticationBloc>(),
+      ),
+      dispose: (i) => i.close(),
+    );
     gh.factory<_i187.RoomListBloc>(
       () => _i187.RoomListBloc(getRoomsUsecase: gh<_i142.GetRoomsUsecase>()),
     );
@@ -347,6 +366,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i598.LandlordRequestListBloc(
         getIncomingRequestsUsecase: gh<_i284.GetIncomingRequestsUsecase>(),
         rejectRentalRequestUsecase: gh<_i284.RejectRentalRequestUsecase>(),
+      ),
+    );
+    gh.factory<_i260.DepositPaymentCubit>(
+      () => _i260.DepositPaymentCubit(
+        createVnpayPaymentUsecase: gh<_i284.CreateVnpayPaymentUsecase>(),
+        cancelContractUsecase: gh<_i284.CancelContractUsecase>(),
       ),
     );
     gh.factory<_i171.DeleteRoomBloc>(
@@ -650,6 +675,25 @@ class _$RegisterModule extends _i291.RegisterModule {
       _i284.RemoveContractMemberUsecase(
         rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
       );
+
+  @override
+  _i284.CreateVnpayPaymentUsecase get createVnpayPaymentUsecase =>
+      _i284.CreateVnpayPaymentUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.GetRentalRequestByIdUsecase get getRentalRequestByIdUsecase =>
+      _i284.GetRentalRequestByIdUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
+
+  @override
+  _i284.GetContractByRentalRequestIdUsecase
+      get getContractByRentalRequestIdUsecase =>
+          _i284.GetContractByRentalRequestIdUsecase(
+            rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+          );
 
   @override
   _i142.GetAvailableRoomsUsecase get getAvailableRoomsUsecase =>

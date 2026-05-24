@@ -23,7 +23,9 @@ abstract interface class RentalRequestRepository {
 
   Future<Either<Failure, List<ContractEntity>>> getLandlordContracts();
 
-  Future<Either<Failure, ContractEntity>> getContractDetail({required String id});
+  Future<Either<Failure, ContractEntity>> getContractDetail({
+    required String id,
+  });
 
   Future<Either<Failure, ContractEntity>> updateContract({
     required String id,
@@ -49,5 +51,21 @@ abstract interface class RentalRequestRepository {
   Future<Either<Failure, void>> removeContractMember({
     required String contractId,
     required String memberId,
+  });
+
+  Future<Either<Failure, VnpayPaymentEntity>> createVnpayDepositPayment({
+    required String contractId,
+  });
+
+  Future<Either<Failure, List<ContractEntity>>> getRoomContracts({
+    required String roomId,
+  });
+
+  Future<Either<Failure, RentalRequestEntity>> getRentalRequestById({
+    required String id,
+  });
+
+  Future<Either<Failure, ContractEntity>> getContractByRentalRequestId({
+    required String rentalRequestId,
   });
 }

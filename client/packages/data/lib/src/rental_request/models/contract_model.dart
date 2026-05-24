@@ -15,7 +15,7 @@ class ContractModel extends ContractEntity {
     required super.updatedAt,
     super.rentalRequestId,
     super.terms,
-    super.momoNumber,
+    super.vnpayNumber,
     super.sentAt,
     super.signedAt,
     super.cancelledAt,
@@ -23,31 +23,31 @@ class ContractModel extends ContractEntity {
   });
 
   factory ContractModel.fromJson(Map<String, dynamic> json) => ContractModel(
-        id: json['id'] as String,
-        rentalRequestId: json['rentalRequestId'] as String?,
-        roomId: json['roomId'] as String,
-        tenantId: json['tenantId'] as String,
-        landlordId: json['landlordId'] as String,
-        startDate: json['startDate'] as String,
-        endDate: json['endDate'] as String,
-        monthlyRent: _parseDouble(json['monthlyRent']),
-        deposit: _parseDouble(json['deposit']),
-        status: _statusFromJson(json['status'] as String),
-        terms: json['terms'] as String?,
-        momoNumber: json['momoNumber'] as String?,
-        sentAt: json['sentAt'] as String?,
-        signedAt: json['signedAt'] as String?,
-        cancelledAt: json['cancelledAt'] as String?,
-        finishedAt: json['finishedAt'] as String?,
-        createdAt: json['createdAt'] as String,
-        updatedAt: json['updatedAt'] as String,
-      );
+    id: json['id'] as String,
+    rentalRequestId: json['rentalRequestId'] as String?,
+    roomId: json['roomId'] as String,
+    tenantId: json['tenantId'] as String,
+    landlordId: json['landlordId'] as String,
+    startDate: json['startDate'] as String,
+    endDate: json['endDate'] as String,
+    monthlyRent: _parseDouble(json['monthlyRent']),
+    deposit: _parseDouble(json['deposit']),
+    status: _statusFromJson(json['status'] as String),
+    terms: json['terms'] as String?,
+    vnpayNumber: json['vnpayNumber'] as String?,
+    sentAt: json['sentAt'] as String?,
+    signedAt: json['signedAt'] as String?,
+    cancelledAt: json['cancelledAt'] as String?,
+    finishedAt: json['finishedAt'] as String?,
+    createdAt: json['createdAt'] as String,
+    updatedAt: json['updatedAt'] as String,
+  );
 }
 
 double _parseDouble(dynamic v) =>
     v is num ? v.toDouble() : double.parse(v.toString());
 
 ContractStatus _statusFromJson(String v) => ContractStatus.values.firstWhere(
-      (e) => e.name.toUpperCase() == v.toUpperCase(),
-      orElse: () => ContractStatus.draft,
-    );
+  (e) => e.name.toUpperCase() == v.toUpperCase(),
+  orElse: () => ContractStatus.draft,
+);

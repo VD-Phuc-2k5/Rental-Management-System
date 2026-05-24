@@ -2,22 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/blocs/pending_contract/pending_contract_cubit.dart';
 import '../../../../core/config/router/route_constants.dart';
 import '../../../../core/constants.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/format_currency.dart';
 import '../../../../core/widgets/tenant_navigation_bottom.dart';
+import '../../../rental_request/presentation/pages/deposit_payment_sheet.dart';
 import '../blocs/available_room_list/available_room_list_bloc.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.read<PendingContractCubit>().checkPending();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-          getIt<AvailableRoomListBloc>()..add(AvailableRoomListFetched()),
-      child: const _HomeView(),
+    return BlocListener<PendingContractCubit, PendingContractState>(
+      listener: (context, state) {
+        if (state is PendingContractFound) {
+          showModalBottomSheet<void>(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            builder: (_) => DepositPaymentSheet(contract: state.contract),
+          ).then((_) {
+            if (context.mounted) {
+              context.read<PendingContractCubit>().dismiss();
+            }
+          });
+        }
+      },
+      child: BlocProvider(
+        create: (_) =>
+            getIt<AvailableRoomListBloc>()..add(AvailableRoomListFetched()),
+        child: const _HomeView(),
+      ),
     );
   }
 }

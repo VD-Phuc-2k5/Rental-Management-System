@@ -8,8 +8,8 @@ class RentalRequestRepositoryImpl implements RentalRequestRepository {
   RentalRequestRepositoryImpl({
     required RentalRequestRemoteDataSource rentalRequestRemoteDataSource,
     required String Function() getToken,
-  })  : _dataSource = rentalRequestRemoteDataSource,
-        _getToken = getToken;
+  }) : _dataSource = rentalRequestRemoteDataSource,
+       _getToken = getToken;
 
   final RentalRequestRemoteDataSource _dataSource;
   final String Function() _getToken;
@@ -40,7 +40,8 @@ class RentalRequestRepositoryImpl implements RentalRequestRepository {
   }
 
   @override
-  Future<Either<Failure, List<RentalRequestEntity>>> getMyRentalRequests() async {
+  Future<Either<Failure, List<RentalRequestEntity>>>
+  getMyRentalRequests() async {
     try {
       final data = await _dataSource.getMyRentalRequests(token: _getToken());
       return Right(data);
@@ -54,7 +55,9 @@ class RentalRequestRepositoryImpl implements RentalRequestRepository {
   }
 
   @override
-  Future<Either<Failure, void>> cancelRentalRequest({required String id}) async {
+  Future<Either<Failure, void>> cancelRentalRequest({
+    required String id,
+  }) async {
     try {
       await _dataSource.cancelRentalRequest(token: _getToken(), id: id);
       return const Right(null);
@@ -68,7 +71,8 @@ class RentalRequestRepositoryImpl implements RentalRequestRepository {
   }
 
   @override
-  Future<Either<Failure, List<RentalRequestEntity>>> getIncomingRequests() async {
+  Future<Either<Failure, List<RentalRequestEntity>>>
+  getIncomingRequests() async {
     try {
       final data = await _dataSource.getIncomingRequests(token: _getToken());
       return Right(data);
@@ -82,7 +86,9 @@ class RentalRequestRepositoryImpl implements RentalRequestRepository {
   }
 
   @override
-  Future<Either<Failure, void>> rejectRentalRequest({required String id}) async {
+  Future<Either<Failure, void>> rejectRentalRequest({
+    required String id,
+  }) async {
     try {
       await _dataSource.rejectRentalRequest(token: _getToken(), id: id);
       return const Right(null);
@@ -128,8 +134,10 @@ class RentalRequestRepositoryImpl implements RentalRequestRepository {
     required String id,
   }) async {
     try {
-      final data =
-          await _dataSource.getContractDetail(token: _getToken(), id: id);
+      final data = await _dataSource.getContractDetail(
+        token: _getToken(),
+        id: id,
+      );
       return Right(data);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
@@ -256,6 +264,82 @@ class RentalRequestRepositoryImpl implements RentalRequestRepository {
         memberId: memberId,
       );
       return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, VnpayPaymentEntity>> createVnpayDepositPayment({
+    required String contractId,
+  }) async {
+    try {
+      final data = await _dataSource.createVnpayDepositPayment(
+        token: _getToken(),
+        contractId: contractId,
+      );
+      return Right(data);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ContractEntity>>> getRoomContracts({
+    required String roomId,
+  }) async {
+    try {
+      final data = await _dataSource.getRoomContracts(
+        token: _getToken(),
+        roomId: roomId,
+      );
+      return Right(data);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RentalRequestEntity>> getRentalRequestById({
+    required String id,
+  }) async {
+    try {
+      final data = await _dataSource.getRentalRequestById(
+        token: _getToken(),
+        id: id,
+      );
+      return Right(data);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ContractEntity>> getContractByRentalRequestId({
+    required String rentalRequestId,
+  }) async {
+    try {
+      final data = await _dataSource.getContractByRentalRequestId(
+        token: _getToken(),
+        rentalRequestId: rentalRequestId,
+      );
+      return Right(data);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     } on NetworkException {

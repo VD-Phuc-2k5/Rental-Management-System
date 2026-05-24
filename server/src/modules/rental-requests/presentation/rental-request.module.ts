@@ -27,6 +27,8 @@ import { FinishContractService } from '../application/services/finish-contract.s
 import { GetContractMembersService } from '../application/services/get-contract-members.service';
 import { RemoveContractMemberService } from '../application/services/remove-contract-member.service';
 import { ContractCleanupService } from '../application/services/contract-cleanup.service';
+import { GetContractByRentalRequestService } from '../application/services/get-contract-by-rental-request.service';
+import { GetRentalRequestByIdService } from '../application/services/get-rental-request-by-id.service';
 
 @Module({
   imports: [DrizzleModule, SupabaseModule],
@@ -59,6 +61,8 @@ import { ContractCleanupService } from '../application/services/contract-cleanup
     GetContractMembersService,
     RemoveContractMemberService,
     ContractCleanupService,
+    GetContractByRentalRequestService,
+    GetRentalRequestByIdService,
   ],
 })
 export class RentalRequestsModule {}

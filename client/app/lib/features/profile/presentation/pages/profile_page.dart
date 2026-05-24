@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/blocs/pending_contract/pending_contract_cubit.dart';
 import '../../../../core/config/router/route_constants.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/widgets/landlord_navigation_bottom.dart';
@@ -35,8 +36,7 @@ class _ProfileView extends StatelessWidget {
       backgroundColor: AppColors.gray25,
       bottomNavigationBar: BlocBuilder<GetProfileBloc, GetProfileState>(
         builder: (context, state) {
-          if (state is GetProfileLoadSuccess &&
-              state.data.role == 'landlord') {
+          if (state is GetProfileLoadSuccess && state.data.role == 'landlord') {
             return const LandlordNavigationBottom(currentIndex: 4);
           }
           return const TenantNavigationBottom(currentIndex: 4);
@@ -46,8 +46,9 @@ class _ProfileView extends StatelessWidget {
         builder: (context, state) => switch (state) {
           GetProfileLoadInProgress() => const _ProfileLoading(),
           GetProfileLoadSuccess(:final data) => _ProfileContent(profile: data),
-          GetProfileLoadFailure(:final failure) =>
-            _ProfileError(message: failure.message),
+          GetProfileLoadFailure(:final failure) => _ProfileError(
+            message: failure.message,
+          ),
           GetProfileInitial() => const SizedBox.shrink(),
         },
       ),
@@ -140,15 +141,14 @@ class _ProfileContent extends StatelessWidget {
                       ),
                       tooltip: 'Chỉnh sửa hồ sơ',
                       onPressed: () async {
-                        final updated =
-                            await context.push<UserProfileEntity>(
+                        final updated = await context.push<UserProfileEntity>(
                           RoutePaths.editProfile,
                           extra: profile,
                         );
                         if (updated != null && context.mounted) {
-                          context
-                              .read<GetProfileBloc>()
-                              .add(const GetProfileFetched());
+                          context.read<GetProfileBloc>().add(
+                            const GetProfileFetched(),
+                          );
                         }
                       },
                     ),
@@ -161,6 +161,65 @@ class _ProfileContent extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 32),
+                    BlocBuilder<PendingContractCubit, PendingContractState>(
+                      builder: (context, state) {
+                        if (state is! PendingContractFound) {
+                          return const SizedBox.shrink();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Material(
+                            color: const Color(0xFFFFF3E0),
+                            borderRadius: BorderRadius.circular(12),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(12),
+                              onTap: () => context.push(RoutePaths.myContracts),
+                              child: const Padding(
+                                padding: EdgeInsets.all(14),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.description_outlined,
+                                      color: Color(0xFFE65100),
+                                      size: 22,
+                                    ),
+                                    SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Hợp đồng chờ ký',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFFE65100),
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          SizedBox(height: 2),
+                                          Text(
+                                            'Bạn có hợp đồng đang chờ ký. Nhấn để xem.',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xFF795548),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.chevron_right,
+                                      color: Color(0xFFE65100),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                     ProfileInfoCardWidget(profile: profile),
                     const SizedBox(height: 20),
                     ProfileActionCardWidget(
@@ -169,9 +228,9 @@ class _ProfileContent extends StatelessWidget {
                         extra: {'step': '1'},
                       ),
                       onSupport: () {},
-                      onLogout: () => context
-                          .read<AuthenticationBloc>()
-                          .add(AuthenticationLogoutRequested()),
+                      onLogout: () => context.read<AuthenticationBloc>().add(
+                        AuthenticationLogoutRequested(),
+                      ),
                     ),
                     const SizedBox(height: 32),
                   ],

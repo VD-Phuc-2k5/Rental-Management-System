@@ -2786,6 +2786,11 @@ cross-spawn@^7.0.3, cross-spawn@^7.0.6:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+dayjs@^1.11.13:
+  version "1.11.20"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.20.tgz#88d919fd639dc991415da5f4cb6f1b6650811938"
+  integrity sha512-YbwwqR/uYpeoP4pu043q+LTDLFBLApUP6VxRihdfNTqu4ubqMlGDLd6ErXhEgsyvY0K6nCs7nggYumAN+9uEuQ==
+
 debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@^4.3.7, debug@^4.4.0, debug@^4.4.3:
   version "4.4.3"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.4.3.tgz#c6ae432d9bd9662582fce08709b038c58e9e3d6a"
@@ -5738,6 +5743,13 @@ vary@^1, vary@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
+
+vnpay@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/vnpay/-/vnpay-2.5.0.tgz#cb2ebe7dc828b1bc0e26b8bf4775056238c7006b"
+  integrity sha512-kyUYxG0pyEnRu/ha0gSVqkPCajmql523W2PQzgCkH4ct4XdEuzdiQnssi/k9XMcv+TvoPzuweEJG+4hWNU2DAQ==
+  dependencies:
+    dayjs "^1.11.13"
 
 walker@^1.0.8:
   version "1.0.8"

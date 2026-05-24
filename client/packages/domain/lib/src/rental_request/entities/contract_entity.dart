@@ -15,7 +15,7 @@ abstract class ContractEntity {
     required this.updatedAt,
     this.rentalRequestId,
     this.terms,
-    this.momoNumber,
+    this.vnpayNumber,
     this.sentAt,
     this.signedAt,
     this.cancelledAt,
@@ -33,7 +33,7 @@ abstract class ContractEntity {
   final double deposit;
   final ContractStatus status;
   final String? terms;
-  final String? momoNumber;
+  final String? vnpayNumber;
   final String? sentAt;
   final String? signedAt;
   final String? cancelledAt;

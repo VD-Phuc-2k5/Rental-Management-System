@@ -11,6 +11,7 @@ class RentalRequestModel extends RentalRequestEntity {
     super.note,
     super.memberInfo,
     super.parkingInfo,
+    super.roomTitle,
   });
 
   factory RentalRequestModel.fromJson(Map<String, dynamic> json) =>
@@ -30,6 +31,7 @@ class RentalRequestModel extends RentalRequestEntity {
                 ?.map((e) => VehicleInfo.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             const [],
+        roomTitle: json['roomTitle'] as String?,
       );
 }
 
