@@ -8,9 +8,11 @@ class PreviewInvoiceScreen extends StatelessWidget {
 
   const PreviewInvoiceScreen({
     super.key,
+    required this.month,
     required this.monthLabel,
     required this.invoices,
   });
+  final String month;
   final String monthLabel;
 
   final List<InvoicePreview> invoices;
@@ -39,7 +41,10 @@ class PreviewInvoiceScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: PreviewInvoceBody(invoices: invoices),
+      body: PreviewInvoceBody(
+        invoices: invoices,
+        month: month,
+      ),
     );
   }
 }
