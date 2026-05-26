@@ -1,18 +1,48 @@
+import 'package:domain/rental_request.dart';
 import 'package:flutter/material.dart';
+
 import '../../../core/constants.dart';
+import '../../../core/di/di.dart';
 import '../../../core/format_currency.dart';
-import '../../deposit-payment-method-screen/deposit_payment_method_screen.dart';
+import 'package:core/usecase.dart';
+import '../../../features/rental_request/presentation/pages/deposit_payment_sheet.dart';
 class DepositPaymentCard extends StatelessWidget {
   const DepositPaymentCard({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    void _goNext(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const DepositPaymentMethodScreen()),
+  Future<void> _openDepositPayment(BuildContext context) async {
+    final result =
+        await getIt<GetMyContractsUsecase>().call(const NoParams());
+    if (!context.mounted) return;
+
+    result.fold(
+      (failure) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(failure.toString())),
+        );
+      },
+      (contracts) {
+        final sent =
+            contracts.where((c) => c.status == ContractStatus.sent).toList();
+        if (sent.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Không có hợp đồng cần thanh toán.')),
+          );
+          return;
+        }
+        showModalBottomSheet<void>(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          builder: (_) => DepositPaymentSheet(contract: sent.first),
+        );
+      },
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
     final int depositAmount = 5000000;
     return Card(
       elevation: 0,
@@ -62,7 +92,7 @@ class DepositPaymentCard extends StatelessWidget {
               height: 54,
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => _goNext(context),
+                onPressed: () => _openDepositPayment(context),
                 icon: const Icon(Icons.credit_card, color: AppColors.white),
                 label: const Text(
                   'Thanh toán tiền cọc ngay',
