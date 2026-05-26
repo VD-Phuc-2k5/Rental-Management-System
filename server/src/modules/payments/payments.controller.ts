@@ -62,7 +62,7 @@ export class PaymentsController {
   }
 
   @Get('vnpay/return')
-  handleVnpayReturn(@Query() query: Record<string, string>) {
+  async handleVnpayReturn(@Query() query: Record<string, string>) {
     const result = this.vnpayService.verifyReturnQuery(query);
 
     if (!result.isVerified) {
@@ -74,6 +74,12 @@ export class PaymentsController {
     }
 
     if (result.isSuccess) {
+      try {
+        await this.vnpayService.finalizeReturn(query);
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        this.logger.warn(`VNPay return finalize skipped: ${message}`);
+      }
       return {
         success: true,
         message: 'Payment successful',
