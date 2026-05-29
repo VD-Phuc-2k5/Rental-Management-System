@@ -79,29 +79,9 @@ class MaintenanceRequestCard extends StatelessWidget {
                 ...[
                   const SizedBox(width: 12),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      request.imageUrls.isNotEmpty
-                          ? request.imageUrls.first
-                          : "assets/images/empty-image.jpg",
-                      width: 90,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: AppColors.slate200,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.image_not_supported,
-                            color: AppColors.slate500,
-                          ),
-                        );
-                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: _buildRequestImage(),
                     ),
-                  ),
                 ],
               ],
             ),
@@ -136,6 +116,48 @@ class MaintenanceRequestCard extends StatelessWidget {
       ),
     );
   }
+
+
+  Widget _buildRequestImage() {
+  final imagePath = request.imageUrls.isNotEmpty
+      ? request.imageUrls.first
+      : "assets/images/empty-image.jpg";
+
+  Widget errorWidget() {
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        color: AppColors.slate200,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Icon(
+        Icons.image_not_supported,
+        color: AppColors.slate500,
+      ),
+    );
+  }
+
+  if (imagePath.startsWith('http')) {
+    return Image.network(
+      imagePath,
+      width: 90,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return errorWidget();
+      },
+    );
+  }
+
+  return Image.asset(
+    imagePath,
+    width: 90,
+    fit: BoxFit.cover,
+    errorBuilder: (context, error, stackTrace) {
+      return errorWidget();
+    },
+  );
+}
 
   Widget _buildPriorityBadge() {
     Color badgeColor;
@@ -199,6 +221,11 @@ class MaintenanceRequestCard extends StatelessWidget {
         textColor = AppColors.red500;
         backgroundColor = AppColors.red100;
         label = "Từ chối";
+        break;
+      case RequestStatus.complaint:
+        textColor = AppColors.red500;
+        backgroundColor = AppColors.red100;
+        label = "Khiếu nại";
         break;
     }
 

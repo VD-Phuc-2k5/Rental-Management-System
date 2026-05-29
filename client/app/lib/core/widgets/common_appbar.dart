@@ -49,6 +49,10 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () {
                 if (prevRouteName != null) {
                   context.goNamed(prevRouteName!);
+                  return;
+                }
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
                 }
               },
               icon: const Icon(Icons.arrow_back, color: AppColors.blue950),

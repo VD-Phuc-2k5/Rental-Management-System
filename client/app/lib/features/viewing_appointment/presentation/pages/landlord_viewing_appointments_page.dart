@@ -13,7 +13,11 @@ import '../../../../core/widgets/landlord_navigation_bottom.dart';
 import '../blocs/landlord_viewing_appointment_list/landlord_viewing_appointment_list_bloc.dart';
 
 class LandlordViewingAppointmentsPage extends StatelessWidget {
-  const LandlordViewingAppointmentsPage({super.key});
+  const LandlordViewingAppointmentsPage({
+    super.key,
+    this.embedded = false,
+    });
+    final bool embedded;
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +25,92 @@ class LandlordViewingAppointmentsPage extends StatelessWidget {
       create: (_) =>
           getIt<LandlordViewingAppointmentListBloc>()
             ..add(LandlordViewingAppointmentListFetched()),
-      child: const _LandlordViewingAppointmentsView(),
+      child:  _LandlordViewingAppointmentsView(
+        embedded: embedded,
+      ),
     );
   }
 }
 
 class _LandlordViewingAppointmentsView extends StatelessWidget {
-  const _LandlordViewingAppointmentsView();
+  const _LandlordViewingAppointmentsView({
+    required this.embedded,
+  });
+  final bool embedded;
 
   @override
   Widget build(BuildContext context) {
+    final content = BlocBuilder<
+    LandlordViewingAppointmentListBloc,
+    LandlordViewingAppointmentListState>(
+  builder: (context, state) {
+    final list = state.currentOrPreviousData;
+    final isLoading =
+        state is LandlordViewingAppointmentListLoadInProgress;
+
+    if (state is LandlordViewingAppointmentListInitial) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state is LandlordViewingAppointmentListLoadFailure && list == null) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              state.failure.toString(),
+              style: const TextStyle(color: AppColors.red500),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () => context
+                  .read<LandlordViewingAppointmentListBloc>()
+                  .add(LandlordViewingAppointmentListFetched()),
+              child: const Text('Thử lại'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (list != null && list.isEmpty) {
+      return const Center(
+        child: Text(
+          'Chưa có lịch xem phòng nào.',
+          style: TextStyle(color: AppColors.slate500),
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      color: AppColors.blue700,
+      onRefresh: () async => context
+          .read<LandlordViewingAppointmentListBloc>()
+          .add(LandlordViewingAppointmentListFetched()),
+      child: Stack(
+        children: [
+          ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: list?.length ?? 0,
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
+            itemBuilder: (context, index) =>
+                _ViewingAppointmentCard(appointment: list![index]),
+          ),
+          if (isLoading)
+            const Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: LinearProgressIndicator(
+                color: AppColors.blue700,
+              ),
+            ),
+        ],
+      ),
+    );
+  },
+);
     return BlocListener<NewRequestsCubit, NewRequestsState>(
       listenWhen: (prev, curr) => curr.count > prev.count,
       listener: (context, state) {
@@ -49,7 +129,8 @@ class _LandlordViewingAppointmentsView extends StatelessWidget {
           ),
         );
       },
-      child: Scaffold(
+      child: embedded
+    ? content : Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -87,76 +168,77 @@ class _LandlordViewingAppointmentsView extends StatelessWidget {
         ),
         bottomNavigationBar: const LandlordNavigationBottom(currentIndex: 2),
         body:
-            BlocBuilder<
-              LandlordViewingAppointmentListBloc,
-              LandlordViewingAppointmentListState
-            >(
-              builder: (context, state) {
-                final list = state.currentOrPreviousData;
-                final isLoading =
-                    state is LandlordViewingAppointmentListLoadInProgress;
+          content,
+            // BlocBuilder<
+            //   LandlordViewingAppointmentListBloc,
+            //   LandlordViewingAppointmentListState
+            // >(
+            //   builder: (context, state) {
+            //     final list = state.currentOrPreviousData;
+            //     final isLoading =
+            //         state is LandlordViewingAppointmentListLoadInProgress;
 
-                if (state is LandlordViewingAppointmentListInitial) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (state is LandlordViewingAppointmentListLoadFailure &&
-                    list == null) {
-                  return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          state.failure.toString(),
-                          style: const TextStyle(color: AppColors.red500),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: () => context
-                              .read<LandlordViewingAppointmentListBloc>()
-                              .add(LandlordViewingAppointmentListFetched()),
-                          child: const Text('Thử lại'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                if (list != null && list.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'Chưa có lịch xem phòng nào.',
-                      style: TextStyle(color: AppColors.slate500),
-                    ),
-                  );
-                }
-                return RefreshIndicator(
-                  color: AppColors.blue700,
-                  onRefresh: () async => context
-                      .read<LandlordViewingAppointmentListBloc>()
-                      .add(LandlordViewingAppointmentListFetched()),
-                  child: Stack(
-                    children: [
-                      ListView.separated(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: list?.length ?? 0,
-                        separatorBuilder: (_, _) => const SizedBox(height: 12),
-                        itemBuilder: (context, index) =>
-                            _ViewingAppointmentCard(appointment: list![index]),
-                      ),
-                      if (isLoading)
-                        const Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          child: LinearProgressIndicator(
-                            color: AppColors.blue700,
-                          ),
-                        ),
-                    ],
-                  ),
-                );
-              },
-            ),
+            //     if (state is LandlordViewingAppointmentListInitial) {
+            //       return const Center(child: CircularProgressIndicator());
+            //     }
+            //     if (state is LandlordViewingAppointmentListLoadFailure &&
+            //         list == null) {
+            //       return Center(
+            //         child: Column(
+            //           mainAxisSize: MainAxisSize.min,
+            //           children: [
+            //             Text(
+            //               state.failure.toString(),
+            //               style: const TextStyle(color: AppColors.red500),
+            //               textAlign: TextAlign.center,
+            //             ),
+            //             const SizedBox(height: 12),
+            //             ElevatedButton(
+            //               onPressed: () => context
+            //                   .read<LandlordViewingAppointmentListBloc>()
+            //                   .add(LandlordViewingAppointmentListFetched()),
+            //               child: const Text('Thử lại'),
+            //             ),
+            //           ],
+            //         ),
+            //       );
+            //     }
+            //     if (list != null && list.isEmpty) {
+            //       return const Center(
+            //         child: Text(
+            //           'Chưa có lịch xem phòng nào.',
+            //           style: TextStyle(color: AppColors.slate500),
+            //         ),
+            //       );
+            //     }
+            //     return RefreshIndicator(
+            //       color: AppColors.blue700,
+            //       onRefresh: () async => context
+            //           .read<LandlordViewingAppointmentListBloc>()
+            //           .add(LandlordViewingAppointmentListFetched()),
+            //       child: Stack(
+            //         children: [
+            //           ListView.separated(
+            //             padding: const EdgeInsets.all(16),
+            //             itemCount: list?.length ?? 0,
+            //             separatorBuilder: (_, _) => const SizedBox(height: 12),
+            //             itemBuilder: (context, index) =>
+            //                 _ViewingAppointmentCard(appointment: list![index]),
+            //           ),
+            //           if (isLoading)
+            //             const Positioned(
+            //               top: 0,
+            //               left: 0,
+            //               right: 0,
+            //               child: LinearProgressIndicator(
+            //                 color: AppColors.blue700,
+            //               ),
+            //             ),
+            //         ],
+            //       ),
+            //     );
+            //   },
+            // ),
       ),
     );
   }

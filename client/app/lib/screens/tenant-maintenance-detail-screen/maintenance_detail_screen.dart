@@ -7,40 +7,78 @@ import 'components/worker_info_card.dart';
 import 'components/processing_timeline_card.dart';
 import 'components/issue_detail_card.dart';
 import 'components/maintenance_detail_bottom_bar.dart';
+import '../../core/models/maintenance_request.dart';
+import 'package:intl/intl.dart';
+class TenantMaintenanceDetailScreen extends StatefulWidget {
+  const TenantMaintenanceDetailScreen({
+    super.key,
+    required this.request,
+  });
 
-class TenantMaintenanceDetailScreen extends StatelessWidget {
-  const TenantMaintenanceDetailScreen({super.key});
+  final MaintenanceRequest request;
+
+  @override
+  State<TenantMaintenanceDetailScreen> createState() =>
+      _TenantMaintenanceDetailScreenState();
+}
+
+class _TenantMaintenanceDetailScreenState
+    extends State<TenantMaintenanceDetailScreen> {
+  late MaintenanceRequest _request;
+
+  @override
+  void initState() {
+    super.initState();
+    _request = widget.request;
+  }
+
+  void _updateRequest(MaintenanceRequest newRequest) {
+    setState(() {
+      _request = newRequest;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+     final scheduledTime = _request.scheduledAt == null
+    ? null
+    : DateFormat('HH:mm, dd/MM/yyyy').format(_request.scheduledAt!);
+
+    return  Scaffold(
       backgroundColor: AppColors.grayBackground,
-      appBar: CommonAppBar(title: 'Chi tiết sự cố'),
+      appBar: const CommonAppBar(title: 'Chi tiết sự cố'),
       body: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(16, 12, 16, 110),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 110),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MaintenanceNoticeBanner(),
-            SizedBox(height: 14),
+            const MaintenanceNoticeBanner(),
+            const SizedBox(height: 14),
 
+            if (_request.technicianName != null ||
+              _request.technicianPhone != null ||
+              _request.scheduledAt != null) ...[
             WorkerInfoCard(
-              workerName: 'Nguyễn Văn A',
-              scheduledTime: '14:00, 20/10/2023',
+              workerName: _request.technicianName ?? 'Chưa có tên thợ',
+              scheduledTime: scheduledTime ?? 'Chưa có lịch sửa',
             ),
-            SizedBox(height: 14),
+              const SizedBox(height: 14),
+            ],
 
-            ProcessingTimelineCard(),
-            SizedBox(height: 14),
-
+            ProcessingTimelineCard(
+              request: _request,
+            ),
+            const SizedBox(height: 14),
             IssueDetailCard(
-              issueImage1: 'assets/images/maintenance_1.jpg',
-              issueImage2: 'assets/images/room_sign_contract.png',
-            )
+              request: _request,
+            ),
           ],
         ),
       ),
-      bottomNavigationBar: MaintenanceDetailBottomBar(),
+      bottomNavigationBar:  MaintenanceDetailBottomBar(
+        request: _request,
+        onRequestChanged: _updateRequest,
+      ),
     );
   }
 }
