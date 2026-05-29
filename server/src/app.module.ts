@@ -14,7 +14,7 @@ import { RentalRequestsModule } from './modules/rental-requests/presentation/ren
 import { ViewingAppointmentsModule } from './modules/viewing-appointments/presentation/viewing-appointment.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { PaymentsModule } from './modules/payments/payments.module';
-
+import { MaintenanceRequestsModule } from './modules/maintenance-requests/presentation/maintenance-request.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,6 +34,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
     ViewingAppointmentsModule,
     UploadModule,
     PaymentsModule,
+    MaintenanceRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

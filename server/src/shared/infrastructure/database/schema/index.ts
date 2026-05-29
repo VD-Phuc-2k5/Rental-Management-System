@@ -9,3 +9,4 @@ export * from './rental-request.schema';
 export * from './contract.schema';
 export * from './contract-member.schema';
 export * from './viewing-appointment.schema';
+export * from './maintenance-request.schema';

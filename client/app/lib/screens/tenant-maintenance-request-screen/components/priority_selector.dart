@@ -1,15 +1,14 @@
 import "../../../core/constants.dart";
+import "../../../core/models/priority.dart";
 import "package:flutter/material.dart";
 
-enum Priority { low, medium, high }
-
 class PrioritySelector extends StatelessWidget {
-
   const PrioritySelector({
     super.key,
     required this.selectedPriority,
     required this.onPrioritySelected,
   });
+
   final Priority selectedPriority;
   final Function(Priority) onPrioritySelected;
 
@@ -43,6 +42,7 @@ class PrioritySelector extends StatelessWidget {
     required Priority priority,
   }) {
     final isSelected = selectedPriority == priority;
+
     return Expanded(
       child: ElevatedButton(
         onPressed: () => onPrioritySelected(priority),

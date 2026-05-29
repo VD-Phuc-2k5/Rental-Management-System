@@ -1,3 +1,9 @@
+import 'package:data/auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/services/maintenance_request_service.dart';
+import '../../../../features/auth/presentation/blocs/authentication/authentication_bloc.dart';
+
 import "../../../../core/constants.dart";
 import "../../../../core/models/maintenance_request.dart";
 import "../../../../core/widgets/maintenance_request_card.dart";
@@ -17,7 +23,17 @@ class ProcessRequestsList extends StatefulWidget {
 class _ProcessRequestsListState extends State<ProcessRequestsList> {
   bool _isLoading = false;
   List<MaintenanceRequest> _requests = [];
+  final _maintenanceService = MaintenanceRequestService();
+  
+  String _getAccessToken() {
+  final authUser = context.read<AuthenticationBloc>().state.user;
 
+  if (authUser is AuthModel) {
+    return authUser.token;
+  }
+
+  throw Exception("Không lấy được token đăng nhập");
+}
   @override
   void initState() {
     super.initState();
@@ -25,66 +41,39 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
   }
 
   Future<void> _loadRequests() async {
+  setState(() {
+    _isLoading = true;
+  });
+
+  try {
+    final token = _getAccessToken();
+
+    final requests = await _maintenanceService.fetchLandlordRequests(
+      token: token,
+    );
+
+    if (!mounted) return;
+
     setState(() {
-      _isLoading = true;
+      _requests = requests;
+      _isLoading = false;
     });
 
-    try {
-      // TO DO: Implement API call to fetch pending/processing requests
-      await Future.delayed(const Duration(seconds: 1));
+    widget.onCountChanged?.call(requests.length);
+  } catch (e) {
+    if (!mounted) return;
 
-      // Mock data - only pending and processing requests
-      final mockRequests = [
-        MaintenanceRequest(
-          id: "1",
-          title: "Vòi nước rò rỉ",
-          description: "Nước chảy liên tục ở bồn rửa mặt, gây lãng phí nước.",
-          location: "Phòng 101 - Nguyễn Văn A",
-          priority: Priority.high,
-          status: RequestStatus.pending,
-          createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-          imageUrls: [
-            "assets/images/maintenance1-image.png",
-            "assets/images/maintenance2-image.png",
-          ],
-        ),
-        MaintenanceRequest(
-          id: "2",
-          title: "Hỏng khóa cửa chính",
-          description: "Khóa bị kẹt, rất khó mở từ bên ngoài...",
-          location: "Phòng 204 - Trần Thị B",
-          priority: Priority.medium,
-          status: RequestStatus.pending,
-          createdAt: DateTime.now().subtract(const Duration(hours: 5)),
-          imageUrls: [],
-        ),
-        MaintenanceRequest(
-          id: "3",
-          title: "Thay bóng đèn hành lang",
-          description: "Bóng đèn bị cháy sáng nay.",
-          location: "Tầng 3 - Khu A",
-          priority: Priority.low,
-          status: RequestStatus.processing,
-          createdAt: DateTime.now().subtract(const Duration(days: 1)),
-          imageUrls: [],
-        ),
-      ];
+    setState(() {
+      _isLoading = false;
+    });
 
-      if (mounted) {
-        setState(() {
-          _requests = mockRequests;
-          _isLoading = false;
-        });
-        widget.onCountChanged?.call(mockRequests.length);
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Không thể tải yêu cầu sự cố: $e"),
+      ),
+    );
   }
+}
 
   Future<void> _onRefresh() async {
     await _loadRequests();
@@ -128,13 +117,16 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           final request = _requests[index];
           return MaintenanceRequestCard(
             request: request,
-            onTap: () {
-              Navigator.of(context).push(
+            onTap: () async {
+              final result = await Navigator.of(context).push<bool>(
                 MaterialPageRoute(
-                  builder: (_) =>
-                      LandlordMaintenanceScheduleScreen(request: request),
+                  builder: (_) => LandlordMaintenanceScheduleScreen(request: request),
                 ),
               );
+
+              if (result == true) {
+                _loadRequests();
+              }
             },
             actionButton: _buildActionButton(request),
           );
@@ -176,7 +168,40 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           ),
         ),
       );
+    }else if (request.status == RequestStatus.complaint) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.red100,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: const Text(
+          "Khiếu nại",
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: AppColors.red500,
+          ),
+        ),
+      );
+    }else if (request.status == RequestStatus.completed) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.green100,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: const Text(
+          "Hoàn thành",
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: AppColors.green700,
+          ),
+        ),
+      );
     }
+    
     return const SizedBox.shrink();
   }
 }
