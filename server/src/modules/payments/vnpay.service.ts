@@ -108,7 +108,6 @@ export class VnpayService {
       vnp_TmnCode: this.tmnCode,
       vnp_TxnRef: orderId,
       vnp_Version: '2.1.0',
-      ...(this.ipnUrl && { vnp_IpnUrl: this.ipnUrl }),
     };
 
     const payUrl = this.buildPaymentUrl(params);
@@ -121,15 +120,7 @@ export class VnpayService {
   }
 
   async handleIpn(ipnData: Record<string, unknown>): Promise<void> {
-    const normalized: Record<string, string> = {};
-    for (const key of Object.keys(ipnData).sort()) {
-      if (key === 'vnp_SecureHash' || key === 'vnp_SecureHashType') continue;
-      const value = ipnData[key];
-      if (typeof value === 'string' || typeof value === 'number') {
-        const str = String(value);
-        if (str.length > 0) normalized[key] = str;
-      }
-    }
+    const normalized = this.normalizeQuery(ipnData);
 
     this.logger.debug(
       `VNPay IPN raw keys=${JSON.stringify(Object.keys(ipnData).sort())}`,
@@ -168,52 +159,14 @@ export class VnpayService {
       throw new BadRequestException('Invalid checksum');
     }
 
-    if (
-      normalized.vnp_ResponseCode !== '00' ||
-      normalized.vnp_TransactionStatus !== '00'
-    ) {
+    if (!this.isPaymentSuccess(normalized)) {
       this.logger.log(
         `VNPay payment failed responseCode=${normalized.vnp_ResponseCode ?? ''} txnRef=${normalized.vnp_TxnRef ?? ''}`,
       );
       return;
     }
 
-    let contractId: string;
-    let tenantId: string;
-    try {
-      const decoded = JSON.parse(
-        Buffer.from(normalized.vnp_OrderInfo ?? '', 'base64').toString(),
-      ) as { contractId: string; tenantId: string };
-      contractId = decoded.contractId;
-      tenantId = decoded.tenantId;
-    } catch {
-      this.logger.error(
-        `VNPay IPN failed to decode order info: ${normalized.vnp_OrderInfo ?? ''}`,
-      );
-      return;
-    }
-
-    const contract = await this.contractRepo.findById(contractId);
-    if (!contract) {
-      this.logger.error(`VNPay IPN contract not found: ${contractId}`);
-      return;
-    }
-
-    const expectedAmount =
-      Math.round(
-        Number(String(contract.deposit ?? '').replace(/[^0-9.-]+/g, '')) || 0,
-      ) * 100;
-    if (String(expectedAmount) !== (normalized.vnp_Amount ?? '')) {
-      this.logger.error(
-        `VNPay IPN amount mismatch contractId=${contractId} expected=${expectedAmount} received=${normalized.vnp_Amount ?? ''}`,
-      );
-      return;
-    }
-
-    await this.signContractService.execute(contractId, tenantId);
-    this.logger.log(
-      `Contract ${contractId} signed via VNPay txnRef=${normalized.vnp_TxnRef ?? ''}`,
-    );
+    await this.applySuccessfulPayment(normalized, 'IPN');
   }
 
   verifyReturnQuery(query: Record<string, string>): VnpayVerifyResult {
@@ -243,6 +196,15 @@ export class VnpayService {
     };
   }
 
+  async finalizeReturn(query: Record<string, string>): Promise<void> {
+    const { isVerified, isSuccess } = this.verifyReturnQuery(query);
+    if (!isVerified) throw new BadRequestException('Invalid checksum');
+    if (!isSuccess) return;
+
+    const normalized = this.normalizeQuery(query);
+    await this.applySuccessfulPayment(normalized, 'RETURN');
+  }
+
   private buildPaymentUrl(params: Record<string, string>): string {
     const sortedKeys = Object.keys(params).sort();
 
@@ -265,11 +227,92 @@ export class VnpayService {
     return `${this.baseUrl}?${urlQuery}&vnp_SecureHash=${secureHash}`;
   }
 
+  private normalizeQuery(
+    data: Record<string, unknown>,
+  ): Record<string, string> {
+    const normalized: Record<string, string> = {};
+    for (const key of Object.keys(data).sort()) {
+      if (key === 'vnp_SecureHash' || key === 'vnp_SecureHashType') continue;
+      const value = data[key];
+      if (typeof value === 'string' || typeof value === 'number') {
+        const str = String(value);
+        if (str.length > 0) normalized[key] = str;
+      }
+    }
+    return normalized;
+  }
+
+  private signHash(params: Record<string, string>): string {
+    const hashQuery = this.buildHashQuery(params);
+    return createHmac('sha512', this.hashSecret)
+      .update(hashQuery, 'utf-8')
+      .digest('hex');
+  }
+
+  private isPaymentSuccess(params: Record<string, string>): boolean {
+    return (
+      params.vnp_ResponseCode === '00' &&
+      params.vnp_TransactionStatus === '00'
+    );
+  }
+
+  private async applySuccessfulPayment(
+    params: Record<string, string>,
+    source: 'IPN' | 'RETURN',
+  ): Promise<void> {
+    let contractId: string;
+    let tenantId: string;
+    try {
+      const decoded = JSON.parse(
+        Buffer.from(params.vnp_OrderInfo ?? '', 'base64').toString(),
+      ) as { contractId: string; tenantId: string };
+      contractId = decoded.contractId;
+      tenantId = decoded.tenantId;
+    } catch {
+      this.logger.error(
+        `VNPay ${source} failed to decode order info: ${params.vnp_OrderInfo ?? ''}`,
+      );
+      return;
+    }
+
+    const contract = await this.contractRepo.findById(contractId);
+    if (!contract) {
+      this.logger.error(`VNPay ${source} contract not found: ${contractId}`);
+      return;
+    }
+
+    const expectedAmount =
+      Math.round(
+        Number(String(contract.deposit ?? '').replace(/[^0-9.-]+/g, '')) || 0,
+      ) * 100;
+    if (String(expectedAmount) !== (params.vnp_Amount ?? '')) {
+      this.logger.error(
+        `VNPay ${source} amount mismatch contractId=${contractId} expected=${expectedAmount} received=${params.vnp_Amount ?? ''}`,
+      );
+      return;
+    }
+
+    try {
+      await this.signContractService.execute(contractId, tenantId);
+      this.logger.log(
+        `Contract ${contractId} signed via VNPay ${source} txnRef=${params.vnp_TxnRef ?? ''}`,
+      );
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.warn(
+        `VNPay ${source} sign skipped contractId=${contractId}: ${message}`,
+      );
+    }
+  }
+
   private buildHashQuery(params: Record<string, string>): string {
     return Object.keys(params)
       .sort()
       .filter((key) => params[key] !== undefined && params[key] !== '')
-      .map((key) => `${key}=${encodeURIComponent(params[key])}`)
+      .map(
+        (key) =>
+          `${key}=${encodeURIComponent(params[key]).replace(/%20/g, '+')}`,
+      )
       .join('&');
   }
 

@@ -40,7 +40,7 @@ class PaymentMethodOptionWidget extends StatelessWidget {
   Widget _buildIcon() {
     IconData iconData;
     switch (option.type) {
-      case PaymentMethodType.vnpay:
+      case PaymentMethodType.payos:
         iconData = Icons.qr_code;
         break;
       case PaymentMethodType.bankTransfer:

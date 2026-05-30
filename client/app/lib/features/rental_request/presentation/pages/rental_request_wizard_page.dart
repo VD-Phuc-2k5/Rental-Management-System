@@ -1375,7 +1375,7 @@ class _NoteStep extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Sau khi gửi, chủ trọ sẽ xem xét và gửi hợp đồng. '
-                  'Trưởng phòng cần ký hợp đồng và chuyển tiền đặt cọc qua VNPay.',
+                  'Trưởng phòng cần ký hợp đồng và chuyển tiền đặt cọc qua PayOS.',
                   style: TextStyle(fontSize: 12, color: AppColors.blue700),
                 ),
               ),

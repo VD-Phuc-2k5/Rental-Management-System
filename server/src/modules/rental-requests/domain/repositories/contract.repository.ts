@@ -6,6 +6,7 @@ export interface UpdateContractData {
   monthlyRent?: string;
   deposit?: string;
   terms?: string;
+  vnpayNumber?: string;
 }
 
 export abstract class ContractRepository {
