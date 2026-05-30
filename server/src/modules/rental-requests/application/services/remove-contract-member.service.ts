@@ -26,6 +26,7 @@ export class RemoveContractMemberService {
       (m) => m.isRoomLeader && contract.tenantId === requesterId,
     );
 
+    // Kiểm tra xem người xóa có phải chủ trọ hoặc trưởng phòng hay không
     if (contract.landlordId !== requesterId && !requesterIsLeader) {
       throw new ForbiddenException(
         'Only the room leader or landlord can remove members',
@@ -35,6 +36,7 @@ export class RemoveContractMemberService {
     const member = members.find((m) => m.id === memberId);
     if (!member) throw new NotFoundException('Member not found');
 
+    // Cập nhật trường leftAt thành thời điểm hiện tại (xóa mềm)
     await this.contractMemberRepo.remove(memberId);
   }
 }
