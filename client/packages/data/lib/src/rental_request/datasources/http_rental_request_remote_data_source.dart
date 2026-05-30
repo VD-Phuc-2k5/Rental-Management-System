@@ -6,8 +6,10 @@ import 'package:core/errors.dart';
 import 'package:domain/rental_request.dart';
 import 'package:http/http.dart' as http;
 
+
 import '../models/contract_member_model.dart';
 import '../models/contract_model.dart';
+import '../models/penalty_model.dart';
 import '../models/vnpay_payment_model.dart';
 import '../models/rental_request_model.dart';
 import 'rental_request_remote_data_source.dart';
@@ -460,7 +462,7 @@ class HttpRentalRequestRemoteDataSource
         Uri.parse('$baseUrl/contracts/$contractId/members/$memberId'),
         headers: _headers(token),
       );
-      if (response.statusCode == 200) return;
+      if (response.statusCode >= 200 && response.statusCode < 300) return;
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       _handleError(response.statusCode, json);
     } on SocketException {
@@ -596,6 +598,67 @@ class HttpRentalRequestRemoteDataSource
           e is UnknownException) {
         rethrow;
       }
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<PenaltyModel> createPenalty({
+    required String token,
+    required String contractId,
+    required String tenantId,
+    required String roomId,
+    required double amount,
+    required String reason,
+  }) async {
+    try {
+      final response = await _client.post(
+        Uri.parse('$baseUrl/penalties'),
+        headers: _headers(token),
+        body: jsonEncode({
+          'contractId': contractId,
+          'tenantId': tenantId,
+          'roomId': roomId,
+          'amount': amount,
+          'reason': reason,
+        }),
+      );
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return PenaltyModel.fromJson(json['data'] as Map<String, dynamic>);
+      }
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<PenaltyModel>> getPenalties({
+    required String token,
+    required String contractId,
+  }) async {
+    try {
+      final response = await _client.get(
+        Uri.parse('$baseUrl/penalties/contract/$contractId'),
+        headers: _headers(token),
+      );
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        return (json['data'] as List).map((e) => PenaltyModel.fromJson(e as Map<String, dynamic>)).toList();
+      }
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException || e is NetworkException || e is UnknownException) rethrow;
       throw UnknownException(message: e.toString());
     }
   }

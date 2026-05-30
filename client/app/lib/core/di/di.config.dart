@@ -22,6 +22,7 @@ import 'package:domain/profile.dart' as _i503;
 import 'package:domain/property.dart' as _i369;
 import 'package:domain/rental_request.dart' as _i284;
 import 'package:domain/room.dart' as _i142;
+import 'package:domain/src/rental_request/rental_request.dart' as _i540;
 import 'package:domain/viewing_appointment.dart' as _i278;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:go_router/go_router.dart' as _i583;
@@ -88,6 +89,7 @@ import '../../features/viewing_appointment/presentation/blocs/schedule_viewing/s
 import '../blocs/new_invoice/new_invoice_cubit.dart' as _i911;
 import '../blocs/new_requests/new_requests_cubit.dart' as _i773;
 import '../blocs/pending_contract/pending_contract_cubit.dart' as _i958;
+import '../blocs/room_contract/room_contract_cubit.dart' as _i574;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -414,6 +416,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i171.DeleteRoomBloc(
         deleteRoomUsecase: gh<_i142.DeleteRoomUsecase>(),
       ),
+    );
+    gh.factory<_i574.RoomContractCubit>(
+      () => _i574.RoomContractCubit(gh<_i540.GetLandlordContractsUsecase>()),
     );
     gh.factory<_i621.CreateRoomBloc>(
       () => _i621.CreateRoomBloc(

@@ -1,4 +1,5 @@
-﻿import { Module } from '@nestjs/common';
+﻿import { PenaltiesModule } from './modules/penalties/penalties.module';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -35,6 +36,7 @@ import { BillingModule } from './modules/billing/billing.module';
     ViewingAppointmentsModule,
     UploadModule,
     PaymentsModule,
+    PenaltiesModule,
     BillingModule,
   ],
   controllers: [AppController],

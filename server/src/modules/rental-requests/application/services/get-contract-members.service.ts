@@ -19,6 +19,11 @@ export class GetContractMembersService {
     if (contract.tenantId !== userId && contract.landlordId !== userId) {
       throw new NotFoundException('Contract not found');
     }
-    return this.contractMemberRepo.findByContractId(contractId);
+
+    // Lấy toàn bộ danh sách thành viên trong hợp đồng
+    const members = await this.contractMemberRepo.findByContractId(contractId);
+
+    // Chỉ trả về những thành viên chưa rời đi (leftAt === null)
+    return members.filter((member) => member.leftAt === null);
   }
 }
