@@ -45,9 +45,6 @@ class _MaintenanceDetailBottomBarState
     );
   }
 
-  bool get _isCompleted =>
-      widget.request.status == RequestStatus.completed;
-
   Future<void> _goToComplaintScreen() async {
     try {
       final freshRequest = await _getFreshRequestOrNotify();
@@ -56,13 +53,14 @@ class _MaintenanceDetailBottomBarState
 
       if (!mounted) return;
 
-      final updatedRequest = await Navigator.of(context).push<MaintenanceRequest>(
-        MaterialPageRoute(
-          builder: (_) => SendComplaintScreen(
-            request: freshRequest,
-          ),
-        ),
-      );
+      final updatedRequest = await Navigator.of(context)
+          .push<MaintenanceRequest>(
+            MaterialPageRoute(
+              builder: (_) => SendComplaintScreen(
+                request: freshRequest,
+              ),
+            ),
+          );
 
       if (updatedRequest != null) {
         widget.onRequestChanged(updatedRequest);
@@ -77,49 +75,49 @@ class _MaintenanceDetailBottomBarState
   Future<void> _confirmCompleted() async {
     if (_isSubmitting) return;
 
-      setState(() {
-        _isSubmitting = true;
-      });
+    setState(() {
+      _isSubmitting = true;
+    });
 
-      try {
-        final freshRequest = await _getFreshRequestOrNotify();
+    try {
+      final freshRequest = await _getFreshRequestOrNotify();
 
-        if (freshRequest == null) return;
+      if (freshRequest == null) return;
 
-        final token = _getAccessToken();
+      final token = _getAccessToken();
 
-        if (token == null || token.isEmpty) {
-          _showMessage('Không lấy được token đăng nhập');
-          return;
-        }
+      if (token == null || token.isEmpty) {
+        _showMessage('Không lấy được token đăng nhập');
+        return;
+      }
 
-        final completedRequest = await _service.completeRequest(
-          token: token,
-          requestId: freshRequest.id,
-        );
+      final completedRequest = await _service.completeRequest(
+        token: token,
+        requestId: freshRequest.id,
+      );
 
-        if (!mounted) return;
+      if (!mounted) return;
 
-        widget.onRequestChanged(completedRequest);
+      widget.onRequestChanged(completedRequest);
 
-        _showMessage('Xác nhận hoàn thành thành công');
-      } catch (e) {
-        if (mounted) {
-          final message = e.toString();
+      _showMessage('Xác nhận hoàn thành thành công');
+    } catch (e) {
+      if (mounted) {
+        final message = e.toString();
 
-          if (message.contains('xác nhận hoàn thành')) {
-            _showMessage('Sự cố này đã được xác nhận hoàn thành trước đó');
-          } else {
-            _showMessage('Lỗi khi xác nhận hoàn thành: $e');
-          }
-        }
-      } finally {
-        if (mounted) {
-          setState(() {
-            _isSubmitting = false;
-          });
+        if (message.contains('xác nhận hoàn thành')) {
+          _showMessage('Sự cố này đã được xác nhận hoàn thành trước đó');
+        } else {
+          _showMessage('Lỗi khi xác nhận hoàn thành: $e');
         }
       }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
     // if (_isCompleted) {
     //   _showMessage('Sự cố này đã được xác nhận hoàn thành');
     //   return;
@@ -164,32 +162,31 @@ class _MaintenanceDetailBottomBarState
     // }
   }
 
-   Future<MaintenanceRequest?> _getFreshRequestOrNotify() async {
-      final token = _getAccessToken();
+  Future<MaintenanceRequest?> _getFreshRequestOrNotify() async {
+    final token = _getAccessToken();
 
-      if (token == null || token.isEmpty) {
-        _showMessage('Không lấy được token đăng nhập');
-        return null;
-      }
-
-      final freshRequest = await _service.fetchRequestDetail(
-        token: token,
-        requestId: widget.request.id,
-      );
-
-      widget.onRequestChanged(freshRequest);
-
-      if (freshRequest.status == RequestStatus.completed) {
-        _showMessage('Sự cố này đã được xác nhận hoàn thành trước đó');
-        return null;
-      }
-
-      return freshRequest;
+    if (token == null || token.isEmpty) {
+      _showMessage('Không lấy được token đăng nhập');
+      return null;
     }
+
+    final freshRequest = await _service.fetchRequestDetail(
+      token: token,
+      requestId: widget.request.id,
+    );
+
+    widget.onRequestChanged(freshRequest);
+
+    if (freshRequest.status == RequestStatus.completed) {
+      _showMessage('Sự cố này đã được xác nhận hoàn thành trước đó');
+      return null;
+    }
+
+    return freshRequest;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final ValueChanged<MaintenanceRequest> onRequestChanged;
     return Container(
       color: AppColors.white,
       child: SafeArea(
@@ -244,9 +241,7 @@ class _MaintenanceDetailBottomBarState
                         color: AppColors.white,
                       ),
                 label: Text(
-                  _isSubmitting
-                      ? 'Đang xử lý...'
-                      : 'Xác nhận hoàn thành',
+                  _isSubmitting ? 'Đang xử lý...' : 'Xác nhận hoàn thành',
                   style: const TextStyle(
                     color: AppColors.white,
                     fontWeight: FontWeight.w600,

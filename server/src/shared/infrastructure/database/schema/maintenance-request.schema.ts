@@ -44,6 +44,7 @@ export const maintenanceRequests = pgTable('maintenance_requests', {
   status: maintenanceRequestStatusEnum('status').notNull().default('pending'),
 
   imageUrls: jsonb('image_urls').notNull().default([]),
+  complaintImageUrls: jsonb('complaint_image_urls').notNull().default([]),
 
   technicianName: text('technician_name'),
   technicianPhone: text('technician_phone'),

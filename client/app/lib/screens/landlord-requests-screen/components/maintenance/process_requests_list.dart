@@ -7,12 +7,10 @@ import '../../../../features/auth/presentation/blocs/authentication/authenticati
 import "../../../../core/constants.dart";
 import "../../../../core/models/maintenance_request.dart";
 import "../../../../core/widgets/maintenance_request_card.dart";
-import '../../../../core/models/priority.dart';
 import "../../../landlord-maintenance-schedule-screen/landlord_maintenance_schedule_screen.dart";
 import "package:flutter/material.dart";
 
 class ProcessRequestsList extends StatefulWidget {
-
   const ProcessRequestsList({super.key, this.onCountChanged});
   final ValueChanged<int>? onCountChanged;
 
@@ -24,16 +22,17 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
   bool _isLoading = false;
   List<MaintenanceRequest> _requests = [];
   final _maintenanceService = MaintenanceRequestService();
-  
-  String _getAccessToken() {
-  final authUser = context.read<AuthenticationBloc>().state.user;
 
-  if (authUser is AuthModel) {
-    return authUser.token;
+  String _getAccessToken() {
+    final authUser = context.read<AuthenticationBloc>().state.user;
+
+    if (authUser is AuthModel) {
+      return authUser.token;
+    }
+
+    throw Exception("Không lấy được token đăng nhập");
   }
 
-  throw Exception("Không lấy được token đăng nhập");
-}
   @override
   void initState() {
     super.initState();
@@ -41,39 +40,39 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
   }
 
   Future<void> _loadRequests() async {
-  setState(() {
-    _isLoading = true;
-  });
-
-  try {
-    final token = _getAccessToken();
-
-    final requests = await _maintenanceService.fetchLandlordRequests(
-      token: token,
-    );
-
-    if (!mounted) return;
-
     setState(() {
-      _requests = requests;
-      _isLoading = false;
+      _isLoading = true;
     });
 
-    widget.onCountChanged?.call(requests.length);
-  } catch (e) {
-    if (!mounted) return;
+    try {
+      final token = _getAccessToken();
 
-    setState(() {
-      _isLoading = false;
-    });
+      final requests = await _maintenanceService.fetchLandlordRequests(
+        token: token,
+      );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Không thể tải yêu cầu sự cố: $e"),
-      ),
-    );
+      if (!mounted) return;
+
+      setState(() {
+        _requests = requests;
+        _isLoading = false;
+      });
+
+      widget.onCountChanged?.call(requests.length);
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Không thể tải yêu cầu sự cố: $e"),
+        ),
+      );
+    }
   }
-}
 
   Future<void> _onRefresh() async {
     await _loadRequests();
@@ -120,12 +119,13 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
             onTap: () async {
               final result = await Navigator.of(context).push<bool>(
                 MaterialPageRoute(
-                  builder: (_) => LandlordMaintenanceScheduleScreen(request: request),
+                  builder: (_) =>
+                      LandlordMaintenanceScheduleScreen(request: request),
                 ),
               );
 
               if (result == true) {
-                _loadRequests();
+                await _loadRequests();
               }
             },
             actionButton: _buildActionButton(request),
@@ -168,7 +168,7 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           ),
         ),
       );
-    }else if (request.status == RequestStatus.complaint) {
+    } else if (request.status == RequestStatus.complaint) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
@@ -184,7 +184,7 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
           ),
         ),
       );
-    }else if (request.status == RequestStatus.completed) {
+    } else if (request.status == RequestStatus.completed) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
@@ -201,7 +201,7 @@ class _ProcessRequestsListState extends State<ProcessRequestsList> {
         ),
       );
     }
-    
+
     return const SizedBox.shrink();
   }
 }

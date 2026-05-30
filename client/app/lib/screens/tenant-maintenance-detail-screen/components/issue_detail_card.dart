@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants.dart';
-
 import '../../../core/models/maintenance_request.dart';
+
 class IssueDetailCard extends StatelessWidget {
-  const IssueDetailCard({
-    super.key,
-    required this.request,
-  });
+  const IssueDetailCard({super.key, required this.request});
 
   final MaintenanceRequest request;
 
@@ -17,10 +14,11 @@ class IssueDetailCard extends StatelessWidget {
       color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header: title + location
             const Text(
               'Sự cố',
               style: TextStyle(
@@ -29,8 +27,33 @@ class IssueDetailCard extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
+            if (request.location.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.location_on_outlined,
+                    size: 14,
+                    color: AppColors.slate400,
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      request.location,
+                      style: const TextStyle(
+                        color: AppColors.slate400,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
             const SizedBox(height: 12),
 
+            // Photos
             Row(
               children: [
                 Expanded(
@@ -52,7 +75,10 @@ class IssueDetailCard extends StatelessWidget {
             ),
 
             const SizedBox(height: 12),
+
+            // Description
             Container(
+              width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: AppColors.gray50,
@@ -67,6 +93,7 @@ class IssueDetailCard extends StatelessWidget {
                     style: TextStyle(
                       color: AppColors.blue950,
                       fontWeight: FontWeight.w600,
+                      fontSize: 13,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -77,78 +104,13 @@ class IssueDetailCard extends StatelessWidget {
                     style: const TextStyle(
                       color: AppColors.slate600,
                       fontWeight: FontWeight.w400,
-                      height: 1.25,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Vị trí sự cố',
-                    style: TextStyle(
-                      color: AppColors.blue950,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    request.location.isNotEmpty ? request.location : 'Chưa xác định',
-                    style: const TextStyle(
-                      color: AppColors.slate600,
-                      fontWeight: FontWeight.w400,
-                      height: 1.25,
+                      height: 1.4,
+                      fontSize: 13,
                     ),
                   ),
                 ],
               ),
             ),
-            // Container(
-            //   padding: const EdgeInsets.all(12),
-            //   decoration: BoxDecoration(
-            //     color: AppColors.gray50,
-            //     borderRadius: BorderRadius.circular(12),
-            //     border: Border.all(color: AppColors.gray100),
-            //   ),
-            //   child:  Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Text(
-            //         'Mô tả chi tiết sự cố',
-            //         style: TextStyle(
-            //           color: AppColors.blue950,
-            //           fontWeight: FontWeight.w600,
-            //         ),
-            //       ),
-            //       SizedBox(height: 6),
-            //       Text(
-            //         request.description.isNotEmpty
-            //             ? request.description
-            //             : 'Chưa có mô tả chi tiết',
-            //         style: const TextStyle(
-            //           color: AppColors.slate600,
-            //           fontWeight: FontWeight.w400,
-            //           height: 1.25,
-            //         ),
-            //       ),
-            //       const SizedBox(height: 10),
-            //       const Text(
-            //         'Vị trí sự cố',
-            //         style: TextStyle(
-            //           color: AppColors.blue950,
-            //           fontWeight: FontWeight.w600,
-            //         ),
-            //       ),
-            //       const SizedBox(height: 6),
-            //       Text(
-            //         request.location.isNotEmpty ? request.location : 'Chưa xác định',
-            //         style: const TextStyle(
-            //           color: AppColors.slate600,
-            //           fontWeight: FontWeight.w400,
-            //           height: 1.25,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-
           ],
         ),
       ),
@@ -187,7 +149,7 @@ class _PhotoTile extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        width: 52,
+        width: double.infinity,
         height: 114,
         color: AppColors.slate100,
         child: imageWidget,
