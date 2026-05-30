@@ -1,10 +1,16 @@
-import '../../../core/constants.dart';
-import 'payment_summary_card.dart';
-import 'transaction_list_item.dart';
+import 'package:domain/billing.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/constants.dart';
+import '../../../core/di/di.dart';
+import '../../tenant-invoice-detail-screen/tenant_invoice_detail_screen.dart';
+import 'payment_summary_card.dart';
+import 'transaction_list_item.dart';
+
 class LandlordPaymentHistoryBody extends StatefulWidget {
-  const LandlordPaymentHistoryBody({super.key});
+  const LandlordPaymentHistoryBody({super.key, this.month});
+
+  final String? month;
 
   @override
   State<LandlordPaymentHistoryBody> createState() =>
@@ -15,67 +21,23 @@ class _LandlordPaymentHistoryBodyState
     extends State<LandlordPaymentHistoryBody> {
   final TextEditingController _searchController = TextEditingController();
   String _query = '';
+  bool _loading = true;
+  String? _errorMessage;
+  List<TenantInvoiceEntity> _invoices = [];
 
-  static const List<Map<String, dynamic>> _paidTransactions = [
-    {
-      'roomName': 'Phòng 101',
-      'tenantName': 'Nguyễn Văn A',
-      'paymentMethod': 'VNPay',
-      'time': '08:30 hôm nay',
-      'amount': 2972500,
-    },
-    {
-      'roomName': 'Phòng 205',
-      'tenantName': 'Trần Thị B',
-      'paymentMethod': 'VNPay',
-      'time': '17:45 hôm qua',
-      'amount': 3500000,
-    },
-    {
-      'roomName': 'Phòng 205',
-      'tenantName': 'Trần Thị B',
-      'paymentMethod': 'VNPay',
-      'time': '17:45 hôm qua',
-      'amount': 3500000,
-    },
-    {
-      'roomName': 'Phòng 205',
-      'tenantName': 'Trần Thị B',
-      'paymentMethod': 'VNPay',
-      'time': '17:45 hôm qua',
-      'amount': 3500000,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadInvoices();
+  }
 
-  static const List<Map<String, dynamic>> _pendingTransactions = [
-    {
-      'roomName': 'Phòng 102',
-      'tenantName': 'Chưa thu',
-      'deadline': '20/10/2023',
-      'amount': 2500000,
-    },
-  ];
-
-  List<Map<String, dynamic>> get _filteredPaid => _paidTransactions
-      .where(
-        (t) => '${t['roomName']} ${t['tenantName']}'.toLowerCase().contains(
-          _query.toLowerCase(),
-        ),
-      )
-      .toList();
-
-  List<Map<String, dynamic>> get _filteredPending => _pendingTransactions
-      .where(
-        (t) => '${t['roomName']} ${t['tenantName']}'.toLowerCase().contains(
-          _query.toLowerCase(),
-        ),
-      )
-      .toList();
-
-  int get _totalCollected =>
-      _paidTransactions.fold(0, (sum, t) => sum + (t['amount'] as int));
-  int get _totalUncollected =>
-      _pendingTransactions.fold(0, (sum, t) => sum + (t['amount'] as int));
+  @override
+  void didUpdateWidget(covariant LandlordPaymentHistoryBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.month != widget.month) {
+      _loadInvoices();
+    }
+  }
 
   @override
   void dispose() {
@@ -83,10 +45,78 @@ class _LandlordPaymentHistoryBodyState
     super.dispose();
   }
 
+  Future<void> _loadInvoices() async {
+    setState(() {
+      _loading = true;
+      _errorMessage = null;
+    });
+
+    final result = await getIt<GetLandlordInvoicesUsecase>().call(
+      GetLandlordInvoicesParams(month: widget.month),
+    );
+
+    if (!mounted) return;
+
+    result.fold(
+      (failure) {
+        setState(() {
+          _loading = false;
+          _errorMessage = failure.toString();
+        });
+      },
+      (data) {
+        final sorted = [...data]..sort((a, b) => b.month.compareTo(a.month));
+        setState(() {
+          _loading = false;
+          _invoices = sorted;
+        });
+      },
+    );
+  }
+
+  List<TenantInvoiceEntity> get _filteredInvoices {
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return _invoices;
+    return _invoices
+        .where(
+          (i) => '${i.roomId} ${i.month} ${i.status}'.toLowerCase().contains(q),
+        )
+        .toList();
+  }
+
+  int get _totalCollected => _invoices
+      .where((i) => i.status == 'paid')
+      .fold(0, (sum, i) => sum + i.total);
+
+  int get _totalUncollected => _invoices
+      .where((i) => i.status != 'paid' && i.status != 'void')
+      .fold(0, (sum, i) => sum + i.total);
+
   @override
   Widget build(BuildContext context) {
-    final paid = _filteredPaid;
-    final pending = _filteredPending;
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_errorMessage != null) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(_errorMessage!, textAlign: TextAlign.center),
+            ),
+            ElevatedButton(
+              onPressed: _loadInvoices,
+              child: const Text('Thu lai'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final invoices = _filteredInvoices;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,144 +125,95 @@ class _LandlordPaymentHistoryBodyState
           totalCollected: _totalCollected,
           totalUncollected: _totalUncollected,
         ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: TextField(
+            controller: _searchController,
+            onChanged: (v) => setState(() => _query = v),
+            decoration: InputDecoration(
+              hintText: 'Tim theo phong, thang, trang thai',
+              prefixIcon: const Icon(Icons.search_rounded),
+              filled: true,
+              fillColor: AppColors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.gray200),
+              ),
+            ),
+          ),
+        ),
         Expanded(
-          child: ListView(
-            padding: const EdgeInsets.only(bottom: 24),
-            children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 12),
-                child: Text(
-                  'Giao dịch gần đây',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.gray900,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: (v) => setState(() => _query = v),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.gray800,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Tìm kiếm hóa đơn',
-                    hintStyle: const TextStyle(
-                      fontSize: 14,
-                      color: AppColors.slate400,
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.search_rounded,
-                      color: AppColors.slate400,
-                      size: 20,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                    filled: true,
-                    fillColor: AppColors.white,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: AppColors.gray200,
-                        width: 1,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: AppColors.blue400,
-                        width: 1.5,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              if (paid.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Text(
-                    'Không tìm thấy giao dịch.',
-                    style: TextStyle(fontSize: 13, color: AppColors.slate400),
-                  ),
-                )
-              else
-                ...paid.asMap().entries.map((entry) {
-                  final t = entry.value;
-                  return Column(
-                    children: [
-                      TransactionListItem(
-                        roomName: t['roomName'],
-                        tenantName: t['tenantName'],
-                        paymentMethod: t['paymentMethod'],
-                        timeOrDeadline: t['time'],
-                        amount: t['amount'],
-                        status: TransactionStatus.paid,
-                      ),
-                      if (entry.key < paid.length - 1)
-                        const Divider(
-                          height: 1,
-                          indent: 72,
-                          endIndent: 16,
-                          color: AppColors.gray100,
+          child: RefreshIndicator(
+            onRefresh: _loadInvoices,
+            child: invoices.isEmpty
+                ? ListView(
+                    children: const [
+                      SizedBox(height: 96),
+                      Center(
+                        child: Text(
+                          'Chua co hoa don nao.',
+                          style: TextStyle(color: AppColors.slate500),
                         ),
-                    ],
-                  );
-                }),
-
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 20, 16, 4),
-                child: Text(
-                  'Chưa thanh toán',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.slate900,
-                    fontFamily: "Inter",
-                  ),
-                ),
-              ),
-
-              if (pending.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Text(
-                    'Không có hóa đơn chưa thanh toán.',
-                    style: TextStyle(fontSize: 13, color: AppColors.slate400),
-                  ),
-                )
-              else
-                ...pending.asMap().entries.map((entry) {
-                  final t = entry.value;
-                  return Column(
-                    children: [
-                      TransactionListItem(
-                        roomName: t['roomName'],
-                        tenantName: t['tenantName'],
-                        paymentMethod: '',
-                        timeOrDeadline: t['deadline'],
-                        amount: t['amount'],
-                        status: TransactionStatus.pending,
                       ),
-                      if (entry.key < pending.length - 1)
-                        const Divider(
-                          height: 1,
-                          indent: 72,
-                          endIndent: 16,
-                          color: AppColors.gray100,
-                        ),
                     ],
-                  );
-                }),
-            ],
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.only(top: 8, bottom: 24),
+                    itemCount: invoices.length,
+                    itemBuilder: (context, index) {
+                      final invoice = invoices[index];
+                      final paid = invoice.status == 'paid';
+                      return InkWell(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => TenantInvoiceDetailScreen(
+                              invoiceId: invoice.id,
+                            ),
+                          ),
+                        ),
+                        child: TransactionListItem(
+                          roomName: _roomLabel(invoice.roomId),
+                          tenantName: _statusLabel(invoice.status),
+                          paymentMethod: paid ? 'VNPay/PayOS' : '',
+                          timeOrDeadline: paid
+                              ? _dateLabel(invoice.paidAt)
+                              : _dueLabel(invoice.dueDate),
+                          amount: invoice.total,
+                          status: paid
+                              ? TransactionStatus.paid
+                              : TransactionStatus.pending,
+                        ),
+                      );
+                    },
+                  ),
           ),
         ),
       ],
     );
+  }
+
+  String _roomLabel(String roomId) {
+    if (roomId.length <= 8) return 'Phong $roomId';
+    return 'Phong ${roomId.substring(0, 8)}';
+  }
+
+  String _statusLabel(String status) {
+    return switch (status) {
+      'draft' => 'Nhap',
+      'finalized' => 'Cho thanh toan',
+      'paid' => 'Da thanh toan',
+      'void' => 'Da huy',
+      _ => status,
+    };
+  }
+
+  String _dueLabel(String? dueDate) {
+    if (dueDate == null || dueDate.isEmpty) return 'Chua dat han';
+    return dueDate;
+  }
+
+  String _dateLabel(DateTime? value) {
+    if (value == null) return '';
+    return value.toLocal().toString().split('.').first;
   }
 }

@@ -15,6 +15,11 @@ export type EnvironmentVariables = {
   VNPAY_BASE_URL: string;
   VNPAY_IPN_URL: string;
   VNPAY_RETURN_URL: string;
+  PAYOS_CLIENT_ID?: string;
+  PAYOS_API_KEY?: string;
+  PAYOS_CHECKSUM_KEY?: string;
+  PAYOS_RETURN_URL?: string;
+  PAYOS_CANCEL_URL?: string;
 };
 
 export function validateEnvironment(
@@ -100,5 +105,15 @@ export function validateEnvironment(
     VNPAY_IPN_URL: (config.VNPAY_IPN_URL as string) ?? '',
     VNPAY_RETURN_URL:
       (config.VNPAY_RETURN_URL as string) ?? 'app://vnpay-result',
+    PAYOS_CLIENT_ID:
+      typeof config.PAYOS_CLIENT_ID === 'string' ? config.PAYOS_CLIENT_ID : undefined,
+    PAYOS_API_KEY:
+      typeof config.PAYOS_API_KEY === 'string' ? config.PAYOS_API_KEY : undefined,
+    PAYOS_CHECKSUM_KEY:
+      typeof config.PAYOS_CHECKSUM_KEY === 'string' ? config.PAYOS_CHECKSUM_KEY : undefined,
+    PAYOS_RETURN_URL:
+      typeof config.PAYOS_RETURN_URL === 'string' ? config.PAYOS_RETURN_URL : undefined,
+    PAYOS_CANCEL_URL:
+      typeof config.PAYOS_CANCEL_URL === 'string' ? config.PAYOS_CANCEL_URL : undefined,
   };
 }

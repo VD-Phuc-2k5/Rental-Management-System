@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:core/errors.dart';
 import 'package:domain/billing.dart';
 import 'package:fpdart/fpdart.dart';
@@ -16,7 +18,8 @@ class BillingRepositoryImpl implements BillingRepository {
 
   @override
   Future<Either<Failure, BillingImportResultEntity>> importMeterReadings({
-    required String filePath,
+    required Uint8List fileBytes,
+    required String fileName,
     String? month,
     String? propertyId,
     String? source,
@@ -24,7 +27,8 @@ class BillingRepositoryImpl implements BillingRepository {
     try {
       final data = await _dataSource.importMeterReadings(
         token: _getToken(),
-        filePath: filePath,
+        fileBytes: fileBytes,
+        fileName: fileName,
         month: month,
         propertyId: propertyId,
         source: source,
@@ -93,6 +97,7 @@ class BillingRepositoryImpl implements BillingRepository {
   Future<Either<Failure, BillingActionResultEntity>> updateInvoice({
     required String invoiceId,
     required List<InvoiceItemInputEntity> items,
+    String? dueDate,
   }) async {
     try {
       final payload = items
@@ -111,6 +116,28 @@ class BillingRepositoryImpl implements BillingRepository {
         token: _getToken(),
         invoiceId: invoiceId,
         items: payload,
+        dueDate: dueDate,
+      );
+      return Right(data);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TenantInvoiceEntity>>> getLandlordInvoices({
+    String? month,
+    String? status,
+  }) async {
+    try {
+      final data = await _dataSource.getLandlordInvoices(
+        token: _getToken(),
+        month: month,
+        status: status,
       );
       return Right(data);
     } on ServerException catch (e) {
@@ -132,6 +159,44 @@ class BillingRepositoryImpl implements BillingRepository {
         token: _getToken(),
         invoiceId: invoiceId,
         dueDate: dueDate,
+      );
+      return Right(data);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TenantInvoiceEntity>>> getTenantInvoices({
+    String? month,
+  }) async {
+    try {
+      final data = await _dataSource.getTenantInvoices(
+        token: _getToken(),
+        month: month,
+      );
+      return Right(data);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TenantInvoiceDetailEntity>> getInvoiceDetail({
+    required String invoiceId,
+  }) async {
+    try {
+      final data = await _dataSource.getInvoiceDetail(
+        token: _getToken(),
+        invoiceId: invoiceId,
       );
       return Right(data);
     } on ServerException catch (e) {

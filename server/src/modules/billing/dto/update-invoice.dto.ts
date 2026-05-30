@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   ArrayNotEmpty,
   IsArray,
+  IsDateString,
   IsIn,
   IsNumber,
   IsOptional,
@@ -42,6 +43,11 @@ export class InvoiceItemInputDto {
 }
 
 export class UpdateInvoiceDto {
+  @ApiPropertyOptional({ example: '2026-06-05' })
+  @IsOptional()
+  @IsDateString()
+  dueDate?: string;
+
   @ApiProperty({ type: [InvoiceItemInputDto] })
   @IsArray()
   @ArrayNotEmpty()

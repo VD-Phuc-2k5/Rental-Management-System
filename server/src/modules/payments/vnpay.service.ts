@@ -108,7 +108,6 @@ export class VnpayService {
       vnp_TmnCode: this.tmnCode,
       vnp_TxnRef: orderId,
       vnp_Version: '2.1.0',
-      ...(this.ipnUrl && { vnp_IpnUrl: this.ipnUrl }),
     };
 
     const payUrl = this.buildPaymentUrl(params);
@@ -310,7 +309,10 @@ export class VnpayService {
     return Object.keys(params)
       .sort()
       .filter((key) => params[key] !== undefined && params[key] !== '')
-      .map((key) => `${key}=${encodeURIComponent(params[key])}`)
+      .map(
+        (key) =>
+          `${key}=${encodeURIComponent(params[key]).replace(/%20/g, '+')}`,
+      )
       .join('&');
   }
 

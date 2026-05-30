@@ -4,7 +4,9 @@ import 'components/body.dart';
 import 'package:flutter/material.dart';
 
 class AddElectricWaterScreen extends StatefulWidget {
-  const AddElectricWaterScreen({super.key});
+  final String? initialPropertyId;
+
+  const AddElectricWaterScreen({super.key, this.initialPropertyId});
 
   @override
   State<AddElectricWaterScreen> createState() => _AddElectricWaterScreenState();
@@ -20,7 +22,7 @@ class _AddElectricWaterScreenState extends State<AddElectricWaterScreen> {
 
   String get _monthLabel {
     final month = _selectedMonth.month.toString().padLeft(2, '0');
-    return 'THANG $month/${_selectedMonth.year}';
+    return 'THÁNG $month/${_selectedMonth.year}';
   }
 
   void _handleMonthChanged(DateTime value) {
@@ -34,7 +36,7 @@ class _AddElectricWaterScreenState extends State<AddElectricWaterScreen> {
     return Scaffold(
       backgroundColor: AppColors.grayBackground,
       appBar: CommonAppBar(
-        title: "Nhap chi so dien - nuoc", 
+        title: "Nhập chỉ số điện - nước", 
         badge: CommonAppBarBadge(
           text: _monthLabel,
         ),
@@ -43,6 +45,7 @@ class _AddElectricWaterScreenState extends State<AddElectricWaterScreen> {
         month: _monthValue,
         monthLabel: _monthLabel,
         onMonthChanged: _handleMonthChanged,
+        initialPropertyId: widget.initialPropertyId,
       ),
     );
   }

@@ -19,13 +19,18 @@ class DepositPaymentLoading extends DepositPaymentState {
 }
 
 class DepositPaymentSuccess extends DepositPaymentState {
-  const DepositPaymentSuccess({required this.payUrl, required this.deeplink});
+  const DepositPaymentSuccess({
+    required this.payUrl,
+    required this.deeplink,
+    this.qrCodeUrl,
+  });
 
   final String payUrl;
   final String deeplink;
+  final String? qrCodeUrl;
 
   @override
-  List<Object?> get props => [payUrl, deeplink];
+  List<Object?> get props => [payUrl, deeplink, qrCodeUrl];
 }
 
 class DepositPaymentFailure extends DepositPaymentState {

@@ -1,4 +1,4 @@
-﻿import 'package:data/auth.dart';
+import 'package:data/auth.dart';
 import 'package:data/profile.dart';
 import 'package:data/property.dart';
 import 'package:data/rental_request.dart';
@@ -292,4 +292,13 @@ abstract class RegisterModule {
 
   @injectable
   FinalizeInvoiceUsecase get finalizeInvoiceUsecase;
+
+  @injectable
+  GetTenantInvoicesUsecase get getTenantInvoicesUsecase;
+
+  @injectable
+  GetLandlordInvoicesUsecase get getLandlordInvoicesUsecase;
+
+  @injectable
+  GetInvoiceDetailUsecase get getInvoiceDetailUsecase;
 }

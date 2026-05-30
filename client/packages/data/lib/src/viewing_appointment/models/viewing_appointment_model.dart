@@ -13,6 +13,7 @@ class ViewingAppointmentModel extends ViewingAppointmentEntity {
     super.roomTitle,
     super.roomAddress,
     super.roomMonthlyRent,
+    super.hasRentalRequest,
   });
 
   factory ViewingAppointmentModel.fromJson(Map<String, dynamic> json) =>
@@ -28,6 +29,7 @@ class ViewingAppointmentModel extends ViewingAppointmentEntity {
         roomTitle: json['roomTitle'] as String?,
         roomAddress: json['roomAddress'] as String?,
         roomMonthlyRent: json['roomMonthlyRent'] as String?,
+        hasRentalRequest: json['hasRentalRequest'] as bool? ?? false,
       );
 }
 

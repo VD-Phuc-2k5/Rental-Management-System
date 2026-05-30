@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { DrizzleService } from 'src/shared/infrastructure/database/drizzle.service';
 import {
   properties,
+  rentalRequests,
   rooms,
   viewingAppointments,
 } from 'src/shared/infrastructure/database/schema';
@@ -61,10 +62,15 @@ export class DrizzleViewingAppointmentRepository implements ViewingAppointmentRe
         propertyWard: properties.ward,
         propertyDistrict: properties.district,
         propertyCity: properties.city,
+        rentalRequestId: rentalRequests.id,
       })
       .from(viewingAppointments)
       .leftJoin(rooms, eq(viewingAppointments.roomId, rooms.id))
       .leftJoin(properties, eq(rooms.propertyId, properties.id))
+      .leftJoin(rentalRequests, and(
+        eq(viewingAppointments.roomId, rentalRequests.roomId),
+        eq(viewingAppointments.tenantId, rentalRequests.tenantId),
+      ))
       .where(eq(viewingAppointments.tenantId, tenantId))
       .orderBy(viewingAppointments.scheduledAt);
 
@@ -87,6 +93,7 @@ export class DrizzleViewingAppointmentRepository implements ViewingAppointmentRe
             ? `${r.propertyAddress}, ${r.propertyWard}, ${r.propertyDistrict}, ${r.propertyCity}`
             : undefined,
           r.roomMonthlyRent ?? undefined,
+          r.rentalRequestId != null,
         ),
     );
   }

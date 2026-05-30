@@ -4,3 +4,4 @@ export 'billing_action_result_entity.dart';
 export 'created_invoice_entity.dart';
 export 'create_invoices_result_entity.dart';
 export 'invoice_item_input_entity.dart';
+export 'tenant_invoice_entity.dart';

@@ -76,7 +76,7 @@ class Body extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Phương thức", style: paymentLabelStyle),
-                          Text("VNPay", style: paymentInfoStyle),
+                          Text("PayOS", style: paymentInfoStyle),
                         ],
                       ),
                       Row(

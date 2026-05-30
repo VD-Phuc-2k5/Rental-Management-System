@@ -1,6 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:domain/billing.dart';
+import 'package:domain/property.dart';
+import 'package:core/usecase.dart';
 
 import '../../../core/constants.dart';
 import '../../../core/di/di.dart';
@@ -17,11 +19,13 @@ class AddElectricWaterBody extends StatefulWidget {
     required this.month,
     required this.monthLabel,
     required this.onMonthChanged,
+    this.initialPropertyId,
   });
 
   final String month;
   final String monthLabel;
   final ValueChanged<DateTime> onMonthChanged;
+  final String? initialPropertyId;
 
   @override
   State<AddElectricWaterBody> createState() => _AddElectricWaterBodyState();
@@ -33,11 +37,36 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
   bool _isSubmitting = false;
   int _importedCount = 0;
   String? _errorMessage;
+  String? _selectedPropertyId;
+  List<PropertyEntity> _properties = [];
 
   List<ElectricWaterEntry> _entries = [];
 
   bool get _hasErrors => _entries.any((e) => e.hasError);
   bool get _hasData => _entries.isNotEmpty || _importedCount > 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProperties();
+  }
+
+  Future<void> _loadProperties() async {
+    final result = await getIt<GetPropertiesUsecase>().call(const NoParams());
+    if (!mounted) return;
+    result.fold(
+      (_) {},
+      (properties) => setState(() {
+        _properties = properties;
+        if (widget.initialPropertyId != null &&
+            properties.any((p) => p.id == widget.initialPropertyId)) {
+          _selectedPropertyId = widget.initialPropertyId;
+        } else if (properties.length == 1) {
+          _selectedPropertyId = properties.first.id;
+        }
+      }),
+    );
+  }
 
   Future<void> _onFilePicked(String? _) async {
     setState(() {
@@ -58,11 +87,12 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
     }
 
     final picked = result.files.first;
-    final filePath = picked.path;
-    if (filePath == null) {
+    final fileBytes = picked.bytes;
+    final fileName = picked.name;
+    if (fileBytes == null || fileBytes.isEmpty) {
       setState(() {
         _isUploading = false;
-        _errorMessage = 'Không tìm thấy đường dẫn file.';
+        _errorMessage = 'Không đọc được nội dung file.';
       });
       return;
     }
@@ -70,8 +100,10 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
     final usecase = getIt<ImportMeterReadingsUsecase>();
     final response = await usecase(
       ImportMeterReadingsParams(
-        filePath: filePath,
+        fileBytes: fileBytes,
+        fileName: fileName,
         month: widget.month,
+        propertyId: _selectedPropertyId,
       ),
     );
 
@@ -99,7 +131,10 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
 
     final usecase = getIt<PreviewInvoicesUsecase>();
     final response = await usecase(
-      PreviewInvoicesParams(month: widget.month),
+      PreviewInvoicesParams(
+        month: widget.month,
+        propertyId: _selectedPropertyId,
+      ),
     );
 
     final result = response.fold<List<InvoicePreview>?>(
@@ -134,12 +169,21 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
       return;
     }
 
+    if (result.isEmpty) {
+      setState(() {
+        _errorMessage =
+            'Không có hợp đồng/phòng nào để tạo hóa đơn cho tháng này.';
+      });
+      return;
+    }
+
     if (mounted) {
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => PreviewInvoiceScreen(
             month: widget.month,
             monthLabel: widget.monthLabel,
+            propertyId: _selectedPropertyId,
             invoices: result,
           ),
         ),
@@ -158,8 +202,8 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
       initialDate: initial,
       firstDate: DateTime(now.year - 5),
       lastDate: DateTime(now.year + 5),
-      helpText: 'Chon thang',
-      fieldLabelText: 'Thang/nam',
+      helpText: 'Chọn tháng',
+      fieldLabelText: 'Tháng/năm',
       initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
 
@@ -186,6 +230,8 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
                   selectedFileName: _selectedFileName,
                   isLoading: _isUploading,
                 ),
+                const SizedBox(height: 12),
+                _buildPropertyPicker(),
                 const SizedBox(height: 12),
                 GestureDetector(
                   onTap: _pickMonth,
@@ -264,6 +310,46 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
           hasErrors: _hasErrors,
         ),
       ],
+    );
+  }
+
+  Widget _buildPropertyPicker() {
+    if (_properties.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return DropdownButtonFormField<String?>(
+      initialValue: _selectedPropertyId,
+      decoration: InputDecoration(
+        labelText: 'Nhà trọ',
+        filled: true,
+        fillColor: AppColors.white,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: AppColors.slate200),
+        ),
+      ),
+      items: [
+        const DropdownMenuItem<String?>(
+          value: null,
+            child: Text('Tất cả nhà trọ'),
+        ),
+        ..._properties.map(
+          (property) => DropdownMenuItem<String?>(
+            value: property.id,
+            child: Text(property.name),
+          ),
+        ),
+      ],
+      onChanged: (value) {
+        setState(() {
+          _selectedPropertyId = value;
+          _importedCount = 0;
+          _entries = [];
+          _errorMessage = null;
+        });
+      },
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:core/errors.dart';
 import 'package:core/usecase.dart';
 import 'package:equatable/equatable.dart';
@@ -8,19 +10,21 @@ import '../repositories/billing_repository.dart';
 
 class ImportMeterReadingsParams extends Equatable {
   const ImportMeterReadingsParams({
-    required this.filePath,
+    required this.fileBytes,
+    required this.fileName,
     this.month,
     this.propertyId,
     this.source,
   });
 
-  final String filePath;
+  final Uint8List fileBytes;
+  final String fileName;
   final String? month;
   final String? propertyId;
   final String? source;
 
   @override
-  List<Object?> get props => [filePath, month, propertyId, source];
+  List<Object?> get props => [fileBytes, fileName, month, propertyId, source];
 }
 
 class ImportMeterReadingsUsecase
@@ -35,7 +39,8 @@ class ImportMeterReadingsUsecase
     ImportMeterReadingsParams params,
   ) {
     return _repository.importMeterReadings(
-      filePath: params.filePath,
+      fileBytes: params.fileBytes,
+      fileName: params.fileName,
       month: params.month,
       propertyId: params.propertyId,
       source: params.source,

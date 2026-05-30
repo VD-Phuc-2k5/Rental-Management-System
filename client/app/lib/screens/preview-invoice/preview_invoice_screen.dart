@@ -5,15 +5,16 @@ import '../../core/models/invoice_preview.dart';
 import 'package:flutter/material.dart';
 
 class PreviewInvoiceScreen extends StatelessWidget {
-
   const PreviewInvoiceScreen({
     super.key,
     required this.month,
     required this.monthLabel,
     required this.invoices,
+    this.propertyId,
   });
   final String month;
   final String monthLabel;
+  final String? propertyId;
 
   final List<InvoicePreview> invoices;
 
@@ -44,6 +45,8 @@ class PreviewInvoiceScreen extends StatelessWidget {
       body: PreviewInvoceBody(
         invoices: invoices,
         month: month,
+        monthLabel: monthLabel,
+        propertyId: propertyId,
       ),
     );
   }

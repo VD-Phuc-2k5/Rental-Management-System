@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -113,7 +114,7 @@ export class BillingController {
 
   @Get('invoices/:id')
   async getInvoiceDetail(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @CurrentUser() user: { id: string },
   ) {
     return this.billingService.getInvoiceDetail(id, user.id);

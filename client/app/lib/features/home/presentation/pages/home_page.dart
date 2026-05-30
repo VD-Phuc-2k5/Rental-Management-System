@@ -8,7 +8,6 @@ import '../../../../core/constants.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/format_currency.dart';
 import '../../../../core/widgets/tenant_navigation_bottom.dart';
-import '../../../rental_request/presentation/pages/deposit_payment_sheet.dart';
 import '../blocs/available_room_list/available_room_list_bloc.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,28 +28,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<PendingContractCubit, PendingContractState>(
-      listener: (context, state) {
-        if (state is PendingContractFound) {
-          showModalBottomSheet<void>(
-            context: context,
-            isScrollControlled: true,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            builder: (_) => DepositPaymentSheet(contract: state.contract),
-          ).then((_) {
-            if (context.mounted) {
-              context.read<PendingContractCubit>().dismiss();
-            }
-          });
-        }
-      },
-      child: BlocProvider(
-        create: (_) =>
-            getIt<AvailableRoomListBloc>()..add(AvailableRoomListFetched()),
-        child: const _HomeView(),
-      ),
+    return BlocProvider(
+      create: (_) =>
+          getIt<AvailableRoomListBloc>()..add(AvailableRoomListFetched()),
+      child: const _HomeView(),
     );
   }
 }

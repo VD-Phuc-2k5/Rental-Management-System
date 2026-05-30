@@ -15,9 +15,13 @@ class PreviewInvoceBody extends StatefulWidget {
     super.key,
     required this.invoices,
     required this.month,
+    required this.monthLabel,
+    this.propertyId,
   });
   final List<InvoicePreview> invoices;
   final String month;
+  final String monthLabel;
+  final String? propertyId;
 
   @override
   State<PreviewInvoceBody> createState() => _PreviewInvoceBodyState();
@@ -26,6 +30,8 @@ class PreviewInvoceBody extends StatefulWidget {
 class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
   late final Set<String> _selectedIds;
   bool _isSending = false;
+  bool _isDraft = false;
+  String? _dueDate;
   String _searchText = '';
   Set<String> _selectedHostels = {};
   final Map<String, _InvoiceEdits> _editedInvoices = {};
@@ -45,7 +51,8 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
   List<InvoicePreview> get _visibleInvoices {
     final search = _searchText.trim().toLowerCase();
     return _invoiceMap.values.where((invoice) {
-      final matchesHostel = _selectedHostels.isEmpty ||
+      final matchesHostel =
+          _selectedHostels.isEmpty ||
           _selectedHostels.contains(invoice.hostelName);
       if (!matchesHostel) {
         return false;
@@ -53,8 +60,8 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
       if (search.isEmpty) {
         return true;
       }
-      final haystack =
-          '${invoice.hostelName} ${invoice.roomNumber}'.toLowerCase();
+      final haystack = '${invoice.hostelName} ${invoice.roomNumber}'
+          .toLowerCase();
       return haystack.contains(search);
     }).toList();
   }
@@ -68,6 +75,31 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
   int get _totalAmount => _invoiceMap.values
       .where((invoice) => _selectedIds.contains(invoice.id))
       .fold(0, (sum, invoice) => sum + invoice.total);
+
+  String get _dueDateLabel {
+    final dueDate = _dueDate;
+    if (dueDate == null || dueDate.isEmpty) return 'Chọn hạn thanh toán';
+    final parts = dueDate.split('-');
+    if (parts.length == 3) return '${parts[2]}/${parts[1]}/${parts[0]}';
+    return dueDate;
+  }
+
+  Future<void> _pickDueDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: now.add(const Duration(days: 7)),
+      firstDate: DateTime(now.year - 1),
+      lastDate: DateTime(now.year + 5),
+      helpText: 'Chọn hạn thanh toán',
+    );
+    if (picked == null) return;
+    setState(() {
+      final month = picked.month.toString().padLeft(2, '0');
+      final day = picked.day.toString().padLeft(2, '0');
+      _dueDate = '${picked.year}-$month-$day';
+    });
+  }
 
   void _toggleAll(bool? value) {
     setState(() {
@@ -141,7 +173,7 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Sua hoa don phong ${invoice.roomNumber}',
+                'Sửa hóa đơn phòng ${invoice.roomNumber}',
                 style: const TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 16,
@@ -150,26 +182,26 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                 ),
               ),
               const SizedBox(height: 12),
-              _buildAmountField('Tien phong', rentController),
+              _buildAmountField('Tiền phòng', rentController),
               const SizedBox(height: 12),
               _buildAmountField(
-                'Dien (${invoice.electricKwh} so)',
+                'Điện (${invoice.electricKwh} số)',
                 electricController,
               ),
               const SizedBox(height: 12),
               _buildAmountField(
-                'Nuoc (${invoice.waterM3}m3)',
+                'Nước (${invoice.waterM3}m3)',
                 waterController,
               ),
               const SizedBox(height: 12),
-              _buildAmountField('Dich vu', serviceController),
+              _buildAmountField('Dịch vụ', serviceController),
               const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Huy'),
+                      child: const Text('Hủy'),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -177,11 +209,11 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                     child: ElevatedButton(
                       onPressed: () {
                         final rentFee = _parseAmount(rentController.text);
-                        final electricFee =
-                            _parseAmount(electricController.text);
+                        final electricFee = _parseAmount(
+                          electricController.text,
+                        );
                         final waterFee = _parseAmount(waterController.text);
-                        final serviceFee =
-                            _parseAmount(serviceController.text);
+                        final serviceFee = _parseAmount(serviceController.text);
 
                         setState(() {
                           _editedInvoices[invoice.id] = _InvoiceEdits(
@@ -193,7 +225,7 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                         });
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Luu'),
+                      child: const Text('Lưu'),
                     ),
                   ),
                 ],
@@ -219,8 +251,9 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
     final electricQty = invoice.electricKwh.toDouble();
     final waterQty = invoice.waterM3.toDouble();
 
-    final electricUnit =
-      electricQty > 0 ? (electricFee / electricQty).toDouble() : 0.0;
+    final electricUnit = electricQty > 0
+        ? (electricFee / electricQty).toDouble()
+        : 0.0;
     final waterUnit = waterQty > 0 ? (waterFee / waterQty).toDouble() : 0.0;
 
     return [
@@ -265,11 +298,9 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
   }
 
   void _openFilterSheet() {
-    final hostels = widget.invoices
-        .map((invoice) => invoice.hostelName)
-        .toSet()
-        .toList()
-      ..sort();
+    final hostels =
+        widget.invoices.map((invoice) => invoice.hostelName).toSet().toList()
+          ..sort();
     var tempSearch = _searchText;
     final tempSelected = {..._selectedHostels};
 
@@ -294,7 +325,7 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Loc hoa don',
+                    'Lọc hóa đơn',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
@@ -305,7 +336,7 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                   const SizedBox(height: 12),
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Tim theo ten nha, so phong',
+                      hintText: 'Tìm theo tên nhà, số phòng',
                       prefixIcon: const Icon(Icons.search),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -327,7 +358,7 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                   const SizedBox(height: 12),
                   if (hostels.isNotEmpty) ...[
                     const Text(
-                      'Chon nha',
+                      'Chọn nhà',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 14,
@@ -372,7 +403,7 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                               tempSelected.clear();
                             });
                           },
-                          child: const Text('Xoa loc'),
+                          child: const Text('Xóa lọc'),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -385,7 +416,7 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                             });
                             Navigator.of(context).pop();
                           },
-                          child: const Text('Ap dung'),
+                          child: const Text('Áp dụng'),
                         ),
                       ),
                     ],
@@ -406,7 +437,9 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
     final response = await usecase(
       CreateInvoicesParams(
         month: widget.month,
+        propertyId: widget.propertyId,
         roomIds: _selectedIds.toList(),
+        dueDate: _dueDate,
         isDraft: true,
       ),
     );
@@ -431,8 +464,7 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
     }
 
     final invoiceMap = {
-      for (final invoice in createResult.invoices)
-        invoice.roomId: invoice.id,
+      for (final invoice in createResult.invoices) invoice.roomId: invoice.id,
     };
 
     final updateUsecase = getIt<UpdateInvoiceUsecase>();
@@ -443,12 +475,16 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
         final invoiceId = invoiceMap[roomId];
         final invoice = _invoiceMap[roomId];
         if (invoiceId == null || invoice == null) {
-          return left(const UnknownFailure(message: 'Khong tim thay hoa don.'));
+          return left(const UnknownFailure(message: 'Không tìm thấy hóa đơn.'));
         }
 
         final items = _buildInvoiceItems(invoice);
         return updateUsecase(
-          UpdateInvoiceParams(invoiceId: invoiceId, items: items),
+          UpdateInvoiceParams(
+            invoiceId: invoiceId,
+            items: items,
+            dueDate: _dueDate,
+          ),
         );
       }),
     );
@@ -463,43 +499,56 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
 
     if (updateFailure != null) {
       setState(() => _isSending = false);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(updateFailure.toString())),
       );
       return;
     }
 
-    final finalizeResults = await Future.wait(
-      _selectedIds.map((roomId) async {
-        final invoiceId = invoiceMap[roomId];
-        if (invoiceId == null) {
-          return left(const UnknownFailure(message: 'Khong tim thay hoa don.'));
-        }
-        return finalizeUsecase(
-          FinalizeInvoiceParams(invoiceId: invoiceId),
-        );
-      }),
-    );
-
-    Failure? finalizeFailure;
-    for (final result in finalizeResults) {
-      result.fold((failure) => finalizeFailure = failure, (_) => null);
-      if (finalizeFailure != null) {
-        break;
-      }
-    }
-
-    if (finalizeFailure != null) {
-      setState(() => _isSending = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(finalizeFailure.toString())),
+    if (!_isDraft) {
+      final finalizeResults = await Future.wait(
+        _selectedIds.map((roomId) async {
+          final invoiceId = invoiceMap[roomId];
+          if (invoiceId == null) {
+            return left(
+              const UnknownFailure(message: 'Không tìm thấy hóa đơn.'),
+            );
+          }
+          return finalizeUsecase(
+            FinalizeInvoiceParams(invoiceId: invoiceId, dueDate: _dueDate),
+          );
+        }),
       );
-      return;
+
+      Failure? finalizeFailure;
+      for (final result in finalizeResults) {
+        result.fold((failure) => finalizeFailure = failure, (_) => null);
+        if (finalizeFailure != null) {
+          break;
+        }
+      }
+
+      if (finalizeFailure != null) {
+        setState(() => _isSending = false);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(finalizeFailure.toString())),
+        );
+        return;
+      }
     }
 
     setState(() => _isSending = false);
 
     if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _isDraft ? 'Đã lưu hóa đơn nháp.' : 'Đã tạo và chốt hóa đơn.',
+          ),
+        ),
+      );
       Navigator.of(context).pop();
     }
   }
@@ -515,6 +564,8 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const InfoBanner(),
+                const SizedBox(height: 16),
+                _buildCreateOptions(),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -580,19 +631,33 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                ..._visibleInvoices.map(
-                  (invoice) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: InvoiceCard(
-                      invoice: invoice,
-                      isSelected: _selectedIds.contains(invoice.id),
-                      onToggleSelect: (val) => _toggleOne(invoice.id, val),
-                      onEdit: () {
-                        _openEditSheet(invoice);
-                      },
+                if (_visibleInvoices.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 32),
+                    child: Center(
+                      child: Text(
+                        'Không có hóa đơn nào trong kết quả xem trước.',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          color: AppColors.slate500,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  ..._visibleInvoices.map(
+                    (invoice) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: InvoiceCard(
+                        invoice: invoice,
+                        isSelected: _selectedIds.contains(invoice.id),
+                        onToggleSelect: (val) => _toggleOne(invoice.id, val),
+                        onEdit: () {
+                          _openEditSheet(invoice);
+                        },
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
@@ -605,6 +670,58 @@ class _PreviewInvoceBodyState extends State<PreviewInvoceBody> {
           isLoading: _isSending,
         ),
       ],
+    );
+  }
+
+  Widget _buildCreateOptions() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.slate200),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.calendar_month, color: AppColors.blue700),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Kỳ hóa đơn: ${widget.monthLabel}',
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.blue950,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          InkWell(
+            onTap: _pickDueDate,
+            child: Row(
+              children: [
+                const Icon(Icons.event_available, color: AppColors.slate500),
+                const SizedBox(width: 10),
+                Expanded(child: Text(_dueDateLabel)),
+                const Icon(Icons.chevron_right, color: AppColors.slate400),
+              ],
+            ),
+          ),
+          Material(
+            color: Colors.transparent,
+            child: SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: _isDraft,
+              onChanged: (value) => setState(() => _isDraft = value),
+              title: const Text('Lưu nháp, chưa gửi cho người thuê'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

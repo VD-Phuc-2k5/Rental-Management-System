@@ -7,9 +7,11 @@ class PaymentHeading extends StatelessWidget {
     super.key,
     required this.price,
     required this.roomName,
+    this.payerName,
   });
   final int price;
   final String roomName;
+  final String? payerName;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,6 @@ class PaymentHeading extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
-            spacing: 8,
             children: [
               const Icon(Icons.apartment, size: 20, color: AppColors.blue700),
               Text(
@@ -59,6 +60,25 @@ class PaymentHeading extends StatelessWidget {
             ],
           ),
         ),
+        if (payerName != null && payerName!.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.person, size: 18, color: AppColors.blue700),
+              const SizedBox(width: 6),
+              Text(
+                payerName!,
+                style: const TextStyle(
+                  color: AppColors.slate700,
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ],
       ],
     );
   }

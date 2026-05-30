@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Logger,
+  NotFoundException,
   Query,
   Req,
   Post,
@@ -15,7 +16,11 @@ import { RolesGuard } from 'src/shared/common/guards/roles.guard';
 import { Roles } from 'src/shared/common/decorators/roles.decorator';
 import { CurrentUser } from 'src/shared/common/decorators/current-user.decorator';
 import { VnpayService } from './vnpay.service';
+import { PayosService } from './payos.service';
 import { CreateDepositPaymentDto } from './dto/create-deposit-payment.dto';
+import { CreateInvoicePaymentDto } from './dto/create-invoice-payment.dto';
+import { SignContractService } from '../rental-requests/application/services/sign-contract.service';
+import { ContractRepository } from '../rental-requests/domain/repositories/contract.repository';
 
 interface VnpayIpnResponse {
   RspCode: string;
@@ -27,7 +32,12 @@ interface VnpayIpnResponse {
 export class PaymentsController {
   private readonly logger = new Logger('PaymentsController');
 
-  constructor(private readonly vnpayService: VnpayService) {}
+  constructor(
+    private readonly vnpayService: VnpayService,
+    private readonly payosService: PayosService,
+    private readonly signContractService: SignContractService,
+    private readonly contractRepo: ContractRepository,
+  ) {}
 
   @Post('vnpay/create-deposit')
   @UseGuards(AuthGuard, RolesGuard)
@@ -37,11 +47,51 @@ export class PaymentsController {
     @CurrentUser() user: { id: string },
     @Req() request: Request,
   ) {
-    return this.vnpayService.createDepositPayment(
+    // Completely switched to PayOS as per user request
+    return this.payosService.createDepositPayment(
       dto.contractId,
       user.id,
-      this.getClientIp(request),
     );
+  }
+
+  @Post('payos/create-invoice')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('tenant')
+  async createInvoicePayment(
+    @Body() dto: CreateInvoicePaymentDto,
+    @CurrentUser() user: { id: string },
+  ) {
+    return this.payosService.createInvoicePayment(dto.invoiceId, user.id);
+  }
+
+  @Post('dev/confirm-payment')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('tenant')
+  async devConfirmPayment(@Body() body: { contractId: string }) {
+    const contract = await this.contractRepo.findById(body.contractId);
+    if (!contract) throw new NotFoundException('Contract not found');
+    await this.signContractService.execute(contract.id, contract.tenantId);
+    return { success: true, contractId: contract.id };
+  }
+
+  @Post('dev/confirm-invoice-payment')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('tenant')
+  async devConfirmInvoicePayment(@Body() body: { invoiceId: string }) {
+    await this.payosService.confirmInvoicePayment(body.invoiceId);
+    return { success: true, invoiceId: body.invoiceId };
+  }
+
+  @Post('payos/webhook')
+  async handlePayosWebhook(@Body() body: any) {
+    try {
+      await this.payosService.handleWebhook(body);
+      return { success: true };
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`PayOS Webhook error: ${message}`);
+      return { success: false, message };
+    }
   }
 
   @Get('vnpay/ipn')

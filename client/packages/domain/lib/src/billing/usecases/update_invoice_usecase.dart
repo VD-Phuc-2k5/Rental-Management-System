@@ -11,13 +11,15 @@ class UpdateInvoiceParams extends Equatable {
   const UpdateInvoiceParams({
     required this.invoiceId,
     required this.items,
+    this.dueDate,
   });
 
   final String invoiceId;
   final List<InvoiceItemInputEntity> items;
+  final String? dueDate;
 
   @override
-  List<Object?> get props => [invoiceId, items];
+  List<Object?> get props => [invoiceId, items, dueDate];
 }
 
 class UpdateInvoiceUsecase
@@ -34,6 +36,7 @@ class UpdateInvoiceUsecase
     return _repository.updateInvoice(
       invoiceId: params.invoiceId,
       items: params.items,
+      dueDate: params.dueDate,
     );
   }
 }

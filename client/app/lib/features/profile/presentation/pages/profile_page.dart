@@ -102,10 +102,21 @@ class _ProfileError extends StatelessWidget {
   }
 }
 
-class _ProfileContent extends StatelessWidget {
+class _ProfileContent extends StatefulWidget {
   const _ProfileContent({required this.profile});
 
   final UserProfileEntity profile;
+
+  @override
+  State<_ProfileContent> createState() => _ProfileContentState();
+}
+
+class _ProfileContentState extends State<_ProfileContent> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => context.read<PendingContractCubit>().checkPending());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +141,7 @@ class _ProfileContent extends StatelessWidget {
               SizedBox(height: topPadding + 10),
               Stack(
                 children: [
-                  ProfileHeaderWidget(profile: profile),
+                  ProfileHeaderWidget(profile: widget.profile),
                   Positioned(
                     top: 0,
                     right: 0,
@@ -143,7 +154,7 @@ class _ProfileContent extends StatelessWidget {
                       onPressed: () async {
                         final updated = await context.push<UserProfileEntity>(
                           RoutePaths.editProfile,
-                          extra: profile,
+                          extra: widget.profile,
                         );
                         if (updated != null && context.mounted) {
                           context.read<GetProfileBloc>().add(
@@ -220,7 +231,7 @@ class _ProfileContent extends StatelessWidget {
                         );
                       },
                     ),
-                    ProfileInfoCardWidget(profile: profile),
+                    ProfileInfoCardWidget(profile: widget.profile),
                     const SizedBox(height: 20),
                     ProfileActionCardWidget(
                       onChangePassword: () => context.push(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:core/constants.dart';
 import 'package:core/errors.dart';
@@ -9,6 +10,7 @@ import '../models/billing_import_result_model.dart';
 import '../models/billing_invoice_preview_model.dart';
 import '../models/billing_action_result_model.dart';
 import '../models/create_invoices_result_model.dart';
+import '../models/tenant_invoice_model.dart';
 import 'billing_remote_data_source.dart';
 
 class HttpBillingRemoteDataSource implements BillingRemoteDataSource {
@@ -35,17 +37,13 @@ class HttpBillingRemoteDataSource implements BillingRemoteDataSource {
   @override
   Future<BillingImportResultModel> importMeterReadings({
     required String token,
-    required String filePath,
+    required Uint8List fileBytes,
+    required String fileName,
     String? month,
     String? propertyId,
     String? source,
   }) async {
     try {
-      final file = File(filePath);
-      if (!await file.exists()) {
-        throw const UnknownException(message: 'File not found');
-      }
-
       final uri = Uri.parse('$baseUrl/billing/meter-readings/import');
       final request = http.MultipartRequest('POST', uri);
       request.headers.addAll(_headers(token));
@@ -58,7 +56,11 @@ class HttpBillingRemoteDataSource implements BillingRemoteDataSource {
         request.fields['source'] = source;
       }
 
-      request.files.add(await http.MultipartFile.fromPath('file', file.path));
+      request.files.add(http.MultipartFile.fromBytes(
+        'file',
+        fileBytes,
+        filename: fileName,
+      ));
 
       final streamed = await _client.send(request);
       final response = await http.Response.fromStream(streamed);
@@ -187,6 +189,7 @@ class HttpBillingRemoteDataSource implements BillingRemoteDataSource {
     required String token,
     required String invoiceId,
     required List<Map<String, dynamic>> items,
+    String? dueDate,
   }) async {
     try {
       final response = await _client.patch(
@@ -195,7 +198,10 @@ class HttpBillingRemoteDataSource implements BillingRemoteDataSource {
           ..._headers(token),
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'items': items}),
+        body: jsonEncode({
+          'items': items,
+          if (dueDate != null && dueDate.isNotEmpty) 'dueDate': dueDate,
+        }),
       );
 
       final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -241,6 +247,120 @@ class HttpBillingRemoteDataSource implements BillingRemoteDataSource {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 200 || response.statusCode == 201) {
         return BillingActionResultModel.success();
+      }
+
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<TenantInvoiceModel>> getTenantInvoices({
+    required String token,
+    String? month,
+  }) async {
+    try {
+      final query = month != null && month.isNotEmpty ? '?month=$month' : '';
+      final response = await _client.get(
+        Uri.parse('$baseUrl/billing/invoices/tenant$query'),
+        headers: _headers(token),
+      );
+
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final list = json['data'] as List? ?? [];
+        return list
+            .whereType<Map>()
+            .map(
+              (e) => TenantInvoiceModel.fromJson(
+                Map<String, dynamic>.from(e),
+              ),
+            )
+            .toList();
+      }
+
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<TenantInvoiceModel>> getLandlordInvoices({
+    required String token,
+    String? month,
+    String? status,
+  }) async {
+    try {
+      final query = <String, String>{
+        if (month != null && month.isNotEmpty) 'month': month,
+        if (status != null && status.isNotEmpty) 'status': status,
+      };
+      final uri = Uri.parse(
+        '$baseUrl/billing/invoices/landlord',
+      ).replace(queryParameters: query.isEmpty ? null : query);
+      final response = await _client.get(uri, headers: _headers(token));
+
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final list = json['data'] as List? ?? [];
+        return list
+            .whereType<Map>()
+            .map(
+              (e) => TenantInvoiceModel.fromJson(Map<String, dynamic>.from(e)),
+            )
+            .toList();
+      }
+
+      _handleError(response.statusCode, json);
+    } on SocketException {
+      throw const NetworkException();
+    } on FormatException {
+      throw const UnknownException(message: 'Invalid response format');
+    } catch (e) {
+      if (e is ServerException ||
+          e is NetworkException ||
+          e is UnknownException) {
+        rethrow;
+      }
+      throw UnknownException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<TenantInvoiceDetailModel> getInvoiceDetail({
+    required String token,
+    required String invoiceId,
+  }) async {
+    try {
+      final response = await _client.get(
+        Uri.parse('$baseUrl/billing/invoices/$invoiceId'),
+        headers: _headers(token),
+      );
+
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = json['data'] as Map<String, dynamic>? ?? json;
+        return TenantInvoiceDetailModel.fromJson(data);
       }
 
       _handleError(response.statusCode, json);

@@ -258,7 +258,11 @@ export class BillingService {
 
       await tx
         .update(invoices)
-        .set({ total: String(total), updatedAt: new Date() })
+        .set({
+          total: String(total),
+          dueDate: dto.dueDate ?? invoice.dueDate,
+          updatedAt: new Date(),
+        })
         .where(eq(invoices.id, invoiceId));
     });
 
