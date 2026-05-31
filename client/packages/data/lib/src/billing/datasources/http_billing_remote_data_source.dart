@@ -56,11 +56,13 @@ class HttpBillingRemoteDataSource implements BillingRemoteDataSource {
         request.fields['source'] = source;
       }
 
-      request.files.add(http.MultipartFile.fromBytes(
-        'file',
-        fileBytes,
-        filename: fileName,
-      ));
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'file',
+          fileBytes,
+          filename: fileName,
+        ),
+      );
 
       final streamed = await _client.send(request);
       final response = await http.Response.fromStream(streamed);
@@ -97,7 +99,7 @@ class HttpBillingRemoteDataSource implements BillingRemoteDataSource {
     try {
       final body = <String, dynamic>{
         'month': month,
-        if (propertyId != null) 'propertyId': propertyId,
+        'propertyId': ?propertyId,
         if (roomIds != null && roomIds.isNotEmpty) 'roomIds': roomIds,
       };
 
@@ -147,10 +149,10 @@ class HttpBillingRemoteDataSource implements BillingRemoteDataSource {
     try {
       final body = <String, dynamic>{
         'month': month,
-        if (propertyId != null) 'propertyId': propertyId,
+        'propertyId': ?propertyId,
         if (roomIds != null && roomIds.isNotEmpty) 'roomIds': roomIds,
-        if (dueDate != null) 'dueDate': dueDate,
-        if (isDraft != null) 'isDraft': isDraft,
+        'dueDate': ?dueDate,
+        'isDraft': ?isDraft,
       };
 
       final response = await _client.post(
@@ -232,7 +234,7 @@ class HttpBillingRemoteDataSource implements BillingRemoteDataSource {
   }) async {
     try {
       final body = <String, dynamic>{
-        if (dueDate != null) 'dueDate': dueDate,
+        'dueDate': ?dueDate,
       };
 
       final response = await _client.post(

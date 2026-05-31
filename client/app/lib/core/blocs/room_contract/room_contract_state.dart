@@ -11,8 +11,8 @@ class RoomContractInitial extends RoomContractState {}
 class RoomContractLoading extends RoomContractState {}
 
 class RoomContractSuccess extends RoomContractState {
-  final String contractId;
   const RoomContractSuccess(this.contractId);
+  final String contractId;
   @override
   List<Object> get props => [contractId];
 }
@@ -20,8 +20,8 @@ class RoomContractSuccess extends RoomContractState {
 class RoomContractEmpty extends RoomContractState {}
 
 class RoomContractFailure extends RoomContractState {
-  final String message;
   const RoomContractFailure(this.message);
+  final String message;
   @override
   List<Object> get props => [message];
 }

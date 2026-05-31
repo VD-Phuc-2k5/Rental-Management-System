@@ -35,9 +35,17 @@ class MemberDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => RemoveMemberCubit(getIt<RemoveContractMemberUsecase>())),
+        BlocProvider(
+          create: (context) =>
+              RemoveMemberCubit(getIt<RemoveContractMemberUsecase>()),
+        ),
         // Cung cấp thêm PenaltyCubit cho tính năng Phạt
-        BlocProvider(create: (context) => PenaltyCubit(getIt<CreatePenaltyUsecase>(), getIt<GetContractDetailUsecase>())),
+        BlocProvider(
+          create: (context) => PenaltyCubit(
+            getIt<CreatePenaltyUsecase>(),
+            getIt<GetContractDetailUsecase>(),
+          ),
+        ),
       ],
       child: MultiBlocListener(
         listeners: [
@@ -45,10 +53,16 @@ class MemberDetailScreen extends StatelessWidget {
           BlocListener<RemoveMemberCubit, RemoveMemberState>(
             listener: (context, state) {
               if (state is RemoveMemberSuccess) {
-                showToast(message: 'Đã xóa thành viên thành công', type: ToastType.success);
+                showToast(
+                  message: 'Đã xóa thành viên thành công',
+                  type: ToastType.success,
+                );
                 Navigator.pop(context, true);
               } else if (state is RemoveMemberFailure) {
-                showToast(message: 'Xóa thất bại: ${state.message}', type: ToastType.error);
+                showToast(
+                  message: 'Xóa thất bại: ${state.message}',
+                  type: ToastType.error,
+                );
               }
             },
           ),
@@ -56,9 +70,15 @@ class MemberDetailScreen extends StatelessWidget {
           BlocListener<PenaltyCubit, PenaltyState>(
             listener: (context, state) {
               if (state is PenaltySuccess) {
-                showToast(message: 'Đã tạo phiếu phạt thành công!', type: ToastType.success);
+                showToast(
+                  message: 'Đã tạo phiếu phạt thành công!',
+                  type: ToastType.success,
+                );
               } else if (state is PenaltyFailure) {
-                showToast(message: 'Lập phiếu phạt thất bại: ${state.message}', type: ToastType.error);
+                showToast(
+                  message: 'Lập phiếu phạt thất bại: ${state.message}',
+                  type: ToastType.error,
+                );
               }
             },
           ),
@@ -104,30 +124,49 @@ class MemberDetailScreen extends StatelessWidget {
                   height: 52,
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: AppColors.orange500, width: 1.5),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      side: const BorderSide(
+                        color: AppColors.orange500,
+                        width: 1.5,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     onPressed: isLoading
                         ? null
                         : () async {
-                      // Mở popup nhập lý do và số tiền
-                      final result = await showDialog<Map<String, dynamic>>(
-                        context: context,
-                        builder: (_) => const PenaltyDialog(),
-                      );
+                            // Mở popup nhập lý do và số tiền
+                            final result =
+                                await showDialog<Map<String, dynamic>>(
+                                  context: context,
+                                  builder: (_) => const PenaltyDialog(),
+                                );
 
-                      // Nếu có kết quả trả về -> Gọi API phạt
-                      if (result != null && context.mounted) {
-                        context.read<PenaltyCubit>().submitPenalty(
-                          contractId: contractId,
-                          amount: result['amount'],
-                          reason: result['reason'],
-                        );
-                      }
-                    },
+                            // Nếu có kết quả trả về -> Gọi API phạt
+                            if (result != null && context.mounted) {
+                              await context.read<PenaltyCubit>().submitPenalty(
+                                contractId: contractId,
+                                amount: result['amount'],
+                                reason: result['reason'],
+                              );
+                            }
+                          },
                     child: isLoading
-                        ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: AppColors.orange500))
-                        : const Text('Phạt vi phạm', style: TextStyle(color: AppColors.orange500, fontSize: 16, fontWeight: FontWeight.bold)),
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: AppColors.orange500,
+                            ),
+                          )
+                        : const Text(
+                            'Phạt vi phạm',
+                            style: TextStyle(
+                              color: AppColors.orange500,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 );
               },
@@ -145,14 +184,16 @@ class MemberDetailScreen extends StatelessWidget {
                     onPressed: isLoading
                         ? null
                         : () async {
-                      final confirm = await showDeleteDialog(context);
-                      if (confirm == true && context.mounted) {
-                        context.read<RemoveMemberCubit>().removeMember(
-                          contractId: contractId,
-                          memberId: memberId,
-                        );
-                      }
-                    },
+                            final confirm = await showDeleteDialog(context);
+                            if (confirm == true && context.mounted) {
+                              await context
+                                  .read<RemoveMemberCubit>()
+                                  .removeMember(
+                                    contractId: contractId,
+                                    memberId: memberId,
+                                  );
+                            }
+                          },
                   );
                 },
               ),

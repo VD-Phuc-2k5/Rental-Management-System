@@ -11,7 +11,7 @@ class DangerBottomButton extends StatelessWidget {
 
   final String text;
   final VoidCallback? onPressed; // Thêm tham số nhận sự kiện
-  final bool isLoading;          // Thêm tham số trạng thái loading
+  final bool isLoading; // Thêm tham số trạng thái loading
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +30,17 @@ class DangerBottomButton extends StatelessWidget {
             // Nếu đang loading thì hiện vòng xoay, ngược lại hiện Icon thùng rác/xóa
             icon: isLoading
                 ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: AppColors.white,
-                strokeWidth: 2,
-              ),
-            )
-                : const Icon(Icons.person_remove_alt_1_outlined, color: AppColors.white),
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: AppColors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const Icon(
+                    Icons.person_remove_alt_1_outlined,
+                    color: AppColors.white,
+                  ),
 
             label: Text(
               isLoading ? 'Đang xử lý...' : text,
@@ -47,10 +50,12 @@ class DangerBottomButton extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.red500,
               foregroundColor: AppColors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               elevation: 0,
               // Tùy chỉnh màu khi nút bị khóa (lúc đang loading)
-              disabledBackgroundColor: AppColors.red500.withOpacity(0.6),
+              disabledBackgroundColor: AppColors.red500.withValues(alpha: 0.6),
               disabledForegroundColor: AppColors.white,
             ),
           ),

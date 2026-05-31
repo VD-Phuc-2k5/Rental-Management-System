@@ -1,4 +1,4 @@
-import 'package:domain/src/rental_request/entities/penalty_entity.dart';
+import 'package:domain/rental_request.dart';
 
 class PenaltyModel extends PenaltyEntity {
   PenaltyModel({

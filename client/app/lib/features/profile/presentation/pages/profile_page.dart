@@ -115,6 +115,7 @@ class _ProfileContentState extends State<_ProfileContent> {
   @override
   void initState() {
     super.initState();
+    // ignore: use_build_context_synchronously
     Future.microtask(() => context.read<PendingContractCubit>().checkPending());
   }
 

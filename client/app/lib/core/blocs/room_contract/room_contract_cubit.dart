@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:domain/rental_request.dart';
 import 'package:injectable/injectable.dart';
 
 // Import từ các package bên ngoài
-import 'package:domain/src/rental_request/rental_request.dart';
 import 'package:core/usecase.dart';
 
 import 'room_contract_state.dart';
@@ -20,12 +20,12 @@ class RoomContractCubit extends Cubit<RoomContractState> {
     final result = await _getLandlordContracts.call(const NoParams());
 
     result.fold(
-          (failure) => emit(RoomContractFailure(failure.message)),
-          (contracts) {
+      (failure) => emit(RoomContractFailure(failure.message)),
+      (contracts) {
         try {
           // Lọc tìm hợp đồng của đúng phòng này và đang ở trạng thái đã ký (signed)
           final activeContract = contracts.firstWhere(
-                (c) => c.roomId == roomId && c.status == ContractStatus.signed,
+            (c) => c.roomId == roomId && c.status == ContractStatus.signed,
           );
           emit(RoomContractSuccess(activeContract.id));
         } catch (e) {

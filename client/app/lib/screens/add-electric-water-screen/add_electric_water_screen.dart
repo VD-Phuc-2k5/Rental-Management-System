@@ -4,9 +4,8 @@ import 'components/body.dart';
 import 'package:flutter/material.dart';
 
 class AddElectricWaterScreen extends StatefulWidget {
-  final String? initialPropertyId;
-
   const AddElectricWaterScreen({super.key, this.initialPropertyId});
+  final String? initialPropertyId;
 
   @override
   State<AddElectricWaterScreen> createState() => _AddElectricWaterScreenState();
@@ -36,7 +35,7 @@ class _AddElectricWaterScreenState extends State<AddElectricWaterScreen> {
     return Scaffold(
       backgroundColor: AppColors.grayBackground,
       appBar: CommonAppBar(
-        title: "Nhập chỉ số điện - nước", 
+        title: "Nhập chỉ số điện - nước",
         badge: CommonAppBarBadge(
           text: _monthLabel,
         ),

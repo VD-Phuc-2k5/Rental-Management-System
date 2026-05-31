@@ -7,11 +7,14 @@ abstract class PenaltyState extends Equatable {
 }
 
 class PenaltyInitial extends PenaltyState {}
+
 class PenaltyLoading extends PenaltyState {}
+
 class PenaltySuccess extends PenaltyState {}
+
 class PenaltyFailure extends PenaltyState {
-  final String message;
   const PenaltyFailure(this.message);
+  final String message;
   @override
   List<Object> get props => [message];
 }

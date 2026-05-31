@@ -2,7 +2,6 @@ import 'package:core/errors.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../rental_request.dart';
-import '../entities/penalty_entity.dart';
 
 abstract interface class RentalRequestRepository {
   Future<Either<Failure, RentalRequestEntity>> createRentalRequest({

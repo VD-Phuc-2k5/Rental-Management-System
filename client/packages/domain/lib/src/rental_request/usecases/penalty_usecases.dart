@@ -4,7 +4,6 @@ import 'package:injectable/injectable.dart';
 import 'package:core/errors.dart'; // Đổi lại đúng đường dẫn file errors của core nếu team dùng khác
 
 import '../../../rental_request.dart';
-import '../entities/penalty_entity.dart';
 import 'package:core/usecase.dart'; // Đổi lại đúng đường dẫn usecase của team
 
 class CreatePenaltyParams extends Equatable {
@@ -27,8 +26,10 @@ class CreatePenaltyParams extends Equatable {
 }
 
 @lazySingleton
-class CreatePenaltyUsecase implements UseCase<PenaltyEntity, CreatePenaltyParams> {
-  CreatePenaltyUsecase({required RentalRequestRepository repository}) : _repo = repository;
+class CreatePenaltyUsecase
+    implements UseCase<PenaltyEntity, CreatePenaltyParams> {
+  CreatePenaltyUsecase({required RentalRequestRepository repository})
+    : _repo = repository;
   final RentalRequestRepository _repo;
 
   @override
@@ -52,8 +53,10 @@ class GetPenaltiesParams extends Equatable {
 }
 
 @lazySingleton
-class GetPenaltiesUsecase implements UseCase<List<PenaltyEntity>, GetPenaltiesParams> {
-  GetPenaltiesUsecase({required RentalRequestRepository repository}) : _repo = repository;
+class GetPenaltiesUsecase
+    implements UseCase<List<PenaltyEntity>, GetPenaltiesParams> {
+  GetPenaltiesUsecase({required RentalRequestRepository repository})
+    : _repo = repository;
   final RentalRequestRepository _repo;
 
   @override

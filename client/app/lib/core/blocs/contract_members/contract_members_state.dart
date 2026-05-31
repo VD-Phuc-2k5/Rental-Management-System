@@ -13,18 +13,16 @@ class ContractMembersInitial extends ContractMembersState {}
 class ContractMembersLoading extends ContractMembersState {}
 
 class ContractMembersSuccess extends ContractMembersState {
-  final List<ContractMemberEntity> members;
-
   const ContractMembersSuccess(this.members);
+  final List<ContractMemberEntity> members;
 
   @override
   List<Object> get props => [members];
 }
 
 class ContractMembersFailure extends ContractMembersState {
-  final String message;
-
   const ContractMembersFailure(this.message);
+  final String message;
 
   @override
   List<Object> get props => [message];

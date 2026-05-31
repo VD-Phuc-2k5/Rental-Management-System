@@ -18,8 +18,9 @@ class TenantListSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       // Khởi tạo Cubit và tự động gọi API lấy danh sách ngay khi màn hình mở lên
-      create: (context) => ContractMembersCubit(getIt<GetContractMembersUsecase>())
-        ..fetchMembers(contractId),
+      create: (context) =>
+          ContractMembersCubit(getIt<GetContractMembersUsecase>())
+            ..fetchMembers(contractId),
       child: _TenantListSectionView(contractId: contractId),
     );
   }
@@ -52,7 +53,7 @@ class _TenantListSectionView extends StatelessWidget {
 
         // 2. Nếu bên màn hình chi tiết báo đã xóa (trả về true), ta sẽ gọi API load lại danh sách
         if (isDeleted == true && context.mounted) {
-          context.read<ContractMembersCubit>().fetchMembers(contractId);
+          await context.read<ContractMembersCubit>().fetchMembers(contractId);
         }
       },
       child: Padding(
@@ -93,7 +94,9 @@ class _TenantListSectionView extends StatelessWidget {
                     member.isRoomLeader ? "Trưởng phòng" : "Thành viên",
                     style: TextStyle(
                       fontSize: 12,
-                      color: member.isRoomLeader ? AppColors.blue700 : AppColors.slate500,
+                      color: member.isRoomLeader
+                          ? AppColors.blue700
+                          : AppColors.slate500,
                     ),
                   ),
                 ],
@@ -126,13 +129,19 @@ class _TenantListSectionView extends StatelessWidget {
       // Lắng nghe các trạng thái (Loading, Success, Failure) từ Cubit
       child: BlocBuilder<ContractMembersCubit, ContractMembersState>(
         builder: (context, state) {
-          if (state is ContractMembersLoading || state is ContractMembersInitial) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.blue700));
+          if (state is ContractMembersLoading ||
+              state is ContractMembersInitial) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.blue700),
+            );
           }
 
           if (state is ContractMembersFailure) {
             return Center(
-              child: Text('Lỗi: ${state.message}', style: const TextStyle(color: AppColors.red500)),
+              child: Text(
+                'Lỗi: ${state.message}',
+                style: const TextStyle(color: AppColors.red500),
+              ),
             );
           }
 
@@ -144,7 +153,10 @@ class _TenantListSectionView extends StatelessWidget {
                 if (members.isEmpty)
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Text("Phòng trống, không có thành viên nào", style: TextStyle(color: AppColors.slate500)),
+                    child: Text(
+                      "Phòng trống, không có thành viên nào",
+                      style: TextStyle(color: AppColors.slate500),
+                    ),
                   )
                 else
                   ...members.map((member) => _buildTenantRow(context, member)),
@@ -158,9 +170,24 @@ class _TenantListSectionView extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Ngày vào ở", style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: AppColors.slate500)),
+                        Text(
+                          "Ngày vào ở",
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 12,
+                            color: AppColors.slate500,
+                          ),
+                        ),
                         SizedBox(height: 4),
-                        Text("Theo hợp đồng", style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.slate900)),
+                        Text(
+                          "Theo hợp đồng",
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: AppColors.slate900,
+                          ),
+                        ),
                       ],
                     ),
                   ],

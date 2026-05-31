@@ -1,5 +1,3 @@
-import 'package:domain/src/rental_request/entities/penalty_entity.dart';
-
 import 'package:core/errors.dart';
 import 'package:domain/rental_request.dart';
 import 'package:fpdart/fpdart.dart';

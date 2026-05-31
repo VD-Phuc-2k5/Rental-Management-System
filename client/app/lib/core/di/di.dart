@@ -1,6 +1,6 @@
+import 'package:domain/rental_request.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:domain/src/rental_request/rental_request.dart';
 
 import 'di.config.dart';
 
@@ -15,7 +15,9 @@ void configureDependencies() {
   getIt.init();
 
   if (!getIt.isRegistered<CreatePenaltyUsecase>()) {
-    getIt.registerLazySingleton(() => CreatePenaltyUsecase(repository: getIt()));
+    getIt.registerLazySingleton(
+      () => CreatePenaltyUsecase(repository: getIt()),
+    );
     getIt.registerLazySingleton(() => GetPenaltiesUsecase(repository: getIt()));
   }
 }

@@ -14,9 +14,8 @@ class RemoveMemberLoading extends RemoveMemberState {}
 class RemoveMemberSuccess extends RemoveMemberState {}
 
 class RemoveMemberFailure extends RemoveMemberState {
-  final String message;
-
   const RemoveMemberFailure(this.message);
+  final String message;
 
   @override
   List<Object> get props => [message];
