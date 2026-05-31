@@ -85,6 +85,21 @@ class RoomInfoCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
+                    const Icon(Icons.account_balance_wallet_outlined, color: AppColors.slate500, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Đặt cọc: ${formatCurrency(room.depositAmount)}",
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 14,
+                        color: AppColors.slate700,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
                     const Icon(Icons.straighten, color: AppColors.slate500, size: 20),
                     const SizedBox(width: 8),
                     Text(
