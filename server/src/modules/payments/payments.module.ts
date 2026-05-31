@@ -9,6 +9,7 @@ import { RentalRequestRepository } from '../rental-requests/domain/repositories/
 import { DrizzleRentalRequestRepository } from '../rental-requests/infrastructure/drizzle-rental-request.repository';
 import { SignContractService } from '../rental-requests/application/services/sign-contract.service';
 import { VnpayService } from './vnpay.service';
+import { PayosService } from './payos.service';
 import { PaymentsController } from './payments.controller';
 
 @Module({
@@ -24,6 +25,7 @@ import { PaymentsController } from './payments.controller';
     },
     SignContractService,
     VnpayService,
+    PayosService,
   ],
 })
 export class PaymentsModule {}

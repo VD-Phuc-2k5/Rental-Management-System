@@ -8,8 +8,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/blocs/new_requests/new_requests_cubit.dart';
 import 'core/blocs/pending_contract/pending_contract_cubit.dart';
+import 'core/config/router/app_router.dart';
 import 'core/di/di.dart';
 import 'features/auth/presentation/blocs/authentication/authentication_bloc.dart';
+import 'features/rental_request/presentation/pages/deposit_payment_sheet.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +44,33 @@ class MainApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(scaffoldBackgroundColor: AppColors.white),
           routerConfig: getIt<GoRouter>(),
+          builder: (context, child) {
+            return BlocListener<PendingContractCubit, PendingContractState>(
+              listener: (context, state) {
+                if (state is PendingContractFound) {
+                  final navContext = appNavigatorKey.currentContext;
+                  if (navContext != null && navContext.mounted) {
+                    showModalBottomSheet<void>(
+                      context: navContext,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      builder: (_) =>
+                          DepositPaymentSheet(contract: state.contract),
+                    ).then((_) {
+                      if (navContext.mounted) {
+                        context.read<PendingContractCubit>().dismiss();
+                      }
+                    });
+                  }
+                }
+              },
+              child: child!,
+            );
+          },
         ),
       ),
     );

@@ -40,7 +40,7 @@ export class RejectRentalRequestService {
     await this.rentalRequestRepo.updateStatus(requestId, 'rejected');
 
     const contract = await this.contractRepo.findByRentalRequestId(requestId);
-    if (contract && contract.status === 'draft') {
+    if (contract && ['draft', 'sent'].includes(contract.status)) {
       await this.contractRepo.updateStatus(
         contract.id,
         'cancelled',

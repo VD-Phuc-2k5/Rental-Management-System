@@ -13,6 +13,7 @@ abstract class ViewingAppointmentEntity {
     this.roomTitle,
     this.roomAddress,
     this.roomMonthlyRent,
+    this.hasRentalRequest = false,
   });
 
   final String id;
@@ -26,4 +27,5 @@ abstract class ViewingAppointmentEntity {
   final String? roomTitle;
   final String? roomAddress;
   final String? roomMonthlyRent;
+  final bool hasRentalRequest;
 }

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../../core/config/router/route_constants.dart';
 import '../../../../core/di/di.dart';
 import '../../../../screens/room-details-rented-screen/room_details_rented_screen.dart';
+import '../../../../screens/add-electric-water-screen/add_electric_water_screen.dart';
 import '../blocs/room_list/room_list_bloc.dart';
 import '../blocs/delete_room/delete_room_bloc.dart';
 
@@ -108,6 +109,33 @@ class _RoomListView extends StatelessWidget {
           ),
         ),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 4, top: 11, bottom: 11),
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => AddElectricWaterScreen(
+                        initialPropertyId: propertyId,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.receipt_long_outlined),
+                tooltip: 'Tạo hóa đơn',
+                color: AppColors.blue700,
+                style: IconButton.styleFrom(
+                  backgroundColor: AppColors.blue50,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 16, top: 11, bottom: 11),
             child: ElevatedButton.icon(

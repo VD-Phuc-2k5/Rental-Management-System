@@ -1,8 +1,19 @@
-import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
-class LandlordPaymentHistoryAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const LandlordPaymentHistoryAppBar({super.key});
+import '../../../core/constants.dart';
+
+class LandlordPaymentHistoryAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
+  const LandlordPaymentHistoryAppBar({
+    super.key,
+    required this.selectedMonth,
+    required this.monthOptions,
+    required this.onMonthChanged,
+  });
+
+  final String? selectedMonth;
+  final List<String> monthOptions;
+  final ValueChanged<String?> onMonthChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +39,7 @@ class LandlordPaymentHistoryAppBar extends StatelessWidget implements PreferredS
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
-                value: 'Tháng 02/2026',
+                value: selectedMonth ?? '',
                 isDense: true,
                 icon: const Icon(
                   Icons.keyboard_arrow_down_rounded,
@@ -41,27 +52,14 @@ class LandlordPaymentHistoryAppBar extends StatelessWidget implements PreferredS
                   fontWeight: FontWeight.w600,
                 ),
                 dropdownColor: AppColors.white,
-                items: <String>[
-                  'Tháng 01/2026',
-                  'Tháng 02/2026',
-                  'Tháng 03/2026',
-                  'Tháng 04/2026',
-                  'Tháng 05/2026',
-                  'Tháng 06/2026',
-                  'Tháng 07/2026',
-                  'Tháng 08/2026',
-                  'Tháng 09/2026',
-                  'Tháng 10/2026',
-                  'Tháng 11/2026',
-                  'Tháng 12/2026',
-                ].map<DropdownMenuItem<String>>((String value) {
+                items: <String>['', ...monthOptions].map((value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(value.isEmpty ? 'Tất cả' : _monthLabel(value)),
                   );
                 }).toList(),
-                onChanged: (String? newValue) {
-                  // Handle month selection change
+                onChanged: (value) {
+                  onMonthChanged(value == null || value.isEmpty ? null : value);
                 },
               ),
             ),
@@ -73,4 +71,10 @@ class LandlordPaymentHistoryAppBar extends StatelessWidget implements PreferredS
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  String _monthLabel(String value) {
+    final parts = value.split('-');
+    if (parts.length != 2) return value;
+    return 'Tháng ${parts[1]}/${parts[0]}';
+  }
 }

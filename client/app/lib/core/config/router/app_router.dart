@@ -42,8 +42,11 @@ import '../../widgets/error_page.dart';
 import 'go_router_refresh_stream.dart';
 import 'route_constants.dart';
 
+final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
+
 GoRouter createRouter(AuthenticationBloc authBloc) {
   return GoRouter(
+    navigatorKey: appNavigatorKey,
     initialLocation: RoutePaths.splash,
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
     redirect: (BuildContext context, GoRouterState state) {

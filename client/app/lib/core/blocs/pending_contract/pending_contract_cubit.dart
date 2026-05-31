@@ -44,9 +44,13 @@ class PendingContractCubit extends Cubit<PendingContractState> {
     if (!isClosed) emit(const PendingContractNone());
   }
 
+  Timer? _pollTimer;
+
   Future<void> _fetchAndSubscribe(String tenantId) async {
     _unsubscribe();
     await _fetchSentContracts();
+
+    bool subscriptionOk = false;
     _channel = Supabase.instance.client
         .channel('pending-contracts-$tenantId')
         .onPostgresChanges(
@@ -61,10 +65,33 @@ class PendingContractCubit extends Cubit<PendingContractState> {
           callback: (payload) {
             final newStatus =
                 payload.newRecord['status']?.toString().toUpperCase();
-            if (newStatus == 'SENT') _fetchSentContracts();
+            if (newStatus == 'SENT' || newStatus == 'CANCELLED') {
+              _fetchSentContracts();
+            }
           },
         )
-        .subscribe();
+        .subscribe((status, error) {
+          if (status == RealtimeSubscribeStatus.subscribed) {
+            subscriptionOk = true;
+            _pollTimer?.cancel();
+          }
+        });
+
+    // Fallback polling: nếu Realtime không subscribe được trong 5s thì polling 30s
+    _pollTimer?.cancel();
+    _pollTimer = Timer(const Duration(seconds: 5), () {
+      if (!subscriptionOk) {
+        _pollTimer = Timer.periodic(
+          const Duration(seconds: 30),
+          (_) => _fetchSentContracts(),
+        );
+      }
+    });
+  }
+
+  void _cancelPolling() {
+    _pollTimer?.cancel();
+    _pollTimer = null;
   }
 
   Future<void> _fetchSentContracts() async {
@@ -80,6 +107,8 @@ class PendingContractCubit extends Cubit<PendingContractState> {
           if (state is! PendingContractFound) {
             emit(PendingContractFound(sent.first));
           }
+        } else if (!isClosed && state is PendingContractFound) {
+          emit(const PendingContractNone());
         }
       },
     );
@@ -94,6 +123,7 @@ class PendingContractCubit extends Cubit<PendingContractState> {
   Future<void> checkPending() => _fetchSentContracts();
 
   void _unsubscribe() {
+    _cancelPolling();
     _channel?.unsubscribe();
     _channel = null;
   }
@@ -102,6 +132,7 @@ class PendingContractCubit extends Cubit<PendingContractState> {
   @override
   Future<void> close() {
     _authSubscription?.cancel();
+    _cancelPolling();
     _channel?.unsubscribe();
     return super.close();
   }

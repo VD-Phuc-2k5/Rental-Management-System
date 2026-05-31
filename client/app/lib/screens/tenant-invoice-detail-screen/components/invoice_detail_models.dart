@@ -39,12 +39,14 @@ class InvoicePaymentInfoData {
 class InvoiceDetailData {
 
   const InvoiceDetailData({
+    required this.id,
     required this.status,
     required this.generalInfo,
     required this.lineItems,
     required this.totalAmount,
     this.paymentInfo,
   });
+  final String id;
   final InvoiceStatus status;
   final InvoiceGeneralInfoData generalInfo;
   final List<InvoiceLineItemData> lineItems;

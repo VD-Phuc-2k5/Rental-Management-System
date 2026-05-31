@@ -1,15 +1,17 @@
-﻿import 'package:data/auth.dart';
+import 'package:data/auth.dart';
 import 'package:data/profile.dart';
 import 'package:data/property.dart';
 import 'package:data/rental_request.dart';
 import 'package:data/room.dart';
 import 'package:data/viewing_appointment.dart';
+import 'package:data/billing.dart';
 import 'package:domain/auth.dart';
 import 'package:domain/profile.dart';
 import 'package:domain/property.dart';
 import 'package:domain/rental_request.dart';
 import 'package:domain/room.dart';
 import 'package:domain/viewing_appointment.dart';
+import 'package:domain/billing.dart';
 import 'package:injectable/injectable.dart';
 import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
@@ -114,6 +116,20 @@ abstract class RegisterModule {
     AuthenticationBloc authBloc,
   ) => ViewingAppointmentRepositoryImpl(
     viewingAppointmentRemoteDataSource: dataSource,
+    getToken: () => authBloc.state.user?.token ?? '',
+  );
+
+  // billing datasource
+  @LazySingleton(as: BillingRemoteDataSource)
+  HttpBillingRemoteDataSource get billingRemoteDataSource;
+
+  // billing repository
+  @LazySingleton(as: BillingRepository)
+  BillingRepositoryImpl billingRepository(
+    BillingRemoteDataSource dataSource,
+    AuthenticationBloc authBloc,
+  ) => BillingRepositoryImpl(
+    billingRemoteDataSource: dataSource,
     getToken: () => authBloc.state.user?.token ?? '',
   );
 
@@ -260,4 +276,29 @@ abstract class RegisterModule {
 
   @injectable
   CancelViewingAppointmentUsecase get cancelViewingAppointmentUsecase;
+
+  // billing
+  @injectable
+  ImportMeterReadingsUsecase get importMeterReadingsUsecase;
+
+  @injectable
+  PreviewInvoicesUsecase get previewInvoicesUsecase;
+
+  @injectable
+  CreateInvoicesUsecase get createInvoicesUsecase;
+
+  @injectable
+  UpdateInvoiceUsecase get updateInvoiceUsecase;
+
+  @injectable
+  FinalizeInvoiceUsecase get finalizeInvoiceUsecase;
+
+  @injectable
+  GetTenantInvoicesUsecase get getTenantInvoicesUsecase;
+
+  @injectable
+  GetLandlordInvoicesUsecase get getLandlordInvoicesUsecase;
+
+  @injectable
+  GetInvoiceDetailUsecase get getInvoiceDetailUsecase;
 }

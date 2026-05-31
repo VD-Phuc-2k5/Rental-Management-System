@@ -1,7 +1,7 @@
 import '../../../core/constants.dart';
 import '../../../core/format_currency.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'invoice_view_models.dart';
 
 class InvoiceSummaryCard extends StatelessWidget {
@@ -9,12 +9,6 @@ class InvoiceSummaryCard extends StatelessWidget {
   const InvoiceSummaryCard({super.key, required this.invoice, this.onPayNow});
   final InvoiceSummaryData invoice;
   final VoidCallback? onPayNow;
-
-  String _getBillingMonth(String invoiceDueDate) {
-    final DateTime date = DateFormat('dd/MM/yyyy').parse(invoiceDueDate);
-    final DateTime billingDate = DateTime(date.year, date.month - 1);
-    return DateFormat('MM/yyyy').format(billingDate);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +56,11 @@ class InvoiceSummaryCard extends StatelessWidget {
                     'Hạn thanh toán: ${invoice.dueDate}',
                     style: invoiceLabelStyle,
                   ),
-                  Text(
-                    'Tháng ${_getBillingMonth(invoice.dueDate)}',
-                    style: const TextStyle(
+                    Text(
+                      invoice.billingMonth != null
+                          ? 'Tháng ${invoice.billingMonth}'
+                          : 'Tháng --/----',
+                      style: const TextStyle(
                       color: AppColors.white,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w700,

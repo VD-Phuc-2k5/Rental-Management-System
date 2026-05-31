@@ -28,6 +28,7 @@ class DepositPaymentCubit extends Cubit<DepositPaymentState> {
         DepositPaymentSuccess(
           payUrl: payment.payUrl,
           deeplink: payment.deeplink,
+          qrCodeUrl: payment.qrCodeUrl,
         ),
       ),
     );

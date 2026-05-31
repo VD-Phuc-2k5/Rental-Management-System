@@ -7,13 +7,24 @@ import '../../core/constants.dart';
 class QrPaymentScreen extends StatelessWidget {
   const QrPaymentScreen({
     super.key,
+    this.invoiceId,
+    this.contractId,
     required this.price,
     required this.roomName,
+    this.qrCodeBase64,
+    this.payerName,
   });
 
   final double appbarBorderWidth = 1.0;
+  final String? invoiceId;
+  /// Contract ID để poll trạng thái ký (deposit payment)
+  final String? contractId;
   final int price;
   final String roomName;
+  /// PayOS QR payload — truyền xuống Body → PaymentQr render QrImageView
+  final String? qrCodeBase64;
+  /// Tên người thanh toán (nếu có)
+  final String? payerName;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +33,6 @@ class QrPaymentScreen extends StatelessWidget {
     void onSuccess() {
       if (navigated) return;
       navigated = true;
-
       Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => PaymentSuccessScreen(price: price)),
       );
@@ -35,7 +45,15 @@ class QrPaymentScreen extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         margin: const EdgeInsets.only(top: 10),
-        child: Body(price: price, roomName: roomName, onSuccess: onSuccess),
+        child: Body(
+          invoiceId: invoiceId,
+          contractId: contractId,
+          price: price,
+          roomName: roomName,
+          onSuccess: onSuccess,
+          qrCodeBase64: qrCodeBase64,
+          payerName: payerName,
+        ),
       ),
     );
   }

@@ -15,6 +15,7 @@ import { RentalRequestsModule } from './modules/rental-requests/presentation/ren
 import { ViewingAppointmentsModule } from './modules/viewing-appointments/presentation/viewing-appointment.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { BillingModule } from './modules/billing/billing.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
     UploadModule,
     PaymentsModule,
     PenaltiesModule,
+    BillingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
