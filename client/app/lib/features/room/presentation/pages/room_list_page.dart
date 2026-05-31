@@ -241,12 +241,17 @@ class _RoomListView extends StatelessWidget {
                       final r = rooms[i];
                       return GestureDetector(
                         onTap: () {
+                          if (r.status != RoomStatus.occupied) {
+                            showToast(message: 'Phòng hiện đang trống, chưa thể xem chi tiết.', type: ToastType.warning);
+                            return;
+                          }
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => RoomDetailsRentedScreen(
-                                roomNumber: r.title,
-                                roomId: r.id,
+                                room: r,
+                                propertyName: propertyName,
                               ),
                             ),
                           );
