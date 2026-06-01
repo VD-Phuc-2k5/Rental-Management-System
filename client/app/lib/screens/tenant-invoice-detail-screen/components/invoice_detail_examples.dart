@@ -4,6 +4,7 @@ import 'invoice_detail_models.dart';
 class InvoiceDetailExamples {
   /// Example of a paid invoice (success state)
   static const InvoiceDetailData paidInvoice = InvoiceDetailData(
+    id: '00000000-0000-4000-8000-000000000001',
     status: InvoiceStatus.paid,
     generalInfo: InvoiceGeneralInfoData(
       roomName: 'Phòng 302 - Nhà Trọ Xanh',
@@ -42,6 +43,7 @@ class InvoiceDetailExamples {
 
   /// Example of a pending invoice (waiting for payment)
   static const InvoiceDetailData pendingInvoice = InvoiceDetailData(
+    id: '00000000-0000-4000-8000-000000000002',
     status: InvoiceStatus.pending,
     generalInfo: InvoiceGeneralInfoData(
       roomName: 'Phòng 202 - Nhà Trọ Xanh',

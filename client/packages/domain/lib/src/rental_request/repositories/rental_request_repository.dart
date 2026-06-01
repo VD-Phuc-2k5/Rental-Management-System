@@ -68,4 +68,16 @@ abstract interface class RentalRequestRepository {
   Future<Either<Failure, ContractEntity>> getContractByRentalRequestId({
     required String rentalRequestId,
   });
+
+  Future<Either<Failure, PenaltyEntity>> createPenalty({
+    required String contractId,
+    required String tenantId,
+    required String roomId,
+    required double amount,
+    required String reason,
+  });
+
+  Future<Either<Failure, List<PenaltyEntity>>> getPenalties({
+    required String contractId,
+  });
 }

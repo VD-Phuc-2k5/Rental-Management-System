@@ -348,4 +348,50 @@ class RentalRequestRepositoryImpl implements RentalRequestRepository {
       return Left(UnknownFailure(message: e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, PenaltyEntity>> createPenalty({
+    required String contractId,
+    required String tenantId,
+    required String roomId,
+    required double amount,
+    required String reason,
+  }) async {
+    try {
+      final data = await _dataSource.createPenalty(
+        token: _getToken(),
+        contractId: contractId,
+        tenantId: tenantId,
+        roomId: roomId,
+        amount: amount,
+        reason: reason,
+      );
+      return Right(data);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PenaltyEntity>>> getPenalties({
+    required String contractId,
+  }) async {
+    try {
+      final data = await _dataSource.getPenalties(
+        token: _getToken(),
+        contractId: contractId,
+      );
+      return Right(data);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(message: e.message));
+    }
+  }
 }

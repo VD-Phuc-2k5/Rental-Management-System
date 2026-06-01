@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DrizzleService } from 'src/shared/infrastructure/database/drizzle.service';
@@ -18,6 +19,12 @@ export class CreateViewingAppointmentService {
     scheduledAt: Date,
     note: string | null,
   ): Promise<ViewingAppointmentEntity> {
+    const now = new Date();
+    if (new Date(scheduledAt) < now) {
+      throw new BadRequestException(
+        'Thời gian xem phòng không thể nằm trong quá khứ!',
+      );
+    }
     const [room] = await this.drizzle.db
       .select({ id: rooms.id })
       .from(rooms)

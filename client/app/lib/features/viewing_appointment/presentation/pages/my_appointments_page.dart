@@ -278,26 +278,51 @@ class _AppointmentCard extends StatelessWidget {
               const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => context.pushNamed(
-                    RouteNames.rentalRequestWizard,
-                    extra: {'roomId': appointment.roomId},
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.blue700,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'Thuê trọ',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+                child: appointment.hasRentalRequest
+                    ? ElevatedButton(
+                        onPressed: null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.slate200,
+                          foregroundColor: AppColors.slate500,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Đã duyệt',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      )
+                    : ElevatedButton(
+                        onPressed: () async {
+                          await context.pushNamed(
+                            RouteNames.rentalRequestWizard,
+                            extra: {'roomId': appointment.roomId},
+                          );
+                          if (context.mounted) {
+                            context
+                                .read<MyViewingAppointmentListBloc>()
+                                .add(MyViewingAppointmentListFetched());
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.blue700,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Thuê trọ',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
               ),
             ],
             if (appointment.status == ViewingAppointmentStatus.pending) ...[

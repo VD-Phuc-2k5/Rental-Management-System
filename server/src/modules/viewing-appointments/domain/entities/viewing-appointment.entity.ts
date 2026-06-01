@@ -17,5 +17,6 @@ export class ViewingAppointmentEntity {
     public readonly roomTitle?: string,
     public readonly roomAddress?: string,
     public readonly roomMonthlyRent?: string,
+    public readonly hasRentalRequest: boolean = false,
   ) {}
 }

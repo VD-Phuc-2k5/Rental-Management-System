@@ -74,6 +74,7 @@ class _ScheduleViewingViewState extends State<_ScheduleViewingView> {
 
   void _submit() {
     if (_selectedDate == null || _selectedTime == null) return;
+
     final dt = DateTime(
       _selectedDate!.year,
       _selectedDate!.month,
@@ -81,15 +82,27 @@ class _ScheduleViewingViewState extends State<_ScheduleViewingView> {
       _selectedTime!.hour,
       _selectedTime!.minute,
     );
+
+    final now = DateTime.now();
+    if (dt.isBefore(now.add(const Duration(minutes: 30)))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vui lòng chọn thời gian cách hiện tại ít nhất 30 phút!'),
+          backgroundColor: AppColors.red500,
+        ),
+      );
+      return;
+    }
+
     context.read<ScheduleViewingBloc>().add(
-          ScheduleViewingSubmitted(
-            roomId: widget.roomId,
-            scheduledAt: dt.toUtc().toIso8601String(),
-            note: _noteController.text.trim().isEmpty
-                ? null
-                : _noteController.text.trim(),
-          ),
-        );
+      ScheduleViewingSubmitted(
+        roomId: widget.roomId,
+        scheduledAt: dt.toUtc().toIso8601String(),
+        note: _noteController.text.trim().isEmpty
+            ? null
+            : _noteController.text.trim(),
+      ),
+    );
   }
 
   @override

@@ -1,4 +1,5 @@
-﻿import { Module } from '@nestjs/common';
+﻿import { PenaltiesModule } from './modules/penalties/penalties.module';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,7 +15,9 @@ import { RentalRequestsModule } from './modules/rental-requests/presentation/ren
 import { ViewingAppointmentsModule } from './modules/viewing-appointments/presentation/viewing-appointment.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { BillingModule } from './modules/billing/billing.module';
 import { MaintenanceRequestsModule } from './modules/maintenance-requests/presentation/maintenance-request.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,6 +37,8 @@ import { MaintenanceRequestsModule } from './modules/maintenance-requests/presen
     ViewingAppointmentsModule,
     UploadModule,
     PaymentsModule,
+    PenaltiesModule,
+    BillingModule,
     MaintenanceRequestsModule,
   ],
   controllers: [AppController],

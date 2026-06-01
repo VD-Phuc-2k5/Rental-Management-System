@@ -1,4 +1,4 @@
-enum PaymentMethodType { vnpay, bankTransfer }
+enum PaymentMethodType { payos, bankTransfer }
 
 class PaymentLineItemData {
   const PaymentLineItemData({

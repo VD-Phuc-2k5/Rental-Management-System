@@ -15,15 +15,15 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  PaymentMethodType _selectedMethod = PaymentMethodType.vnpay;
+  PaymentMethodType _selectedMethod = PaymentMethodType.payos;
 
   List<PaymentMethodOption> get _paymentMethods => [
     PaymentMethodOption(
-      type: PaymentMethodType.vnpay,
-      name: "VNPay",
+      type: PaymentMethodType.payos,
+      name: "PayOS",
       description: "Thanh toán qua ứng dụng ngân hàng",
       iconName: "qr_code",
-      isSelected: _selectedMethod == PaymentMethodType.vnpay,
+      isSelected: _selectedMethod == PaymentMethodType.payos,
     ),
     PaymentMethodOption(
       type: PaymentMethodType.bankTransfer,

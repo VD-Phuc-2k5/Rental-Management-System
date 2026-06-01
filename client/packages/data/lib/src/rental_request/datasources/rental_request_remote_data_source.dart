@@ -2,6 +2,7 @@ import 'package:domain/rental_request.dart';
 
 import '../models/contract_member_model.dart';
 import '../models/contract_model.dart';
+import '../models/penalty_model.dart';
 import '../models/vnpay_payment_model.dart';
 import '../models/rental_request_model.dart';
 
@@ -78,5 +79,19 @@ abstract interface class RentalRequestRemoteDataSource {
   Future<ContractModel> getContractByRentalRequestId({
     required String token,
     required String rentalRequestId,
+  });
+
+  Future<PenaltyModel> createPenalty({
+    required String token,
+    required String contractId,
+    required String tenantId,
+    required String roomId,
+    required double amount,
+    required String reason,
+  });
+
+  Future<List<PenaltyModel>> getPenalties({
+    required String token,
+    required String contractId,
   });
 }

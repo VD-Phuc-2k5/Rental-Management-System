@@ -10,16 +10,19 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:data/auth.dart' as _i41;
+import 'package:data/billing.dart' as _i713;
 import 'package:data/profile.dart' as _i366;
 import 'package:data/property.dart' as _i83;
 import 'package:data/rental_request.dart' as _i411;
 import 'package:data/room.dart' as _i586;
 import 'package:data/viewing_appointment.dart' as _i1022;
 import 'package:domain/auth.dart' as _i378;
+import 'package:domain/billing.dart' as _i863;
 import 'package:domain/profile.dart' as _i503;
 import 'package:domain/property.dart' as _i369;
 import 'package:domain/rental_request.dart' as _i284;
 import 'package:domain/room.dart' as _i142;
+import 'package:domain/src/rental_request/rental_request.dart' as _i540;
 import 'package:domain/viewing_appointment.dart' as _i278;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:go_router/go_router.dart' as _i583;
@@ -83,8 +86,10 @@ import '../../features/viewing_appointment/presentation/blocs/my_viewing_appoint
     as _i500;
 import '../../features/viewing_appointment/presentation/blocs/schedule_viewing/schedule_viewing_bloc.dart'
     as _i324;
+import '../blocs/new_invoice/new_invoice_cubit.dart' as _i911;
 import '../blocs/new_requests/new_requests_cubit.dart' as _i773;
 import '../blocs/pending_contract/pending_contract_cubit.dart' as _i958;
+import '../blocs/room_contract/room_contract_cubit.dart' as _i574;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -103,6 +108,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.authRemoteDataSource,
     );
     gh.lazySingleton<_i378.AuthRepository>(() => registerModule.authRepository);
+    gh.lazySingleton<_i713.BillingRemoteDataSource>(
+      () => registerModule.billingRemoteDataSource,
+    );
     gh.lazySingleton<_i83.PropertyRemoteDataSource>(
       () => registerModule.propertyRemoteDataSource,
     );
@@ -178,6 +186,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i142.BrowseRoomRepository>(
       () => registerModule.browseRoomRepository(
         gh<_i586.BrowseRoomRemoteDataSource>(),
+        gh<_i652.AuthenticationBloc>(),
+      ),
+    );
+    gh.lazySingleton<_i863.BillingRepository>(
+      () => registerModule.billingRepository(
+        gh<_i713.BillingRemoteDataSource>(),
         gh<_i652.AuthenticationBloc>(),
       ),
     );
@@ -264,6 +278,30 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i83.PropertyRemoteDataSource>(),
         gh<_i652.AuthenticationBloc>(),
       ),
+    );
+    gh.factory<_i863.ImportMeterReadingsUsecase>(
+      () => registerModule.importMeterReadingsUsecase,
+    );
+    gh.factory<_i863.PreviewInvoicesUsecase>(
+      () => registerModule.previewInvoicesUsecase,
+    );
+    gh.factory<_i863.CreateInvoicesUsecase>(
+      () => registerModule.createInvoicesUsecase,
+    );
+    gh.factory<_i863.UpdateInvoiceUsecase>(
+      () => registerModule.updateInvoiceUsecase,
+    );
+    gh.factory<_i863.FinalizeInvoiceUsecase>(
+      () => registerModule.finalizeInvoiceUsecase,
+    );
+    gh.factory<_i863.GetTenantInvoicesUsecase>(
+      () => registerModule.getTenantInvoicesUsecase,
+    );
+    gh.factory<_i863.GetLandlordInvoicesUsecase>(
+      () => registerModule.getLandlordInvoicesUsecase,
+    );
+    gh.factory<_i863.GetInvoiceDetailUsecase>(
+      () => registerModule.getInvoiceDetailUsecase,
     );
     gh.factory<_i284.CreateRentalRequestUsecase>(
       () => registerModule.createRentalRequestUsecase,
@@ -379,6 +417,9 @@ extension GetItInjectableX on _i174.GetIt {
         deleteRoomUsecase: gh<_i142.DeleteRoomUsecase>(),
       ),
     );
+    gh.factory<_i574.RoomContractCubit>(
+      () => _i574.RoomContractCubit(gh<_i540.GetLandlordContractsUsecase>()),
+    );
     gh.factory<_i621.CreateRoomBloc>(
       () => _i621.CreateRoomBloc(
         createRoomUsecase: gh<_i142.CreateRoomUsecase>(),
@@ -413,6 +454,13 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i779.AvailableRoomListBloc(
         getAvailableRoomsUsecase: gh<_i142.GetAvailableRoomsUsecase>(),
       ),
+    );
+    gh.singleton<_i911.NewInvoiceCubit>(
+      () => _i911.NewInvoiceCubit(
+        gh<_i652.AuthenticationBloc>(),
+        gh<_i863.GetTenantInvoicesUsecase>(),
+      ),
+      dispose: (i) => i.close(),
     );
     gh.factory<_i511.BrowseRoomDetailBloc>(
       () => _i511.BrowseRoomDetailBloc(
@@ -463,6 +511,10 @@ class _$RegisterModule extends _i291.RegisterModule {
   _i41.AuthRepositoryImpl get authRepository => _i41.AuthRepositoryImpl(
     authRemoteDataSource: _getIt<_i41.AuthRemoteDataSource>(),
   );
+
+  @override
+  _i713.HttpBillingRemoteDataSource get billingRemoteDataSource =>
+      _i713.HttpBillingRemoteDataSource(client: _getIt<_i519.Client>());
 
   @override
   _i83.HttpPropertyRemoteDataSource get propertyRemoteDataSource =>
@@ -587,6 +639,54 @@ class _$RegisterModule extends _i291.RegisterModule {
       _i142.DeleteRoomUsecase(roomRepository: _getIt<_i142.RoomRepository>());
 
   @override
+  _i863.ImportMeterReadingsUsecase get importMeterReadingsUsecase =>
+      _i863.ImportMeterReadingsUsecase(
+        billingRepository: _getIt<_i863.BillingRepository>(),
+      );
+
+  @override
+  _i863.PreviewInvoicesUsecase get previewInvoicesUsecase =>
+      _i863.PreviewInvoicesUsecase(
+        billingRepository: _getIt<_i863.BillingRepository>(),
+      );
+
+  @override
+  _i863.CreateInvoicesUsecase get createInvoicesUsecase =>
+      _i863.CreateInvoicesUsecase(
+        billingRepository: _getIt<_i863.BillingRepository>(),
+      );
+
+  @override
+  _i863.UpdateInvoiceUsecase get updateInvoiceUsecase =>
+      _i863.UpdateInvoiceUsecase(
+        billingRepository: _getIt<_i863.BillingRepository>(),
+      );
+
+  @override
+  _i863.FinalizeInvoiceUsecase get finalizeInvoiceUsecase =>
+      _i863.FinalizeInvoiceUsecase(
+        billingRepository: _getIt<_i863.BillingRepository>(),
+      );
+
+  @override
+  _i863.GetTenantInvoicesUsecase get getTenantInvoicesUsecase =>
+      _i863.GetTenantInvoicesUsecase(
+        billingRepository: _getIt<_i863.BillingRepository>(),
+      );
+
+  @override
+  _i863.GetLandlordInvoicesUsecase get getLandlordInvoicesUsecase =>
+      _i863.GetLandlordInvoicesUsecase(
+        billingRepository: _getIt<_i863.BillingRepository>(),
+      );
+
+  @override
+  _i863.GetInvoiceDetailUsecase get getInvoiceDetailUsecase =>
+      _i863.GetInvoiceDetailUsecase(
+        billingRepository: _getIt<_i863.BillingRepository>(),
+      );
+
+  @override
   _i284.CreateRentalRequestUsecase get createRentalRequestUsecase =>
       _i284.CreateRentalRequestUsecase(
         rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
@@ -690,10 +790,10 @@ class _$RegisterModule extends _i291.RegisterModule {
 
   @override
   _i284.GetContractByRentalRequestIdUsecase
-      get getContractByRentalRequestIdUsecase =>
-          _i284.GetContractByRentalRequestIdUsecase(
-            rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
-          );
+  get getContractByRentalRequestIdUsecase =>
+      _i284.GetContractByRentalRequestIdUsecase(
+        rentalRequestRepository: _getIt<_i284.RentalRequestRepository>(),
+      );
 
   @override
   _i142.GetAvailableRoomsUsecase get getAvailableRoomsUsecase =>

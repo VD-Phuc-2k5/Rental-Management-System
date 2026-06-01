@@ -1,9 +1,10 @@
 import 'package:domain/rental_request.dart';
 import 'package:domain/room.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../../../../screens/qr-payment-screen/qr_payment_screen.dart';
 
 import '../../../../core/config/router/route_constants.dart';
 import '../../../../core/constants.dart';
@@ -52,16 +53,23 @@ class _DepositPaymentContentState extends State<_DepositPaymentContent> {
         : Future.value(null);
   }
 
-  Future<void> _openPayment(String deeplink, String payUrl) async {
-    final deep = Uri.tryParse(deeplink);
-    if (deep != null && await canLaunchUrl(deep)) {
-      await launchUrl(deep, mode: LaunchMode.externalApplication);
-      return;
-    }
-    final web = Uri.tryParse(payUrl);
-    if (web != null) {
-      await launchUrl(web, mode: LaunchMode.externalApplication);
-    }
+  void _navigateToQrPayment(
+    NavigatorState navigator, {
+    required String contractId,
+    required String? qrCodeBase64,
+    required String roomName,
+    required int amount,
+  }) {
+    navigator.push(
+      MaterialPageRoute(
+        builder: (_) => QrPaymentScreen(
+          price: amount,
+          roomName: roomName,
+          contractId: contractId,
+          qrCodeBase64: qrCodeBase64,
+        ),
+      ),
+    );
   }
 
   @override
@@ -69,8 +77,23 @@ class _DepositPaymentContentState extends State<_DepositPaymentContent> {
     return BlocConsumer<DepositPaymentCubit, DepositPaymentState>(
       listener: (context, state) async {
         if (state is DepositPaymentSuccess) {
-          await _openPayment(state.deeplink, state.payUrl);
-          if (context.mounted) Navigator.of(context).pop();
+          log('[DepositPayment] payUrl: \'${state.payUrl}\'', name: 'DepositPaymentSheet');
+          final room = await _roomDetailFuture;
+          final roomName = room?.title ?? 'Phòng';
+          final amount = widget.contract.deposit.toInt();
+          log('[DepositPayment] roomName: $roomName, amount: $amount', name: 'DepositPaymentSheet');
+          if (context.mounted) {
+            final navigator = Navigator.of(context, rootNavigator: true);
+            navigator.pop();
+            log('[DepositPayment] Push QrPaymentScreen with qrCodeUrl: \'${state.qrCodeUrl}\'', name: 'DepositPaymentSheet');
+            _navigateToQrPayment(
+              navigator,
+              contractId: widget.contract.id,
+              qrCodeBase64: state.qrCodeUrl,
+              roomName: roomName,
+              amount: amount,
+            );
+          }
         }
         if (state is DepositPaymentRejected) {
           if (context.mounted) {
@@ -159,7 +182,7 @@ class _DepositPaymentContentState extends State<_DepositPaymentContent> {
                             )
                           : const Icon(Icons.account_balance_wallet_outlined),
                       label: const Text(
-                        'Thanh toán cọc qua VNPay',
+                        'Thanh toán cọc qua PayOS',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 15,
