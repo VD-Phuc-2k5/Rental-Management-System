@@ -16,6 +16,9 @@ dependencies:
   http: ^1.6.0
   flutter_dotenv: ^6.0.0
 
+  # Supabase (Realtime notifications)
+  supabase_flutter: ^2.8.4
+
   # State Management
   get_it: ^9.2.0
   injectable: ^2.7.1+4
@@ -30,8 +33,11 @@ dependencies:
   fpdart: ^1.2.0
 
   # UI & Utilities
+  url_launcher: ^6.3.0
+  qr_flutter: ^4.1.0
   cached_network_image: ^3.4.1
   image_picker: ^1.2.1
+  file_picker: ^8.1.2
   intl: ^0.20.2
   uuid: ^4.5.2
   string_validator: ^1.2.0

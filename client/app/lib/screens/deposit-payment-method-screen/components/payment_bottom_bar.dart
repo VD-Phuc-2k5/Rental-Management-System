@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/screens/bank-transfer-guide-screen/bank_transfer_guide_screen.dart';
+import '../../../core/constants.dart';
+import '../../bank-transfer-guide-screen/bank_transfer_guide_screen.dart';
 class PaymentBottomBar extends StatelessWidget {
   const PaymentBottomBar({super.key});
 
@@ -47,9 +47,9 @@ class PaymentBottomBar extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Icon(Icons.lock_outline, size: 16, color: AppColors.gray500),
                 SizedBox(width: 6),
                 Text(

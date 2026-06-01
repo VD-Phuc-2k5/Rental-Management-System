@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 import 'cccd_upload.dart';
 
 class TenantInfoForm extends StatelessWidget {
-  final TextEditingController nameCtl;
-  final TextEditingController dobCtl;
-  final TextEditingController cccdCtl;
-  final TextEditingController addressCtl;
-  final TextEditingController phoneCtl;
-  final TextEditingController emailCtl;
-  final VoidCallback onPickDate;
 
   const TenantInfoForm({
     super.key,
@@ -20,6 +13,13 @@ class TenantInfoForm extends StatelessWidget {
     required this.emailCtl,
     required this.onPickDate,
   });
+  final TextEditingController nameCtl;
+  final TextEditingController dobCtl;
+  final TextEditingController cccdCtl;
+  final TextEditingController addressCtl;
+  final TextEditingController phoneCtl;
+  final TextEditingController emailCtl;
+  final VoidCallback onPickDate;
 
   @override
   Widget build(BuildContext context) {
@@ -81,15 +81,6 @@ class TenantInfoForm extends StatelessWidget {
 }
 
 class _LabeledField extends StatelessWidget {
-  final String label;
-  final bool requiredMark;
-  final TextEditingController controller;
-  final String hint;
-  final bool readOnly;
-  final IconData? suffixIcon;
-  final VoidCallback? onTap;
-  final TextInputType? keyboardType;
-  final int maxLines;
 
   const _LabeledField({
     required this.label,
@@ -102,6 +93,15 @@ class _LabeledField extends StatelessWidget {
     this.keyboardType,
     this.maxLines = 1,
   });
+  final String label;
+  final bool requiredMark;
+  final TextEditingController controller;
+  final String hint;
+  final bool readOnly;
+  final IconData? suffixIcon;
+  final VoidCallback? onTap;
+  final TextInputType? keyboardType;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +138,7 @@ class _LabeledField extends StatelessWidget {
               suffixIcon,
               color: const Color(0xFF647487),),
             filled: true,
-            fillColor:  Color(0xFFFFFFFF),
+            fillColor:  const Color(0xFFFFFFFF),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

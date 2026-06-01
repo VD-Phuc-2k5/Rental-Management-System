@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 enum VehicleType { motorbike, bicycle, car }
 
 class VehicleFees {
@@ -38,26 +38,26 @@ class VehicleFees {
 }
 
 class VehicleItem {
-  final VehicleType type;
-  final String plate;
-  final int quantity;
 
   const VehicleItem({
     required this.type,
     required this.plate,
     this.quantity = 1,
   });
+  final VehicleType type;
+  final String plate;
+  final int quantity;
 }
 
 class VehicleListSection extends StatelessWidget {
-  final List<VehicleItem> vehicles;
-  final void Function(int index) onDelete;
 
   const VehicleListSection({
     super.key,
     required this.vehicles,
     required this.onDelete,
   });
+  final List<VehicleItem> vehicles;
+  final void Function(int index) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +88,8 @@ class VehicleListSection extends StatelessWidget {
 }
 
 class _Title extends StatelessWidget {
-  final String text;
   const _Title({required this.text});
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -105,10 +105,6 @@ class _Title extends StatelessWidget {
 }
 
 class _VehicleCard extends StatelessWidget {
-  final VehicleType type;
-  final String plate;
-  final int quantity;
-  final VoidCallback onDelete;
 
   const _VehicleCard({
     required this.type,
@@ -116,6 +112,10 @@ class _VehicleCard extends StatelessWidget {
     required this.quantity,
     required this.onDelete,
   });
+  final VehicleType type;
+  final String plate;
+  final int quantity;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {

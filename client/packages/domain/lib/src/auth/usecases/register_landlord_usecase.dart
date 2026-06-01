@@ -1,6 +1,6 @@
 import 'package:core/errors.dart';
 import 'package:core/usecase.dart';
-import 'package:fpdart/src/either.dart';
+import 'package:fpdart/fpdart.dart';
 
 import '../../../auth.dart';
 

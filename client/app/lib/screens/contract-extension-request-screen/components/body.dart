@@ -1,11 +1,10 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/contract-extension-request-screen/components/extension_period_dropdown.dart';
-import 'package:app/screens/contract-extension-request-screen/components/info_message.dart';
-import 'package:app/screens/contract-extension-request-screen/components/new_start_date_picker.dart';
-import 'package:app/screens/contract-extension-request-screen/components/note_input_field.dart';
-import 'package:app/screens/contract-extension-request-screen/components/room_info_card.dart';
-import 'package:app/screens/contract-extension-request-screen/components/submit_button.dart';
-import 'package:app/screens/home-screen/home_screen.dart';
+import '../../../core/constants.dart';
+import 'extension_period_dropdown.dart';
+import 'info_message.dart';
+import 'new_start_date_picker.dart';
+import 'note_input_field.dart';
+import 'room_info_card.dart';
+import 'submit_button.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatefulWidget {
@@ -29,7 +28,7 @@ class _BodyState extends State<Body> {
     // Initialize dates
     _contractExpiryDate = DateTime(2026, 3, 31);
     // Default start date is one day after contract expiry
-    _selectedStartDate = _contractExpiryDate.add(Duration(days: 1));
+    _selectedStartDate = _contractExpiryDate.add(const Duration(days: 1));
   }
 
   @override
@@ -68,7 +67,7 @@ class _BodyState extends State<Body> {
 
     if (!startDateOnly.isAfter((expiryDateOnly))) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Ngày bắt đầu phải sau ngày hết hạn hợp đồng cũ'),
           backgroundColor: AppColors.red500,
         ),
@@ -81,7 +80,7 @@ class _BodyState extends State<Body> {
     });
 
     // Simulate API call
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -89,20 +88,13 @@ class _BodyState extends State<Body> {
 
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Đã gửi yêu cầu gia hạn thành công!'),
             backgroundColor: AppColors.green500,
           ),
         );
 
         // Navigate back after success
-        Future.delayed(Duration(seconds: 1), () {
-          if (mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
-            );
-          }
-        });
       }
     });
   }
@@ -116,7 +108,7 @@ class _BodyState extends State<Body> {
           spacing: 20.0,
           children: [
             // Room information card
-            RoomInfoCard(
+            const RoomInfoCard(
               roomName: "Phòng 301",
               hostelName: "Khu trọ Hạnh Phúc",
               contractExpiryDate: "31/03/2026",
@@ -144,7 +136,7 @@ class _BodyState extends State<Body> {
             ),
 
             // Info message
-            InfoMessage(),
+            const InfoMessage(),
 
             // Submit button
             SubmitButton(
@@ -153,7 +145,7 @@ class _BodyState extends State<Body> {
               isLoading: _isLoading,
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),

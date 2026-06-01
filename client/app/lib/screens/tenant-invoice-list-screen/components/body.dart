@@ -1,16 +1,9 @@
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_history_section.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_summary_card.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_view_models.dart';
+import 'invoice_history_section.dart';
+import 'invoice_summary_card.dart';
+import 'invoice_view_models.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
-  final InvoiceSummaryData latestInvoice;
-  final InvoiceHistoryState historyState;
-  final List<InvoiceHistoryItemData> historyItems;
-  final VoidCallback? onPayNow;
-  final ValueChanged<String>? onSearchChanged;
-  final ValueChanged<InvoiceHistoryItemData>? onHistoryItemTap;
-  final Widget? historyErrorWidget;
 
   const Body({
     super.key,
@@ -22,6 +15,7 @@ class Body extends StatelessWidget {
     this.historyState = InvoiceHistoryState.data,
     this.historyItems = const [
       InvoiceHistoryItemData(
+        id: '00000000-0000-4000-8000-000000000010',
         billingMonth: '02/2026',
         paidAt: 'Hạn: 10/03/2026',
         amount: 2750000,
@@ -29,6 +23,7 @@ class Body extends StatelessWidget {
         isPaid: false,
       ),
       InvoiceHistoryItemData(
+        id: '00000000-0000-4000-8000-000000000011',
         billingMonth: '01/2026',
         paidAt: '10/02/2026 • 14:30',
         amount: 3500000,
@@ -36,6 +31,7 @@ class Body extends StatelessWidget {
         isPaid: true,
       ),
       InvoiceHistoryItemData(
+        id: '00000000-0000-4000-8000-000000000012',
         billingMonth: '12/2025',
         paidAt: '10/01/2026 • 10:15',
         amount: 3200000,
@@ -48,6 +44,13 @@ class Body extends StatelessWidget {
     this.onHistoryItemTap,
     this.historyErrorWidget,
   });
+  final InvoiceSummaryData latestInvoice;
+  final InvoiceHistoryState historyState;
+  final List<InvoiceHistoryItemData> historyItems;
+  final VoidCallback? onPayNow;
+  final ValueChanged<String>? onSearchChanged;
+  final ValueChanged<InvoiceHistoryItemData>? onHistoryItemTap;
+  final Widget? historyErrorWidget;
 
   @override
   Widget build(BuildContext context) {

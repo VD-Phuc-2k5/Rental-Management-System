@@ -1,37 +1,36 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/components/payment_method_selector.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/components/payment_models.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/components/payment_summary_card.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
+import 'payment_method_selector.dart';
+import 'payment_models.dart';
+import 'payment_summary_card.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatefulWidget {
+  const Body({super.key, required this.paymentData, this.onPaymentSubmit});
   final PaymentData paymentData;
   final VoidCallback? onPaymentSubmit;
-
-  const Body({super.key, required this.paymentData, this.onPaymentSubmit});
 
   @override
   State<Body> createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
-  PaymentMethodType _selectedMethod = PaymentMethodType.vnpay;
+  PaymentMethodType _selectedMethod = PaymentMethodType.payos;
 
   List<PaymentMethodOption> get _paymentMethods => [
     PaymentMethodOption(
-      type: PaymentMethodType.vnpay,
-      name: "VNPay",
+      type: PaymentMethodType.payos,
+      name: "PayOS",
       description: "Thanh toán qua ứng dụng ngân hàng",
       iconName: "qr_code",
-      isSelected: _selectedMethod == PaymentMethodType.vnpay,
+      isSelected: _selectedMethod == PaymentMethodType.payos,
     ),
     PaymentMethodOption(
-      type: PaymentMethodType.momo,
-      name: "MoMo",
-      description: "Ví điện tử momo",
-      iconName: "wallet",
-      isSelected: _selectedMethod == PaymentMethodType.momo,
+      type: PaymentMethodType.bankTransfer,
+      name: "Chuyển khoản ngân hàng",
+      description: "Ngân hàng",
+      iconName: "account_balance",
+      isSelected: _selectedMethod == PaymentMethodType.bankTransfer,
     ),
   ];
 

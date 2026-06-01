@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class TenantBottomBar extends StatelessWidget {
-  final VoidCallback onNext;
 
   const TenantBottomBar({super.key, required this.onNext});
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class TenantBottomBar extends StatelessWidget {
                 ),
               ),
             ),
-            child: Text(
+            child: const Text(
               'Tiếp theo',
               style: TextStyle(
                 fontSize: 16,

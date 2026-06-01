@@ -1,8 +1,4 @@
 class RoomMember {
-  final String id;
-  final String name;
-  final String role;
-  final String? avatarUrl;
 
   const RoomMember({
     required this.id,
@@ -10,4 +6,8 @@ class RoomMember {
     this.role = 'Thành viên',
     this.avatarUrl,
   });
+  final String id;
+  final String name;
+  final String role;
+  final String? avatarUrl;
 }

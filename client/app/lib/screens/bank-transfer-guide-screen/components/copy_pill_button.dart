@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class CopyPillButton extends StatelessWidget {
-  final String textToCopy;
   const CopyPillButton({
     super.key,
     required this.textToCopy,
   });
+  final String textToCopy;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -19,9 +19,9 @@ class CopyPillButton extends StatelessWidget {
           color: AppColors.blue700.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(999),
         ),
-        child: Row(
+        child: const Row(
           mainAxisSize: MainAxisSize.min,
-          children: const [
+          children: [
             Icon(
               Icons.copy_rounded,
               size: 16,

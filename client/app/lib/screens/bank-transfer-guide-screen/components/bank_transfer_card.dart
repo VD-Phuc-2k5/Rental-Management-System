@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:app/screens/bank-transfer-guide-screen/components/copy_pill_button.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import 'copy_pill_button.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 class BankTransferCard extends StatelessWidget {
-  final String? bankName;
-  final String? accountName;
-  final String? accountNumber;
-  final double? amount;
-  final String? transferContent;
   const BankTransferCard({
     super.key,
     this.bankName,
@@ -16,6 +11,11 @@ class BankTransferCard extends StatelessWidget {
     this.amount,
     this.transferContent,
   });
+  final String? bankName;
+  final String? accountName;
+  final String? accountNumber;
+  final double? amount;
+  final String? transferContent;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class BankTransferCard extends StatelessWidget {
             value: displayAmount,
             valueColor: AppColors.blue700,
           ),
-          Divider(height: 1,color: AppColors.slate100),
+          const Divider(height: 1,color: AppColors.slate100),
           _CopyRow(
             label: 'Nội dung chuyển khoản',
             value: transferContent ?? 'lỗi',
@@ -56,12 +56,12 @@ class BankTransferCard extends StatelessWidget {
 }
 
 class _BankRow extends StatelessWidget {
-  final String? bankName;
   const _BankRow(
     {
       required this.bankName,
     }
   );
+  final String? bankName;
 
   @override
   Widget build(BuildContext context) {
@@ -83,14 +83,14 @@ class _BankRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Ngân hàng',
                   style: TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w400),
                 ),
-                SizedBox(height: 3),
+                const SizedBox(height: 3),
                 Text(
                   bankName ?? 'lỗi',
-                  style: TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w600),
+                  style: const TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -102,13 +102,13 @@ class _BankRow extends StatelessWidget {
 }
 
 class _TextRow extends StatelessWidget {
-  final String label;
-  final String value;
 
   const _TextRow({
     required this.label,
     required this.value,
   });
+  final String label;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
@@ -140,10 +140,6 @@ class _TextRow extends StatelessWidget {
 }
 
 class _CopyRow extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color? valueColor;
-  final bool highlight;
 
   const _CopyRow({
     required this.label,
@@ -151,6 +147,10 @@ class _CopyRow extends StatelessWidget {
     this.valueColor,
     this.highlight = false,
   });
+  final String label;
+  final String value;
+  final Color? valueColor;
+  final bool highlight;
 
   @override
   Widget build(BuildContext context) {

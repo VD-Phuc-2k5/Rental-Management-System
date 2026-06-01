@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class RegisterRentBottomBar extends StatelessWidget {
-  final VoidCallback onRegister;
 
   const RegisterRentBottomBar({super.key, required this.onRegister});
+  final VoidCallback onRegister;
 
   @override
 Widget build(BuildContext context) {
@@ -42,9 +42,9 @@ Widget build(BuildContext context) {
               ),
             ),
           ),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text(
                 'Đăng ký thuê phòng ngay',
                 style: TextStyle(

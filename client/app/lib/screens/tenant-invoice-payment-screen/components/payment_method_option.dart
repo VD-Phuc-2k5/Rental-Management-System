@@ -1,16 +1,15 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/components/payment_models.dart';
+import '../../../core/constants.dart';
+import 'payment_models.dart';
 import 'package:flutter/material.dart';
 
 class PaymentMethodOptionWidget extends StatelessWidget {
-  final PaymentMethodOption option;
-  final VoidCallback? onTap;
-
   const PaymentMethodOptionWidget({
     super.key,
     required this.option,
     this.onTap,
   });
+  final PaymentMethodOption option;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +40,11 @@ class PaymentMethodOptionWidget extends StatelessWidget {
   Widget _buildIcon() {
     IconData iconData;
     switch (option.type) {
-      case PaymentMethodType.vnpay:
+      case PaymentMethodType.payos:
         iconData = Icons.qr_code;
         break;
-      case PaymentMethodType.momo:
-        iconData = Icons.account_balance_wallet;
+      case PaymentMethodType.bankTransfer:
+        iconData = Icons.account_balance_rounded;
         break;
     }
 
@@ -97,7 +96,7 @@ class PaymentMethodOptionWidget extends StatelessWidget {
           color: option.isSelected ? AppColors.blue700 : AppColors.slate300,
         ),
       ),
-      child: Icon(Icons.check, size: 14.0, color: AppColors.white),
+      child: const Icon(Icons.check, size: 14.0, color: AppColors.white),
     );
   }
 }

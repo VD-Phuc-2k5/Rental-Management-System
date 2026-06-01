@@ -1,4 +1,4 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 import 'confirmation_section.dart';
 import 'member_selection_list.dart';

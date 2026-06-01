@@ -1,10 +1,10 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class CountdownWidget extends StatelessWidget {
-  final int daysRemaining;
 
   const CountdownWidget({super.key, required this.daysRemaining});
+  final int daysRemaining;
 
   @override
   Widget build(BuildContext context) {

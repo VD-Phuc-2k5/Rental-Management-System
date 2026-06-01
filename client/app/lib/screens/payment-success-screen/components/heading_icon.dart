@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class HeadingIcon extends StatelessWidget {
   const HeadingIcon({super.key});

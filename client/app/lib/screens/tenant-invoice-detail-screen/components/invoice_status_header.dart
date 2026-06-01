@@ -1,11 +1,11 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_detail_models.dart';
+import '../../../core/constants.dart';
+import 'invoice_detail_models.dart';
 import 'package:flutter/material.dart';
 
 class InvoiceStatusHeader extends StatelessWidget {
-  final InvoiceStatus status;
 
   const InvoiceStatusHeader({super.key, required this.status});
+  final InvoiceStatus status;
 
   @override
   Widget build(BuildContext context) {

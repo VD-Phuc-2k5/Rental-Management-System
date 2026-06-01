@@ -4,7 +4,7 @@ class HeadingTitle extends StatelessWidget {
   const HeadingTitle({super.key});
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return const Text(
       "Thanh toán thành công",
       style: TextStyle(
         fontFamily: "Inter",

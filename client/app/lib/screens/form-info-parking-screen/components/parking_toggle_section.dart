@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class ParkingToggleSection extends StatelessWidget {
-  final bool value;
-  final ValueChanged<bool> onChanged;
 
   const ParkingToggleSection({
     super.key,
     required this.value,
     required this.onChanged,
   });
+  final bool value;
+  final ValueChanged<bool> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +20,10 @@ class ParkingToggleSection extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         child: Row(
           children: [
-            Expanded(
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     'Khách có gửi xe không?',
                     style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: AppColors.slate800),
@@ -40,7 +40,7 @@ class ParkingToggleSection extends StatelessWidget {
               value: value,
               onChanged: onChanged,
               activeTrackColor: AppColors.blue700, 
-              activeColor: Colors.white,                
+              activeThumbColor: Colors.white,                
               inactiveTrackColor: AppColors.gray200,
               inactiveThumbColor: Colors.white,
             ),

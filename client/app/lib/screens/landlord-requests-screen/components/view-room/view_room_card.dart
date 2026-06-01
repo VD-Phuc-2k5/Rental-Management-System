@@ -1,14 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ViewRoomCard extends StatelessWidget {
-  final String tenantName;
-  final String phoneNumber;
-  final String roomInfo;
-  final String scheduledDate;
-  final String? note;
-  final String status;
-  final VoidCallback onTap;
 
   const ViewRoomCard({
     super.key,
@@ -20,6 +13,13 @@ class ViewRoomCard extends StatelessWidget {
     this.note,
     this.status = 'Chờ xử lý',
   });
+  final String tenantName;
+  final String phoneNumber;
+  final String roomInfo;
+  final String scheduledDate;
+  final String? note;
+  final String status;
+  final VoidCallback onTap;
 
   String _getInitials(String name) {
     final trimmed = name.trim();
@@ -99,7 +99,7 @@ class ViewRoomCard extends StatelessWidget {
               Container(
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.blue50,
                   shape: BoxShape.circle,
                 ),
@@ -186,11 +186,11 @@ class ViewRoomCard extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
+
+  const _InfoRow({required this.icon, required this.text, this.textColor});
   final IconData icon;
   final String text;
   final Color? textColor;
-
-  const _InfoRow({required this.icon, required this.text, this.textColor});
 
   @override
   Widget build(BuildContext context) {

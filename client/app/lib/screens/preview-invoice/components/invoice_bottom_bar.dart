@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 
 class InvoiceBottomBar extends StatelessWidget {
-  final int selectedCount;
-  final int totalAmount;
-  final VoidCallback? onSend;
-  final bool isLoading;
 
   const InvoiceBottomBar({
     super.key,
@@ -15,6 +11,10 @@ class InvoiceBottomBar extends StatelessWidget {
     this.onSend,
     this.isLoading = false,
   });
+  final int selectedCount;
+  final int totalAmount;
+  final VoidCallback? onSend;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
+
 class RegisterRentApartmentSection extends StatelessWidget {
   const RegisterRentApartmentSection({super.key});
 
@@ -12,7 +13,7 @@ class RegisterRentApartmentSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _ImageHeader(
+          const _ImageHeader(
             imagePath: 'assets/images/room.png',
             tagText: 'Căn hộ dịch vụ',
           ),
@@ -51,13 +52,10 @@ class RegisterRentApartmentSection extends StatelessWidget {
   }
 }
 
-
-
 class _ImageHeader extends StatelessWidget {
+  const _ImageHeader({required this.imagePath, required this.tagText});
   final String imagePath;
   final String tagText;
-
-  const _ImageHeader({required this.imagePath, required this.tagText});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +75,7 @@ class _ImageHeader extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.55),
+                color: Colors.black.withValues(alpha: 0.55),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -93,10 +91,9 @@ class _ImageHeader extends StatelessWidget {
 }
 
 class _TitleRow extends StatelessWidget {
+  const _TitleRow({required this.title, required this.onFav});
   final String title;
   final VoidCallback onFav;
-
-  const _TitleRow({required this.title, required this.onFav});
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +102,11 @@ class _TitleRow extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700,color: Color(0xFF111417)),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF111417),
+            ),
           ),
         ),
         IconButton(
@@ -118,20 +119,28 @@ class _TitleRow extends StatelessWidget {
 }
 
 class _AddressRow extends StatelessWidget {
-  final String text;
   const _AddressRow({required this.text});
+  final String text;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Icon(Icons.location_on_outlined, size: 18, color: Color(0xFF647487)),
+        const Icon(
+          Icons.location_on_outlined,
+          size: 18,
+          color: Color(0xFF647487),
+        ),
         const SizedBox(width: 6),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(color: Color(0xFF647487), height: 1.3,fontSize: 14),
+            style: const TextStyle(
+              color: Color(0xFF647487),
+              height: 1.3,
+              fontSize: 14,
+            ),
           ),
         ),
       ],
@@ -140,17 +149,16 @@ class _AddressRow extends StatelessWidget {
 }
 
 class _SpecsRow extends StatelessWidget {
+  const _SpecsRow({required this.area, required this.bed, required this.bath});
   final String area;
   final String bed;
   final String bath;
 
-  const _SpecsRow({required this.area, required this.bed, required this.bath});
-
   @override
   Widget build(BuildContext context) {
     const style = TextStyle(color: Colors.grey, fontSize: 14);
-    return Row(
-      children: const [
+    return const Row(
+      children: [
         Icon(Icons.square_foot_outlined, size: 14, color: Color(0xFF647487)),
         SizedBox(width: 6),
         Text('35m²', style: style),
@@ -168,16 +176,18 @@ class _SpecsRow extends StatelessWidget {
 }
 
 class _PriceRow extends StatelessWidget {
+  const _PriceRow({required this.price, required this.unit});
   final String price;
   final String unit;
-
-  const _PriceRow({required this.price, required this.unit});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text('Giá thuê', style: TextStyle(color: Color(0xFF647487),fontSize: 14)),
+        const Text(
+          'Giá thuê',
+          style: TextStyle(color: Color(0xFF647487), fontSize: 14),
+        ),
         const Spacer(),
         Text(
           price,
@@ -188,7 +198,10 @@ class _PriceRow extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 4),
-        Text(unit, style: const TextStyle(color: Color(0xFF647487),fontSize: 14)),
+        Text(
+          unit,
+          style: const TextStyle(color: Color(0xFF647487), fontSize: 14),
+        ),
       ],
     );
   }

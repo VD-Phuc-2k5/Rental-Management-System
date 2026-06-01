@@ -1,9 +1,35 @@
-abstract class RoutePaths {
+﻿abstract class RoutePaths {
   static const String splash = '/splash';
   static const String login = '/login';
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
   static const String home = '/home';
+  static const String propertyList = '/properties';
+  static const String createProperty = '/properties/create';
+  static const String updateProperty = '/properties/update';
+  static const String roomList = '/rooms';
+  static const String createRoom = '/rooms/create';
+  static const String updateRoom = '/rooms/update';
+  static const String roomTab = '/rooms-tab';
+  static const String landlordRequests = '/requests';
+  static const String landlordPayments = '/payments';
+  static const String profile = '/profile';
+  static const String editProfile = '/profile/edit';
+  static const String roomDetail = '/room-detail';
+  static const String rentalRequest = '/rental-request';
+  static const String myRequests = '/my-requests';
+  static const String contractPreview = '/contract-preview';
+  static const String scheduleViewing = '/schedule-viewing';
+  static const String myAppointments = '/my-appointments';
+  static const String landlordViewingAppointments =
+      '/landlord-viewing-appointments';
+  static const String landlordIncomingRequests = '/landlord-incoming-requests';
+  static const String landlordContracts = '/landlord-contracts';
+  static const String landlordContractEdit = '/landlord-contract-edit';
+  static const String rentalRequestWizard = '/rental-request-wizard';
+  static const String myContracts = '/my-contracts';
+  static const String tenantMaintenance = '/maintenance';
+  static const String tenantInvoices = '/invoices';
 }
 
 abstract class RouteNames {
@@ -12,4 +38,30 @@ abstract class RouteNames {
   static const String register = 'register';
   static const String forgotPassword = 'forgot-password';
   static const String home = 'home';
+  static const String propertyList = 'property-list';
+  static const String createProperty = 'create-property';
+  static const String updateProperty = 'update-property';
+  static const String roomList = 'room-list';
+  static const String createRoom = 'create-room';
+  static const String updateRoom = 'update-room';
+  static const String roomTab = 'room-tab';
+  static const String landlordRequests = 'landlord-requests';
+  static const String landlordPayments = 'landlord-payments';
+  static const String profile = 'profile';
+  static const String editProfile = 'edit-profile';
+  static const String roomDetail = 'room-detail';
+  static const String rentalRequest = 'rental-request';
+  static const String myRequests = 'my-requests';
+  static const String contractPreview = 'contract-preview';
+  static const String scheduleViewing = 'schedule-viewing';
+  static const String myAppointments = 'my-appointments';
+  static const String landlordViewingAppointments =
+      'landlord-viewing-appointments';
+  static const String landlordIncomingRequests = 'landlord-incoming-requests';
+  static const String landlordContracts = 'landlord-contracts';
+  static const String landlordContractEdit = 'landlord-contract-edit';
+  static const String rentalRequestWizard = 'rental-request-wizard';
+  static const String myContracts = 'my-contracts';
+  static const String tenantMaintenance = 'tenant-maintenance';
+  static const String tenantInvoices = 'tenant-invoices';
 }

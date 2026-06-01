@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/screens/contract-preview-screen/components/contract_preview_card.dart';
-import 'package:app/screens/contract-preview-screen/components/deposit_section.dart';
-import 'package:app/screens/contract-preview-screen/components/contract_bottom_bar.dart';
-import 'package:app/screens/contract-status-screen/contract_status_screen.dart';
+import 'components/contract_preview_card.dart';
+import 'components/deposit_section.dart';
+import 'components/contract_bottom_bar.dart';
+import '../contract-status-screen/contract_status_screen.dart';
 
 class ContractPreviewScreen extends StatelessWidget {
   const ContractPreviewScreen({super.key});
@@ -34,11 +34,11 @@ class ContractPreviewScreen extends StatelessWidget {
             color: Color(0xFF111417),),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 14, 16, 120),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16, 14, 16, 120),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             ContractPreviewCard(),
             SizedBox(height: 16),
             DepositSection(),

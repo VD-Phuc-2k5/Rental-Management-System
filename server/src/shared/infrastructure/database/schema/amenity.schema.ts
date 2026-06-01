@@ -1,4 +1,4 @@
-import { pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+﻿import { pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 export const amenityValues = [
 	'WIFI',
@@ -8,6 +8,11 @@ export const amenityValues = [
 	'WATER_HEATER',
 	'AIR_CONDITIONER',
 	'PRIVATE_BATHROOM',
+	'PARKING',
+	'SECURITY',
+	'CAMERA',
+	'FREE_TIME',
+	'ELEVATOR',
 ] as const;
 
 export const amenityEnum = pgEnum('amenity', amenityValues);
@@ -24,10 +29,15 @@ export const amenities = pgTable('amenities', {
 
 export const amenitySeed: Array<{ code: (typeof amenityValues)[number]; name: string }> = [
 	{ code: 'WIFI', name: 'Wifi' },
-	{ code: 'BED', name: 'Bed' },
-	{ code: 'FRIDGE', name: 'Fridge' },
-	{ code: 'BALCONY', name: 'Balcony' },
-	{ code: 'WATER_HEATER', name: 'Water Heater' },
-	{ code: 'AIR_CONDITIONER', name: 'Air Conditioner' },
-	{ code: 'PRIVATE_BATHROOM', name: 'Private Bathroom' },
+	{ code: 'BED', name: 'Giường' },
+	{ code: 'FRIDGE', name: 'Tủ lạnh' },
+	{ code: 'BALCONY', name: 'Ban công' },
+	{ code: 'WATER_HEATER', name: 'Máy nước nóng' },
+	{ code: 'AIR_CONDITIONER', name: 'Điều hòa' },
+	{ code: 'PRIVATE_BATHROOM', name: 'WC riêng' },
+	{ code: 'PARKING', name: 'Giữ xe' },
+	{ code: 'SECURITY', name: 'An ninh 24/7' },
+	{ code: 'CAMERA', name: 'Camera' },
+	{ code: 'FREE_TIME', name: 'Giờ giấc tự do' },
+	{ code: 'ELEVATOR', name: 'Thang máy' },
 ];

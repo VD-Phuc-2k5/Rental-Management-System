@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 class TransactionSummaryCard extends StatelessWidget {
-  final String? bankName;
-  final int? amount;
-  final String? transferContent;
   const TransactionSummaryCard({
     super.key,
     this.bankName,
     this.amount,
     this.transferContent,
   });
+  final String? bankName;
+  final int? amount;
+  final String? transferContent;
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +42,14 @@ class TransactionSummaryCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Ngân hàng',
                         style: TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w400,fontSize: 12),
                       ),
-                      SizedBox(height: 3),
+                      const SizedBox(height: 3),
                       Text(
                         (bankName == null || bankName!.trim().isEmpty) ? '—' : bankName!,
-                        style: TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w600),
+                        style: const TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -64,7 +64,7 @@ class TransactionSummaryCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 82,
                   child: Text(
                     'Nội dung:',
@@ -76,7 +76,7 @@ class TransactionSummaryCard extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Text(
                        (transferContent == null || transferContent!.trim().isEmpty) ? '—' : transferContent!,
-                      style: TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w700),
+                      style: const TextStyle(color: AppColors.blue950, fontWeight: FontWeight.w700),
                     ),
                   ),),
               ],
@@ -91,7 +91,7 @@ class TransactionSummaryCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               displayAmount,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.blue700,
                 fontWeight: FontWeight.w800,
                 fontSize: 22,

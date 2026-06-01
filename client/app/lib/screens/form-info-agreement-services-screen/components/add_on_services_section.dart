@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class AddOnServicesSectionUi extends StatelessWidget {
   const AddOnServicesSectionUi({super.key});
 
@@ -9,12 +9,12 @@ class AddOnServicesSectionUi extends StatelessWidget {
       elevation: 0,
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      child: Column(
+      child: const Column(
         children:  [
           _ServiceRow(icon: Icons.wifi, name: 'Internet', price: '100.000', enabled: true),
-          const Divider(height: 1),
+          Divider(height: 1),
           _ServiceRow(icon: Icons.cleaning_services, name: 'Vệ sinh', price: '50.000', enabled: true),
-          const Divider(height: 1),
+          Divider(height: 1),
           _ServiceRow(icon: Icons.shield_outlined, name: 'Bảo vệ', price: '0', enabled: false),
         ],
       ),
@@ -23,10 +23,6 @@ class AddOnServicesSectionUi extends StatelessWidget {
 }
 
 class _ServiceRow extends StatefulWidget {
-  final IconData icon;
-  final String name;
-  final String price;
-  final bool enabled;
 
   const _ServiceRow({
     required this.icon,
@@ -34,6 +30,10 @@ class _ServiceRow extends StatefulWidget {
     required this.price,
     required this.enabled,
   });
+  final IconData icon;
+  final String name;
+  final String price;
+  final bool enabled;
 
   @override
   State<_ServiceRow> createState() => _ServiceRowState();
@@ -78,7 +78,7 @@ class _ServiceRowState extends State<_ServiceRow> {
             ),
             child: Text(
               widget.price,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.w800,
               ),
             ),

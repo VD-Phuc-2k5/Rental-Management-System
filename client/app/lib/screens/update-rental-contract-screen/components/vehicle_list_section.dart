@@ -1,17 +1,14 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ContractVehicle {
-  final String name;
-  final String licensePlate;
 
   const ContractVehicle({required this.name, required this.licensePlate});
+  final String name;
+  final String licensePlate;
 }
 
 class VehicleListSection extends StatelessWidget {
-  final List<ContractVehicle> vehicles;
-  final VoidCallback onAddVehicle;
-  final void Function(int index) onDeleteVehicle;
 
   const VehicleListSection({
     super.key,
@@ -19,6 +16,9 @@ class VehicleListSection extends StatelessWidget {
     required this.onAddVehicle,
     required this.onDeleteVehicle,
   });
+  final List<ContractVehicle> vehicles;
+  final VoidCallback onAddVehicle;
+  final void Function(int index) onDeleteVehicle;
 
   @override
   Widget build(BuildContext context) {
@@ -86,15 +86,15 @@ class VehicleListSection extends StatelessWidget {
 }
 
 class _VehicleCard extends StatelessWidget {
-  final String name;
-  final String licensePlate;
-  final VoidCallback onDelete;
 
   const _VehicleCard({
     required this.name,
     required this.licensePlate,
     required this.onDelete,
   });
+  final String name;
+  final String licensePlate;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -145,10 +145,10 @@ class _VehicleCard extends StatelessWidget {
 }
 
 class _AddButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onPressed;
 
   const _AddButton({required this.text, required this.onPressed});
+  final String text;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {

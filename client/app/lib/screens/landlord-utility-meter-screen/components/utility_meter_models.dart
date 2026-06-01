@@ -1,13 +1,13 @@
 enum RoomStatus { rented, vacant }
 
 class UtilityMeterReading {
-  final int oldReading;
-  final int newReading;
 
   const UtilityMeterReading({
     required this.oldReading,
     required this.newReading,
   });
+  final int oldReading;
+  final int newReading;
 
   int get consumption => newReading - oldReading;
 
@@ -20,12 +20,6 @@ class UtilityMeterReading {
 }
 
 class RoomMeterData {
-  final String id;
-  final String roomNumber;
-  final String hostelName;
-  final RoomStatus status;
-  final UtilityMeterReading electricity;
-  final UtilityMeterReading water;
 
   const RoomMeterData({
     required this.id,
@@ -35,6 +29,12 @@ class RoomMeterData {
     required this.electricity,
     required this.water,
   });
+  final String id;
+  final String roomNumber;
+  final String hostelName;
+  final RoomStatus status;
+  final UtilityMeterReading electricity;
+  final UtilityMeterReading water;
 
   RoomMeterData copyWith({
     String? id,
@@ -56,10 +56,10 @@ class RoomMeterData {
 }
 
 class UtilityMeterUpdateData {
-  final String month;
-  final List<RoomMeterData> rooms;
 
   const UtilityMeterUpdateData({required this.month, required this.rooms});
+  final String month;
+  final List<RoomMeterData> rooms;
 
   List<String> get hostelNames {
     final names = rooms.map((r) => r.hostelName).toSet().toList();

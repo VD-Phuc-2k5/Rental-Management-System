@@ -1,4 +1,4 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class CancelFormSection extends StatefulWidget {
@@ -91,7 +91,7 @@ class _CancelFormSectionState extends State<CancelFormSection> {
 
           _buildLabel("Lý do trả phòng", isRequired: true),
           DropdownButtonFormField<String>(
-            value: _selectedReason,
+            initialValue: _selectedReason,
             hint: const Text(
               "Chọn lý do",
               style: TextStyle(

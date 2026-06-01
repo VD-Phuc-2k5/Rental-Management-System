@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ParkingBottomBar extends StatelessWidget {
-  final VoidCallback onNext;
 
   const ParkingBottomBar({super.key, required this.onNext});
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,24 @@
-import "package:app/core/constants.dart";
-import "package:app/screens/tenant-maintenance-request-screen/components/image_upload_section.dart";
-import "package:app/screens/tenant-maintenance-request-screen/components/labeled_text_field.dart";
-import "package:app/screens/tenant-maintenance-request-screen/components/priority_selector.dart";
+// import 'dart:convert';
+// import 'dart:io';
+
+// import 'package:core/src/constants/app_constant.dart' as app_constants;
+// import 'package:http/http.dart' as http;
+// //import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:data/auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../features/auth/presentation/blocs/authentication/authentication_bloc.dart';
+import '../../../core/services/maintenance_request_service.dart';
+import '../../../core/models/priority.dart';
+import 'package:core/usecase.dart';
+import 'package:domain/rental_request.dart';
+
+import '../../../core/di/di.dart';
+
+import "../../../core/constants.dart";
+import "image_upload_section.dart";
+import "labeled_text_field.dart";
+import "priority_selector.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
 
@@ -19,12 +36,38 @@ class _RequestFormState extends State<RequestForm> {
   final _imagePicker = ImagePicker();
   final int _maxImages = 5;
 
+  //final http.Client _client = http.Client();
+  final GetMyContractsUsecase _getMyContractsUsecase =
+    getIt<GetMyContractsUsecase>();
+
+  final MaintenanceRequestService _maintenanceService =
+    MaintenanceRequestService();
+
+  String? _getCurrentTenantId() {
+  final authUser = context.read<AuthenticationBloc>().state.user;
+
+  if (authUser is AuthModel) {
+    return authUser.user.id;
+  }
+
+  return null;
+}
+String? _getAccessToken() {
+  final authUser = context.read<AuthenticationBloc>().state.user;
+
+  if (authUser is AuthModel) {
+    return authUser.token;
+  }
+
+  return null;
+}
   Priority _selectedPriority = Priority.low;
   List<XFile> _selectedImages = [];
   bool _isSubmitting = false;
 
   @override
   void dispose() {
+    //_client.close();
     _titleController.dispose();
     _descriptionController.dispose();
     super.dispose();
@@ -89,16 +132,37 @@ class _RequestFormState extends State<RequestForm> {
     });
 
     try {
-      // TODO: Implement API call to submit maintenance request
-      // Example:
-      // await maintenanceService.createRequest(
-      //   title: _titleController.text.trim(),
-      //   description: _descriptionController.text.trim(),
-      //   priority: _selectedPriority,
-      //   images: _selectedImages,
-      // );
+      final hasSignedContract = await _hasSignedContract();
 
-      await Future.delayed(const Duration(seconds: 2)); // Simulate API call
+    if (!hasSignedContract) {
+      if (mounted) {
+        _showMessage(
+          "Bạn chưa có hợp đồng thuê phòng đang hoạt động nên không thể gửi yêu cầu sửa chữa",
+        );
+      }
+      return;
+    }
+      final tenantId = _getCurrentTenantId();
+
+      if (tenantId == null || tenantId.isEmpty) {
+        _showMessage("Không lấy được thông tin người dùng đăng nhập");
+        return;
+      }
+
+      final token = _getAccessToken();
+
+      if (token == null || token.isEmpty) {
+        _showMessage("Không lấy được token đăng nhập");
+        return;
+      }
+    await _maintenanceService.createRequest(
+      token: token,
+      title: _titleController.text,
+      description: _descriptionController.text,
+      location: "Chưa xác định",
+      priority: _selectedPriority,
+      images: _selectedImages,
+    );
 
       if (mounted) {
         _showMessage("Gửi yêu cầu thành công");
@@ -126,6 +190,21 @@ class _RequestFormState extends State<RequestForm> {
       _selectedImages = [];
     });
   }
+
+  Future<bool> _hasSignedContract() async {
+  final result = await _getMyContractsUsecase(const NoParams());
+
+  return result.fold(
+    (failure) {
+      throw Exception(failure.message);
+    },
+    (contracts) {
+      return contracts.any(
+        (contract) => contract.status == ContractStatus.signed,
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {

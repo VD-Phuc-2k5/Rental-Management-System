@@ -1,13 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class RoomOwnerSection extends StatelessWidget {
-  final String ownerName;
-  final String ownerAvatar;
-  final String ownerRole;
-  final String ownerBadge;
-  final bool isOnline;
-  final VoidCallback? onCallPressed;
 
   const RoomOwnerSection({
     super.key,
@@ -18,6 +12,12 @@ class RoomOwnerSection extends StatelessWidget {
     this.isOnline = true,
     this.onCallPressed,
   });
+  final String ownerName;
+  final String ownerAvatar;
+  final String ownerRole;
+  final String ownerBadge;
+  final bool isOnline;
+  final VoidCallback? onCallPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class RoomOwnerSection extends StatelessWidget {
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: AppColors.slate200,
-                        child: Icon(
+                        child: const Icon(
                           Icons.person,
                           size: 32,
                           color: AppColors.slate400,
@@ -73,7 +73,7 @@ class RoomOwnerSection extends StatelessWidget {
               children: [
                 Text(
                   ownerName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -83,7 +83,7 @@ class RoomOwnerSection extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   '$ownerRole • $ownerBadge',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
@@ -102,7 +102,7 @@ class RoomOwnerSection extends StatelessWidget {
                 border: Border.all(color: AppColors.slate300, width: 1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.phone, size: 24, color: AppColors.blue700),
+              child: const Icon(Icons.phone, size: 24, color: AppColors.blue700),
             ),
           ),
         ],

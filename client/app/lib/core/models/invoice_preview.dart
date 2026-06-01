@@ -1,13 +1,4 @@
 class InvoicePreview {
-  final String id;
-  final String hostelName;
-  final String roomNumber;
-  final int rentFee;
-  final int electricKwh;
-  final int electricFee;
-  final int waterM3;
-  final int waterFee;
-  final int serviceFee;
 
   const InvoicePreview({
     required this.id,
@@ -20,8 +11,6 @@ class InvoicePreview {
     required this.waterFee,
     required this.serviceFee,
   });
-
-  int get total => rentFee + electricFee + waterFee + serviceFee;
 
   factory InvoicePreview.fromJson(Map<String, dynamic> json) {
     return InvoicePreview(
@@ -36,6 +25,17 @@ class InvoicePreview {
       serviceFee: json['serviceFee'] as int,
     );
   }
+  final String id;
+  final String hostelName;
+  final String roomNumber;
+  final int rentFee;
+  final int electricKwh;
+  final int electricFee;
+  final int waterM3;
+  final int waterFee;
+  final int serviceFee;
+
+  int get total => rentFee + electricFee + waterFee + serviceFee;
 
   Map<String, dynamic> toJson() => {
     'id': id,

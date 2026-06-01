@@ -1,15 +1,15 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class UpdateReasonSection extends StatelessWidget {
-  final TextEditingController controller;
-  final String? errorText;
 
   const UpdateReasonSection({
     super.key,
     required this.controller,
     this.errorText,
   });
+  final TextEditingController controller;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {

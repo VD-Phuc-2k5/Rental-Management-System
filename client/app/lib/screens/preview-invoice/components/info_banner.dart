@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class InfoBanner extends StatelessWidget {
-  final String message;
 
   const InfoBanner({
     super.key,
     this.message =
         'Hệ thống đã tự động tính toán dựa theo hợp đồng từng phòng. Kiểm tra và gửi khi sẵn sàng.',
   });
+  final String message;
 
   @override
   Widget build(BuildContext context) {

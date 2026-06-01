@@ -1,13 +1,31 @@
-import 'package:app/core/models/invoice_preview.dart';
-import 'package:app/screens/preview-invoice/preview_invoice_screen.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:app/screens/add-electric-water-screen/components/bottom_action_bar.dart';
-import 'package:app/screens/add-electric-water-screen/components/data_preview_table.dart';
-import 'package:app/screens/add-electric-water-screen/components/upload_section.dart';
-import 'package:app/screens/add-electric-water-screen/models/electric_water_entry.dart';
+import 'package:domain/billing.dart';
+import 'package:domain/property.dart';
+import 'package:core/usecase.dart';
+
+import '../../../core/constants.dart';
+import '../../../core/di/di.dart';
+import '../../../core/models/invoice_preview.dart';
+import '../../preview-invoice/preview_invoice_screen.dart';
+import 'bottom_action_bar.dart';
+import 'data_preview_table.dart';
+import 'upload_section.dart';
+import '../models/electric_water_entry.dart';
 
 class AddElectricWaterBody extends StatefulWidget {
-  const AddElectricWaterBody({super.key});
+  const AddElectricWaterBody({
+    super.key,
+    required this.month,
+    required this.monthLabel,
+    required this.onMonthChanged,
+    this.initialPropertyId,
+  });
+
+  final String month;
+  final String monthLabel;
+  final ValueChanged<DateTime> onMonthChanged;
+  final String? initialPropertyId;
 
   @override
   State<AddElectricWaterBody> createState() => _AddElectricWaterBodyState();
@@ -17,126 +35,183 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
   String? _selectedFileName;
   bool _isUploading = false;
   bool _isSubmitting = false;
+  int _importedCount = 0;
+  String? _errorMessage;
+  String? _selectedPropertyId;
+  List<PropertyEntity> _properties = [];
 
   List<ElectricWaterEntry> _entries = [];
 
   bool get _hasErrors => _entries.any((e) => e.hasError);
-  bool get _hasData => _entries.isNotEmpty;
+  bool get _hasData => _entries.isNotEmpty || _importedCount > 0;
 
-  Future<void> _onFilePicked(String? _) async {
-    setState(() => _isUploading = true);
-
-    await Future.delayed(const Duration(seconds: 1));
-
-    final mockEntries = [
-      const ElectricWaterEntry(
-        hostelName: 'Nhà A',
-        roomNumber: '101',
-        oldElectric: 1240,
-        newElectric: 1350,
-        oldWater: 450,
-        newWater: 465,
-      ),
-      const ElectricWaterEntry(
-        hostelName: 'Nhà A',
-        roomNumber: '102',
-        oldElectric: 2100,
-        newElectric: 2215,
-        oldWater: 890,
-        newWater: 902,
-      ),
-      const ElectricWaterEntry(
-        hostelName: 'Nhà B',
-        roomNumber: '103',
-        oldElectric: 1850,
-        newElectric: 1800, // lỗi: mới < cũ
-        oldWater: 510,
-        newWater: 530,
-      ),
-      const ElectricWaterEntry(
-        hostelName: 'Nhà B',
-        roomNumber: '201',
-        oldElectric: 3400,
-        newElectric: 3520,
-        oldWater: 120,
-        newWater: 135,
-      ),
-    ];
-
-    setState(() {
-      _selectedFileName = 'chiso_thang_02_2026.xlsx';
-      _entries = mockEntries;
-      _isUploading = false;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _loadProperties();
   }
 
-  final List<InvoicePreview> _mockInvoices = const [
-    InvoicePreview(
-      id: '1',
-      hostelName: 'Nhà A',
-      roomNumber: '101',
-      rentFee: 3000000,
-      electricKwh: 110,
-      electricFee: 220000,
-      waterM3: 15,
-      waterFee: 75000,
-      serviceFee: 50000,
-    ),
-    InvoicePreview(
-      id: '2',
-      hostelName: 'Nhà A',
-      roomNumber: '102',
-      rentFee: 3200000,
-      electricKwh: 115,
-      electricFee: 230000,
-      waterM3: 12,
-      waterFee: 60000,
-      serviceFee: 50000,
-    ),
-    InvoicePreview(
-      id: '3',
-      hostelName: 'Nhà B',
-      roomNumber: '103',
-      rentFee: 2800000,
-      electricKwh: 50, // lỗi
-      electricFee: 100000,
-      waterM3: 20,
-      waterFee: 100000,
-      serviceFee: 50000,
-    ),
-    InvoicePreview(
-      id: '4',
-      hostelName: 'Nhà B',
-      roomNumber: '201',
-      rentFee: 3500000,
-      electricKwh: 120,
-      electricFee: 240000,
-      waterM3: 15,
-      waterFee: 75000,
-      serviceFee: 50000,
-    ),
-  ];
+  Future<void> _loadProperties() async {
+    final result = await getIt<GetPropertiesUsecase>().call(const NoParams());
+    if (!mounted) return;
+    result.fold(
+      (_) {},
+      (properties) => setState(() {
+        _properties = properties;
+        if (widget.initialPropertyId != null &&
+            properties.any((p) => p.id == widget.initialPropertyId)) {
+          _selectedPropertyId = widget.initialPropertyId;
+        } else if (properties.length == 1) {
+          _selectedPropertyId = properties.first.id;
+        }
+      }),
+    );
+  }
 
-  // ─── Submit (thay bằng API call thực tế) ─────────────────────────────────────
+  Future<void> _onFilePicked(String? _) async {
+    setState(() {
+      _isUploading = true;
+      _errorMessage = null;
+      _importedCount = 0;
+    });
+
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.custom,
+      allowedExtensions: ['xlsx', 'xls', 'json'],
+    );
+
+    if (result == null || result.files.isEmpty) {
+      setState(() => _isUploading = false);
+      return;
+    }
+
+    final picked = result.files.first;
+    final fileBytes = picked.bytes;
+    final fileName = picked.name;
+    if (fileBytes == null || fileBytes.isEmpty) {
+      setState(() {
+        _isUploading = false;
+        _errorMessage = 'Không đọc được nội dung file.';
+      });
+      return;
+    }
+
+    final usecase = getIt<ImportMeterReadingsUsecase>();
+    final response = await usecase(
+      ImportMeterReadingsParams(
+        fileBytes: fileBytes,
+        fileName: fileName,
+        month: widget.month,
+        propertyId: _selectedPropertyId,
+      ),
+    );
+
+    response.fold(
+      (failure) {
+        setState(() {
+          _errorMessage = failure.toString();
+          _isUploading = false;
+          _selectedFileName = picked.name;
+        });
+      },
+      (data) {
+        setState(() {
+          _selectedFileName = picked.name;
+          _importedCount = data.imported;
+          _entries = [];
+          _isUploading = false;
+        });
+      },
+    );
+  }
+
   Future<void> _onNext() async {
     setState(() => _isSubmitting = true);
 
-    // TODO: Gọi API lưu chỉ số điện nước
-    await Future.delayed(const Duration(seconds: 1));
+    final usecase = getIt<PreviewInvoicesUsecase>();
+    final response = await usecase(
+      PreviewInvoicesParams(
+        month: widget.month,
+        propertyId: _selectedPropertyId,
+      ),
+    );
 
-    setState(() => _isSubmitting = false);
+    final result = response.fold<List<InvoicePreview>?>(
+      (failure) {
+        setState(() {
+          _errorMessage = failure.toString();
+          _isSubmitting = false;
+        });
+        return null;
+      },
+      (data) {
+        setState(() => _isSubmitting = false);
+        return data
+            .map(
+              (e) => InvoicePreview(
+                id: e.id,
+                hostelName: e.hostelName,
+                roomNumber: e.roomNumber,
+                rentFee: e.rentFee,
+                electricKwh: e.electricKwh,
+                electricFee: e.electricFee,
+                waterM3: e.waterM3,
+                waterFee: e.waterFee,
+                serviceFee: e.serviceFee,
+              ),
+            )
+            .toList();
+      },
+    );
+
+    if (result == null) {
+      return;
+    }
+
+    if (result.isEmpty) {
+      setState(() {
+        _errorMessage =
+            'Không có hợp đồng/phòng nào để tạo hóa đơn cho tháng này.';
+      });
+      return;
+    }
 
     if (mounted) {
-      Navigator.of(context)
-        .push(MaterialPageRoute(
-          builder: (_) => 
-            PreviewInvoiceScreen(
-              monthLabel: "Tháng 02/2026", 
-              invoices: _mockInvoices
-            )
-        )
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => PreviewInvoiceScreen(
+            month: widget.month,
+            monthLabel: widget.monthLabel,
+            propertyId: _selectedPropertyId,
+            invoices: result,
+          ),
+        ),
       );
     }
+  }
+
+  Future<void> _pickMonth() async {
+    final now = DateTime.now();
+    final initial = DateTime(
+      int.parse(widget.month.substring(0, 4)),
+      int.parse(widget.month.substring(5, 7)),
+    );
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initial,
+      firstDate: DateTime(now.year - 5),
+      lastDate: DateTime(now.year + 5),
+      helpText: 'Chọn tháng',
+      fieldLabelText: 'Tháng/năm',
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+    );
+
+    if (picked == null) {
+      return;
+    }
+
+    widget.onMonthChanged(DateTime(picked.year, picked.month));
   }
 
   @override
@@ -155,7 +230,70 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
                   selectedFileName: _selectedFileName,
                   isLoading: _isUploading,
                 ),
-                if (_hasData) ...[
+                const SizedBox(height: 12),
+                _buildPropertyPicker(),
+                const SizedBox(height: 12),
+                GestureDetector(
+                  onTap: _pickMonth,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.slate200),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.calendar_month,
+                          color: AppColors.blue700,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            widget.monthLabel,
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.blue950,
+                            ),
+                          ),
+                        ),
+                        const Icon(
+                          Icons.chevron_right,
+                          color: AppColors.slate400,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (_errorMessage != null) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    _errorMessage!,
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+                if (_importedCount > 0) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    'Đã nhập $_importedCount dòng chỉ số.',
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+                if (_entries.isNotEmpty) ...[
                   const SizedBox(height: 20),
                   DataPreviewTable(entries: _entries),
                 ],
@@ -172,6 +310,46 @@ class _AddElectricWaterBodyState extends State<AddElectricWaterBody> {
           hasErrors: _hasErrors,
         ),
       ],
+    );
+  }
+
+  Widget _buildPropertyPicker() {
+    if (_properties.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return DropdownButtonFormField<String?>(
+      initialValue: _selectedPropertyId,
+      decoration: InputDecoration(
+        labelText: 'Nhà trọ',
+        filled: true,
+        fillColor: AppColors.white,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: AppColors.slate200),
+        ),
+      ),
+      items: [
+        const DropdownMenuItem<String?>(
+          value: null,
+            child: Text('Tất cả nhà trọ'),
+        ),
+        ..._properties.map(
+          (property) => DropdownMenuItem<String?>(
+            value: property.id,
+            child: Text(property.name),
+          ),
+        ),
+      ],
+      onChanged: (value) {
+        setState(() {
+          _selectedPropertyId = value;
+          _importedCount = 0;
+          _entries = [];
+          _errorMessage = null;
+        });
+      },
     );
   }
 }

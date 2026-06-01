@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
-import 'package:app/core/models/invoice_preview.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
+import '../../../core/models/invoice_preview.dart';
 
 class InvoiceCard extends StatelessWidget {
-  final InvoicePreview invoice;
-  final bool isSelected;
-  final ValueChanged<bool> onToggleSelect;
-  final VoidCallback? onEdit;
 
   const InvoiceCard({
     super.key,
@@ -16,6 +12,10 @@ class InvoiceCard extends StatelessWidget {
     required this.onToggleSelect,
     this.onEdit,
   });
+  final InvoicePreview invoice;
+  final bool isSelected;
+  final ValueChanged<bool> onToggleSelect;
+  final VoidCallback? onEdit;
 
   @override
   Widget build(BuildContext context) {

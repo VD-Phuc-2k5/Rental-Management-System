@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class BottomActionBar extends StatelessWidget {
-  final VoidCallback? onNext;
-  final bool isLoading;
-  final bool hasErrors;
 
   const BottomActionBar({
     super.key,
@@ -12,6 +9,9 @@ class BottomActionBar extends StatelessWidget {
     this.isLoading = false,
     this.hasErrors = false,
   });
+  final VoidCallback? onNext;
+  final bool isLoading;
+  final bool hasErrors;
 
   @override
   Widget build(BuildContext context) {

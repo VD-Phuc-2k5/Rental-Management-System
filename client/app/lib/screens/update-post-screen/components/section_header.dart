@@ -1,11 +1,11 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class SectionHeader extends StatelessWidget {
-  final String title;
-  final IconData icon;
 
   const SectionHeader({super.key, required this.title, required this.icon});
+  final String title;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {

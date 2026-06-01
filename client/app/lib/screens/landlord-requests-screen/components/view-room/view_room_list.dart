@@ -1,13 +1,13 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/models/room_request.dart';
-import 'package:app/screens/landlord-requests-screen/components/view-room/view_room_card.dart';
-import 'package:app/screens/landlord-view-room-detail/landlord_view_room_detail_screen.dart';
+import '../../../../core/constants.dart';
+import '../../../../core/models/room_request.dart';
+import 'view_room_card.dart';
+import '../../../landlord-view-room-detail/landlord_view_room_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class ViewRoomList extends StatefulWidget {
-  final ValueChanged<int>? onCountChanged;
 
   const ViewRoomList({super.key, this.onCountChanged});
+  final ValueChanged<int>? onCountChanged;
 
   @override
   State<ViewRoomList> createState() => _ViewRoomListState();
@@ -110,7 +110,7 @@ class _ViewRoomListState extends State<ViewRoomList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LandlordViewRoomDetailScreen(),
+                  builder: (context) => const LandlordViewRoomDetailScreen(),
                 ),
               );
             },

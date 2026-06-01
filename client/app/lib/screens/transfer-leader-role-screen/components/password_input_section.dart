@@ -1,10 +1,10 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class PasswordInputSection extends StatefulWidget {
-  final TextEditingController controller;
 
   const PasswordInputSection({super.key, required this.controller});
+  final TextEditingController controller;
 
   @override
   State<PasswordInputSection> createState() => _PasswordInputSectionState();

@@ -1,15 +1,15 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ContractExpiryHeader extends StatelessWidget {
-  final String roomNumber;
-  final DateTime expiryDate;
 
   const ContractExpiryHeader({
     super.key,
     required this.roomNumber,
     required this.expiryDate,
   });
+  final String roomNumber;
+  final DateTime expiryDate;
 
   String _formatDate(DateTime date) {
     return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";

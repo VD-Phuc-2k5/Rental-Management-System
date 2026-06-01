@@ -1,5 +1,5 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/widgets/common_appbar.dart';
+import '../../core/constants.dart';
+import '../../core/widgets/common_appbar.dart';
 import 'package:flutter/material.dart';
 
 import 'components/amenities_section.dart';
@@ -14,14 +14,14 @@ class UpdatePostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppColors.gray25,
-      appBar: const CommonAppBar(title: "Cập nhật bài đăng"),
+      appBar: CommonAppBar(title: "Cập nhật bài đăng"),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             ImageUploadSection(),
             SizedBox(height: 24),
             BasicInfoSection(),

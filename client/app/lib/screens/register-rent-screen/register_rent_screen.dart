@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/screens/form-info-rent-screen/tenant_info_screen.dart';
-import 'package:app/screens/register-rent-screen/components/header.dart';
-import 'package:app/screens/register-rent-screen/components/apartment_section.dart';
-import 'package:app/screens/register-rent-screen/components/appointment_section.dart';
-import 'package:app/screens/register-rent-screen/components/bottom_bar.dart';
-import 'package:app/core/constants.dart';
+import '../form-info-rent-screen/tenant_info_screen.dart';
+import 'components/header.dart';
+import 'components/apartment_section.dart';
+import 'components/appointment_section.dart';
+import 'components/bottom_bar.dart';
+import '../../core/constants.dart';
 class RegisterRentScreen extends StatelessWidget {
   const RegisterRentScreen({super.key});
 

@@ -1,10 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class SubmitButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final String label;
-  final bool isLoading;
 
   const SubmitButton({
     super.key,
@@ -12,6 +9,9 @@ class SubmitButton extends StatelessWidget {
     required this.label,
     this.isLoading = false,
   });
+  final VoidCallback onPressed;
+  final String label;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +23,11 @@ class SubmitButton extends StatelessWidget {
           backgroundColor: AppColors.blue600,
           foregroundColor: AppColors.white,
           elevation: 0,
-          padding: EdgeInsets.symmetric(vertical: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
           disabledBackgroundColor: AppColors.slate300,
         ),
         child: isLoading
-            ? SizedBox(
+            ? const SizedBox(
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(
@@ -37,7 +37,7 @@ class SubmitButton extends StatelessWidget {
               )
             : Text(
                 label,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: "Inter",
                   fontWeight: FontWeight.w600,
                   fontSize: 16,

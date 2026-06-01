@@ -1,14 +1,7 @@
-import "package:app/core/constants.dart";
+import "../../../core/constants.dart";
 import "package:flutter/material.dart";
 
 class LabeledTextField extends StatelessWidget {
-  final String label;
-  final bool isRequired;
-  final String hintText;
-  final int maxLines;
-  final int? maxLength;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
 
   const LabeledTextField({
     super.key,
@@ -20,6 +13,13 @@ class LabeledTextField extends StatelessWidget {
     this.controller,
     this.validator,
   });
+  final String label;
+  final bool isRequired;
+  final String hintText;
+  final int maxLines;
+  final int? maxLength;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,5 @@
-import 'package:app/screens/home-screen/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class BackToHomeButton extends StatelessWidget {
   const BackToHomeButton({super.key});
@@ -24,12 +23,7 @@ class BackToHomeButton extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const HomeScreen(),
-                  ),
-                );
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
               child: const Text(
                 "Về trang chủ",

@@ -1,11 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class TenantMembersSection extends StatelessWidget {
-  final List<TenantMember> members;
-  final VoidCallback onAddMember;
-  final void Function(int index) onDeleteMember;
-  final void Function(int index) onSetLeader;
 
   const TenantMembersSection({
     super.key,
@@ -14,6 +10,10 @@ class TenantMembersSection extends StatelessWidget {
     required this.onDeleteMember,
     required this.onSetLeader,
   });
+  final List<TenantMember> members;
+  final VoidCallback onAddMember;
+  final void Function(int index) onDeleteMember;
+  final void Function(int index) onSetLeader;
 
   @override
   Widget build(BuildContext context) {
@@ -46,22 +46,22 @@ class TenantMembersSection extends StatelessWidget {
 }
 
 class TenantMember {
-  final String name;
-  final String role;
-  final bool isLeader;
 
   const TenantMember({
     required this.name,
     required this.role,
     this.isLeader = false,
   });
+  final String name;
+  final String role;
+  final bool isLeader;
 }
 
 class _OutlineAddButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onPressed;
 
   const _OutlineAddButton({required this.text, required this.onPressed});
+  final String text;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -90,8 +90,8 @@ class _OutlineAddButton extends StatelessWidget {
 }
 
 class _SectionTitle extends StatelessWidget {
-  final String text;
   const _SectionTitle({required this.text});
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -114,11 +114,6 @@ class _SectionTitle extends StatelessWidget {
 }
 
 class _MemberCard extends StatelessWidget {
-  final String name;
-  final String role;
-  final VoidCallback onDelete;
-  final VoidCallback onSetLeader;
-  final bool selected;
 
   const _MemberCard({
     required this.name,
@@ -127,6 +122,11 @@ class _MemberCard extends StatelessWidget {
     required this.onSetLeader,
     required this.selected,
   });
+  final String name;
+  final String role;
+  final VoidCallback onDelete;
+  final VoidCallback onSetLeader;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {

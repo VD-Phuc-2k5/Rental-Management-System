@@ -1,4 +1,4 @@
-import "package:app/core/constants.dart";
+import "constants.dart";
 import "package:flutter/material.dart";
 
 class CollapseText {
@@ -22,11 +22,6 @@ class CollapseText {
 }
 
 class CollapsibleText extends StatefulWidget {
-  final String text;
-  final int maxLines;
-  final TextStyle? style;
-  final String expandText;
-  final String collapseText;
 
   const CollapsibleText({
     super.key,
@@ -36,6 +31,11 @@ class CollapsibleText extends StatefulWidget {
     this.expandText = "Xem thêm",
     this.collapseText = "Thu gọn",
   });
+  final String text;
+  final int maxLines;
+  final TextStyle? style;
+  final String expandText;
+  final String collapseText;
 
   @override
   State<CollapsibleText> createState() => _CollapsibleTextState();

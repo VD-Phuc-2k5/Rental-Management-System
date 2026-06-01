@@ -1,10 +1,10 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class NotificationInfoBox extends StatelessWidget {
-  final String roomNumber;
 
   const NotificationInfoBox({super.key, required this.roomNumber});
+  final String roomNumber;
 
   @override
   Widget build(BuildContext context) {

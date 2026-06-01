@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class RentPriceSectionUi extends StatefulWidget {
+  RentPriceSectionUi({
+    super.key,
+    required this.rentPriceCtl,
+    required this.startDateCtl,
+    this.terms = const ['6 tháng', '12 tháng', '18 tháng', '24 tháng'],
+    String? initialTerm,
+    this.onTermChanged,
+  }) : initialTerm = (initialTerm != null && terms.contains(initialTerm))
+           ? initialTerm
+           : terms.first;
   final TextEditingController rentPriceCtl;
   final TextEditingController startDateCtl;
 
   final List<String> terms;
   final String initialTerm;
   final ValueChanged<String>? onTermChanged;
-
-  RentPriceSectionUi({
-    super.key,
-    required this.rentPriceCtl,
-    required this.startDateCtl,
-    List<String> terms = const ['6 tháng', '12 tháng', '18 tháng', '24 tháng'],
-    String? initialTerm,
-    this.onTermChanged,
-  }): terms = terms,
-      initialTerm =
-          (initialTerm != null && terms.contains(initialTerm))
-              ? initialTerm
-              : terms.first;
 
   @override
   State<RentPriceSectionUi> createState() => _RentPriceSectionUiState();
@@ -97,8 +94,8 @@ class _RentPriceSectionUiState extends State<RentPriceSectionUi> {
 }
 
 class _CardWrap extends StatelessWidget {
-  final Widget child;
   const _CardWrap({required this.child});
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -112,8 +109,8 @@ class _CardWrap extends StatelessWidget {
 }
 
 class _MiniLabel extends StatelessWidget {
-  final String text;
   const _MiniLabel(this.text);
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -129,15 +126,14 @@ class _MiniLabel extends StatelessWidget {
 }
 
 class _PillInput extends StatelessWidget {
-  final TextEditingController controller;
-  final String hint;
-  final TextInputType keyboardType;
-
   const _PillInput({
     required this.controller,
     this.hint = 'dd/mm/yyyy',
     this.keyboardType = TextInputType.datetime,
   });
+  final TextEditingController controller;
+  final String hint;
+  final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -173,15 +169,14 @@ class _PillInput extends StatelessWidget {
 }
 
 class _PillMoneyInput extends StatelessWidget {
-  final TextEditingController controller;
-  final String hint;
-  final String suffix;
-
   const _PillMoneyInput({
     required this.controller,
     required this.suffix,
     this.hint = 'Nhập số tiền',
   });
+  final TextEditingController controller;
+  final String hint;
+  final String suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -234,15 +229,14 @@ class _PillMoneyInput extends StatelessWidget {
 }
 
 class _PillDropdown extends StatelessWidget {
-  final String value;
-  final List<String> items;
-  final ValueChanged<String?> onChanged;
-
   const _PillDropdown({
     required this.value,
     required this.items,
     required this.onChanged,
   });
+  final String value;
+  final List<String> items;
+  final ValueChanged<String?> onChanged;
 
   @override
   Widget build(BuildContext context) {

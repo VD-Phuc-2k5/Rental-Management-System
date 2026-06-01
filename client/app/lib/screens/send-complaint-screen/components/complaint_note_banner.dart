@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class ComplaintNoteBanner extends StatelessWidget {
   const ComplaintNoteBanner({super.key});
@@ -13,9 +13,9 @@ class ComplaintNoteBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.red100),
       ),
-      child: Row(
+      child: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Icon(Icons.info_outline_rounded, color: AppColors.red500),
           SizedBox(width: 10),
           Expanded(

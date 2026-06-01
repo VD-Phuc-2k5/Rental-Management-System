@@ -1,11 +1,7 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class RoomSummaryCard extends StatelessWidget {
-  final String roomName;
-  final String address;
-  final String imageUrl;
-  final VoidCallback? onTap;
 
   const RoomSummaryCard({
     super.key,
@@ -14,6 +10,10 @@ class RoomSummaryCard extends StatelessWidget {
     required this.imageUrl,
     this.onTap,
   });
+  final String roomName;
+  final String address;
+  final String imageUrl;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class RoomSummaryCard extends StatelessWidget {
                     color: AppColors.gray200,
                     borderRadius: BorderRadius.circular(40),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.image,
                     color: AppColors.gray500,
                     size: 28,

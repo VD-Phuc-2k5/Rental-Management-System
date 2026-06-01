@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class AgreeTermsRow extends StatefulWidget {
-  final bool initialValue;
-  final ValueChanged<bool>? onChanged;
 
   const AgreeTermsRow({
     super.key,
     this.initialValue = false,
     this.onChanged,
   });
+  final bool initialValue;
+  final ValueChanged<bool>? onChanged;
 
   @override
   State<AgreeTermsRow> createState() => _AgreeTermsRowState();
@@ -82,13 +82,13 @@ class _AgreeTermsRowState extends State<AgreeTermsRow> {
 }
 
 class _CheckBoxCircle extends StatelessWidget {
-  final bool value;
-  final VoidCallback onTap;
 
   const _CheckBoxCircle({
     required this.value,
     required this.onTap,
   });
+  final bool value;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

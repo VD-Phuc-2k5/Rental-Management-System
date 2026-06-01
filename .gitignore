@@ -5,3 +5,5 @@ commands/
 .claude/
 .agents/
 skills-lock.json
+.understand-anything/
+PLAN.md

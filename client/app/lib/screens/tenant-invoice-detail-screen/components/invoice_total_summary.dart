@@ -1,11 +1,11 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 import 'package:flutter/material.dart';
 
 class InvoiceTotalSummary extends StatelessWidget {
-  final int totalAmount;
 
   const InvoiceTotalSummary({super.key, required this.totalAmount});
+  final int totalAmount;
 
   @override
   Widget build(BuildContext context) {

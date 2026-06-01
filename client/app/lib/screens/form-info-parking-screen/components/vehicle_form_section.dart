@@ -1,17 +1,7 @@
 import 'package:flutter/material.dart';
 import 'vehicle_list_section.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class VehicleFormSection extends StatelessWidget {
-  final VehicleType selectedType;
-  final ValueChanged<VehicleType> onTypeChanged;
-
-  final TextEditingController plateCtl;
-
-  final int quantity;
-  final ValueChanged<int> onQuantityChanged;
-
-  final int totalFee;
-  final VoidCallback onAddVehicle;
 
   const VehicleFormSection({
     super.key,
@@ -23,6 +13,16 @@ class VehicleFormSection extends StatelessWidget {
     required this.totalFee,
     required this.onAddVehicle,
   });
+  final VehicleType selectedType;
+  final ValueChanged<VehicleType> onTypeChanged;
+
+  final TextEditingController plateCtl;
+
+  final int quantity;
+  final ValueChanged<int> onQuantityChanged;
+
+  final int totalFee;
+  final VoidCallback onAddVehicle;
 
   String _money(int v) {
     final s = v.toString();
@@ -107,8 +107,8 @@ class VehicleFormSection extends StatelessWidget {
 }
 
 class _FieldLabel extends StatelessWidget {
-  final String text;
   const _FieldLabel(this.text);
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -123,13 +123,13 @@ class _FieldLabel extends StatelessWidget {
 }
 
 class _DropdownVehicleType extends StatelessWidget {
-  final VehicleType value;
-  final ValueChanged<VehicleType> onChanged;
 
   const _DropdownVehicleType({
     required this.value,
     required this.onChanged,
   });
+  final VehicleType value;
+  final ValueChanged<VehicleType> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +149,7 @@ class _DropdownVehicleType extends StatelessWidget {
             return DropdownMenuItem(
               value: t,
               child: Text(VehicleFees.labelOf(t),
-                style: TextStyle(fontWeight: FontWeight.w400,
+                style: const TextStyle(fontWeight: FontWeight.w400,
                                   fontSize: 16,
                                   color: AppColors.blue900),),
             );
@@ -164,13 +164,13 @@ class _DropdownVehicleType extends StatelessWidget {
 }
 
 class _QuantityStepper extends StatelessWidget {
-  final int value;
-  final ValueChanged<int> onChanged;
 
   const _QuantityStepper({
     required this.value,
     required this.onChanged,
   });
+  final int value;
+  final ValueChanged<int> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -194,15 +194,15 @@ class _QuantityStepper extends StatelessWidget {
 }
 
 class _SquareBtn extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback? onTap;
-  final bool filled;
 
   const _SquareBtn({
     required this.icon,
     required this.onTap,
     this.filled = false,
   });
+  final IconData icon;
+  final VoidCallback? onTap;
+  final bool filled;
 
   @override
   Widget build(BuildContext context) {
@@ -233,8 +233,8 @@ class _SquareBtn extends StatelessWidget {
 }
 
 class _FeeBox extends StatelessWidget {
-  final String value;
   const _FeeBox({required this.value});
+  final String value;
 
   @override
   Widget build(BuildContext context) {

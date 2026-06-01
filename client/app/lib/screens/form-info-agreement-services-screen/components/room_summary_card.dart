@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class RoomSummaryCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
 
   const RoomSummaryCard({
     super.key,
     required this.title,
     required this.subtitle,
   });
+  final String title;
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {

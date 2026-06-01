@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class TenantCccdUploadSection extends StatelessWidget {
   const TenantCccdUploadSection({super.key});
 
@@ -24,8 +24,8 @@ class TenantCccdUploadSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Row(
-          children: const [
+        const Row(
+          children: [
             Expanded(child: _UploadBox(title: 'Mặt trước')),
             SizedBox(width: 12),
             Expanded(child: _UploadBox(title: 'Mặt sau')),
@@ -37,8 +37,8 @@ class TenantCccdUploadSection extends StatelessWidget {
 }
 
 class _UploadBox extends StatelessWidget {
-  final String title;
   const _UploadBox({required this.title});
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _UploadBox extends StatelessWidget {
               height: 36,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0x19195AA4),
+                color: Color(0x19195AA4),
               ),
               child: const Icon(Icons.add, color: Color(0xFF195AA4)),
             ),

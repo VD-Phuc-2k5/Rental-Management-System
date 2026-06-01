@@ -1,0 +1,701 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:core/constants.dart';
+import 'package:domain/room.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+
+import '../../../../core/di/di.dart';
+import '../../../auth/presentation/blocs/authentication/authentication_bloc.dart';
+import '../blocs/update_room/update_room_bloc.dart';
+import '../widgets/room_amenity_selector.dart';
+
+class UpdateRoomPage extends StatelessWidget {
+  const UpdateRoomPage({super.key, required this.room});
+  final RoomEntity room;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => getIt<UpdateRoomBloc>(),
+      child: _UpdateRoomView(room: room),
+    );
+  }
+}
+
+class _UpdateRoomView extends StatefulWidget {
+  const _UpdateRoomView({required this.room});
+  final RoomEntity room;
+  @override
+  State<_UpdateRoomView> createState() => _UpdateRoomViewState();
+}
+
+class _UpdateRoomViewState extends State<_UpdateRoomView> {
+  late final _titleCtrl = TextEditingController(text: widget.room.title);
+  late final _areaCtrl = TextEditingController(
+    text: widget.room.areaSqm.toString(),
+  );
+  late final _rentCtrl = TextEditingController(
+    text: widget.room.monthlyRent.toInt().toString(),
+  );
+  late final _depositCtrl = TextEditingController(
+    text: widget.room.depositAmount.toInt().toString(),
+  );
+  late final _elecCtrl = TextEditingController(
+    text: widget.room.electricityRatePerKwh.toString(),
+  );
+  late final _waterCtrl = TextEditingController(
+    text: widget.room.waterRatePerM3.toString(),
+  );
+  late final _descCtrl = TextEditingController(
+    text: widget.room.description ?? '',
+  );
+  late final _motorbikeCtrl = TextEditingController(
+    text: widget.room.parkingFees.motorbike.toInt().toString(),
+  );
+  late final _carCtrl = TextEditingController(
+    text: widget.room.parkingFees.car.toInt().toString(),
+  );
+  late Set<String> _includedCodes = Set<String>.from(
+    widget.room.includedAmenityCodes,
+  );
+  late Map<String, double> _addonPrices = {
+    for (final a in widget.room.addonAmenities) a.code: a.monthlyPrice,
+  };
+  late RoomStatus _status = widget.room.status;
+  late final List<String> _existingImageUrls = widget.room.images
+      .map((i) => i.url)
+      .toList();
+  final List<({XFile file, Uint8List bytes})> _newPickedImages = [];
+  bool _uploading = false;
+
+  @override
+  void dispose() {
+    _titleCtrl.dispose();
+    _areaCtrl.dispose();
+    _rentCtrl.dispose();
+    _depositCtrl.dispose();
+    _elecCtrl.dispose();
+    _waterCtrl.dispose();
+    _descCtrl.dispose();
+    _motorbikeCtrl.dispose();
+    _carCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickImages() async {
+    final picker = ImagePicker();
+    final files = await picker.pickMultiImage();
+    if (files.isNotEmpty) {
+      final entries = await Future.wait(
+        files.map((f) async => (file: f, bytes: await f.readAsBytes())),
+      );
+      setState(() => _newPickedImages.addAll(entries));
+    }
+  }
+
+  Future<List<({String url, int sortOrder})>> _uploadNewImages(
+    String token,
+  ) async {
+    final results = <({String url, int sortOrder})>[];
+    final offset = _existingImageUrls.length;
+    for (var i = 0; i < _newPickedImages.length; i++) {
+      final entry = _newPickedImages[i];
+      final request =
+          http.MultipartRequest(
+              'POST',
+              Uri.parse('$baseUrl/upload/image?bucket=room-images'),
+            )
+            ..headers['Authorization'] = 'Bearer $token'
+            ..files.add(
+              http.MultipartFile.fromBytes(
+                'file',
+                entry.bytes,
+                filename: entry.file.name,
+              ),
+            );
+      final streamed = await request.send();
+      final body =
+          jsonDecode(await streamed.stream.bytesToString())
+              as Map<String, dynamic>;
+      if (streamed.statusCode == 201) {
+        results.add((
+          url: (body['data'] as Map<String, dynamic>)['url'] as String,
+          sortOrder: offset + i,
+        ));
+      }
+    }
+    return results;
+  }
+
+  Future<void> _submit() async {
+    final area = double.tryParse(_areaCtrl.text.trim());
+    final rent = double.tryParse(_rentCtrl.text.trim().replaceAll('.', ''));
+    final deposit = double.tryParse(
+      _depositCtrl.text.trim().replaceAll('.', ''),
+    );
+    final elec = double.tryParse(_elecCtrl.text.trim().replaceAll('.', ''));
+    final water = double.tryParse(_waterCtrl.text.trim().replaceAll('.', ''));
+    if (_titleCtrl.text.trim().isEmpty ||
+        area == null ||
+        rent == null ||
+        deposit == null ||
+        elec == null ||
+        water == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vui lòng kiểm tra lại thông tin')),
+      );
+      return;
+    }
+
+    final motorbike =
+        double.tryParse(_motorbikeCtrl.text.trim().replaceAll('.', '')) ??
+        150000;
+    final car =
+        double.tryParse(_carCtrl.text.trim().replaceAll('.', '')) ?? 1000000;
+
+    List<({String url, int sortOrder})> allImages = _existingImageUrls
+        .asMap()
+        .entries
+        .map((e) => (url: e.value, sortOrder: e.key))
+        .toList();
+
+    if (_newPickedImages.isNotEmpty) {
+      setState(() => _uploading = true);
+      try {
+        final token =
+            context.read<AuthenticationBloc>().state.user?.token ?? '';
+        final uploaded = await _uploadNewImages(token);
+        allImages = [...allImages, ...uploaded];
+      } catch (_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Lỗi khi tải ảnh lên')),
+          );
+          setState(() => _uploading = false);
+        }
+        return;
+      }
+      if (mounted) setState(() => _uploading = false);
+    }
+
+    if (!mounted) return;
+    context.read<UpdateRoomBloc>().add(
+      UpdateRoomSubmitted(
+        id: widget.room.id,
+        title: _titleCtrl.text.trim(),
+        status: _status,
+        areaSqm: area,
+        monthlyRent: rent,
+        depositAmount: deposit,
+        electricityRatePerKwh: elec,
+        waterRatePerM3: water,
+        includedAmenityCodes: _includedCodes.toList(),
+        addonAmenities: addonPricesToList(_addonPrices),
+        description: _descCtrl.text.trim().isEmpty
+            ? null
+            : _descCtrl.text.trim(),
+        images: allImages,
+        parkingFees: RoomParkingFees(
+          motorbike: motorbike,
+          car: car,
+        ),
+      ),
+    );
+  }
+
+  Widget _label(String text) => Padding(
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Text(
+      text,
+      style: const TextStyle(
+        fontFamily: "Inter",
+        fontWeight: FontWeight.w600,
+        fontSize: 14,
+        color: AppColors.slate700,
+      ),
+    ),
+  );
+
+  Widget _field(
+    TextEditingController ctrl,
+    String hint, {
+    String? suffix,
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+  }) => TextFormField(
+    controller: ctrl,
+    maxLines: maxLines,
+    keyboardType: keyboardType,
+    style: const TextStyle(
+      fontFamily: "Nunito",
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      color: AppColors.slate900,
+    ),
+    decoration: InputDecoration(
+      hintText: hint,
+      filled: true,
+      fillColor: AppColors.slate50,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      suffixText: suffix,
+      suffixStyle: const TextStyle(
+        fontFamily: "Nunito",
+        fontWeight: FontWeight.w500,
+        fontSize: 12,
+        color: AppColors.slate400,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: const BorderSide(color: AppColors.slate200),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: const BorderSide(color: AppColors.blue700),
+      ),
+    ),
+  );
+
+  Widget _imagePickerSection() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _label("Ảnh phòng"),
+      SizedBox(
+        height: 100,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            ..._existingImageUrls.asMap().entries.map(
+              (e) => Stack(
+                children: [
+                  Container(
+                    width: 90,
+                    height: 90,
+                    margin: const EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      image: DecorationImage(
+                        image: NetworkImage(e.value),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 2,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () =>
+                          setState(() => _existingImageUrls.removeAt(e.key)),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: AppColors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          size: 16,
+                          color: AppColors.slate700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ..._newPickedImages.asMap().entries.map(
+              (e) => Stack(
+                children: [
+                  Container(
+                    width: 90,
+                    height: 90,
+                    margin: const EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      image: DecorationImage(
+                        image: MemoryImage(e.value.bytes),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 2,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () =>
+                          setState(() => _newPickedImages.removeAt(e.key)),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: AppColors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          size: 16,
+                          color: AppColors.slate700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: _pickImages,
+              child: Container(
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: AppColors.slate200),
+                  color: AppColors.slate50,
+                ),
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add_photo_alternate_outlined,
+                      color: AppColors.slate400,
+                      size: 28,
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "Thêm ảnh",
+                      style: TextStyle(
+                        fontFamily: "Nunito",
+                        fontSize: 11,
+                        color: AppColors.slate400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+
+  Widget _parkingFeesSection() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _label("Phí gửi xe (đ/tháng/xe)"),
+      Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Xe máy",
+                  style: TextStyle(
+                    fontFamily: "Nunito",
+                    fontSize: 12,
+                    color: AppColors.slate500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                _field(
+                  _motorbikeCtrl,
+                  "150000",
+                  suffix: "đ",
+                  keyboardType: TextInputType.number,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Ô tô",
+                  style: TextStyle(
+                    fontFamily: "Nunito",
+                    fontSize: 12,
+                    color: AppColors.slate500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                _field(
+                  _carCtrl,
+                  "1000000",
+                  suffix: "đ",
+                  keyboardType: TextInputType.number,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<UpdateRoomBloc, UpdateRoomState>(
+      listener: (context, state) {
+        if (state is UpdateRoomLoadSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Cập nhật phòng thành công')),
+          );
+          context.pop();
+        } else if (state is UpdateRoomLoadFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.failure.message)));
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.gray25,
+        appBar: AppBar(
+          backgroundColor: AppColors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColors.slate700),
+            onPressed: () => context.pop(),
+          ),
+          titleSpacing: 0,
+          title: const Padding(
+            padding: EdgeInsets.only(right: 40),
+            child: Text(
+              "Cập nhật phòng",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: AppColors.slate900,
+                fontFamily: "Public Sans",
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
+            ),
+          ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Container(color: AppColors.slate200, height: 1),
+          ),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: AppColors.slate100),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.black.withAlpha(13),
+                        blurRadius: 2,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _imagePickerSection(),
+                      const SizedBox(height: 16),
+                      const Divider(color: AppColors.slate100, thickness: 1),
+                      const SizedBox(height: 16),
+                      _label("Số phòng / Tên phòng"),
+                      _field(_titleCtrl, "VD: 101"),
+                      const SizedBox(height: 16),
+                      _label("Trạng thái"),
+                      StatefulBuilder(
+                        builder: (ctx, setSt) =>
+                            DropdownButtonFormField<RoomStatus>(
+                              initialValue: _status,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: AppColors.white,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.slate200,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.blue700,
+                                  ),
+                                ),
+                              ),
+                              items: const [
+                                DropdownMenuItem(
+                                  value: RoomStatus.available,
+                                  child: Text('Còn trống'),
+                                ),
+                                DropdownMenuItem(
+                                  value: RoomStatus.occupied,
+                                  child: Text('Đang thuê'),
+                                ),
+                                DropdownMenuItem(
+                                  value: RoomStatus.maintenance,
+                                  child: Text('Bảo trì'),
+                                ),
+                              ],
+                              onChanged: (v) {
+                                if (v != null) {
+                                  setSt(() => _status = v);
+                                  setState(() {});
+                                }
+                              },
+                            ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _label("Diện tích (m²)"),
+                                _field(
+                                  _areaCtrl,
+                                  "25",
+                                  suffix: "m²",
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _label("Giá thuê"),
+                                _field(
+                                  _rentCtrl,
+                                  "3.500.000",
+                                  suffix: "đ",
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      _label("Tiền đặt cọc"),
+                      _field(
+                        _depositCtrl,
+                        "1.000.000",
+                        suffix: "đ",
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 16),
+                      const Divider(color: AppColors.slate100, thickness: 1),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _label("Giá điện"),
+                                _field(
+                                  _elecCtrl,
+                                  "3.500",
+                                  suffix: "đ/kWh",
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _label("Giá nước"),
+                                _field(
+                                  _waterCtrl,
+                                  "15.000",
+                                  suffix: "đ/m3",
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Divider(color: AppColors.slate100, thickness: 1),
+                      const SizedBox(height: 16),
+                      _parkingFeesSection(),
+                      const SizedBox(height: 16),
+                      const Divider(color: AppColors.slate100, thickness: 1),
+                      const SizedBox(height: 16),
+                      RoomAmenitySelector(
+                        includedCodes: _includedCodes,
+                        addonPrices: _addonPrices,
+                        onIncludedChanged: (v) =>
+                            setState(() => _includedCodes = v),
+                        onAddonChanged: (v) => setState(() => _addonPrices = v),
+                      ),
+                      const SizedBox(height: 16),
+                      _label("Mô tả (tùy chọn)"),
+                      _field(_descCtrl, "Mô tả thêm...", maxLines: 3),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            BlocBuilder<UpdateRoomBloc, UpdateRoomState>(
+              builder: (context, state) {
+                final loading = state is UpdateRoomLoadInProgress || _uploading;
+                return Container(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    border: Border(top: BorderSide(color: AppColors.slate200)),
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: loading ? null : _submit,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.blue700,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: loading
+                          ? const CircularProgressIndicator(
+                              color: AppColors.white,
+                            )
+                          : Text(
+                              _uploading ? "Đang tải ảnh..." : "Lưu thay đổi",
+                              style: const TextStyle(
+                                fontFamily: "Nunito",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: AppColors.white,
+                              ),
+                            ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

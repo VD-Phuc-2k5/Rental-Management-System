@@ -1,11 +1,8 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class NewStartDatePicker extends StatelessWidget {
-  final DateTime selectedDate;
-  final ValueChanged<DateTime> onDateChanged;
-  final DateTime? contractExpiryDate;
 
   const NewStartDatePicker({
     super.key,
@@ -13,6 +10,9 @@ class NewStartDatePicker extends StatelessWidget {
     required this.onDateChanged,
     this.contractExpiryDate,
   });
+  final DateTime selectedDate;
+  final ValueChanged<DateTime> onDateChanged;
+  final DateTime? contractExpiryDate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime firstDate;
@@ -58,7 +58,7 @@ class NewStartDatePicker extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8.0,
       children: [
-        Text(
+        const Text(
           "Ngày bắt đầu hợp đồng mới",
           style: TextStyle(
             color: AppColors.blue950,
@@ -71,7 +71,7 @@ class NewStartDatePicker extends StatelessWidget {
           onTap: () => _selectDate(context),
           borderRadius: BorderRadius.circular(8.0),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
             decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: BorderRadius.circular(8.0),
@@ -82,22 +82,22 @@ class NewStartDatePicker extends StatelessWidget {
               children: [
                 Text(
                   DateFormat('dd/MM/yyyy').format(selectedDate),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.blue950,
                     fontFamily: "Inter",
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
                   ),
                 ),
-                Icon(Icons.calendar_today, color: AppColors.slate500, size: 20),
+                const Icon(Icons.calendar_today, color: AppColors.slate500, size: 20),
               ],
             ),
           ),
         ),
         if (contractExpiryDate != null &&
             selectedDate.isBefore(contractExpiryDate!))
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
+          const Padding(
+            padding: EdgeInsets.only(top: 4.0),
             child: Text(
               "*Ngày bắt đầu phải từ sau ngày hết hạn hợp đồng cũ.",
               style: TextStyle(
@@ -113,8 +113,8 @@ class NewStartDatePicker extends StatelessWidget {
             selectedDate.isAtSameMomentAs(
               contractExpiryDate!.add(const Duration(days: 1)),
             ))
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
+          const Padding(
+            padding: EdgeInsets.only(top: 4.0),
             child: Text(
               "Mặc định là ngày kế tiếp sau khi hết hạn hợp đồng cũ",
               style: TextStyle(

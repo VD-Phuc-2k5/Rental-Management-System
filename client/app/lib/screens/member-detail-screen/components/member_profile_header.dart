@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class MemberProfileHeader extends StatelessWidget {
-  final String? name;
-  final String? role;
-  final ImageProvider? avatar;
-  final int? joinMonth;
-  final int? joinYear;
   const MemberProfileHeader({
     super.key,
     this.name,
@@ -14,6 +9,11 @@ class MemberProfileHeader extends StatelessWidget {
     this.joinMonth,
     this.joinYear,
   });
+  final String? name;
+  final String? role;
+  final ImageProvider? avatar;
+  final int? joinMonth;
+  final int? joinYear;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class MemberProfileHeader extends StatelessWidget {
             height: 92,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Color(0xFFFFE3D6),
+              color: const Color(0xFFFFE3D6),
               // boxShadow: [
               //   BoxShadow(
               //     color: AppColors.black.withOpacity(0.0),
@@ -55,7 +55,7 @@ class MemberProfileHeader extends StatelessWidget {
         const SizedBox(height: 14),
          Text(
            displayName,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w700,
             color: AppColors.blue950,
@@ -73,11 +73,11 @@ class MemberProfileHeader extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.verified_user_outlined, size: 14, color: AppColors.blue700),
-                SizedBox(width: 6),
+                const Icon(Icons.verified_user_outlined, size: 14, color: AppColors.blue700),
+                const SizedBox(width: 6),
                 Text(
                   displayRole,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.blue700,
                     fontWeight: FontWeight.w600,
                   ),
@@ -89,7 +89,7 @@ class MemberProfileHeader extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           joinText,
-          style: TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w400),
+          style: const TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w400),
         ),
       ],
     );

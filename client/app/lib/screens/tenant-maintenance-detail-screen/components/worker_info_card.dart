@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class WorkerInfoCard extends StatelessWidget {
-  final String workerName;
-  final String scheduledTime;
   const WorkerInfoCard({
     super.key,
     required this.workerName,
     required this.scheduledTime,
   });
+  final String workerName;
+  final String scheduledTime;
 
   @override
   Widget build(BuildContext context) {
@@ -41,20 +41,20 @@ class WorkerInfoCard extends StatelessWidget {
                     children: [
                       Text(
                         workerName,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.blue950,
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
                         ),
                       ),
-                      SizedBox(height: 6),
+                      const SizedBox(height: 6),
                       Row(
                         children: [
-                          Icon(Icons.access_time, size: 16, color: AppColors.slate500),
-                          SizedBox(width: 6),
+                          const Icon(Icons.access_time, size: 16, color: AppColors.slate500),
+                          const SizedBox(width: 6),
                           Text(
                             scheduledTime,
-                            style: TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w400),
+                            style: const TextStyle(color: AppColors.slate500, fontWeight: FontWeight.w400),
                           ),
                         ],
                       ),

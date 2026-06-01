@@ -1,4 +1,4 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class CalculationSection extends StatelessWidget {
@@ -20,11 +20,11 @@ class CalculationSection extends StatelessWidget {
         ],
         borderRadius: BorderRadius.circular(5),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
+            children: [
               Icon(
                 Icons.calculate_outlined,
                 color: AppColors.blue700,
@@ -42,10 +42,10 @@ class CalculationSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text(
                 "Tiền đặt cọc",
                 style: TextStyle(
@@ -65,10 +65,10 @@ class CalculationSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text(
                 "- Sửa tường",
                 style: TextStyle(
@@ -88,14 +88,14 @@ class CalculationSection extends StatelessWidget {
               ),
             ],
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(vertical: 16.0),
             child: Divider(color: AppColors.slate100, height: 1),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: const [
+            children: [
               Text(
                 "Tổng hoàn trả",
                 style: TextStyle(

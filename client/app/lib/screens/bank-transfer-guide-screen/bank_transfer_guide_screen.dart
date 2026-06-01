@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/widgets/common_appbar.dart';
+import '../../core/widgets/common_appbar.dart';
 
-import 'package:app/screens/bank-transfer-guide-screen/components/info_notice_banner.dart';
-import 'package:app/screens/bank-transfer-guide-screen/components/bank_transfer_card.dart';
-import 'package:app/core/constants.dart';
+import 'components/info_notice_banner.dart';
+import 'components/bank_transfer_card.dart';
+import '../../core/constants.dart';
 class BankTransferGuideScreen extends StatelessWidget {
   const BankTransferGuideScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppColors.grayBackground,
-      appBar: const CommonAppBar(title: 'Chuyển khoản ngân hàng'),
+      appBar: CommonAppBar(title: 'Chuyển khoản ngân hàng'),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 18, 16, 24),
+        padding: EdgeInsets.fromLTRB(16, 18, 16, 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             SizedBox(height: 6),
             InfoNoticeBanner(),
             SizedBox(height: 14),

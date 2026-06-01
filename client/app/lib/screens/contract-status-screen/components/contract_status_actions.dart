@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class ContractStatusActions extends StatelessWidget {
   const ContractStatusActions({super.key});
 

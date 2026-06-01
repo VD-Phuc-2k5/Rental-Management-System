@@ -1,13 +1,9 @@
-import "package:app/core/constants.dart";
+import "../../../core/constants.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
 import 'dart:typed_data';
 
 class ImageUploadSection extends StatelessWidget {
-  final List<XFile> selectedImages;
-  final VoidCallback onAddImage;
-  final Function(int) onRemoveImage;
-  final int maxImages;
 
   const ImageUploadSection({
     super.key,
@@ -16,6 +12,10 @@ class ImageUploadSection extends StatelessWidget {
     required this.onRemoveImage,
     this.maxImages = 5,
   });
+  final List<XFile> selectedImages;
+  final VoidCallback onAddImage;
+  final Function(int) onRemoveImage;
+  final int maxImages;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class ImageUploadSection extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
@@ -123,7 +123,7 @@ class ImageUploadSection extends StatelessWidget {
               color: AppColors.slate500,
               size: 32,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               "Thêm ảnh",
               style: TextStyle(color: AppColors.slate500, fontSize: 12),

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class UtilitiesSectionUi extends StatelessWidget {
-  final TextEditingController elecPriceCtl;
-  final TextEditingController waterPriceCtl;
-  final TextEditingController parkingFeeCtl;
 
   const UtilitiesSectionUi({
     super.key,
@@ -12,6 +9,9 @@ class UtilitiesSectionUi extends StatelessWidget {
     required this.waterPriceCtl,
     required this.parkingFeeCtl,
   });
+  final TextEditingController elecPriceCtl;
+  final TextEditingController waterPriceCtl;
+  final TextEditingController parkingFeeCtl;
 
   @override
   Widget build(BuildContext context) {
@@ -56,15 +56,15 @@ class UtilitiesSectionUi extends StatelessWidget {
 }
 
 class _BoxInput extends StatelessWidget {
-  final String label;
-  final TextEditingController controller;
-  final String hint;
 
   const _BoxInput({
     required this.label,
     required this.controller,
     required this.hint,
   });
+  final String label;
+  final TextEditingController controller;
+  final String hint;
 
   @override
   Widget build(BuildContext context) {

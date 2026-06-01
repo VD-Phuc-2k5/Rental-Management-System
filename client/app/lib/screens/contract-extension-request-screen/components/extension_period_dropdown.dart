@@ -1,16 +1,16 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ExtensionPeriodDropdown extends StatelessWidget {
-  final int selectedMonths;
-  final ValueChanged<int?> onChanged;
-  final allowedOptions = const [3, 6, 9, 12, 24];
 
   const ExtensionPeriodDropdown({
     super.key,
     required this.selectedMonths,
     required this.onChanged,
   });
+  final int selectedMonths;
+  final ValueChanged<int?> onChanged;
+  final allowedOptions = const [3, 6, 9, 12, 24];
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class ExtensionPeriodDropdown extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8.0,
       children: [
-        Text(
+        const Text(
           "Thời gian gia hạn mong muốn",
           style: TextStyle(
             color: AppColors.blue950,
@@ -35,21 +35,21 @@ class ExtensionPeriodDropdown extends StatelessWidget {
           ),
           child: DropdownButtonFormField<int>(
             initialValue: selectedMonths,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 16.0,
                 vertical: 12.0,
               ),
             ),
-            icon: Icon(Icons.keyboard_arrow_down, color: AppColors.slate500),
+            icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.slate500),
             items: allowedOptions
                 .map(
                   (months) => DropdownMenuItem<int>(
                     value: months,
                     child: Text(
                       "$months tháng",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.blue950,
                         fontFamily: "Inter",
                         fontWeight: FontWeight.w400,

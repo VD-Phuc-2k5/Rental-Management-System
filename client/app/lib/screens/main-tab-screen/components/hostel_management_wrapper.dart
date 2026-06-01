@@ -1,5 +1,3 @@
-import 'package:app/screens/empty-hostel-screen/empty_hostel_screen.dart';
-import 'package:app/screens/hostel-list-screen/hostel_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class HostelManagementWrapper extends StatefulWidget {
@@ -25,10 +23,6 @@ class HostelManagementWrapperState extends State<HostelManagementWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    if (isEmpty) {
-      return const EmptyHostelScreen();
-    } else {
-      return const HostelListScreen();
-    }
+    return const Text("");
   }
 }

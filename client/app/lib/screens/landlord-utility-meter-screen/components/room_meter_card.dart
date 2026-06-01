@@ -1,16 +1,9 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/landlord-utility-meter-screen/components/utility_meter_models.dart';
+import '../../../core/constants.dart';
+import 'utility_meter_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RoomMeterCard extends StatelessWidget {
-  final RoomMeterData room;
-
-  final TextEditingController electricityController;
-  final TextEditingController waterController;
-
-  final ValueChanged<int>? onElectricityNewReadingChanged;
-  final ValueChanged<int>? onWaterNewReadingChanged;
 
   const RoomMeterCard({
     super.key,
@@ -20,6 +13,13 @@ class RoomMeterCard extends StatelessWidget {
     this.onElectricityNewReadingChanged,
     this.onWaterNewReadingChanged,
   });
+  final RoomMeterData room;
+
+  final TextEditingController electricityController;
+  final TextEditingController waterController;
+
+  final ValueChanged<int>? onElectricityNewReadingChanged;
+  final ValueChanged<int>? onWaterNewReadingChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class RoomMeterCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: isRented
-              ? Text(
+              ? const Text(
                   "Đang thuê",
                   style: TextStyle(
                     color: AppColors.green700,
@@ -92,7 +92,7 @@ class RoomMeterCard extends StatelessWidget {
                     fontSize: 12,
                   ),
                 )
-              : Text(
+              : const Text(
                   "Trống",
                   style: TextStyle(
                     color: AppColors.slate500,

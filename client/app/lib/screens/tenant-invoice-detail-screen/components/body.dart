@@ -1,20 +1,18 @@
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_actions.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_detail_models.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_general_info.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_line_items.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_payment_info.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_status_header.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_total_summary.dart';
+import 'invoice_actions.dart';
+import 'invoice_detail_models.dart';
+import 'invoice_general_info.dart';
+import 'invoice_line_items.dart';
+import 'invoice_payment_info.dart';
+import 'invoice_status_header.dart';
+import 'invoice_total_summary.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
-  final InvoiceDetailData invoice;
-  final VoidCallback? onPayNow;
-  final VoidCallback? onDownloadPDF;
 
   const Body({
     super.key,
     this.invoice = const InvoiceDetailData(
+      id: '',
       status: InvoiceStatus.pending,
       generalInfo: InvoiceGeneralInfoData(
         roomName: 'Phòng 302 - Nhà Trọ Xanh',
@@ -53,6 +51,9 @@ class Body extends StatelessWidget {
     this.onPayNow,
     this.onDownloadPDF,
   });
+  final InvoiceDetailData invoice;
+  final VoidCallback? onPayNow;
+  final VoidCallback? onDownloadPDF;
 
   @override
   Widget build(BuildContext context) {

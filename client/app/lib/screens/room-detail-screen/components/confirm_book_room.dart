@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 
 class ConfirmBookRoom extends StatelessWidget {
-  final double price;
-  final VoidCallback? onPressed;
-
   const ConfirmBookRoom({
     super.key,
     required this.price,
     this.onPressed,
   });
+  final double price;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class ConfirmBookRoom extends StatelessWidget {
         color: AppColors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -34,7 +33,7 @@ class ConfirmBookRoom extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Giá thuê',
                   style: TextStyle(
                     fontFamily: 'Inter',
@@ -48,14 +47,14 @@ class ConfirmBookRoom extends StatelessWidget {
                   children: [
                     Text(
                       formatCurrency(price),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                         color: AppColors.blue700,
                       ),
                     ),
-                    Text(
+                    const Text(
                       '/tháng',
                       style: TextStyle(
                         fontFamily: 'Inter',
@@ -84,7 +83,7 @@ class ConfirmBookRoom extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Đặt lịch xem phòng',
                     style: TextStyle(
                       fontFamily: 'Inter',

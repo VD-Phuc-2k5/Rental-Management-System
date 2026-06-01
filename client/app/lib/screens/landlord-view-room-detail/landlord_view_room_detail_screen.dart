@@ -1,7 +1,7 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/widgets/common_appbar.dart';
-import 'package:app/screens/landlord-view-room-detail/components/body.dart';
-import 'package:app/screens/landlord-view-room-detail/components/response_submit_button.dart';
+import '../../core/constants.dart';
+import '../../core/widgets/common_appbar.dart';
+import 'components/body.dart';
+import 'components/response_submit_button.dart';
 import 'package:flutter/material.dart';
 
 class LandlordViewRoomDetailScreen extends StatelessWidget {
@@ -11,8 +11,8 @@ class LandlordViewRoomDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.grayBackground,
-      appBar: CommonAppBar(title: "Chi tiết yêu cầu"),
-      body: SingleChildScrollView(
+      appBar: const CommonAppBar(title: "Chi tiết yêu cầu"),
+      body: const SingleChildScrollView(
         child: LandlordViewRoomDetailBody(),
       ),
       bottomNavigationBar: Container(

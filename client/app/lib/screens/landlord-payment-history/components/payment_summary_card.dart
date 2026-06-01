@@ -1,16 +1,16 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
 import 'package:flutter/material.dart';
 
 class PaymentSummaryCard extends StatelessWidget {
-  final int totalCollected;
-  final int totalUncollected;
 
   const PaymentSummaryCard({
     super.key,
     required this.totalCollected,
     required this.totalUncollected,
   });
+  final int totalCollected;
+  final int totalUncollected;
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +80,9 @@ class PaymentSummaryCard extends StatelessWidget {
 }
 
 class _CircularProgress extends StatelessWidget {
-  final double progress;
 
   const _CircularProgress({required this.progress});
+  final double progress;
 
   @override
   Widget build(BuildContext context) {

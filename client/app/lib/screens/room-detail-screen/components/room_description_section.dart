@@ -1,14 +1,14 @@
-import 'package:app/core/collapse_text.dart';
+import '../../../core/collapse_text.dart';
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 
 class RoomDescriptionSection extends StatefulWidget {
-  final String description;
 
   const RoomDescriptionSection({
     super.key,
     required this.description,
   });
+  final String description;
 
   @override
   State<RoomDescriptionSection> createState() => _RoomDescriptionSectionState();
@@ -29,9 +29,9 @@ class _RoomDescriptionSectionState extends State<RoomDescriptionSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Mô tả',
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Nunito',
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -62,7 +62,7 @@ class _RoomDescriptionSectionState extends State<RoomDescriptionSection> {
                       padding: const EdgeInsets.only(left: 4),
                       child: Text(
                         _isExpanded ? ' Thu gọn' : ' Xem thêm',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

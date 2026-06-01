@@ -1,9 +1,9 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:app/screens/update-rental-contract-screen/components/contract_info_card.dart';
-import 'package:app/screens/update-rental-contract-screen/components/member_list_section.dart';
-import 'package:app/screens/update-rental-contract-screen/components/vehicle_list_section.dart';
-import 'package:app/screens/update-rental-contract-screen/components/update_reason_section.dart';
+import 'contract_info_card.dart';
+import 'member_list_section.dart';
+import 'vehicle_list_section.dart';
+import 'update_reason_section.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key});

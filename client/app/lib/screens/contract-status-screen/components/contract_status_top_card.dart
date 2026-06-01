@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 class ContractStatusTopCard extends StatelessWidget {
-  final String tenantName;
-  final String sentTime;
   
   const ContractStatusTopCard({
     super.key,
     required this.tenantName,
     required this.sentTime,
   });
+  final String tenantName;
+  final String sentTime;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class ContractStatusTopCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  TextSpan(text: '\nA lúc $sentTime.',style: TextStyle(fontWeight: FontWeight.w600,color: AppColors.slate500)),
+                  TextSpan(text: '\nA lúc $sentTime.',style: const TextStyle(fontWeight: FontWeight.w600,color: AppColors.slate500)),
                 ],
               ),
             ),

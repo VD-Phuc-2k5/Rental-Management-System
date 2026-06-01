@@ -1,59 +1,142 @@
-import 'package:app/core/widgets/common_appbar.dart';
-import 'package:app/core/widgets/tenant_navigation_bottom.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_detail_examples.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/tenant_invoice_detail_screen.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/body.dart';
-import 'package:app/screens/tenant-invoice-list-screen/components/invoice_view_models.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/components/payment_models.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/tenant_invoice_payment_screen.dart';
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-class TenantInvoiceListScreen extends StatelessWidget {
+import '../../core/blocs/new_invoice/new_invoice_cubit.dart';
+import '../../core/di/di.dart';
+import '../../core/widgets/common_appbar.dart';
+import '../../core/widgets/tenant_navigation_bottom.dart';
+import '../tenant-invoice-detail-screen/tenant_invoice_detail_screen.dart';
+import '../tenant-invoice-payment-screen/tenant_invoice_payment_screen.dart';
+import 'components/body.dart';
+import 'components/invoice_view_models.dart';
+import 'package:domain/billing.dart';
+import 'package:flutter/material.dart';
+import 'tenant_invoice_mappers.dart';
+
+class TenantInvoiceListScreen extends StatefulWidget {
   const TenantInvoiceListScreen({super.key});
 
-  void _navigateToInvoiceDetail(
-    BuildContext context,
-    InvoiceHistoryItemData item,
-  ) {
-    // Navigate to detail screen with appropriate invoice data based on status
-    final invoice = item.isPaid
-        ? InvoiceDetailExamples.paidInvoice
-        : InvoiceDetailExamples.pendingInvoice;
+  @override
+  State<TenantInvoiceListScreen> createState() => _TenantInvoiceListScreenState();
+}
 
+class _TenantInvoiceListScreenState extends State<TenantInvoiceListScreen> {
+  InvoiceHistoryState _historyState = InvoiceHistoryState.loading;
+  List<InvoiceHistoryItemData> _historyItems = [];
+  InvoiceSummaryData? _latestInvoice;
+  TenantInvoiceEntity? _latestPayableInvoice;
+  String? _errorMessage;
+  StreamSubscription<NewInvoiceState>? _invoiceSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInvoices();
+    _invoiceSubscription = getIt<NewInvoiceCubit>().stream.listen(_onNewInvoice);
+    getIt<NewInvoiceCubit>().clearBadge();
+  }
+
+  @override
+  void dispose() {
+    _invoiceSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _onNewInvoice(NewInvoiceState state) {
+    if (state.count > 0) {
+      _loadInvoices();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Bạn có hóa đơn mới!'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      getIt<NewInvoiceCubit>().clearBadge();
+    }
+  }
+
+  Future<void> _loadInvoices() async {
+    setState(() {
+      _historyState = InvoiceHistoryState.loading;
+      _errorMessage = null;
+    });
+
+    final result = await getIt<GetTenantInvoicesUsecase>().call(
+      const GetTenantInvoicesParams(),
+    );
+
+    if (!mounted) return;
+
+    result.fold(
+      (failure) {
+        setState(() {
+          _historyState = InvoiceHistoryState.error;
+          _errorMessage = failure.toString();
+          _historyItems = [];
+          _latestInvoice = null;
+          _latestPayableInvoice = null;
+        });
+      },
+      (invoices) {
+        final sorted = [...invoices]
+          ..sort((a, b) => b.month.compareTo(a.month));
+
+        final history = sorted.map(mapTenantInvoiceToHistoryItem).toList();
+
+        TenantInvoiceEntity? latestPayable;
+        for (final inv in sorted) {
+          if (inv.status == 'finalized') {
+            latestPayable = inv;
+            break;
+          }
+        }
+
+        InvoiceSummaryData? summary;
+        if (latestPayable != null) {
+          summary = InvoiceSummaryData(
+            dueDate: formatDueDateDisplay(latestPayable.dueDate),
+            amountDue: latestPayable.total,
+            billingMonth: formatBillingMonthDisplay(latestPayable.month),
+            badgeText: 'Mới nhất',
+          );
+        }
+
+        setState(() {
+          _historyState =
+              history.isEmpty ? InvoiceHistoryState.empty : InvoiceHistoryState.data;
+          _historyItems = history;
+          _latestInvoice = summary;
+          _latestPayableInvoice = latestPayable;
+        });
+      },
+    );
+  }
+
+  void _navigateToInvoiceDetail(InvoiceHistoryItemData item) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => TenantInvoiceDetailScreen(invoice: invoice),
+        builder: (_) => TenantInvoiceDetailScreen(invoiceId: item.id),
       ),
     );
   }
 
-  void _navigateToPayment(BuildContext context) {
-    // TO DO: Replace with actual invoice data from API
-    const paymentData = PaymentData(
-      invoiceId: 'INV-2026-03',
-      roomName: 'Phòng 202 - Nhà Trọ Xanh',
-      lineItems: [
-        PaymentLineItemData(name: 'Tiền phòng', amount: 2000000),
-        PaymentLineItemData(
-          name: 'Điện',
-          description: '125kWh x 4,000đ',
-          amount: 500000,
-        ),
-        PaymentLineItemData(name: 'Nước', amount: 200000),
-        PaymentLineItemData(
-          name: 'Dịch vụ (Wifi, rác, vệ sinh)',
-          amount: 50000,
-        ),
-      ],
-      totalAmount: 2750000,
-    );
+  void _navigateToPayment() {
+    final payable = _latestPayableInvoice;
+    if (payable == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Không có hóa đơn chờ thanh toán.')),
+      );
+      return;
+    }
 
+    final paymentData = mapTenantInvoiceToPayment(payable);
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const TenantInvoicePaymentScreen(
-          appbarTitle: "Thanh toán hóa đơn",
+        builder: (_) => TenantInvoicePaymentScreen(
+          appbarTitle: 'Thanh toán hóa đơn',
           paymentData: paymentData,
         ),
       ),
@@ -63,12 +146,34 @@ class TenantInvoiceListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: "Hóa đơn của tôi"),
+      appBar: const CommonAppBar(title: 'Hóa đơn của tôi'),
       body: Body(
-        onHistoryItemTap: (item) => _navigateToInvoiceDetail(context, item),
-        onPayNow: () => _navigateToPayment(context),
+        latestInvoice: _latestInvoice ??
+            const InvoiceSummaryData(
+              dueDate: '—',
+              amountDue: 0,
+            ),
+        historyState: _historyState,
+        historyItems: _historyItems,
+        onPayNow: _latestPayableInvoice != null ? _navigateToPayment : null,
+        onHistoryItemTap: _navigateToInvoiceDetail,
+        historyErrorWidget: _historyState == InvoiceHistoryState.error
+            ? Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 12,
+                  children: [
+                    Text(_errorMessage ?? 'Không tải được hóa đơn'),
+                    ElevatedButton(
+                      onPressed: _loadInvoices,
+                      child: const Text('Thử lại'),
+                    ),
+                  ],
+                ),
+              )
+            : null,
       ),
-      bottomNavigationBar: TenantNavigationBottom(currentIndex: 3),
+      bottomNavigationBar: const TenantNavigationBottom(currentIndex: 3),
     );
   }
 }

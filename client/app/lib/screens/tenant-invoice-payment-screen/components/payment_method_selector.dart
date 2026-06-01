@@ -1,17 +1,17 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/components/payment_method_option.dart';
-import 'package:app/screens/tenant-invoice-payment-screen/components/payment_models.dart';
+import '../../../core/constants.dart';
+import 'payment_method_option.dart';
+import 'payment_models.dart';
 import 'package:flutter/material.dart';
 
 class PaymentMethodSelector extends StatelessWidget {
-  final List<PaymentMethodOption> paymentMethods;
-  final ValueChanged<PaymentMethodType>? onMethodSelected;
 
   const PaymentMethodSelector({
     super.key,
     required this.paymentMethods,
     this.onMethodSelected,
   });
+  final List<PaymentMethodOption> paymentMethods;
+  final ValueChanged<PaymentMethodType>? onMethodSelected;
 
   @override
   Widget build(BuildContext context) {

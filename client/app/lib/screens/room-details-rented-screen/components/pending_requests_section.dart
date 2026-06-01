@@ -1,5 +1,5 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/landlord-requests-screen/landlord_requests_screen.dart';
+import '../../../core/constants.dart';
+import '../../landlord-requests-screen/landlord_requests_screen.dart';
 import 'package:flutter/material.dart';
 
 class PendingRequestsSection extends StatelessWidget {
@@ -83,10 +83,10 @@ class PendingRequestsSection extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Expanded(
+                  const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           "Yêu cầu gia hạn",
                           style: TextStyle(

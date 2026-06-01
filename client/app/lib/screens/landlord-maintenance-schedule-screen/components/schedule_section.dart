@@ -1,12 +1,8 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ScheduleSection extends StatelessWidget {
-  final DateTime? selectedDate;
-  final TimeOfDay? selectedTime;
-  final VoidCallback onSelectDate;
-  final VoidCallback onSelectTime;
 
   const ScheduleSection({
     super.key,
@@ -15,6 +11,10 @@ class ScheduleSection extends StatelessWidget {
     required this.onSelectDate,
     required this.onSelectTime,
   });
+  final DateTime? selectedDate;
+  final TimeOfDay? selectedTime;
+  final VoidCallback onSelectDate;
+  final VoidCallback onSelectTime;
 
   Widget _buildSectionHeader() {
     return const Text(

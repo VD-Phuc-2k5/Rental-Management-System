@@ -1,4 +1,4 @@
-import 'package:app/core/constants.dart';
+import '../../../core/constants.dart';
 import 'package:flutter/material.dart';
 
 class ContractInfoCard extends StatelessWidget {
@@ -41,12 +41,12 @@ class ContractInfoCard extends StatelessWidget {
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.all(24.0),
+          const Padding(
+            padding: EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   "Hợp đồng 2026/HĐTT-001",
                   style: TextStyle(
                     fontFamily: "Inter",
@@ -55,8 +55,8 @@ class ContractInfoCard extends StatelessWidget {
                     color: Colors.white70,
                   ),
                 ),
-                const SizedBox(height: 4),
-                const Text(
+                SizedBox(height: 4),
+                Text(
                   "Phòng 301",
                   style: TextStyle(
                     fontFamily: "Inter",
@@ -65,14 +65,14 @@ class ContractInfoCard extends StatelessWidget {
                     color: AppColors.white,
                   ),
                 ),
-                const Spacer(),
-                const Divider(color: Colors.white24, height: 1),
-                const SizedBox(height: 16),
+                Spacer(),
+                Divider(color: Colors.white24, height: 1),
+                SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      children: const [
+                      children: [
                         Icon(
                           Icons.person_outline,
                           color: Colors.white70,
@@ -90,7 +90,7 @@ class ContractInfoCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const Text(
+                    Text(
                       "Nguyễn Văn A",
                       style: TextStyle(
                         fontFamily: "Inter",
@@ -101,12 +101,12 @@ class ContractInfoCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      children: const [
+                      children: [
                         Icon(
                           Icons.account_balance_wallet_outlined,
                           color: Colors.white70,
@@ -124,7 +124,7 @@ class ContractInfoCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const Text(
+                    Text(
                       "4.000.000đ",
                       style: TextStyle(
                         fontFamily: "Inter",

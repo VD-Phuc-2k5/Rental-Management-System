@@ -1,23 +1,20 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/transfer-leader-role-screen/transfer_leader_role_screen.dart';
+import '../../../core/constants.dart';
+import '../../transfer-leader-role-screen/transfer_leader_role_screen.dart';
 import 'package:flutter/material.dart';
 
 class RentalContractMember {
-  final String name;
-  final String role;
-  final bool isLeader;
 
   const RentalContractMember({
     required this.name,
     required this.role,
     this.isLeader = false,
   });
+  final String name;
+  final String role;
+  final bool isLeader;
 }
 
 class MemberListSection extends StatelessWidget {
-  final List<RentalContractMember> members;
-  final VoidCallback onAddMember;
-  final void Function(int index) onDeleteMember;
 
   const MemberListSection({
     super.key,
@@ -25,6 +22,9 @@ class MemberListSection extends StatelessWidget {
     required this.onAddMember,
     required this.onDeleteMember,
   });
+  final List<RentalContractMember> members;
+  final VoidCallback onAddMember;
+  final void Function(int index) onDeleteMember;
 
   @override
   Widget build(BuildContext context) {
@@ -93,10 +93,6 @@ class MemberListSection extends StatelessWidget {
 }
 
 class _MemberCard extends StatelessWidget {
-  final String name;
-  final String role;
-  final bool isLeader;
-  final VoidCallback onDelete;
 
   const _MemberCard({
     required this.name,
@@ -104,6 +100,10 @@ class _MemberCard extends StatelessWidget {
     required this.isLeader,
     required this.onDelete,
   });
+  final String name;
+  final String role;
+  final bool isLeader;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -185,10 +185,10 @@ class _MemberCard extends StatelessWidget {
 }
 
 class _AddButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onPressed;
 
   const _AddButton({required this.text, required this.onPressed});
+  final String text;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {

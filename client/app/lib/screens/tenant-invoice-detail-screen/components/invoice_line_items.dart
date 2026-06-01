@@ -1,12 +1,12 @@
-import 'package:app/core/constants.dart';
-import 'package:app/core/format_currency.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_detail_models.dart';
+import '../../../core/constants.dart';
+import '../../../core/format_currency.dart';
+import 'invoice_detail_models.dart';
 import 'package:flutter/material.dart';
 
 class InvoiceLineItems extends StatelessWidget {
-  final List<InvoiceLineItemData> items;
 
   const InvoiceLineItems({super.key, required this.items});
+  final List<InvoiceLineItemData> items;
 
   @override
   Widget build(BuildContext context) {

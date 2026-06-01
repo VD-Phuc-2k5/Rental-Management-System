@@ -1,11 +1,11 @@
-import 'package:app/core/constants.dart';
-import 'package:app/screens/tenant-invoice-detail-screen/components/invoice_detail_models.dart';
+import '../../../core/constants.dart';
+import 'invoice_detail_models.dart';
 import 'package:flutter/material.dart';
 
 class InvoiceGeneralInfo extends StatelessWidget {
-  final InvoiceGeneralInfoData info;
 
   const InvoiceGeneralInfo({super.key, required this.info});
+  final InvoiceGeneralInfoData info;
 
   @override
   Widget build(BuildContext context) {

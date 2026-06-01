@@ -1,17 +1,13 @@
-import { Controller, Post, Body, Get, Param } from "@nestjs/common";
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserService } from "../application/services/create-user.service";
-import { CreateUserDto } from "../application/dto/create-user.dto";
-import { FindUserService } from "../application/services/find-user.service";
+import { FindUserService } from '../application/services/find-user.service';
 
 @ApiTags('users')
-@Controller("users")
+@Controller('users')
 export class UsersController {
-  constructor(
-    private readonly findUser: FindUserService
-  ) {}
+  constructor(private readonly findUser: FindUserService) {}
 
-  @Get(":id")
+  @Get(':id')
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -32,7 +28,7 @@ export class UsersController {
       },
     },
   })
-  async findById(@Param("id") id: string) {
+  async findById(@Param('id') id: string) {
     return this.findUser.execute(id);
   }
 }
