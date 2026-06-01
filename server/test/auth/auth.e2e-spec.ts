@@ -296,8 +296,8 @@ describe('AuthModule (e2e)', () => {
 
     it('AUTH-006: Missing password', async () => {
       const payload = registerPayload();
-      delete payload.password;
-      delete payload.confirm_password;
+      delete (payload as any).password;
+      delete (payload as any).confirm_password;
 
       const res = await request(app.getHttpServer())
         .post('/api/auth/register/user')
