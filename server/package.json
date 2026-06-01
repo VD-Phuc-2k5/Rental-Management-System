@@ -36,7 +36,7 @@
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.45.1",
     "ioredis": "^5.6.1",
-    "nodemailer": "^6.9.3",
+    "nodemailer": "^8.0.5",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
