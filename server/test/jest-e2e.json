@@ -2,7 +2,7 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": "..",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+    "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
@@ -21,7 +21,7 @@
   "coverageReporters": ["text", "lcov"],
   "coveragePathIgnorePatterns": [
     "/node_modules/",
-    "/test/",
+    "/testing/",
     "/dist/"
   ]
 }

@@ -47,14 +47,29 @@
 | EP-15 | `true` | `true` | Hợp lệ |
 | EP-16 | `false` | `false` | Không hợp lệ |
 
-### 1.6 Login
+### 1.6 Register — identity_number
 
 | Lớp | Mô tả | Giá trị đại diện | Kết quả |
 |-----|-------|-----------------|:-------:|
-| EP-17 | Email + password đúng | `{ tenant đã đăng ký }` | Thành công |
-| EP-18 | Email sai | `wrong@test.com` | Thất bại |
-| EP-19 | Password sai | password sai | Thất bại |
-| EP-20 | Email rỗng | `{ email: "" }` | Không hợp lệ |
+| EP-17 | 12 số | `"123456789012"` | Hợp lệ |
+| EP-18 | Không gửi identity_number | `undefined` | Hợp lệ (optional) |
+
+### 1.7 Register — Business Logic (service layer)
+
+| Lớp | Mô tả | Giá trị đại diện | Kết quả |
+|-----|-------|-----------------|:-------:|
+| EP-19 | Phone không được gửi → bỏ qua check | `phone: undefined` | Service bỏ qua check phone |
+| EP-20 | Identity không được gửi → bỏ qua check | `identity_number: undefined` | Service bỏ qua check identity |
+| EP-21 | BadRequestException từ create → re-throw | userRepository throws BadRequestException | **400** |
+
+### 1.8 Login
+
+| Lớp | Mô tả | Giá trị đại diện | Kết quả |
+|-----|-------|-----------------|:-------:|
+| EP-22 | Email + password đúng | `{ tenant đã đăng ký }` | Thành công |
+| EP-23 | Email sai | `wrong@test.com` | Thất bại |
+| EP-24 | Password sai | password sai | Thất bại |
+| EP-25 | Email rỗng | `{ email: "" }` | Không hợp lệ |
 
 ---
 
@@ -114,87 +129,108 @@
 | Endpoint public? | N | N | N | Y/N | Y/N | Y |
 | **Kết quả** | **200/201** | **403** | **401/403** | **401** | **401** | **200** |
 
-### 3.2 Reset Password Flow
+### 3.2 Reset Password Flow — forgot-password
 
 | Điều kiện | Rule 1 | Rule 2 | Rule 3 | Rule 4 |
 |-----------|:------:|:------:|:------:|:------:|
 | Email tồn tại? | Y | N | Y | Y |
-| OTP đúng? | Y | - | N | - |
-| New password hợp lệ? | Y | - | - | N |
-| **Kết quả forgot-password** | **201** | **201** (bảo mật) | - | - |
-| **Kết quả reset-password** | **201** | - | **400** | **400** |
+| OTP Redis set thành công? | Y | Y | N | Y |
+| AuthOperationError? | N | N | N | Y |
+| **Kết quả** | **201** (gửi email) | **201** (không gửi email) | **500** | **400** |
+
+### 3.3 Reset Password Flow — Verify OTP
+
+| Điều kiện | Rule 1 | Rule 2 | Rule 3 |
+|-----------|:------:|:------:|:------:|
+| OTP trong Redis? | Y | N | Y |
+| OTP đúng? | Y | - | N |
+| **Kết quả** | **201** (đánh dấu verified) | **400** | **400** |
+
+### 3.4 Reset Password Flow — reset-password
+
+| Điều kiện | Rule 1 | Rule 2 | Rule 3 | Rule 4 | Rule 5 |
+|-----------|:------:|:------:|:------:|:------:|:------:|
+| Password == confirmPassword? | Y | N | Y | Y | Y |
+| OTP trong Redis? | Y | - | Y | Y | Y |
+| OTP đúng? | Y | - | N | N | Y |
+| isVerified = true? | - | - | N | Y | - |
+| User tồn tại? | Y | - | - | Y | N |
+| AuthOperationError? | N | - | - | N | - |
+| **Kết quả** | **201** | **400** | **400** | **201** (⚠ bypass OTP) | **400** |
+
+> ⚠ **Lưu ý bảo mật (Rule 4):** Nếu OTP đã được verify qua endpoint `/auth/verify-otp`, thì ở bước reset-password, OTP có thể sai nhưng vẫn cho qua vì `isVerified=true`. Đây là behavior hiện tại: một trong hai điều kiện (OTP đúng OR đã verify) là đủ. Cần cân nhắc: nếu attacker có quyền truy cập vào Redis, họ có thể tự set `isVerified=true`.
 
 ---
 
-## 4. Test Cases
+## 4. Test Cases (e2e — chỉ BVA & DT)
 
-### Register
+> EP tests đã được phủ bởi unit tests, không trùng lặp ở e2e.
 
-| ID | Kỹ thuật | Test Case | Input | Expected Status | Expected Data |
-|----|:---------:|-----------|-------|:---------------:|---------------|
-| AUTH-001 | EP | Register tenant thành công | `{ email, fullName, phone, password, confirm_password, accepted_terms }` với email mới | **201** | `data.role = "tenant"` |
-| AUTH-002 | EP | Register landlord thành công | `{...validLandlord}` | **201** | `data.role = "landlord"` |
-| AUTH-003 | EP | Email đã tồn tại | email từ AUTH-001 | **400/409** | message lỗi |
-| AUTH-004 | EP | Email sai format | `{...valid, email: "invalid"}` | **400** | Validation error |
-| AUTH-005 | EP | Email rỗng | `{...valid, email: ""}` | **400** | Validation error |
-| AUTH-006 | EP | Thiếu password | `{...valid, password: undefined}` | **400** | Validation error |
-| AUTH-007 | EP | Password yếu (thiếu ký tự đặc biệt) | `{...valid, password: "Aa111111", confirm_password: "Aa111111"}` | **400** | `Mật khẩu phải có chữ hoa, chữ thường, số và ký tự đặc biệt` |
-| AUTH-008 | EP | Password confirm không khớp | `{...valid, confirm_password: "Bb222222@"}` | **400** | Validation error |
-| AUTH-009 | EP | Không đồng ý điều khoản | `{...valid, accepted_terms: false}` | **400** | Validation error |
-| AUTH-010 | EP | Phone chứa chữ | `{...valid, phone: "abc123"}` | **400** | `Số điện thoại chỉ được chứa chữ số` |
-| AUTH-011 | EP | fullName rỗng | `{...valid, fullName: ""}` | **400** | Validation error |
-| AUTH-012 | BVA | Password 7 ký tự | `{...valid, password: "A1@bcde", confirm_password: "A1@bcde"}` | **400** | Validation error |
-| AUTH-013 | BVA | Password 8 ký tự (min) | `{...valid, password: "A1@bcdef", confirm_password: "A1@bcdef"}` | **201** | Thành công |
-| AUTH-014 | BVA | Password 72 ký tự (max) | `{...valid, password: "A1@"+"a"*69, confirm_password: "A1@"+"a"*69}` | **201** | Thành công |
-| AUTH-015 | BVA | Password 73 ký tự | `{...valid, password: "A1@"+"a"*70, confirm_password: "A1@"+"a"*70}` | **400** | Validation error |
-| AUTH-016 | BVA | Phone 9 số | `{...valid, phone: "012345678"}` | **400** | Validation error |
-| AUTH-017 | BVA | Phone 10 số (min) | `{...valid, phone: "0123456789"}` | **201** | Thành công |
-| AUTH-018 | BVA | Phone 15 số (max) | `{...valid, phone: "012345678901234"}` | **201** | Thành công |
-| AUTH-019 | BVA | Phone 16 số | `{...valid, phone: "0123456789012345"}` | **400** | Validation error |
-| AUTH-020 | BVA | fullName 1 ký tự | `{...valid, fullName: "A"}` | **400** | Validation error |
-| AUTH-021 | BVA | fullName 100 ký tự (max) | `{...valid, fullName: "A"*100}` | **201** | Thành công |
-| AUTH-022 | BVA | fullName 101 ký tự | `{...valid, fullName: "A"*101}` | **400** | Validation error |
-| AUTH-023 | BVA | identity_number 11 số | `{...validLandlord, identity_number: "1"*11}` | **400** | Validation error |
-| AUTH-024 | BVA | identity_number 12 số | `{...validLandlord}` | **201** | Thành công |
-| AUTH-025 | BVA | identity_number 13 số | `{...validLandlord, identity_number: "1"*13}` | **400** | Validation error |
+### BVA — Register password length
 
-### Login
+| ID | Test Case | Input | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-012 | Password 7 chars (min-1) | `{...valid, password: "A1@bcde"}` | **400** |
+| AUTH-013 | Password 8 chars (min) | `{...valid, password: "A1@bcdef"}` | **201** |
+| AUTH-053 | Password 9 chars (min+1) | `{...valid, password: "A1@bcdefg"}` | **201** |
+| AUTH-054 | Password 71 chars (max-1) | `{...valid, password: "A1@"+"a"*68}` | **201** |
+| AUTH-014 | Password 72 chars (max) | `{...valid, password: "A1@"+"a"*69}` | **201** |
+| AUTH-015 | Password 73 chars (max+1) | `{...valid, password: "A1@"+"a"*70}` | **400** |
 
-| ID | Kỹ thuật | Test Case | Input | Expected Status | Expected Data |
-|----|:---------:|-----------|-------|:---------------:|---------------|
-| AUTH-026 | EP | Login tenant thành công | `{ email, password }` từ AUTH-001 | **201** | `data.token`, `data.user.roles` chứa "tenant" |
-| AUTH-027 | EP | Login landlord thành công | `{ email, password }` từ AUTH-002 | **201** | `data.token`, `data.user.roles` chứa "landlord" |
-| AUTH-028 | EP | Login sai email | `{ email: "wrong@test.com", password: "Test@1234" }` | **401** | Unauthorized |
-| AUTH-029 | EP | Login sai password | `{ email, password: "WrongPass1@" }` | **401** | Unauthorized |
-| AUTH-030 | EP | Login email rỗng | `{ email: "", password: "Test@1234" }` | **400** | Validation error |
+### BVA — Register phone length
 
-### Forgot / Reset Password
+| ID | Test Case | Input | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-016 | Phone 9 chars (min-1) | `{...valid, phone: "012345678"}` | **400** |
+| AUTH-017 | Phone 10 chars (min) | `{...valid, phone: "0123456789"}` | **201** |
+| AUTH-055 | Phone 11 chars (min+1) | `{...valid, phone: "01234567890"}` | **201** |
+| AUTH-018 | Phone 15 chars (max) | `{...valid, phone: "012345678901234"}` | **201** |
+| AUTH-019 | Phone 16 chars (max+1) | `{...valid, phone: "0123456789012345"}` | **400** |
 
-| ID | Kỹ thuật | Test Case | Input | Expected Status |
-|----|:---------:|-----------|-------|:---------------:|
-| AUTH-031 | EP | Forgot password thành công | `{ email }` | **201** |
-| AUTH-032 | EP | Forgot password email không tồn tại | `{ email: "notfound@test.com" }` | **201** |
-| AUTH-033 | EP | Forgot password thiếu email | `{}` | **400** |
-| AUTH-034 | EP | Confirm OTP thành công | `{ email, otp: "123456" }` | **201** |
-| AUTH-035 | EP | Confirm OTP sai | `{ email, otp: "000000" }` | **400** |
-| AUTH-036 | EP | Confirm OTP sai độ dài | `{ email, otp: "12345" }` | **400** |
-| AUTH-037 | EP | Reset password thành công | `{ email, otp, newPassword: "NewPass1@", confirmPassword: "NewPass1@" }` | **201** |
-| AUTH-038 | EP | Reset password OTP sai | `{ email, otp: "000000", newPassword: "NewPass1@", confirmPassword: "NewPass1@" }` | **400** |
-| AUTH-039 | EP | Reset password newPassword yếu | `{ email, otp, newPassword: "weak", confirmPassword: "weak" }` | **400** |
-| AUTH-040 | EP | Reset password confirm không khớp | `{ email, otp, newPassword: "NewPass1@", confirmPassword: "Diff1@ent" }` | **400** |
-| AUTH-041 | DT | Login password cũ sau reset | password cũ | **401** |
-| AUTH-042 | DT | Login password mới sau reset | password mới | **201** |
+### BVA — Register fullName length
 
-### Access Control
+| ID | Test Case | Input | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-020 | fullName 1 char (min-1) | `{...valid, fullName: "A"}` | **400** |
+| AUTH-056 | fullName 2 chars (min) | `{...valid, fullName: "An"}` | **201** |
+| AUTH-057 | fullName 99 chars (max-1) | `{...valid, fullName: "A"*99}` | **201** |
+| AUTH-021 | fullName 100 chars (max) | `{...valid, fullName: "A"*100}` | **201** |
+| AUTH-022 | fullName 101 chars (max+1) | `{...valid, fullName: "A"*101}` | **400** |
 
-| ID | Kỹ thuật | Test Case | Token | Endpoint | Expected Status |
-|----|:---------:|-----------|:-----:|:--------:|:---------------:|
-| AUTH-043 | DT | Endpoint public không cần auth | - | GET /api/users/:id | **200** |
-| AUTH-044 | DT | Endpoint cần auth không token | - | POST /api/properties | **401** |
-| AUTH-045 | DT | Token rỗng | `"Bearer "` | POST /api/properties | **401** |
-| AUTH-046 | DT | Token giả mạo | `"Bearer fake"` | GET /api/profile | **401** |
-| AUTH-047 | DT | Tenant gọi endpoint landlord | tenant | POST /api/properties | **403** |
-| AUTH-048 | DT | Landlord gọi endpoint tenant | landlord | POST /api/rental-requests | **403** |
+### BVA — Register identity_number length
+
+| ID | Test Case | Input | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-023 | identity_number 11 chars (exact-1) | `{...validLandlord, identity_number: "1"*11}` | **400** |
+| AUTH-024 | identity_number 12 chars (exact) | `{...validLandlord}` | **201** |
+| AUTH-025 | identity_number 13 chars (exact+1) | `{...validLandlord, identity_number: "1"*13}` | **400** |
+
+### BVA — OTP length
+
+| ID | Test Case | Input | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-036 | OTP 5 chars (min-1) | `{ email, otp: "12345" }` | **400** |
+| AUTH-058 | OTP 6 chars (exact) | `{ email, otp: "123456" }` with valid Redis | **201** |
+| AUTH-059 | OTP 7 chars (max+1) | `{ email, otp: "1234567" }` | **400** |
+
+### DT — Password reset lifecycle
+
+| ID | Test Case | Steps | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-041 | Old password fails after reset | reset-password → login with cũ | **401** |
+| AUTH-042 | New password succeeds after reset | login với mới | **201** |
+| AUTH-043 | OTP bypass khi isVerified=true | reset-password với OTP sai + isVerified=true | **201** |
+
+### DT — Access Control
+
+| ID | Test Case | Token | Endpoint | Expected Status |
+|:--:|----------|:-----:|:--------:|:---------------:|
+| AUTH-047 | Public endpoint không cần auth | — | GET /api/users/:id | **200** |
+| AUTH-048 | Protected endpoint không token | — | GET /api/profile | **401** |
+| AUTH-049 | Empty Bearer token | `"Bearer "` | GET /api/profile | **401** |
+| AUTH-050 | Fake Bearer token | `"Bearer fake"` | GET /api/profile | **401** |
+| AUTH-051 | RolesGuard cho phép đúng role | valid token | GET /api/test-roles/tenant | **200** |
+| AUTH-052 | RolesGuard từ chối sai role | valid token | GET /api/test-roles/admin | **403** |
 
 ---
 

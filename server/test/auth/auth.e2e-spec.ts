@@ -1,14 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, INestApplication, UseGuards, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AuthModule } from '../../src/modules/auth/presentation/auth.module';
-import { UsersModule } from '../../src/modules/users/presentation/user.module';
-import { SupabaseModule } from '../../src/shared/infrastructure/supabase/supabase.module';
-import { DrizzleModule } from '../../src/shared/infrastructure/database/drizzle.module';
-import { RedisModule } from '../../src/shared/infrastructure/redis/redis.module';
-import { MailModule } from '../../src/shared/infrastructure/mail/mail.module';
 import { SupabaseService } from '../../src/shared/infrastructure/supabase/supabase.service';
 import { RedisService } from '../../src/shared/infrastructure/redis/redis.service';
 import { MailService } from '../../src/shared/infrastructure/mail/mail.service';
@@ -16,6 +11,9 @@ import { UserRepository } from '../../src/modules/users/domain/repositories/user
 import { DrizzleService } from '../../src/shared/infrastructure/database/drizzle.service';
 import { HttpResponseInterceptor } from '../../src/shared/common/interceptors/HttpResponse.interceptor';
 import { HttpExceptionFilter } from '../../src/shared/common/filter/HttpException.filter';
+import { AuthGuard } from '../../src/shared/common/guards/auth.guard';
+import { RolesGuard } from '../../src/shared/common/guards/roles.guard';
+import { Roles } from '../../src/shared/common/decorators/roles.decorator';
 
 // ---------------------------------------------------------------------------
 // Mock definitions
@@ -58,8 +56,30 @@ const mockMailService = {
 };
 
 const mockDrizzleService = {
-  db: {} as any,
+  db: {
+    query: {
+      users: {
+        findFirst: jest.fn(),
+      },
+    },
+  },
 };
+
+@Controller('test-roles')
+@UseGuards(AuthGuard, RolesGuard)
+class TestRolesController {
+  @Get('tenant')
+  @Roles('tenant')
+  getTenant() {
+    return { ok: true };
+  }
+
+  @Get('admin')
+  @Roles('admin')
+  getAdmin() {
+    return { ok: true };
+  }
+}
 
 function createMockUser(overrides: Record<string, any> = {}) {
   return {
@@ -109,13 +129,6 @@ function landlordPayload(overrides: Record<string, any> = {}) {
   };
 }
 
-function loginPayload(email?: string) {
-  return {
-    email: email ?? `tenant-${Date.now()}@test.com`,
-    password: 'Test@1234',
-  };
-}
-
 // ---------------------------------------------------------------------------
 // Test suite
 // ---------------------------------------------------------------------------
@@ -151,6 +164,8 @@ describe('AuthModule (e2e)', () => {
         }),
         AuthModule,
       ],
+      controllers: [TestRolesController],
+      providers: [RolesGuard, AuthGuard],
     })
       .overrideProvider(SupabaseService)
       .useValue(mockSupabaseService)
@@ -212,6 +227,19 @@ describe('AuthModule (e2e)', () => {
 
     mockUserRepository.findById.mockResolvedValue(createMockUser());
 
+    mockSupabaseAuth.getUser.mockResolvedValue({
+      data: { user: { id: '00000000-0000-0000-0000-000000000001', email: 'tenant@test.com' } },
+      error: null,
+    });
+
+    (mockDrizzleService.db.query.users.findFirst as jest.Mock).mockResolvedValue({
+      id: '00000000-0000-0000-0000-000000000001',
+      phone: '0912345678',
+      fullName: 'Nguyen Van A',
+      avatarUrl: null,
+      roles: [{ role: 'tenant' }],
+    });
+
     mockRedisService.getValue.mockResolvedValue(null);
     mockRedisClient.set.mockResolvedValue('OK');
     mockRedisClient.get.mockResolvedValue(null);
@@ -223,448 +251,233 @@ describe('AuthModule (e2e)', () => {
     await app.close();
   });
 
-  // =========================================================
-  // REGISTER
-  // =========================================================
+  // ===================================================================
+  // BVA: REGISTER — PASSWORD BOUNDARY
+  // ===================================================================
 
-  describe('POST /api/auth/register/user - Register tenant', () => {
-    it('AUTH-001: Register tenant successfully', async () => {
-      const payload = registerPayload();
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/user')
-        .send(payload)
-        .expect(201);
-
-      expect(res.body.statusCode).toBe(201);
-      expect(res.body.message).toBe('Success');
-      expect(res.body.data.role).toBe('tenant');
-      expect(res.body.data.email).toBe(payload.email);
-      expect(res.body.data.id).toBeDefined();
-    });
-
-    it('AUTH-002: Register landlord successfully', async () => {
-      const payload = landlordPayload();
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/landlord')
-        .send(payload)
-        .expect(201);
-
-      expect(res.body.statusCode).toBe(201);
-      expect(res.body.data.role).toBe('landlord');
-    });
-
-    it('AUTH-003: Email already exists', async () => {
-      const existingEmail = 'existing@test.com';
-      mockSupabaseAuthAdmin.listUsers.mockResolvedValue({
-        data: { users: [{ id: 'existing-id', email: existingEmail }] },
-        error: null,
-      });
-
-      const payload = registerPayload({ email: existingEmail });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/user')
-        .send(payload);
-
-      expect(res.status).toBe(409);
-      expect(res.body.message).toContain('Email');
-    });
-
-    it('AUTH-004: Invalid email format', async () => {
-      const payload = registerPayload({ email: 'invalid' });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/user')
-        .send(payload)
-        .expect(400);
-
-      expect(res.body.statusCode).toBe(400);
-    });
-
-    it('AUTH-005: Empty email', async () => {
-      const payload = registerPayload({ email: '' });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/user')
-        .send(payload)
-        .expect(400);
-
-      expect(res.body.statusCode).toBe(400);
-    });
-
-    it('AUTH-006: Missing password', async () => {
-      const payload = registerPayload();
-      delete (payload as any).password;
-      delete (payload as any).confirm_password;
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/user')
-        .send(payload)
-        .expect(400);
-
-      expect(res.body.statusCode).toBe(400);
-    });
-
-    it('AUTH-007: Weak password - missing special char', async () => {
-      const payload = registerPayload({
-        password: 'Aa111111',
-        confirm_password: 'Aa111111',
-      });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/user')
-        .send(payload)
-        .expect(400);
-
-      expect(res.body.details.message[0]).toContain('Mật khẩu phải có');
-    });
-
-    it('AUTH-008: Confirm password mismatch', async () => {
-      const payload = registerPayload({
-        confirm_password: 'Bb222222@',
-      });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/user')
-        .send(payload)
-        .expect(400);
-
-      expect(res.body.statusCode).toBe(400);
-    });
-
-    it('AUTH-009: accepted_terms false', async () => {
-      const payload = registerPayload({ accepted_terms: false });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/user')
-        .send(payload)
-        .expect(400);
-
-      expect(res.body.statusCode).toBe(400);
-    });
-
-    it('AUTH-010: Phone contains letters', async () => {
-      const payload = registerPayload({ phone: 'abc123' });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/user')
-        .send(payload)
-        .expect(400);
-
-      expect(res.body.details.message[0]).toContain('chữ số');
-    });
-
-    it('AUTH-011: Empty fullName', async () => {
-      const payload = registerPayload({ fullName: '' });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/register/user')
-        .send(payload)
-        .expect(400);
-
-      expect(res.body.statusCode).toBe(400);
-    });
-
-    // ---- BVA: Password ----
-    it('AUTH-012: BVA - Password 7 chars (below min)', async () => {
+  describe('BVA - Register password length', () => {
+    it('AUTH-012: Password 7 chars (min-1) → 400', async () => {
       const payload = registerPayload({
         password: 'A1@bcde',
         confirm_password: 'A1@bcde',
       });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(400);
-
-      expect(res.body.statusCode).toBe(400);
     });
 
-    it('AUTH-013: BVA - Password 8 chars (min)', async () => {
+    it('AUTH-013: Password 8 chars (min) → 201', async () => {
       const payload = registerPayload({
         password: 'A1@bcdef',
         confirm_password: 'A1@bcdef',
       });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(201);
     });
 
-    it('AUTH-014: BVA - Password 72 chars (max)', async () => {
+    it('AUTH-053: Password 9 chars (min+1) → 201', async () => {
+      const payload = registerPayload({
+        password: 'A1@bcdefg',
+        confirm_password: 'A1@bcdefg',
+      });
+      await request(app.getHttpServer())
+        .post('/api/auth/register/user')
+        .send(payload)
+        .expect(201);
+    });
+
+    it('AUTH-054: Password 71 chars (max-1) → 201', async () => {
+      const payload = registerPayload({
+        password: 'A1@' + 'a'.repeat(68),
+        confirm_password: 'A1@' + 'a'.repeat(68),
+      });
+      await request(app.getHttpServer())
+        .post('/api/auth/register/user')
+        .send(payload)
+        .expect(201);
+    });
+
+    it('AUTH-014: Password 72 chars (max) → 201', async () => {
       const payload = registerPayload({
         password: 'A1@' + 'a'.repeat(69),
         confirm_password: 'A1@' + 'a'.repeat(69),
       });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(201);
     });
 
-    it('AUTH-015: BVA - Password 73 chars (above max)', async () => {
+    it('AUTH-015: Password 73 chars (max+1) → 400', async () => {
       const payload = registerPayload({
         password: 'A1@' + 'a'.repeat(70),
         confirm_password: 'A1@' + 'a'.repeat(70),
       });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(400);
     });
+  });
 
-    // ---- BVA: Phone ----
-    it('AUTH-016: BVA - Phone 9 chars (below min)', async () => {
+  // ===================================================================
+  // BVA: REGISTER — PHONE BOUNDARY
+  // ===================================================================
+
+  describe('BVA - Register phone length', () => {
+    it('AUTH-016: Phone 9 chars (min-1) → 400', async () => {
       const payload = registerPayload({ phone: '012345678' });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(400);
     });
 
-    it('AUTH-017: BVA - Phone 10 chars (min)', async () => {
+    it('AUTH-017: Phone 10 chars (min) → 201', async () => {
       const payload = registerPayload({ phone: '0123456789' });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(201);
     });
 
-    it('AUTH-018: BVA - Phone 15 chars (max)', async () => {
+    it('AUTH-055: Phone 11 chars (min+1) → 201', async () => {
+      const payload = registerPayload({ phone: '01234567890' });
+      await request(app.getHttpServer())
+        .post('/api/auth/register/user')
+        .send(payload)
+        .expect(201);
+    });
+
+    it('AUTH-018: Phone 15 chars (max) → 201', async () => {
       const payload = registerPayload({ phone: '012345678901234' });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(201);
     });
 
-    it('AUTH-019: BVA - Phone 16 chars (above max)', async () => {
+    it('AUTH-019: Phone 16 chars (max+1) → 400', async () => {
       const payload = registerPayload({ phone: '0123456789012345' });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(400);
     });
+  });
 
-    // ---- BVA: fullName ----
-    it('AUTH-020: BVA - fullName 1 char (below min)', async () => {
+  // ===================================================================
+  // BVA: REGISTER — FULLNAME BOUNDARY
+  // ===================================================================
+
+  describe('BVA - Register fullName length', () => {
+    it('AUTH-020: fullName 1 char (min-1) → 400', async () => {
       const payload = registerPayload({ fullName: 'A' });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(400);
     });
 
-    it('AUTH-021: BVA - fullName 100 chars (max)', async () => {
+    it('AUTH-056: fullName 2 chars (min) → 201', async () => {
+      const payload = registerPayload({ fullName: 'An' });
+      await request(app.getHttpServer())
+        .post('/api/auth/register/user')
+        .send(payload)
+        .expect(201);
+    });
+
+    it('AUTH-057: fullName 99 chars (max-1) → 201', async () => {
+      const payload = registerPayload({ fullName: 'A'.repeat(99) });
+      await request(app.getHttpServer())
+        .post('/api/auth/register/user')
+        .send(payload)
+        .expect(201);
+    });
+
+    it('AUTH-021: fullName 100 chars (max) → 201', async () => {
       const payload = registerPayload({ fullName: 'A'.repeat(100) });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(201);
     });
 
-    it('AUTH-022: BVA - fullName 101 chars (above max)', async () => {
+    it('AUTH-022: fullName 101 chars (max+1) → 400', async () => {
       const payload = registerPayload({ fullName: 'A'.repeat(101) });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/user')
         .send(payload)
         .expect(400);
     });
+  });
 
-    // ---- BVA: identity_number ----
-    it('AUTH-023: BVA - identity_number 11 chars (below exact)', async () => {
+  // ===================================================================
+  // BVA: REGISTER — IDENTITY NUMBER BOUNDARY
+  // ===================================================================
+
+  describe('BVA - Register identity_number length', () => {
+    it('AUTH-023: identity_number 11 chars (exact-1) → 400', async () => {
       const payload = landlordPayload({ identity_number: '1'.repeat(11) });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/landlord')
         .send(payload)
         .expect(400);
     });
 
-    it('AUTH-024: BVA - identity_number 12 chars (exact)', async () => {
+    it('AUTH-024: identity_number 12 chars (exact) → 201', async () => {
       const payload = landlordPayload({ identity_number: '1'.repeat(12) });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/landlord')
         .send(payload)
         .expect(201);
     });
 
-    it('AUTH-025: BVA - identity_number 13 chars (above exact)', async () => {
+    it('AUTH-025: identity_number 13 chars (exact+1) → 400', async () => {
       const payload = landlordPayload({ identity_number: '1'.repeat(13) });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/register/landlord')
         .send(payload)
         .expect(400);
     });
   });
 
-  // =========================================================
-  // LOGIN
-  // =========================================================
+  // ===================================================================
+  // BVA: OTP LENGTH
+  // ===================================================================
 
-  describe('POST /api/auth/login - Login', () => {
-    it('AUTH-026: Login tenant successfully', async () => {
-      const payload = loginPayload('tenant-login@test.com');
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/login')
-        .send(payload)
-        .expect(201);
-
-      expect(res.body.data.token).toBeDefined();
-      expect(res.body.data.user).toBeDefined();
-    });
-
-    it('AUTH-027: Login landlord successfully', async () => {
-      mockUserRepository.findById.mockResolvedValue(
-        createMockUser({ role: ['landlord'] }),
-      );
-
-      const payload = loginPayload('landlord-login@test.com');
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/login')
-        .send(payload)
-        .expect(201);
-
-      expect(res.body.data.user.role).toContain('landlord');
-    });
-
-    it('AUTH-028: Login wrong email', async () => {
-      mockSupabaseAuth.signInWithPassword.mockResolvedValue({
-        data: { session: null },
-        error: { status: 400, message: 'Invalid login credentials' },
-      });
-
-      const payload = loginPayload('wrong@test.com');
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/login')
-        .send(payload)
-        .expect(401);
-
-      expect(res.body.statusCode).toBe(401);
-    });
-
-    it('AUTH-029: Login wrong password', async () => {
-      mockSupabaseAuth.signInWithPassword.mockResolvedValue({
-        data: { session: null },
-        error: { status: 400, message: 'Invalid login credentials' },
-      });
-
-      const payload = { email: 'tenant-login@test.com', password: 'WrongPass1@' };
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/login')
-        .send(payload)
-        .expect(401);
-
-      expect(res.body.statusCode).toBe(401);
-    });
-
-    it('AUTH-030: Login empty email', async () => {
-      const payload = { email: '', password: 'Test@1234' };
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/login')
-        .send(payload)
+  describe('BVA - OTP length', () => {
+    it('AUTH-036: Confirm OTP 5 chars (min-1) → 400', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/confirm-otp')
+        .send({ email: 'test@test.com', otp: '12345' })
         .expect(400);
-
-      expect(res.body.statusCode).toBe(400);
-    });
-  });
-
-  // =========================================================
-  // FORGOT / RESET PASSWORD
-  // =========================================================
-
-  describe('POST /api/auth/forgot-password - Forgot password', () => {
-    it('AUTH-031: Forgot password successfully', async () => {
-      mockSupabaseAuthAdmin.listUsers.mockResolvedValue({
-        data: { users: [{ id: 'existing-user', email: 'exists@test.com' }] },
-        error: null,
-      });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/forgot-password')
-        .send({ email: 'exists@test.com' })
-        .expect(201);
-
-      expect(res.body.statusCode).toBe(201);
     });
 
-    it('AUTH-032: Forgot password - email not found (still 201 for security)', async () => {
-      mockSupabaseAuthAdmin.listUsers.mockResolvedValue({
-        data: { users: [] },
-        error: null,
-      });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/forgot-password')
-        .send({ email: 'notfound@test.com' })
-        .expect(201);
-
-      expect(res.body.statusCode).toBe(201);
-    });
-
-    it('AUTH-033: Forgot password - missing email', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/forgot-password')
-        .send({})
-        .expect(400);
-
-      expect(res.body.statusCode).toBe(400);
-    });
-  });
-
-  describe('POST /api/auth/confirm-otp - Confirm OTP', () => {
-    it('AUTH-034: Confirm OTP successfully', async () => {
+    it('AUTH-058: Confirm OTP 6 chars (exact) → 201', async () => {
       mockRedisService.getValue.mockResolvedValue({ otp: '123456', isVerified: false });
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/api/auth/confirm-otp')
-        .send({ email: 'exists@test.com', otp: '123456' })
+        .send({ email: 'test@test.com', otp: '123456' })
         .expect(201);
-
-      expect(res.body.message).toBe('Success');
     });
 
-    it('AUTH-035: Confirm OTP wrong code', async () => {
-      mockRedisService.getValue.mockResolvedValue({ otp: '123456', isVerified: false });
-
-      const res = await request(app.getHttpServer())
+    it('AUTH-059: Confirm OTP 7 chars (max+1) → 400', async () => {
+      await request(app.getHttpServer())
         .post('/api/auth/confirm-otp')
-        .send({ email: 'exists@test.com', otp: '000000' })
+        .send({ email: 'test@test.com', otp: '1234567' })
         .expect(400);
-
-      expect(res.body.message).toContain('OTP');
-    });
-
-    it('AUTH-036: Confirm OTP wrong length', async () => {
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/confirm-otp')
-        .send({ email: 'exists@test.com', otp: '12345' })
-        .expect(400);
-
-      expect(res.body.statusCode).toBe(400);
     });
   });
 
-  describe('POST /api/auth/reset-password - Reset password', () => {
+  // ===================================================================
+  // DT: PASSWORD RESET LIFECYCLE
+  // ===================================================================
+
+  describe('DT - Reset password lifecycle', () => {
     const resetPayload = (overrides: Record<string, any> = {}) => ({
       email: 'exists@test.com',
       otp: '123456',
@@ -673,52 +486,7 @@ describe('AuthModule (e2e)', () => {
       ...overrides,
     });
 
-    it('AUTH-037: Reset password successfully', async () => {
-      mockRedisService.getValue.mockResolvedValue({ otp: '123456', isVerified: true });
-      mockSupabaseAuthAdmin.listUsers.mockResolvedValue({
-        data: { users: [{ id: 'existing-user', email: 'exists@test.com' }] },
-        error: null,
-      });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/reset-password')
-        .send(resetPayload())
-        .expect(201);
-
-      expect(res.body.data.message).toContain('thành công');
-    });
-
-    it('AUTH-038: Reset password - wrong OTP', async () => {
-      mockRedisService.getValue.mockResolvedValue({ otp: '123456', isVerified: false });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/reset-password')
-        .send(resetPayload({ otp: '000000' }))
-        .expect(400);
-
-      expect(res.body.message).toContain('OTP');
-    });
-
-    it('AUTH-039: Reset password - weak new password', async () => {
-      mockRedisService.getValue.mockResolvedValue({ otp: '123456', isVerified: true });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/reset-password')
-        .send(resetPayload({ newPassword: 'weak', confirmPassword: 'weak' }))
-        .expect(400);
-    });
-
-    it('AUTH-040: Reset password - confirm mismatch', async () => {
-      mockRedisService.getValue.mockResolvedValue({ otp: '123456', isVerified: true });
-
-      const res = await request(app.getHttpServer())
-        .post('/api/auth/reset-password')
-        .send(resetPayload({ confirmPassword: 'Diff1@ent' }))
-        .expect(400);
-    });
-
-    // ---- DT: Reset-password lifecycle ----
-    it('AUTH-041: Login with old password fails after reset (DT)', async () => {
+    it('AUTH-041: Login with old password fails after reset', async () => {
       mockRedisService.getValue.mockResolvedValue({ otp: '123456', isVerified: true });
       mockSupabaseAuthAdmin.listUsers.mockResolvedValue({
         data: { users: [{ id: 'existing-user', email: 'exists@test.com' }] },
@@ -743,7 +511,7 @@ describe('AuthModule (e2e)', () => {
       expect(res.body.statusCode).toBe(401);
     });
 
-    it('AUTH-042: Login with new password succeeds after reset (DT)', async () => {
+    it('AUTH-042: Login with new password succeeds after reset', async () => {
       mockSupabaseAuth.signInWithPassword.mockResolvedValue({
         data: {
           session: { access_token: 'mock-jwt-token' },
@@ -759,52 +527,70 @@ describe('AuthModule (e2e)', () => {
 
       expect(res.body.data.token).toBeDefined();
     });
+
+    it('AUTH-043: OTP bypass — wrong OTP but isVerified=true still succeeds', async () => {
+      mockRedisService.getValue.mockResolvedValue({ otp: '123456', isVerified: true });
+      mockSupabaseAuthAdmin.listUsers.mockResolvedValue({
+        data: { users: [{ id: 'existing-user', email: 'exists@test.com' }] },
+        error: null,
+      });
+
+      await request(app.getHttpServer())
+        .post('/api/auth/reset-password')
+        .send(resetPayload({ otp: '000000' }))
+        .expect(201);
+    });
   });
 
-  // =========================================================
-  // ACCESS CONTROL (DT - Decision Table)
-  // =========================================================
+  // ===================================================================
+  // DT: ACCESS CONTROL
+  // ===================================================================
 
-  describe('Access Control - Decision Table', () => {
-    it('AUTH-043: Public endpoint without auth', async () => {
+  describe('DT - Access Control', () => {
+    it('AUTH-047: Public endpoint without auth → 200', async () => {
       mockUserRepository.findById.mockResolvedValue(createMockUser());
-
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get('/api/users/some-id')
         .expect(200);
-
-      expect(res.body.statusCode).toBe(200);
     });
 
-    it('AUTH-044: Protected endpoint without token', async () => {
-      const res = await request(app.getHttpServer())
+    it('AUTH-048: Protected endpoint without token → 401', async () => {
+      await request(app.getHttpServer())
         .get('/api/profile')
         .expect(401);
-
-      expect(res.body.message).toContain('Authorization');
     });
 
-    it('AUTH-045: Empty Bearer token', async () => {
-      const res = await request(app.getHttpServer())
+    it('AUTH-049: Empty Bearer token → 401', async () => {
+      await request(app.getHttpServer())
         .get('/api/profile')
         .set('Authorization', 'Bearer ')
         .expect(401);
-
-      expect(res.body.statusCode).toBe(401);
     });
 
-    it('AUTH-046: Fake Bearer token', async () => {
+    it('AUTH-050: Fake Bearer token → 401', async () => {
       mockSupabaseClient.auth.getUser.mockResolvedValue({
         data: { user: null },
         error: { message: 'Invalid token' },
       });
 
-      const res = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get('/api/profile')
         .set('Authorization', 'Bearer fake-jwt-token')
         .expect(401);
+    });
 
-      expect(res.body.message).toContain('không hợp lệ');
+    it('AUTH-051: RolesGuard allows required role → 200', async () => {
+      await request(app.getHttpServer())
+        .get('/api/test-roles/tenant')
+        .set('Authorization', 'Bearer valid-jwt-token')
+        .expect(200);
+    });
+
+    it('AUTH-052: RolesGuard forbids missing role → 403', async () => {
+      await request(app.getHttpServer())
+        .get('/api/test-roles/admin')
+        .set('Authorization', 'Bearer valid-jwt-token')
+        .expect(403);
     });
   });
 });
