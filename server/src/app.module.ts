@@ -16,6 +16,7 @@ import { ViewingAppointmentsModule } from './modules/viewing-appointments/presen
 import { UploadModule } from './modules/upload/upload.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { BillingModule } from './modules/billing/billing.module';
+import { MaintenanceRequestsModule } from './modules/maintenance-requests/presentation/maintenance-request.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { BillingModule } from './modules/billing/billing.module';
     PaymentsModule,
     PenaltiesModule,
     BillingModule,
+    MaintenanceRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

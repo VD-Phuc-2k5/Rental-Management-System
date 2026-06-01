@@ -7,7 +7,7 @@ export class UploadService {
   constructor(private readonly supabaseService: SupabaseService) {}
 
   async uploadImage(
-    bucket: 'room-images' | 'identity-images',
+    bucket: 'room-images' | 'identity-images' | 'maintenance-requests',
     fileBuffer: Buffer,
     mimeType: string,
   ): Promise<string> {

@@ -1,6 +1,4 @@
 import '../constants.dart';
-import '../../screens/tenant-invoice-list-screen/tenant_invoice_list_screen.dart';
-import '../../screens/tenant-maintenance-request-screen/tenant_maintenance_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -28,16 +26,10 @@ class TenantNavigationBottom extends StatelessWidget {
         context.go(RoutePaths.myAppointments);
         break;
       case 2:
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => const TenantMaintenanceRequestScreen(),
-          ),
-        );
+        context.go(RoutePaths.tenantMaintenance);
         break;
       case 3:
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const TenantInvoiceListScreen()),
-        );
+        context.go(RoutePaths.tenantInvoices);
         break;
       case 4:
         context.go(RoutePaths.profile);

@@ -2,7 +2,6 @@ import "../../../core/constants.dart";
 import "package:flutter/material.dart";
 
 class TabHeader extends StatelessWidget {
-
   const TabHeader({
     super.key,
     required this.selectedIndex,
@@ -53,9 +52,7 @@ class TabHeader extends StatelessWidget {
           shadowColor: Colors.transparent,
         ),
         child: Text(
-          counts != null && counts!.length > index
-              ? '${tabs[index]} (${counts![index]})'
-              : tabs[index],
+          tabs[index],
           style: TextStyle(
             color: isSelected ? AppColors.blue700 : AppColors.slate500,
             fontWeight: FontWeight.w700,

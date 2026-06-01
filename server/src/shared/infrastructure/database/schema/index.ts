@@ -11,3 +11,4 @@ export * from './contract-member.schema';
 export * from './viewing-appointment.schema';
 export * from './penalty.schema';
 export * from './billing.schema';
+export * from './maintenance-request.schema';

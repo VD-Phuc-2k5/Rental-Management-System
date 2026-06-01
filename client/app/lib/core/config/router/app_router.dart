@@ -38,6 +38,8 @@ import '../../../features/viewing_appointment/presentation/pages/landlord_viewin
 import '../../../features/splash/presentation/pages/splash_page.dart';
 import '../../../screens/landlord-requests-screen/landlord_requests_screen.dart';
 import '../../../screens/landlord-payment-history/landlord_payment_history_screen.dart';
+import '../../../screens/tenant-maintenance-request-screen/tenant_maintenance_request_screen.dart';
+import '../../../screens/tenant-invoice-list-screen/tenant_invoice_list_screen.dart';
 import '../../widgets/error_page.dart';
 import 'go_router_refresh_stream.dart';
 import 'route_constants.dart';
@@ -293,6 +295,16 @@ GoRouter createRouter(AuthenticationBloc authBloc) {
           final extra = state.extra as Map<String, String>;
           return RentalRequestWizardPage(roomId: extra['roomId'] ?? '');
         },
+      ),
+      GoRoute(
+        path: RoutePaths.tenantMaintenance,
+        name: RouteNames.tenantMaintenance,
+        builder: (_, _) => const TenantMaintenanceRequestScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.tenantInvoices,
+        name: RouteNames.tenantInvoices,
+        builder: (_, _) => const TenantInvoiceListScreen(),
       ),
     ],
     errorBuilder: (BuildContext context, GoRouterState state) =>

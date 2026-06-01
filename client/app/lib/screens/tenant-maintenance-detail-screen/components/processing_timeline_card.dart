@@ -1,21 +1,37 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants.dart';
-
+import 'package:intl/intl.dart';
+import '../../../core/models/maintenance_request.dart';
 class ProcessingTimelineCard extends StatelessWidget {
-  const ProcessingTimelineCard({super.key});
+  const ProcessingTimelineCard({
+    super.key,
+     required this.request,});
+
+  final MaintenanceRequest request;
 
   @override
   Widget build(BuildContext context) {
+    final createdAtText = DateFormat('HH:mm, dd/MM/yyyy').format(request.createdAt);
+
+    final scheduledAtText = request.scheduledAt == null
+        ? ''
+        : DateFormat('HH:mm, dd/MM/yyyy').format(request.scheduledAt!);
+
+    final hasSchedule = request.scheduledAt != null ||
+        request.status == RequestStatus.processing ||
+        request.status == RequestStatus.completed;
+
+    final isCompleted = request.status == RequestStatus.completed;
     return Card(
       elevation: 0,
       color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      child: const Padding(
-        padding: EdgeInsets.fromLTRB(14, 14, 14, 12),
+      child:  Padding(
+        padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'TIẾN ĐỘ XỬ LÝ',
               style: TextStyle(
                 color: AppColors.slate500,
@@ -24,30 +40,36 @@ class ProcessingTimelineCard extends StatelessWidget {
                 letterSpacing: 0.3,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
 
             _TimelineItem(
               state: _TimelineState.done,
               title: 'Tiếp nhận yêu cầu',
-              subtitle: '09:30, 19/10/2023',
+              subtitle: createdAtText,
               isLast: false,
             ),
             _TimelineItem(
-              state: _TimelineState.done,
+              state: hasSchedule ? _TimelineState.done : _TimelineState.todo,
               title: 'Đã lên lịch',
-              subtitle: '10:15, 19/10/2023',
+              subtitle: scheduledAtText,
               isLast: false,
             ),
             _TimelineItem(
-              state: _TimelineState.current,
-              title: 'Chờ xác nhận',
-              subtitle: 'Vui lòng kiểm tra kết quả bên dưới',
+              state: request.status == RequestStatus.processing
+                  ? _TimelineState.current
+                  : isCompleted
+                      ? _TimelineState.done
+                      : _TimelineState.todo,
+              title: 'Đang xử lý',
+              subtitle: request.status == RequestStatus.processing
+                  ? 'Sự cố đang được xử lý'
+                  : '',
               isLast: false,
             ),
             _TimelineItem(
-              state: _TimelineState.todo,
+              state: isCompleted ? _TimelineState.done : _TimelineState.todo,
               title: 'Hoàn thành',
-              subtitle: '',
+              subtitle: isCompleted ? 'Sự cố đã được hoàn thành' : '',
               isLast: true,
             ),
           ],

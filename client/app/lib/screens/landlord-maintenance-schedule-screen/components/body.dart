@@ -1,3 +1,9 @@
+import 'package:data/auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../core/services/maintenance_request_service.dart';
+import '../../../features/auth/presentation/blocs/authentication/authentication_bloc.dart';
+
 import '../../../core/constants.dart';
 import '../../../core/models/maintenance_request.dart';
 import 'notification_info_box.dart';
@@ -18,11 +24,21 @@ class _BodyState extends State<Body> {
   final _technicianNameController = TextEditingController();
   final _technicianPhoneController = TextEditingController();
   final _notesController = TextEditingController();
+  final _maintenanceService = MaintenanceRequestService();
 
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   bool _isSubmitting = false;
 
+  String _getAccessToken() {
+  final authUser = context.read<AuthenticationBloc>().state.user;
+
+  if (authUser is AuthModel) {
+    return authUser.token;
+  }
+
+  throw Exception("Không lấy được token đăng nhập");
+}
   @override
   void dispose() {
     _technicianNameController.dispose();
@@ -142,6 +158,10 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> _submitSchedule() async {
+    if (widget.request.status == RequestStatus.completed) {
+      _showMessage("Sự cố này đã hoàn thành rồi");
+      return;
+    }
     if (!_validateForm()) return;
 
     setState(() {
@@ -159,7 +179,24 @@ class _BodyState extends State<Body> {
       // - _selectedTime
 
       // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      final token = _getAccessToken();
+
+      final scheduledAt = DateTime(
+        _selectedDate!.year,
+        _selectedDate!.month,
+        _selectedDate!.day,
+        _selectedTime!.hour,
+        _selectedTime!.minute,
+      );
+
+      await _maintenanceService.scheduleMaintenanceRequest(
+        token: token,
+        requestId: widget.request.id,
+        technicianName: _technicianNameController.text,
+        technicianPhone: _technicianPhoneController.text,
+        scheduledAt: scheduledAt,
+        landlordNote: _notesController.text,
+      );
 
       if (!mounted) return;
 
@@ -168,7 +205,7 @@ class _BodyState extends State<Body> {
       // Navigate back after successful submission
       await Future.delayed(const Duration(milliseconds: 500));
       if (mounted) {
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
       }
     } catch (e, stackTrace) {
       debugPrint("Error when saving schedule: $e");

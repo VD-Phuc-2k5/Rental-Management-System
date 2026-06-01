@@ -26,9 +26,9 @@ export class UploadController {
     @Query('bucket') bucket: string,
   ) {
     if (!file) throw new BadRequestException('No file provided');
-    const validBuckets = ['room-images', 'identity-images'] as const;
+    const validBuckets = ['room-images', 'identity-images', 'maintenance-requests',] as const;
     const targetBucket = validBuckets.includes(bucket as any)
-      ? (bucket as 'room-images' | 'identity-images')
+      ? (bucket as 'room-images' | 'identity-images' | 'maintenance-requests')
       : 'room-images';
 
     const url = await this.uploadService.uploadImage(

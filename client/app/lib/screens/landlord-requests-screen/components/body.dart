@@ -1,7 +1,7 @@
 import "maintenance/process_requests_list.dart";
 import "tab_header.dart";
-import "view-room/view_room_list.dart";
 import "package:flutter/material.dart";
+import '../../../features/viewing_appointment/presentation/pages/landlord_viewing_appointments_page.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key});
@@ -12,7 +12,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   int _selectedTabIndex = 0;
-  int _viewRoomCount = 0;
+  final int _viewRoomCount = 0;
   int _processCount = 0;
 
   @override
@@ -31,11 +31,14 @@ class _BodyState extends State<Body> {
         ),
         Expanded(
           child: _selectedTabIndex == 0
-              ? ViewRoomList(
-                  onCountChanged: (count) {
-                    setState(() => _viewRoomCount = count);
-                  },
+              ? const LandlordViewingAppointmentsPage(
+                  embedded: true,
                 )
+              // ? ViewRoomList(
+              //     onCountChanged: (count) {
+              //       setState(() => _viewRoomCount = count);
+              //     },
+              //   )
               : ProcessRequestsList(
                   onCountChanged: (count) {
                     setState(() => _processCount = count);
