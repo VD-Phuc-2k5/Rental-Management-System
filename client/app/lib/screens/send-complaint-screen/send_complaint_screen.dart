@@ -1,6 +1,7 @@
 import 'package:data/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../core/constants.dart';
 import '../../core/models/maintenance_request.dart';
@@ -29,8 +30,10 @@ class SendComplaintScreen extends StatefulWidget {
 class _SendComplaintScreenState extends State<SendComplaintScreen> {
   final _reasonController = TextEditingController();
   final _service = MaintenanceRequestService();
+  final _imagePicker = ImagePicker();
 
   bool _isSubmitting = false;
+  final List<XFile> _selectedImages = [];
 
   @override
   void dispose() {
@@ -40,11 +43,7 @@ class _SendComplaintScreenState extends State<SendComplaintScreen> {
 
   String? _getAccessToken() {
     final authUser = context.read<AuthenticationBloc>().state.user;
-
-    if (authUser is AuthModel) {
-      return authUser.token;
-    }
-
+    if (authUser is AuthModel) return authUser.token;
     return null;
   }
 
@@ -52,6 +51,28 @@ class _SendComplaintScreenState extends State<SendComplaintScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
+  }
+
+  Future<void> _pickImage() async {
+    if (_selectedImages.length >= ComplaintImagesSection.maxImages) return;
+
+    try {
+      final picked = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1920,
+        maxHeight: 1080,
+        imageQuality: 85,
+      );
+      if (picked != null && mounted) {
+        setState(() => _selectedImages.add(picked));
+      }
+    } on Exception catch (e) {
+      if (mounted) _showMessage('Lỗi khi chọn ảnh: $e');
+    }
+  }
+
+  void _removeImage(int index) {
+    setState(() => _selectedImages.removeAt(index));
   }
 
   Future<void> _submitComplaint() async {
@@ -63,7 +84,6 @@ class _SendComplaintScreenState extends State<SendComplaintScreen> {
     }
 
     final token = _getAccessToken();
-
     if (token == null || token.isEmpty) {
       _showMessage('Không lấy được token đăng nhập');
       return;
@@ -74,30 +94,25 @@ class _SendComplaintScreenState extends State<SendComplaintScreen> {
       return;
     }
 
-    setState(() {
-      _isSubmitting = true;
-    });
+    setState(() => _isSubmitting = true);
 
     try {
       final updatedRequest = await _service.submitComplaint(
         token: token,
         requestId: widget.request.id,
         complaintDescription: reason,
+        images: _selectedImages,
       );
 
       if (!mounted) return;
 
       _showMessage('Gửi khiếu nại thành công');
-
       await Future.delayed(const Duration(milliseconds: 400));
 
-      if (mounted) {
-        Navigator.of(context).pop(updatedRequest);
-      }
+      if (mounted) Navigator.of(context).pop(updatedRequest);
     } catch (e) {
       if (mounted) {
         final message = e.toString();
-
         if (message.contains('xác nhận hoàn thành')) {
           _showMessage('Sự cố này đã được xác nhận hoàn thành trước đó');
         } else {
@@ -105,11 +120,7 @@ class _SendComplaintScreenState extends State<SendComplaintScreen> {
         }
       }
     } finally {
-      if (mounted) {
-        setState(() {
-          _isSubmitting = false;
-        });
-      }
+      if (mounted) setState(() => _isSubmitting = false);
     }
   }
 
@@ -131,11 +142,13 @@ class _SendComplaintScreenState extends State<SendComplaintScreen> {
               statusLabel: widget.request.status.label,
             ),
             const SizedBox(height: 16),
-            ComplaintReasonField(
-              controller: _reasonController,
-            ),
+            ComplaintReasonField(controller: _reasonController),
             const SizedBox(height: 18),
-            const ComplaintImagesSection(),
+            ComplaintImagesSection(
+              images: _selectedImages,
+              onAddImage: _pickImage,
+              onRemoveImage: _removeImage,
+            ),
             const SizedBox(height: 14),
             const ComplaintNoteBanner(),
           ],

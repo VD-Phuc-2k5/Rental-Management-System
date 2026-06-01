@@ -28,6 +28,8 @@
   static const String landlordContractEdit = '/landlord-contract-edit';
   static const String rentalRequestWizard = '/rental-request-wizard';
   static const String myContracts = '/my-contracts';
+  static const String tenantMaintenance = '/maintenance';
+  static const String tenantInvoices = '/invoices';
 }
 
 abstract class RouteNames {
@@ -60,4 +62,6 @@ abstract class RouteNames {
   static const String landlordContractEdit = 'landlord-contract-edit';
   static const String rentalRequestWizard = 'rental-request-wizard';
   static const String myContracts = 'my-contracts';
+  static const String tenantMaintenance = 'tenant-maintenance';
+  static const String tenantInvoices = 'tenant-invoices';
 }

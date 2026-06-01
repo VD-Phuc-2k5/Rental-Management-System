@@ -39,6 +39,7 @@ export class SubmitMaintenanceComplaintService {
         id,
         tenantId,
         dto.complaintDescription,
+        dto.complaintImageUrls,
       );
 
     if (!updatedRequest) {

@@ -19,25 +19,16 @@ class HistoryRequestsView extends StatefulWidget {
 class _HistoryRequestsViewState extends State<HistoryRequestsView> {
   final _service = MaintenanceRequestService();
 
-  String _getCurrentTenantId() {
-  final authUser = context.read<AuthenticationBloc>().state.user;
-
-  if (authUser is AuthModel) {
-    return authUser.user.id;
-  }
-
-  throw Exception("Không lấy được thông tin người dùng đăng nhập");
-}
-
   String _getAccessToken() {
-  final authUser = context.read<AuthenticationBloc>().state.user;
+    final authUser = context.read<AuthenticationBloc>().state.user;
 
-  if (authUser is AuthModel) {
-    return authUser.token;
+    if (authUser is AuthModel) {
+      return authUser.token;
+    }
+
+    throw Exception("Không lấy được token đăng nhập");
   }
 
-  throw Exception("Không lấy được token đăng nhập");
-}
   late Future<List<MaintenanceRequest>> _futureRequests;
 
   @override
@@ -45,20 +36,19 @@ class _HistoryRequestsViewState extends State<HistoryRequestsView> {
     super.initState();
     final token = _getAccessToken();
 
-  _futureRequests = _service.fetchMyRequests(
-    token: token,
-  );
+    _futureRequests = _service.fetchMyRequests(
+      token: token,
+    );
   }
 
   Future<void> _reload() async {
     final token = _getAccessToken();
 
-  setState(() {
-    _futureRequests = _service.fetchMyRequests(
-      token: token,
-    );
-  });
-
+    setState(() {
+      _futureRequests = _service.fetchMyRequests(
+        token: token,
+      );
+    });
 
     await _futureRequests;
   }

@@ -19,6 +19,7 @@ export class MaintenanceRequestEntity {
     public readonly priority: MaintenancePriority,
     public readonly status: MaintenanceRequestStatus,
     public readonly imageUrls: string[],
+    public readonly complaintImageUrls: string[],
     public readonly technicianName: string | null,
     public readonly technicianPhone: string | null,
     public readonly scheduledAt: Date | null,

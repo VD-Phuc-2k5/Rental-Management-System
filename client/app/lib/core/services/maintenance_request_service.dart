@@ -167,6 +167,7 @@ class MaintenanceRequestService {
   Future<List<String>> _uploadImages({
     required String token,
     required List<XFile> images,
+    String bucket = 'maintenance-requests',
   }) async {
     if (images.isEmpty) return const [];
 
@@ -175,7 +176,7 @@ class MaintenanceRequestService {
     for (final image in images) {
       final request = http.MultipartRequest(
         'POST',
-        Uri.parse('$baseUrl/upload/image?bucket=maintenance-requests'),
+        Uri.parse('$baseUrl/upload/image?bucket=$bucket'),
       );
 
       request.headers['Authorization'] = 'Bearer $token';
@@ -280,13 +281,22 @@ class MaintenanceRequestService {
       required String token,
       required String requestId,
       required String complaintDescription,
+      List<XFile> images = const [],
     }) async {
       try {
+        final complaintImageUrls = await _uploadImages(
+          token: token,
+          images: images,
+          bucket: 'maintenance-requests',
+        );
+
         final response = await _client.patch(
           Uri.parse('$baseUrl/maintenance-requests/$requestId/complaint'),
           headers: _headers(token),
           body: jsonEncode({
             'complaintDescription': complaintDescription.trim(),
+            if (complaintImageUrls.isNotEmpty)
+              'complaintImageUrls': complaintImageUrls,
           }),
         );
 

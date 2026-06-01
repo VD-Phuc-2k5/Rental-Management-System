@@ -16,9 +16,7 @@ import {
 } from '../domain/repositories/maintenance-request.repository';
 
 @Injectable()
-export class DrizzleMaintenanceRequestRepository
-  implements MaintenanceRequestRepository
-{
+export class DrizzleMaintenanceRequestRepository implements MaintenanceRequestRepository {
   constructor(private readonly drizzle: DrizzleService) {}
 
   private toEntity(
@@ -35,6 +33,7 @@ export class DrizzleMaintenanceRequestRepository
       row.priority as MaintenancePriority,
       row.status as MaintenanceRequestStatus,
       (row.imageUrls as string[]) ?? [],
+      (row.complaintImageUrls as string[]) ?? [],
       row.technicianName ?? null,
       row.technicianPhone ?? null,
       row.scheduledAt ?? null,
@@ -64,9 +63,7 @@ export class DrizzleMaintenanceRequestRepository
     return this.toEntity(row);
   }
 
-  async findByTenantId(
-    tenantId: string,
-  ): Promise<MaintenanceRequestEntity[]> {
+  async findByTenantId(tenantId: string): Promise<MaintenanceRequestEntity[]> {
     const rows = await this.drizzle.db
       .select()
       .from(maintenanceRequests)
@@ -132,47 +129,48 @@ export class DrizzleMaintenanceRequestRepository
     return row ? this.toEntity(row) : null;
   }
   async findByIdAndTenantId(
-  id: string,
-  tenantId: string,
-): Promise<MaintenanceRequestEntity | null> {
-  const [row] = await this.drizzle.db
-    .select()
-    .from(maintenanceRequests)
-    .where(
-      and(
-        eq(maintenanceRequests.id, id),
-        eq(maintenanceRequests.tenantId, tenantId),
-      ),
-    )
-    .limit(1);
+    id: string,
+    tenantId: string,
+  ): Promise<MaintenanceRequestEntity | null> {
+    const [row] = await this.drizzle.db
+      .select()
+      .from(maintenanceRequests)
+      .where(
+        and(
+          eq(maintenanceRequests.id, id),
+          eq(maintenanceRequests.tenantId, tenantId),
+        ),
+      )
+      .limit(1);
 
-  return row ? this.toEntity(row) : null;
-}
+    return row ? this.toEntity(row) : null;
+  }
 
-async completeByTenantId(
-  id: string,
-  tenantId: string,
-): Promise<MaintenanceRequestEntity | null> {
-  const [row] = await this.drizzle.db
-    .update(maintenanceRequests)
-    .set({
-      status: 'completed',
-    })
-    .where(
-      and(
-        eq(maintenanceRequests.id, id),
-        eq(maintenanceRequests.tenantId, tenantId),
-      ),
-    )
-    .returning();
+  async completeByTenantId(
+    id: string,
+    tenantId: string,
+  ): Promise<MaintenanceRequestEntity | null> {
+    const [row] = await this.drizzle.db
+      .update(maintenanceRequests)
+      .set({
+        status: 'completed',
+      })
+      .where(
+        and(
+          eq(maintenanceRequests.id, id),
+          eq(maintenanceRequests.tenantId, tenantId),
+        ),
+      )
+      .returning();
 
-  return row ? this.toEntity(row) : null;
-}
+    return row ? this.toEntity(row) : null;
+  }
 
   async submitComplaintByTenantId(
     id: string,
     tenantId: string,
     complaintDescription: string,
+    complaintImageUrls: string[] = [],
   ): Promise<MaintenanceRequestEntity | null> {
     const current = await this.findByIdAndTenantId(id, tenantId);
 
@@ -191,6 +189,7 @@ async completeByTenantId(
       .update(maintenanceRequests)
       .set({
         description: newDescription,
+        complaintImageUrls,
         status: 'complaint',
         updatedAt: new Date(),
       })

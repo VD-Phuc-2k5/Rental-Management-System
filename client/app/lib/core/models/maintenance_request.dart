@@ -1,8 +1,41 @@
 import 'priority.dart';
 
-enum RequestStatus { pending, processing, completed, rejected, complaint  }
+enum RequestStatus { pending, processing, completed, rejected, complaint }
 
 class MaintenanceRequest {
+  factory MaintenanceRequest.fromMap(Map<String, dynamic> map) {
+    return MaintenanceRequest(
+      id: map['id']?.toString() ?? '',
+      title: map['title']?.toString() ?? '',
+      description: map['description']?.toString() ?? '',
+      location: map['location']?.toString() ?? '',
+      priority: _parsePriority(map['priority']),
+      status: _parseStatus(map['status']),
+      createdAt:
+          DateTime.tryParse(
+            map['createdAt']?.toString() ?? map['created_at']?.toString() ?? '',
+          )?.toLocal() ??
+          DateTime.now(),
+      imageUrls: _parseImageUrls(map['imageUrls'] ?? map['image_urls']),
+      complaintImageUrls: _parseImageUrls(
+        map['complaintImageUrls'] ?? map['complaint_image_urls'],
+      ),
+      tenantName:
+          map['tenantName']?.toString() ?? map['tenant_name']?.toString(),
+      technicianName:
+          map['technicianName']?.toString() ??
+          map['technician_name']?.toString(),
+      technicianPhone:
+          map['technicianPhone']?.toString() ??
+          map['technician_phone']?.toString(),
+      scheduledAt: DateTime.tryParse(
+        map['scheduledAt']?.toString() ?? map['scheduled_at']?.toString() ?? '',
+      )?.toLocal(),
+      landlordNote:
+          map['landlordNote']?.toString() ?? map['landlord_note']?.toString(),
+    );
+  }
+
   MaintenanceRequest({
     required this.id,
     required this.title,
@@ -12,8 +45,8 @@ class MaintenanceRequest {
     required this.status,
     required this.createdAt,
     this.imageUrls = const [],
+    this.complaintImageUrls = const [],
     this.tenantName,
-
     this.technicianName,
     this.technicianPhone,
     this.scheduledAt,
@@ -28,45 +61,12 @@ class MaintenanceRequest {
   final RequestStatus status;
   final DateTime createdAt;
   final List<String> imageUrls;
+  final List<String> complaintImageUrls;
   final String? tenantName;
-  
   final String? technicianName;
   final String? technicianPhone;
   final DateTime? scheduledAt;
   final String? landlordNote;
-  factory MaintenanceRequest.fromMap(Map<String, dynamic> map) {
-  return MaintenanceRequest(
-    id: map['id']?.toString() ?? '',
-    title: map['title']?.toString() ?? '',
-    description: map['description']?.toString() ?? '',
-    location: map['location']?.toString() ?? '',
-    priority: _parsePriority(map['priority']),
-    status: _parseStatus(map['status']),
-    createdAt: DateTime.tryParse(
-          map['createdAt']?.toString() ??
-              map['created_at']?.toString() ??
-              '',
-        )?.toLocal() ??
-        DateTime.now(),
-    imageUrls: _parseImageUrls(
-      map['imageUrls'] ?? map['image_urls'],
-    ),
-    tenantName: map['tenantName']?.toString() ??
-        map['tenant_name']?.toString(),
-    
-    technicianName: map['technicianName']?.toString() ??
-        map['technician_name']?.toString(),
-    technicianPhone: map['technicianPhone']?.toString() ??
-        map['technician_phone']?.toString(),
-    scheduledAt: DateTime.tryParse(
-      map['scheduledAt']?.toString() ??
-          map['scheduled_at']?.toString() ??
-          '',
-    )?.toLocal(),
-    landlordNote: map['landlordNote']?.toString() ??
-        map['landlord_note']?.toString(),
-  );
-}
 
   static Priority _parsePriority(dynamic value) {
     return Priority.values.firstWhere(
@@ -84,11 +84,7 @@ class MaintenanceRequest {
 
   static List<String> _parseImageUrls(dynamic value) {
     if (value == null) return const [];
-
-    if (value is List) {
-      return value.map((e) => e.toString()).toList();
-    }
-
+    if (value is List) return value.map((e) => e.toString()).toList();
     return const [];
   }
 }

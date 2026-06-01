@@ -48,18 +48,19 @@ export abstract class MaintenanceRequestRepository {
   ): Promise<MaintenanceRequestEntity | null>;
 
   abstract findByIdAndTenantId(
-  id: string,
-  tenantId: string,
-): Promise<MaintenanceRequestEntity | null>;
+    id: string,
+    tenantId: string,
+  ): Promise<MaintenanceRequestEntity | null>;
 
-abstract completeByTenantId(
-  id: string,
-  tenantId: string,
-): Promise<MaintenanceRequestEntity | null>;
+  abstract completeByTenantId(
+    id: string,
+    tenantId: string,
+  ): Promise<MaintenanceRequestEntity | null>;
 
-abstract submitComplaintByTenantId(
-  id: string,
-  tenantId: string,
-  complaintDescription: string,
-): Promise<MaintenanceRequestEntity | null>;
+  abstract submitComplaintByTenantId(
+    id: string,
+    tenantId: string,
+    complaintDescription: string,
+    complaintImageUrls?: string[],
+  ): Promise<MaintenanceRequestEntity | null>;
 }
