@@ -13,16 +13,16 @@
 | Lớp | Trường | Mô tả | Giá trị đại diện | Kết quả |
 |-----|--------|-------|-----------------|:-------:|
 | EP-01 | title | Chuỗi không rỗng | `Phong 101` | Hợp lệ |
-| EP-02 | title | Rỗng | `""` | Không hợp lệ |
+| EP-02 | title | Rỗng | `""` | Không hợp lệ — DTO (`class-validator`) |
 | EP-03 | area_sqm | > 0 | `25` | Hợp lệ |
-| EP-04 | area_sqm | = 0 | `0` | Không hợp lệ |
+| EP-04 | area_sqm | = 0 | `0` | Không hợp lệ — DTO (`class-validator`) |
 | EP-05 | monthly_rent | > 0 | `3000000` | Hợp lệ |
-| EP-06 | monthly_rent | < 0 | `-1000000` | Không hợp lệ |
+| EP-06 | monthly_rent | < 0 | `-1000000` | Không hợp lệ — DTO (`class-validator`) |
 | EP-07 | deposit_amount | > 0 | `6000000` | Hợp lệ |
 | EP-08 | status | `AVAILABLE` | `AVAILABLE` | Hợp lệ |
 | EP-09 | status | `OCCUPIED` | `OCCUPIED` | Hợp lệ |
 | EP-10 | status | `MAINTENANCE` | `MAINTENANCE` | Hợp lệ |
-| EP-11 | status | Không hợp lệ | `INVALID_STATUS` | Không hợp lệ |
+| EP-11 | status | Không hợp lệ | `INVALID_STATUS` | Không hợp lệ — DTO type (`RoomStatus`) |
 
 ### Browse Rooms
 
