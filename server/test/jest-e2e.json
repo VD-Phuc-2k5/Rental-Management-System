@@ -11,6 +11,7 @@
   },
   "collectCoverageFrom": [
     "src/modules/auth/**/*.ts",
+    "src/modules/rooms/**/*.ts",
     "src/shared/common/**/*.ts",
     "!src/**/*.module.ts",
     "!src/**/*.entity.ts",
