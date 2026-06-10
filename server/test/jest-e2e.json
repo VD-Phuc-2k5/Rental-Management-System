@@ -11,11 +11,15 @@
   },
   "collectCoverageFrom": [
     "src/modules/auth/**/*.ts",
+    "src/modules/properties/**/*.ts",
     "src/modules/rooms/**/*.ts",
     "src/shared/common/**/*.ts",
     "!src/**/*.module.ts",
     "!src/**/*.entity.ts",
     "!src/**/*.schema.ts",
+    "!src/**/*.dto.ts",
+    "!src/**/*.controller.ts",
+    "!src/**/index.ts",
     "!src/config/**"
   ],
   "coverageDirectory": "<rootDir>/test/coverage/e2e",
@@ -23,6 +27,10 @@
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "/testing/",
-    "/dist/"
+    "/dist/",
+    "/dto/",
+    "\\.controller\\.ts",
+    "/index\\.ts",
+    "\\.module\\.ts"
   ]
 }
