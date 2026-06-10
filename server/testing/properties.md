@@ -20,7 +20,10 @@
 | EP-08 | description | Chuỗi không rỗng | `Khu tro an ninh` | Hợp lệ |
 | EP-09 | amenityCodes | Mảng enum hợp lệ | `["WIFI", "AIR_CONDITIONER"]` | Hợp lệ |
 | EP-10 | amenityCodes | Mảng chứa giá trị không hợp lệ | `["INVALID_AMENITY"]` | Không hợp lệ |
-| EP-11 | amenityCodes | Mảng rỗng | `[]` | Không hợp lệ |
+| EP-11 | amenityCodes | Mảng rỗng | `[]` | Không hợp lệ (bắt bởi DTO) |
+| EP-12 | Entity.isValidAmenity | Amenity tồn tại trong danh sách | `WIFI` in `[WIFI, AC]` | Hợp lệ |
+| EP-13 | Entity.isValidAmenity | Amenity không tồn tại trong danh sách | `BED` in `[WIFI]` | Không hợp lệ |
+| EP-14 | Entity.isValidAmenity | Danh sách amenity rỗng | `WIFI` in `[]` | Không hợp lệ |
 
 ## 2. Bảng quyết định (Decision Table) — Property CRUD Access
 
@@ -54,6 +57,23 @@
 | PROP-13 | EP | Delete property thành công | DELETE | landlord | `:id` (tồn tại) | **200** |
 | PROP-14 | EP | Delete property không tồn tại | DELETE | landlord | `:uuid` | **404** |
 | PROP-15 | DT | Delete property của landlord khác | DELETE | landlord B | `:id` (của A) | **404** |
+| PROP-16 | EP | Entity — isValidAmenity trả về true khi amenity tồn tại | - | - | `WIFI` in `[WIFI, AC]` | **true** |
+| PROP-17 | EP | Entity — isValidAmenity trả về false khi amenity không tồn tại | - | - | `BED` in `[WIFI]` | **false** |
+| PROP-18 | EP | Entity — isValidAmenity trả về false khi danh sách rỗng | - | - | `WIFI` in `[]` | **false** |
+| PROP-19 | EP | Create — amenityCodes chứa nhiều giá trị không hợp lệ | POST | landlord | `{ ...valid, amenityCodes: ["FAKE1", "FAKE2"] }` | **400** |
+| PROP-20 | EP | Update — amenityCodes không hợp lệ | PATCH | landlord | `:id` + `{ amenityCodes: ["INVALID"] }` | **400** |
+| PROP-21 | EP | Update — amenityCodes hợp lệ | PATCH | landlord | `:id` + `{ amenityCodes: ["WIFI", "BED"] }` | **200** |
+| PROP-22 | EP | Update với partial fields | PATCH | landlord | `:id` + `{ name }` | **200** |
+| PROP-23 | EP | Repository — tạo property thành công | - | - | Input đầy đủ | **Thành công** |
+| PROP-24 | EP | Repository — foreign key violation (landlord không tồn tại) | - | - | landlorerId không hợp lệ | **Lỗi** |
+| PROP-25 | EP | Repository — findAll trả về mảng rỗng | - | - | landlord không có property | **[]** |
+| PROP-26 | EP | Repository — findById trả về null | - | - | id không tồn tại | **null** |
+| PROP-27 | EP | Controller — InternalServerError khi service throw unknown error | POST | landlord | `{ ...valid }` | **500** |
+| PROP-28 | EP | Controller — InternalServerError khi getById throw unknown error | GET | landlord | `:id` | **500** |
+| PROP-29 | EP | Controller — InternalServerError khi update throw unknown error | PATCH | landlord | `:id` | **500** |
+| PROP-30 | EP | Controller — InternalServerError khi delete throw unknown error | DELETE | landlord | `:id` | **500** |
+| PROP-31 | EP | Domain errors — default messages | - | - | - | **OK** |
+| PROP-32 | EP | Domain errors — custom messages | - | - | - | **OK** |
 
 ---
 
