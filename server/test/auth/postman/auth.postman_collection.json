@@ -1,0 +1,1465 @@
+{
+  "info": {
+    "name": "Auth API Tests",
+    "description": "Postman collection for Auth module test automation. Based on server/testing/auth.md\n\n## Usage\n1. Import this collection into Postman\n2. Import the environment file (auth.postman_environment.json)\n3. Select environment \"Auth API - Local\"\n4. Update {{base_url}} if needed\n5. Run requests in order or use Collection Runner with auth-test-data.json\n\n## OTP Handling\nRequests in \"Password Reset Flow\" folder set {{otp}} automatically via test endpoint.\nIf your server doesn't have GET /api/test/otp, manually set {{otp}} from Redis before running confirm-otp.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Setup",
+      "item": [
+        {
+          "name": "Register Tenant (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `tenant-${Date.now()}@test.com`;",
+                  "pm.environment.set('registered_email', email);",
+                  "pm.variables.set('email', email);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Register tenant - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const userId = json.data.id;",
+                  "pm.test('Response has data.id', () => {",
+                  "  pm.expect(userId).to.be.a('string');",
+                  "});",
+                  "pm.test('Response has data.email', () => {",
+                  "  pm.expect(json.data).to.have.property('email');",
+                  "});",
+                  "pm.test('Role is tenant', () => {",
+                  "  pm.expect(json.data.role).to.eql('tenant');",
+                  "});",
+                  "const existingIds = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', existingIds ? existingIds + ',' + userId : userId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"091{{$timestamp}}\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "Register Landlord (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `landlord-${Date.now()}@test.com`;",
+                  "pm.environment.set('registered_landlord_email', email);",
+                  "pm.variables.set('email', email);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Register landlord - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const userId = json.data.id;",
+                  "pm.test('Response has data.id', () => {",
+                  "  pm.expect(userId).to.be.a('string');",
+                  "});",
+                  "pm.test('Role is landlord', () => {",
+                  "  pm.expect(json.data.role).to.eql('landlord');",
+                  "});",
+                  "const existingIds = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', existingIds ? existingIds + ',' + userId : userId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Tran Thi B\",\n  \"phone\": \"098{{$timestamp}}\",\n  \"identity_number\": \"123456789012\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/landlord",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "landlord"]
+            }
+          }
+        },
+        {
+          "name": "Login Tenant (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has token', () => {",
+                  "  pm.expect(json.data).to.have.property('token');",
+                  "  pm.expect(json.data.token).to.be.a('string');",
+                  "});",
+                  "pm.test('Response has user info', () => {",
+                  "  pm.expect(json.data).to.have.property('user');",
+                  "  pm.expect(json.data.user).to.have.property('role');",
+                  "});",
+                  "",
+                  "pm.environment.set('auth_token', json.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Register",
+      "item": [
+        {
+          "name": "EP-01: Register - Email đúng format",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', `ep01-${Date.now()}@test.com`);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - email hợp lệ', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has data.email', () => {",
+                  "  pm.expect(json.data).to.have.property('email');",
+                  "});",
+                  "const userId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', existingIds ? existingIds + ',' + userId : userId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"091{{$timestamp}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-02: Register - Email sai format (thiếu @)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - email sai format', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has error message', () => {",
+                  "  pm.expect(json).to.have.property('message');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"invalid\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-03: Register - Email rỗng",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - email rỗng', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-05: Register - Password thiếu ký tự đặc biệt",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - password thiếu ký tự đặc biệt', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ep05-{{$timestamp}}@test.com\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Aa111111\",\n  \"confirm_password\": \"Aa111111\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-06: Register - Password thiếu chữ hoa",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - password thiếu chữ hoa', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ep06-{{$timestamp}}@test.com\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"test@1111\",\n  \"confirm_password\": \"test@1111\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-07: Register - Password thiếu chữ thường",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - password thiếu chữ thường', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ep07-{{$timestamp}}@test.com\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"TEST@1111\",\n  \"confirm_password\": \"TEST@1111\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-08: Register - Password thiếu số",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - password thiếu số', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ep08-{{$timestamp}}@test.com\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@Test\",\n  \"confirm_password\": \"Test@Test\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-11: Register - Phone có chứa chữ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - phone chứa chữ', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ep11-{{$timestamp}}@test.com\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"abc123\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-14: Register - fullName rỗng",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - fullName rỗng', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ep14-{{$timestamp}}@test.com\",\n  \"fullName\": \"\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-16: Register - accepted_terms = false",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - accepted_terms = false', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ep16-{{$timestamp}}@test.com\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-12: Register - Không gửi phone (optional)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', `ep12-${Date.now()}@test.com`);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - phone optional', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "const userId = pm.response.json().data.id;",
+                  "const existingIds = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', existingIds ? existingIds + ',' + userId : userId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "user"]
+            }
+          }
+        },
+        {
+          "name": "EP-18: Register - Không gửi identity_number (optional)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', `ep18-${Date.now()}@test.com`);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - identity_number optional', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "const userId = pm.response.json().data.id;",
+                  "const existingIds = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', existingIds ? existingIds + ',' + userId : userId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Tran Thi B\",\n  \"phone\": \"098{{$timestamp}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/landlord",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", "landlord"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "EP-22: Login - Thành công",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - login thành công', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has token', () => {",
+                  "  pm.expect(json.data).to.have.property('token');",
+                  "});",
+                  "pm.test('Response has user info', () => {",
+                  "  pm.expect(json.data).to.have.property('user');",
+                  "  pm.expect(json.data.user).to.have.all.keys('id', 'phone', 'fullName', 'identityNumber', 'role', 'avatarUrl', 'createdAt', 'updatedAt', 'acceptedTerms', 'dateOfBirth');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "EP-23: Login - Email sai",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - email sai', () => {",
+                  "  pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"wrong@test.com\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "EP-24: Login - Password sai",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - password sai', () => {",
+                  "  pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"WrongPass@1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "EP-25: Login - Email rỗng",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - email rỗng', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Password Reset Flow",
+      "item": [
+        {
+          "name": "Forgot Password - Email tồn tại",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `reset-${Date.now()}@test.com`;",
+                  "pm.environment.set('otp_email', email);",
+                  "pm.variables.set('email', email);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - forgot-password', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const otpEmail = pm.environment.get('otp_email');",
+                  "",
+                  "pm.sendRequest({",
+                  "  url: pm.environment.get('base_url') + '/api/test/otp?email=' + encodeURIComponent(otpEmail),",
+                  "  method: 'GET'",
+                  "}, function (err, res) {",
+                  "  if (!err && res.code === 200) {",
+                  "    const json = res.json();",
+                  "    if (json.otp) {",
+                  "      pm.environment.set('otp', json.otp);",
+                  "      console.log('OTP fetched: ' + json.otp);",
+                  "    } else {",
+                  "      console.warn('Test helper không trả về OTP. Kiểm tra Redis thủ công.');",
+                  "    }",
+                  "  } else {",
+                  "    console.warn('Không thể fetch OTP từ test helper (cần GET /api/test/otp?email=...). Vui lòng đặt OTP thủ công.');",
+                  "  }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password - Email không tồn tại",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - always 201 for security', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test('Message khác rỗng', () => {",
+                  "  pm.expect(json.data.message).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nonexistent-{{$timestamp}}@test.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Confirm OTP - Hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - OTP hợp lệ', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test('Message OTP hop le', () => {",
+                  "  pm.expect(json.data.message).to.include('OTP');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"{{otp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/confirm-otp",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "confirm-otp"]
+            }
+          }
+        },
+        {
+          "name": "Confirm OTP - OTP 5 chars (min-1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - OTP 5 chars', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"12345\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/confirm-otp",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "confirm-otp"]
+            }
+          }
+        },
+        {
+          "name": "Confirm OTP - OTP 7 chars (max+1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - OTP 7 chars', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"1234567\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/confirm-otp",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "confirm-otp"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password - Hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - reset-password thành công', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"{{otp}}\",\n  \"newPassword\": \"NewPass@123\",\n  \"confirmPassword\": \"NewPass@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "reset-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password - OTP sai",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('otp_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - OTP sai', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp\": \"000000\",\n  \"newPassword\": \"NewPass@123\",\n  \"confirmPassword\": \"NewPass@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "reset-password"]
+            }
+          }
+        },
+        {
+          "name": "AUTH-041: Login với password cũ sau reset",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('otp_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - password cũ bị từ chối', () => {",
+                  "  pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "AUTH-042: Login với password mới sau reset",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('otp_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - login với password mới', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"NewPass@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "AUTH-043: OTP bypass khi isVerified=true",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - OTP bypass qua isVerified', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"000000\",\n  \"newPassword\": \"NewPass@123\",\n  \"confirmPassword\": \"NewPass@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "reset-password"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Access Control",
+      "item": [
+        {
+          "name": "AUTH-047: Public endpoint - Không cần token",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const ids = pm.environment.get('created_user_ids');",
+                  "if (ids) {",
+                  "  const list = ids.split(',').filter(id => id);",
+                  "  if (list.length > 0) {",
+                  "    const randomId = list[Math.floor(Math.random() * list.length)];",
+                  "    pm.variables.set('user_id', randomId);",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 - public endpoint', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "AUTH-048: Protected endpoint - Không token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - không token', () => {",
+                  "  pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "profile"]
+            }
+          }
+        },
+        {
+          "name": "AUTH-049: Protected endpoint - Token rỗng",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - token rỗng', () => {",
+                  "  pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer "
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "profile"]
+            }
+          }
+        },
+        {
+          "name": "AUTH-050: Protected endpoint - Token fake",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - token fake', () => {",
+                  "  pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer fake"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cleanup",
+      "item": [
+        {
+          "name": "Cleanup: Delete all test users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const projectRef = pm.environment.get('supabase_project_ref');",
+                  "const serviceRoleKey = pm.environment.get('service_role_key');",
+                  "const ids = pm.environment.get('created_user_ids');",
+                  "",
+                  "if (!ids) {",
+                  "  console.log('Không có user nào cần cleanup.');",
+                  "  return;",
+                  "}",
+                  "",
+                  "if (!projectRef || !serviceRoleKey) {",
+                  "  console.warn('Cần set supabase_project_ref và service_role_key trong environment.');",
+                  "  return;",
+                  "}",
+                  "",
+                  "const baseUrl = projectRef.replace(/\\/$/, '');",
+                  "const userIds = ids.split(',').filter(id => id);",
+                  "const deletedIds = [];",
+                  "const failedIds = [];",
+                  "let completed = 0;",
+                  "",
+                  "userIds.forEach((userId, index) => {",
+                  "  const deleteUrl = baseUrl + '/auth/v1/admin/users/' + encodeURIComponent(userId);",
+                  "  pm.sendRequest({",
+                  "    url: deleteUrl,",
+                  "    method: 'DELETE',",
+                  "    header: {",
+                  "      'apikey': serviceRoleKey,",
+                  "      'Authorization': 'Bearer ' + serviceRoleKey",
+                  "    }",
+                  "  }, function (err, res) {",
+                  "    completed++;",
+                  "    if (err || res.code >= 400) {",
+                  "      failedIds.push(userId);",
+                  "      console.warn('Xóa thất bại: ' + userId + ' - ' + (err ? err.message : res.code));",
+                  "    } else {",
+                  "      deletedIds.push(userId);",
+                  "      console.log('Đã xóa: ' + userId);",
+                  "    }",
+                  "",
+                  "    if (completed === userIds.length) {",
+                  "      const summary = 'Cleanup: ' + deletedIds.length + '/' + userIds.length + ' users deleted' + (failedIds.length ? ', failed: ' + failedIds.length : '');",
+                  "      pm.test(summary, () => {",
+                  "        pm.expect(deletedIds.length).to.eql(userIds.length);",
+                  "      });",
+                  "      pm.environment.set('created_user_ids', '');",
+                  "      console.log(summary);",
+                  "    }",
+                  "  });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health"]
+            }
+          }
+        }
+      ],
+      "description": "Xóa tất cả test users đã tạo trong session.\n\nSet 2 biến trong environment (Current Value):\n- `supabase_project_ref`: Ví dụ `https://xyzabc.supabase.co`\n- `service_role_key`: Service role key từ Supabase Dashboard → Settings → API\n\nChạy request, nó sẽ loop qua từng user ID và gọi DELETE qua Supabase Admin API.\n\nNếu chưa set 2 biến trên, có thể chạy SQL script thủ công:\n```sql\nDELETE FROM auth.users WHERE email LIKE 'tenant-%@test.com' OR email LIKE 'ep%@test.com' OR email LIKE 'reset-%@test.com' OR email LIKE 'landlord-%@test.com' OR email LIKE 'bva-%@test.com';\n```"
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "test_password",
+      "value": "Test@1234",
+      "type": "string"
+    },
+    {
+      "key": "registered_email",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "registered_landlord_email",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "otp",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "otp_email",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
