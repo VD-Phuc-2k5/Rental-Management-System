@@ -86,6 +86,17 @@
 | BVA-05 | `A1@` + `a`*69 | 72 | Biên trên (max) | **201** |
 | BVA-06 | `A1@` + `a`*70 | 73 | Biên trên + 1 | **400** |
 
+**e2e Test Cases:**
+
+| ID | Test Case | Input | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-012 | Password 7 chars (min-1) | `{...valid, password: "A1@bcde"}` | **400** |
+| AUTH-013 | Password 8 chars (min) | `{...valid, password: "A1@bcdef"}` | **201** |
+| AUTH-053 | Password 9 chars (min+1) | `{...valid, password: "A1@bcdefg"}` | **201** |
+| AUTH-054 | Password 71 chars (max-1) | `{...valid, password: "A1@"+"a"*68}` | **201** |
+| AUTH-014 | Password 72 chars (max) | `{...valid, password: "A1@"+"a"*69}` | **201** |
+| AUTH-015 | Password 73 chars (max+1) | `{...valid, password: "A1@"+"a"*70}` | **400** |
+
 ### 2.2 Phone length (`@Length(10, 15)`)
 
 | ID | Giá trị | Độ dài | Loại biên | Kết quả |
@@ -95,6 +106,16 @@
 | BVA-09 | `01234567890` | 11 | Biên dưới + 1 | **201** |
 | BVA-10 | `012345678901234` | 15 | Biên trên (max) | **201** |
 | BVA-11 | `0123456789012345` | 16 | Biên trên + 1 | **400** |
+
+**e2e Test Cases:**
+
+| ID | Test Case | Input | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-016 | Phone 9 chars (min-1) | `{...valid, phone: "012345678"}` | **400** |
+| AUTH-017 | Phone 10 chars (min) | `{...valid, phone: "0123456789"}` | **201** |
+| AUTH-055 | Phone 11 chars (min+1) | `{...valid, phone: "01234567890"}` | **201** |
+| AUTH-018 | Phone 15 chars (max) | `{...valid, phone: "012345678901234"}` | **201** |
+| AUTH-019 | Phone 16 chars (max+1) | `{...valid, phone: "0123456789012345"}` | **400** |
 
 ### 2.3 fullName length (`@MinLength(2) @MaxLength(100)`)
 
@@ -107,6 +128,16 @@
 | BVA-16 | `"A"*100` | 100 | Biên trên (max) | **201** |
 | BVA-17 | `"A"*101` | 101 | Biên trên + 1 | **400** |
 
+**e2e Test Cases:**
+
+| ID | Test Case | Input | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-020 | fullName 1 char (min-1) | `{...valid, fullName: "A"}` | **400** |
+| AUTH-056 | fullName 2 chars (min) | `{...valid, fullName: "An"}` | **201** |
+| AUTH-057 | fullName 99 chars (max-1) | `{...valid, fullName: "A"*99}` | **201** |
+| AUTH-021 | fullName 100 chars (max) | `{...valid, fullName: "A"*100}` | **201** |
+| AUTH-022 | fullName 101 chars (max+1) | `{...valid, fullName: "A"*101}` | **400** |
+
 ### 2.4 identity_number length (`@Length(12, 12)`)
 
 | ID | Giá trị | Độ dài | Loại biên | Kết quả |
@@ -114,6 +145,22 @@
 | BVA-18 | `"1"*11` | 11 | Biên dưới - 1 | **400** |
 | BVA-19 | `"1"*12` | 12 | Biên (chính xác) | **201** |
 | BVA-20 | `"1"*13` | 13 | Biên trên + 1 | **400** |
+
+**e2e Test Cases:**
+
+| ID | Test Case | Input | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-023 | identity_number 11 chars (exact-1) | `{...validLandlord, identity_number: "1"*11}` | **400** |
+| AUTH-024 | identity_number 12 chars (exact) | `{...validLandlord}` | **201** |
+| AUTH-025 | identity_number 13 chars (exact+1) | `{...validLandlord, identity_number: "1"*13}` | **400** |
+
+### 2.5 OTP length (`@Length(6, 6)`)
+
+| ID | Test Case | Input | Expected Status |
+|:--:|----------|-------|:---------------:|
+| AUTH-036 | OTP 5 chars (min-1) | `{ email, otp: "12345" }` | **400** |
+| AUTH-058 | OTP 6 chars (exact) | `{ email, otp: "123456" }` with valid Redis | **201** |
+| AUTH-059 | OTP 7 chars (max+1) | `{ email, otp: "1234567" }` | **400** |
 
 ---
 
@@ -128,6 +175,17 @@
 | Role phù hợp? | Y | N | Y | - | - | N/A |
 | Endpoint public? | N | N | N | Y/N | Y/N | Y |
 | **Kết quả** | **200/201** | **403** | **401/403** | **401** | **401** | **200** |
+
+**e2e Test Cases:**
+
+| ID | Test Case | Token | Endpoint | Expected Status |
+|:--:|----------|:-----:|:--------:|:---------------:|
+| AUTH-047 | Public endpoint không cần auth | — | GET /api/users/:id | **200** |
+| AUTH-048 | Protected endpoint không token | — | GET /api/profile | **401** |
+| AUTH-049 | Empty Bearer token | `"Bearer "` | GET /api/profile | **401** |
+| AUTH-050 | Fake Bearer token | `"Bearer fake"` | GET /api/profile | **401** |
+| AUTH-051 | RolesGuard cho phép đúng role | valid token | GET /api/test-roles/tenant | **200** |
+| AUTH-052 | RolesGuard từ chối sai role | valid token | GET /api/test-roles/admin | **403** |
 
 ### 3.2 Reset Password Flow — forgot-password
 
@@ -158,62 +216,9 @@
 | AuthOperationError? | N | - | - | N | - |
 | **Kết quả** | **201** | **400** | **400** | **201** (⚠ bypass OTP) | **400** |
 
-> ⚠ **Lưu ý bảo mật (Rule 4):** Nếu OTP đã được verify qua endpoint `/auth/verify-otp`, thì ở bước reset-password, OTP có thể sai nhưng vẫn cho qua vì `isVerified=true`. Đây là behavior hiện tại: một trong hai điều kiện (OTP đúng OR đã verify) là đủ. Cần cân nhắc: nếu attacker có quyền truy cập vào Redis, họ có thể tự set `isVerified=true`.
+> ⚠ **Lưu ý bảo mật (Rule 4):** Nếu OTP đã được verify qua endpoint `/auth/confirm-otp`, thì ở bước reset-password, OTP có thể sai nhưng vẫn cho qua vì `isVerified=true`. Đây là behavior hiện tại: một trong hai điều kiện (OTP đúng OR đã verify) là đủ. Cần cân nhắc: nếu attacker có quyền truy cập vào Redis, họ có thể tự set `isVerified=true`.
 
----
-
-## 4. Test Cases (e2e — chỉ BVA & DT)
-
-> EP tests đã được phủ bởi unit tests, không trùng lặp ở e2e.
-
-### BVA — Register password length
-
-| ID | Test Case | Input | Expected Status |
-|:--:|----------|-------|:---------------:|
-| AUTH-012 | Password 7 chars (min-1) | `{...valid, password: "A1@bcde"}` | **400** |
-| AUTH-013 | Password 8 chars (min) | `{...valid, password: "A1@bcdef"}` | **201** |
-| AUTH-053 | Password 9 chars (min+1) | `{...valid, password: "A1@bcdefg"}` | **201** |
-| AUTH-054 | Password 71 chars (max-1) | `{...valid, password: "A1@"+"a"*68}` | **201** |
-| AUTH-014 | Password 72 chars (max) | `{...valid, password: "A1@"+"a"*69}` | **201** |
-| AUTH-015 | Password 73 chars (max+1) | `{...valid, password: "A1@"+"a"*70}` | **400** |
-
-### BVA — Register phone length
-
-| ID | Test Case | Input | Expected Status |
-|:--:|----------|-------|:---------------:|
-| AUTH-016 | Phone 9 chars (min-1) | `{...valid, phone: "012345678"}` | **400** |
-| AUTH-017 | Phone 10 chars (min) | `{...valid, phone: "0123456789"}` | **201** |
-| AUTH-055 | Phone 11 chars (min+1) | `{...valid, phone: "01234567890"}` | **201** |
-| AUTH-018 | Phone 15 chars (max) | `{...valid, phone: "012345678901234"}` | **201** |
-| AUTH-019 | Phone 16 chars (max+1) | `{...valid, phone: "0123456789012345"}` | **400** |
-
-### BVA — Register fullName length
-
-| ID | Test Case | Input | Expected Status |
-|:--:|----------|-------|:---------------:|
-| AUTH-020 | fullName 1 char (min-1) | `{...valid, fullName: "A"}` | **400** |
-| AUTH-056 | fullName 2 chars (min) | `{...valid, fullName: "An"}` | **201** |
-| AUTH-057 | fullName 99 chars (max-1) | `{...valid, fullName: "A"*99}` | **201** |
-| AUTH-021 | fullName 100 chars (max) | `{...valid, fullName: "A"*100}` | **201** |
-| AUTH-022 | fullName 101 chars (max+1) | `{...valid, fullName: "A"*101}` | **400** |
-
-### BVA — Register identity_number length
-
-| ID | Test Case | Input | Expected Status |
-|:--:|----------|-------|:---------------:|
-| AUTH-023 | identity_number 11 chars (exact-1) | `{...validLandlord, identity_number: "1"*11}` | **400** |
-| AUTH-024 | identity_number 12 chars (exact) | `{...validLandlord}` | **201** |
-| AUTH-025 | identity_number 13 chars (exact+1) | `{...validLandlord, identity_number: "1"*13}` | **400** |
-
-### BVA — OTP length
-
-| ID | Test Case | Input | Expected Status |
-|:--:|----------|-------|:---------------:|
-| AUTH-036 | OTP 5 chars (min-1) | `{ email, otp: "12345" }` | **400** |
-| AUTH-058 | OTP 6 chars (exact) | `{ email, otp: "123456" }` with valid Redis | **201** |
-| AUTH-059 | OTP 7 chars (max+1) | `{ email, otp: "1234567" }` | **400** |
-
-### DT — Password reset lifecycle
+**e2e Test Cases — Password Reset Lifecycle:**
 
 | ID | Test Case | Steps | Expected Status |
 |:--:|----------|-------|:---------------:|
@@ -221,20 +226,9 @@
 | AUTH-042 | New password succeeds after reset | login với mới | **201** |
 | AUTH-043 | OTP bypass khi isVerified=true | reset-password với OTP sai + isVerified=true | **201** |
 
-### DT — Access Control
-
-| ID | Test Case | Token | Endpoint | Expected Status |
-|:--:|----------|:-----:|:--------:|:---------------:|
-| AUTH-047 | Public endpoint không cần auth | — | GET /api/users/:id | **200** |
-| AUTH-048 | Protected endpoint không token | — | GET /api/profile | **401** |
-| AUTH-049 | Empty Bearer token | `"Bearer "` | GET /api/profile | **401** |
-| AUTH-050 | Fake Bearer token | `"Bearer fake"` | GET /api/profile | **401** |
-| AUTH-051 | RolesGuard cho phép đúng role | valid token | GET /api/test-roles/tenant | **200** |
-| AUTH-052 | RolesGuard từ chối sai role | valid token | GET /api/test-roles/admin | **403** |
-
 ---
 
-## 5. Test Data
+## 4. Test Data
 
 ```typescript
 export const authTestData = {
