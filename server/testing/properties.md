@@ -25,7 +25,22 @@
 | EP-13 | Entity.isValidAmenity | Amenity không tồn tại trong danh sách | `BED` in `[WIFI]` | Không hợp lệ |
 | EP-14 | Entity.isValidAmenity | Danh sách amenity rỗng | `WIFI` in `[]` | Không hợp lệ |
 
-## 2. Bảng quyết định (Decision Table) — Property CRUD Access
+## 2. Phân tích giá trị biên (Boundary Value Analysis)
+
+### Create / Update Property
+
+| ID | Trường | Điều kiện biên | Giá trị đại diện | Kết quả |
+|----|--------|---------------|-----------------|:-------:|
+| BVA-01 | name | 1 ký tự (min-length) | `"A"` | Hợp lệ |
+| BVA-02 | address | 1 ký tự (min-length) | `"1"` | Hợp lệ |
+| BVA-03 | ward | 1 ký tự (min-length) | `"P"` | Hợp lệ |
+| BVA-04 | district | 1 ký tự (min-length) | `"Q"` | Hợp lệ |
+| BVA-05 | city | 1 ký tự (min-length) | `"H"` | Hợp lệ |
+| BVA-06 | description | 1 ký tự (min-length) | `"K"` | Hợp lệ |
+| BVA-07 | amenityCodes | 1 phần tử (min-length) | `["WIFI"]` | Hợp lệ |
+| BVA-08 | amenityCodes | 0 phần tử (rỗng) | `[]` | Không hợp lệ |
+
+## 3. Bảng quyết định (Decision Table) — Property CRUD Access
 
 | Điều kiện | Rule 1 | Rule 2 | Rule 3 | Rule 4 | Rule 5 | Rule 6 |
 |-----------|:------:|:------:|:------:|:------:|:------:|:------:|
@@ -38,46 +53,65 @@
 
 ---
 
-## 3. Test Cases
+## 4. Test Cases
+
+### EP — Equivalence Partitioning
 
 | ID | Kỹ thuật | Test Case | Method | Token | Body / Param | Expected Status |
 |----|:---------:|-----------|:------:|:----:|-------------|:---------------:|
 | PROP-01 | EP | Create property thành công | POST | landlord | `{ name, address, ward, district, city, description, amenityCodes: ["WIFI"] }` | **201** |
 | PROP-02 | EP | Create thiếu name | POST | landlord | `{ address, ward, district, city, description, amenityCodes: ["WIFI"] }` | **400** |
 | PROP-03 | EP | Create amenityCodes không hợp lệ | POST | landlord | `{ ...valid, amenityCodes: ["INVALID"] }` | **400** |
-| PROP-04 | DT | Create với tenant token | POST | tenant | `{ ...valid }` | **403** |
-| PROP-05 | DT | Create không token | POST | - | `{ ...valid }` | **401** |
-| PROP-06 | EP | Get all properties | GET | landlord | - | **200** |
-| PROP-07 | EP | Get property by ID | GET | landlord | `:id` (tồn tại) | **200** |
-| PROP-08 | EP | Get property không tồn tại | GET | landlord | `:id` (uuid) | **404** |
-| PROP-09 | DT | Get property của landlord khác | GET | landlord B | `:id` (của A) | **404** |
-| PROP-10 | EP | Update property thành công | PATCH | landlord | `:id` + `{ name, description }` | **200** |
-| PROP-11 | EP | Update property không tồn tại | PATCH | landlord | `:uuid` | **404** |
-| PROP-12 | DT | Update property của landlord khác | PATCH | landlord B | `:id` (của A) | **404** |
-| PROP-13 | EP | Delete property thành công | DELETE | landlord | `:id` (tồn tại) | **200** |
-| PROP-14 | EP | Delete property không tồn tại | DELETE | landlord | `:uuid` | **404** |
-| PROP-15 | DT | Delete property của landlord khác | DELETE | landlord B | `:id` (của A) | **404** |
-| PROP-16 | EP | Entity — isValidAmenity trả về true khi amenity tồn tại | - | - | `WIFI` in `[WIFI, AC]` | **true** |
-| PROP-17 | EP | Entity — isValidAmenity trả về false khi amenity không tồn tại | - | - | `BED` in `[WIFI]` | **false** |
-| PROP-18 | EP | Entity — isValidAmenity trả về false khi danh sách rỗng | - | - | `WIFI` in `[]` | **false** |
-| PROP-19 | EP | Create — amenityCodes chứa nhiều giá trị không hợp lệ | POST | landlord | `{ ...valid, amenityCodes: ["FAKE1", "FAKE2"] }` | **400** |
-| PROP-20 | EP | Update — amenityCodes không hợp lệ | PATCH | landlord | `:id` + `{ amenityCodes: ["INVALID"] }` | **400** |
-| PROP-21 | EP | Update — amenityCodes hợp lệ | PATCH | landlord | `:id` + `{ amenityCodes: ["WIFI", "BED"] }` | **200** |
-| PROP-22 | EP | Update với partial fields | PATCH | landlord | `:id` + `{ name }` | **200** |
-| PROP-23 | EP | Repository — tạo property thành công | - | - | Input đầy đủ | **Thành công** |
-| PROP-24 | EP | Repository — foreign key violation (landlord không tồn tại) | - | - | landlorerId không hợp lệ | **Lỗi** |
-| PROP-25 | EP | Repository — findAll trả về mảng rỗng | - | - | landlord không có property | **[]** |
-| PROP-26 | EP | Repository — findById trả về null | - | - | id không tồn tại | **null** |
-| PROP-27 | EP | Controller — InternalServerError khi service throw unknown error | POST | landlord | `{ ...valid }` | **500** |
-| PROP-28 | EP | Controller — InternalServerError khi getById throw unknown error | GET | landlord | `:id` | **500** |
-| PROP-29 | EP | Controller — InternalServerError khi update throw unknown error | PATCH | landlord | `:id` | **500** |
-| PROP-30 | EP | Controller — InternalServerError khi delete throw unknown error | DELETE | landlord | `:id` | **500** |
-| PROP-31 | EP | Domain errors — default messages | - | - | - | **OK** |
-| PROP-32 | EP | Domain errors — custom messages | - | - | - | **OK** |
+| PROP-04 | EP | Get all properties | GET | landlord | - | **200** |
+| PROP-05 | EP | Get property by ID | GET | landlord | `:id` (tồn tại) | **200** |
+| PROP-06 | EP | Get property không tồn tại | GET | landlord | `:id` (uuid) | **404** |
+| PROP-07 | EP | Update property thành công | PATCH | landlord | `:id` + `{ name, description }` | **200** |
+| PROP-08 | EP | Update property không tồn tại | PATCH | landlord | `:uuid` | **404** |
+| PROP-09 | EP | Delete property thành công | DELETE | landlord | `:id` (tồn tại) | **200** |
+| PROP-10 | EP | Delete property không tồn tại | DELETE | landlord | `:uuid` | **404** |
+| PROP-11 | EP | Entity — isValidAmenity trả về true khi amenity tồn tại | - | - | `WIFI` in `[WIFI, AC]` | **true** |
+| PROP-12 | EP | Entity — isValidAmenity trả về false khi amenity không tồn tại | - | - | `BED` in `[WIFI]` | **false** |
+| PROP-13 | EP | Entity — isValidAmenity trả về false khi danh sách rỗng | - | - | `WIFI` in `[]` | **false** |
+| PROP-14 | EP | Create — amenityCodes chứa nhiều giá trị không hợp lệ | POST | landlord | `{ ...valid, amenityCodes: ["FAKE1", "FAKE2"] }` | **400** |
+| PROP-15 | EP | Update — amenityCodes không hợp lệ | PATCH | landlord | `:id` + `{ amenityCodes: ["INVALID"] }` | **400** |
+| PROP-16 | EP | Update — amenityCodes hợp lệ | PATCH | landlord | `:id` + `{ amenityCodes: ["WIFI", "BED"] }` | **200** |
+| PROP-17 | EP | Update với partial fields | PATCH | landlord | `:id` + `{ name }` | **200** |
+| PROP-18 | EP | Repository — tạo property thành công | - | - | Input đầy đủ | **Thành công** |
+| PROP-19 | EP | Repository — foreign key violation (landlord không tồn tại) | - | - | landlorerId không hợp lệ | **Lỗi** |
+| PROP-20 | EP | Repository — findAll trả về mảng rỗng | - | - | landlord không có property | **[]** |
+| PROP-21 | EP | Repository — findById trả về null | - | - | id không tồn tại | **null** |
+| PROP-22 | EP | Controller — InternalServerError khi service throw unknown error | POST | landlord | `{ ...valid }` | **500** |
+| PROP-23 | EP | Controller — InternalServerError khi getById throw unknown error | GET | landlord | `:id` | **500** |
+| PROP-24 | EP | Controller — InternalServerError khi update throw unknown error | PATCH | landlord | `:id` | **500** |
+| PROP-25 | EP | Controller — InternalServerError khi delete throw unknown error | DELETE | landlord | `:id` | **500** |
+| PROP-26 | EP | Domain errors — default messages | - | - | - | **OK** |
+| PROP-27 | EP | Domain errors — custom messages | - | - | - | **OK** |
+
+### BVA — Boundary Value Analysis
+
+| ID | Kỹ thuật | Test Case | Method | Token | Body / Param | Expected Status |
+|----|:--------:|-----------|:------:|:----:|-------------|:---------------:|
+| PROP-28 | BVA | Create với name 1 ký tự | POST | landlord | `{ ...valid, name: "A" }` | **201** |
+| PROP-29 | BVA | Create với address 1 ký tự | POST | landlord | `{ ...valid, address: "1" }` | **201** |
+| PROP-30 | BVA | Create với ward 1 ký tự | POST | landlord | `{ ...valid, ward: "P" }` | **201** |
+| PROP-31 | BVA | Create với district 1 ký tự | POST | landlord | `{ ...valid, district: "Q" }` | **201** |
+| PROP-32 | BVA | Create với city 1 ký tự | POST | landlord | `{ ...valid, city: "H" }` | **201** |
+| PROP-33 | BVA | Create với description 1 ký tự | POST | landlord | `{ ...valid, description: "K" }` | **201** |
+| PROP-34 | BVA | Create với amenityCodes rỗng | POST | landlord | `{ ...valid, amenityCodes: [] }` | **400** |
+
+### DT — Decision Table
+
+| ID | Kỹ thuật | Test Case | Method | Token | Body / Param | Expected Status |
+|----|:---------:|-----------|:------:|:----:|-------------|:---------------:|
+| PROP-35 | DT | Create với tenant token | POST | tenant | `{ ...valid }` | **403** |
+| PROP-36 | DT | Create không token | POST | - | `{ ...valid }` | **401** |
+| PROP-37 | DT | Get property của landlord khác | GET | landlord B | `:id` (của A) | **404** |
+| PROP-38 | DT | Update property của landlord khác | PATCH | landlord B | `:id` (của A) | **404** |
+| PROP-39 | DT | Delete property của landlord khác | DELETE | landlord B | `:id` (của A) | **404** |
 
 ---
 
-## 4. Test Data
+## 5. Test Data
 
 ```typescript
 export const propertiesTestData = {

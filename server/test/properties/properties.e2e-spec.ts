@@ -14,7 +14,7 @@ import { Amenity } from '../../src/shared/infrastructure/database/enum/amenity';
 const LANDLORD_ID = '00000000-0000-0000-0000-000000000001';
 const PROPERTY_ID = '00000000-0000-0000-0000-000000000010';
 
-function makeProperty() {
+function makeProperty(overrides: Record<string, any> = {}) {
   return {
     id: PROPERTY_ID,
     landlorerId: LANDLORD_ID,
@@ -27,6 +27,7 @@ function makeProperty() {
     amenityCodes: [Amenity.WIFI, Amenity.AIR_CONDITIONER],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    ...overrides,
   };
 }
 
@@ -92,7 +93,7 @@ const mockPropertiesRepository = {
 // Test suite
 // ---------------------------------------------------------------------------
 
-describe('PropertiesModule (e2e) — EP & DT', () => {
+describe('PropertiesModule (e2e) — EP, BVA & DT', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -190,6 +191,134 @@ describe('PropertiesModule (e2e) — EP & DT', () => {
           amenityCodes: payload.amenityCodes,
         }),
       );
+    });
+  });
+
+  // ===================================================================
+  // BVA: Boundary Value Analysis
+  // ===================================================================
+
+  describe('BVA — Create property boundary values', () => {
+    const baseUrl = '/api/properties';
+
+    it('PROP-28: Create với name 1 ký tự → 201', async () => {
+      const payload = validCreatePayload({ name: 'A' });
+      mockPropertiesRepository.createProperty.mockResolvedValue(
+        makeProperty({ name: 'A' }),
+      );
+
+      const res = await request(app.getHttpServer())
+        .post(baseUrl)
+        .set('Authorization', 'Bearer valid-token')
+        .send(payload)
+        .expect(201);
+
+      expect(res.body.data.name).toBe('A');
+      expect(mockPropertiesRepository.createProperty).toHaveBeenCalledWith(
+        expect.objectContaining({ name: 'A' }),
+      );
+    });
+
+    it('PROP-29: Create với address 1 ký tự → 201', async () => {
+      const payload = validCreatePayload({ address: '1' });
+      mockPropertiesRepository.createProperty.mockResolvedValue(
+        makeProperty({ address: '1' }),
+      );
+
+      const res = await request(app.getHttpServer())
+        .post(baseUrl)
+        .set('Authorization', 'Bearer valid-token')
+        .send(payload)
+        .expect(201);
+
+      expect(res.body.data.address).toBe('1');
+      expect(mockPropertiesRepository.createProperty).toHaveBeenCalledWith(
+        expect.objectContaining({ address: '1' }),
+      );
+    });
+
+    it('PROP-30: Create với ward 1 ký tự → 201', async () => {
+      const payload = validCreatePayload({ ward: 'P' });
+      mockPropertiesRepository.createProperty.mockResolvedValue(
+        makeProperty({ ward: 'P' }),
+      );
+
+      const res = await request(app.getHttpServer())
+        .post(baseUrl)
+        .set('Authorization', 'Bearer valid-token')
+        .send(payload)
+        .expect(201);
+
+      expect(res.body.data.ward).toBe('P');
+      expect(mockPropertiesRepository.createProperty).toHaveBeenCalledWith(
+        expect.objectContaining({ ward: 'P' }),
+      );
+    });
+
+    it('PROP-31: Create với district 1 ký tự → 201', async () => {
+      const payload = validCreatePayload({ district: 'Q' });
+      mockPropertiesRepository.createProperty.mockResolvedValue(
+        makeProperty({ district: 'Q' }),
+      );
+
+      const res = await request(app.getHttpServer())
+        .post(baseUrl)
+        .set('Authorization', 'Bearer valid-token')
+        .send(payload)
+        .expect(201);
+
+      expect(res.body.data.district).toBe('Q');
+      expect(mockPropertiesRepository.createProperty).toHaveBeenCalledWith(
+        expect.objectContaining({ district: 'Q' }),
+      );
+    });
+
+    it('PROP-32: Create với city 1 ký tự → 201', async () => {
+      const payload = validCreatePayload({ city: 'H' });
+      mockPropertiesRepository.createProperty.mockResolvedValue(
+        makeProperty({ city: 'H' }),
+      );
+
+      const res = await request(app.getHttpServer())
+        .post(baseUrl)
+        .set('Authorization', 'Bearer valid-token')
+        .send(payload)
+        .expect(201);
+
+      expect(res.body.data.city).toBe('H');
+      expect(mockPropertiesRepository.createProperty).toHaveBeenCalledWith(
+        expect.objectContaining({ city: 'H' }),
+      );
+    });
+
+    it('PROP-33: Create với description 1 ký tự → 201', async () => {
+      const payload = validCreatePayload({ description: 'K' });
+      mockPropertiesRepository.createProperty.mockResolvedValue(
+        makeProperty({ description: 'K' }),
+      );
+
+      const res = await request(app.getHttpServer())
+        .post(baseUrl)
+        .set('Authorization', 'Bearer valid-token')
+        .send(payload)
+        .expect(201);
+
+      expect(res.body.data.description).toBe('K');
+      expect(mockPropertiesRepository.createProperty).toHaveBeenCalledWith(
+        expect.objectContaining({ description: 'K' }),
+      );
+    });
+
+    it('PROP-34: Create với amenityCodes rỗng → 400', async () => {
+      const payload = validCreatePayload({ amenityCodes: [] });
+
+      await request(app.getHttpServer())
+        .post(baseUrl)
+        .set('Authorization', 'Bearer valid-token')
+        .send(payload)
+        .expect(400);
+
+      expect(mockPropertiesRepository.createProperty).not.toHaveBeenCalled();
     });
   });
 
