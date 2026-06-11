@@ -81,16 +81,39 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "src/modules/auth/application/services/**/*.ts",
+      "src/modules/auth/domain/**/*.ts",
+      "src/modules/auth/infrastructure/**/*.ts",
+      "src/modules/properties/application/services/**/*.ts",
+      "src/modules/properties/domain/**/*.ts",
+      "src/modules/properties/infrastructure/**/*.ts",
+      "src/modules/properties/presentation/**/*.ts",
+      "src/modules/rooms/application/services/**/*.ts",
+      "src/modules/rooms/domain/**/*.ts",
+      "src/modules/rooms/infrastructure/**/*.ts",
+      "src/modules/rooms/presentation/**/*.ts",
+      "!src/**/*.dto.ts",
+      "!src/**/*.controller.ts",
+      "!src/**/index.ts"
     ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coverageDirectory": "coverage",
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/dto/",
+      "/*.controller.ts",
+      "/index.ts",
+      "/*.module.ts"
+    ],
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/src/$1"
+    }
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

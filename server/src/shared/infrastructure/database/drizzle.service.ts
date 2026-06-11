@@ -8,7 +8,7 @@ import * as schema from './schema/index';
 @Injectable()
 export class DrizzleService implements OnModuleDestroy {
   private readonly pool: Pool;
-  public readonly db: NodePgDatabase<typeof schema>;
+  public db: NodePgDatabase<typeof schema>;
 
   constructor(private readonly configService: ConfigService<EnvironmentVariables, true>) {
     const databaseUrl = this.configService.getOrThrow<string>('DATABASE_URL');
