@@ -184,7 +184,7 @@
       "name": "Register",
       "item": [
         {
-          "name": "EP-01: Register - Email đúng format",
+          "name": "TC01: Register - Email đúng format",
           "event": [
             {
               "listen": "prerequest",
@@ -234,7 +234,7 @@
           }
         },
         {
-          "name": "EP-02: Register - Email sai format (thiếu @)",
+          "name": "TC02: Register - Email sai format (thiếu @)",
           "event": [
             {
               "listen": "test",
@@ -272,7 +272,7 @@
           }
         },
         {
-          "name": "EP-03: Register - Email rỗng",
+          "name": "TC03: Register - Email rỗng",
           "event": [
             {
               "listen": "test",
@@ -306,7 +306,7 @@
           }
         },
         {
-          "name": "EP-05: Register - Password thiếu ký tự đặc biệt",
+          "name": "TC05: Register - Password thiếu ký tự đặc biệt",
           "event": [
             {
               "listen": "test",
@@ -340,7 +340,7 @@
           }
         },
         {
-          "name": "EP-06: Register - Password thiếu chữ hoa",
+          "name": "TC06: Register - Password thiếu chữ hoa",
           "event": [
             {
               "listen": "test",
@@ -374,7 +374,7 @@
           }
         },
         {
-          "name": "EP-07: Register - Password thiếu chữ thường",
+          "name": "TC07: Register - Password thiếu chữ thường",
           "event": [
             {
               "listen": "test",
@@ -408,7 +408,7 @@
           }
         },
         {
-          "name": "EP-08: Register - Password thiếu số",
+          "name": "TC08: Register - Password thiếu số",
           "event": [
             {
               "listen": "test",
@@ -442,7 +442,7 @@
           }
         },
         {
-          "name": "EP-11: Register - Phone có chứa chữ",
+          "name": "TC11: Register - Phone có chứa chữ",
           "event": [
             {
               "listen": "test",
@@ -476,7 +476,7 @@
           }
         },
         {
-          "name": "EP-14: Register - fullName rỗng",
+          "name": "TC14: Register - fullName rỗng",
           "event": [
             {
               "listen": "test",
@@ -510,7 +510,7 @@
           }
         },
         {
-          "name": "EP-16: Register - accepted_terms = false",
+          "name": "TC16: Register - accepted_terms = false",
           "event": [
             {
               "listen": "test",
@@ -544,7 +544,7 @@
           }
         },
         {
-          "name": "EP-12: Register - Không gửi phone (optional)",
+          "name": "TC12: Register - Không gửi phone (optional)",
           "event": [
             {
               "listen": "prerequest",
@@ -590,7 +590,7 @@
           }
         },
         {
-          "name": "EP-18: Register - Không gửi identity_number (optional)",
+          "name": "TC18: Register - Không gửi identity_number (optional)",
           "event": [
             {
               "listen": "prerequest",
@@ -641,7 +641,7 @@
       "name": "Login",
       "item": [
         {
-          "name": "EP-22: Login - Thành công",
+          "name": "TC48: Login - Thành công",
           "event": [
             {
               "listen": "prerequest",
@@ -692,7 +692,7 @@
           }
         },
         {
-          "name": "EP-23: Login - Email sai",
+          "name": "TC49: Login - Email sai",
           "event": [
             {
               "listen": "test",
@@ -726,7 +726,7 @@
           }
         },
         {
-          "name": "EP-24: Login - Password sai",
+          "name": "TC50: Login - Password sai",
           "event": [
             {
               "listen": "prerequest",
@@ -769,7 +769,7 @@
           }
         },
         {
-          "name": "EP-25: Login - Email rỗng",
+          "name": "TC51: Login - Email rỗng",
           "event": [
             {
               "listen": "test",
@@ -808,7 +808,7 @@
       "name": "Password Reset Flow",
       "item": [
         {
-          "name": "Forgot Password - Email tồn tại",
+          "name": "TC53: Forgot Password - Email tồn tại",
           "event": [
             {
               "listen": "prerequest",
@@ -872,7 +872,7 @@
           }
         },
         {
-          "name": "Forgot Password - Email không tồn tại",
+          "name": "TC54: Forgot Password - Email không tồn tại",
           "event": [
             {
               "listen": "test",
@@ -911,7 +911,7 @@
           }
         },
         {
-          "name": "Confirm OTP - Hợp lệ",
+          "name": "TC60: Confirm OTP - Hợp lệ",
           "event": [
             {
               "listen": "test",
@@ -950,7 +950,7 @@
           }
         },
         {
-          "name": "Confirm OTP - OTP 5 chars (min-1)",
+          "name": "TC57: Confirm OTP - OTP 5 chars (min-1)",
           "event": [
             {
               "listen": "test",
@@ -984,7 +984,7 @@
           }
         },
         {
-          "name": "Confirm OTP - OTP 7 chars (max+1)",
+          "name": "TC59: Confirm OTP - OTP 7 chars (max+1)",
           "event": [
             {
               "listen": "test",
@@ -1018,7 +1018,7 @@
           }
         },
         {
-          "name": "Reset Password - Hợp lệ",
+          "name": "TC65: Reset Password - Hợp lệ",
           "event": [
             {
               "listen": "test",
@@ -1052,7 +1052,7 @@
           }
         },
         {
-          "name": "Reset Password - OTP sai",
+          "name": "TC67: Reset Password - OTP sai",
           "event": [
             {
               "listen": "prerequest",
@@ -1095,7 +1095,7 @@
           }
         },
         {
-          "name": "AUTH-041: Login với password cũ sau reset",
+          "name": "TC71: Login với password cũ sau reset",
           "event": [
             {
               "listen": "prerequest",
@@ -1138,7 +1138,7 @@
           }
         },
         {
-          "name": "AUTH-042: Login với password mới sau reset",
+          "name": "TC72: Login với password mới sau reset",
           "event": [
             {
               "listen": "prerequest",
@@ -1181,7 +1181,7 @@
           }
         },
         {
-          "name": "AUTH-043: OTP bypass khi isVerified=true",
+          "name": "TC69: OTP bypass khi isVerified=true",
           "event": [
             {
               "listen": "test",
@@ -1220,7 +1220,7 @@
       "name": "Access Control",
       "item": [
         {
-          "name": "AUTH-047: Public endpoint - Không cần token",
+          "name": "TC73: Public endpoint - Không cần token",
           "event": [
             {
               "listen": "prerequest",
@@ -1261,7 +1261,7 @@
           }
         },
         {
-          "name": "AUTH-048: Protected endpoint - Không token",
+          "name": "TC74: Protected endpoint - Không token",
           "event": [
             {
               "listen": "test",
@@ -1286,7 +1286,7 @@
           }
         },
         {
-          "name": "AUTH-049: Protected endpoint - Token rỗng",
+          "name": "TC75: Protected endpoint - Token rỗng",
           "event": [
             {
               "listen": "test",
@@ -1316,7 +1316,7 @@
           }
         },
         {
-          "name": "AUTH-050: Protected endpoint - Token fake",
+          "name": "TC76: Protected endpoint - Token fake",
           "event": [
             {
               "listen": "test",
