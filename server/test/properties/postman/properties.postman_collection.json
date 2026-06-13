@@ -1208,7 +1208,7 @@
       "name": "BVA",
       "item": [
         {
-          "name": "TC_015 - BVA - Create — name 9 ký tự (dưới min) → 400",
+          "name": "TC_015: BVA - Create — name 9 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -1224,9 +1224,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - name 9 ký tự (dưới min 10)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_015: Status 400 - name 9 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -1261,7 +1259,7 @@
           }
         },
         {
-          "name": "TC_016 - BVA - Create — name 10 ký tự (tại min) → 201",
+          "name": "TC_016: BVA - Create — name 10 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -1277,9 +1275,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - name 10 ký tự (tại min)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_016: Status 201 - name 10 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -1319,7 +1315,7 @@
           }
         },
         {
-          "name": "TC_017 - BVA - Create — name 11 ký tự (trên min 1) → 201",
+          "name": "TC_017: BVA - Create — name 11 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -1335,9 +1331,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - name 11 ký tự (trên min 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_017: Status 201 - name 11 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -1377,7 +1371,7 @@
           }
         },
         {
-          "name": "TC_018 - BVA - Create — name 49 ký tự (dưới max 1) → 201",
+          "name": "TC_018: BVA - Create — name 49 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -1393,9 +1387,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - name 49 ký tự (dưới max 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_018: Status 201 - name 49 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -1435,7 +1427,63 @@
           }
         },
         {
-          "name": "TC_019 - BVA - Create — name 51 ký tự (trên max) → 400",
+          "name": "TC_019: BVA - Create — name 50 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_name', 'A'.repeat(50));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_019: Status 201 - name 50 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"{{test_name}}\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_020: BVA - Create — name 51 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -1451,9 +1499,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - name 51 ký tự (trên max 50)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_020: Status 400 - name 51 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -1488,7 +1534,7 @@
           }
         },
         {
-          "name": "TC_020 - BVA - Create — description 49 ký tự (dưới min) → 400",
+          "name": "TC_021: BVA - Create — description 49 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -1504,9 +1550,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - description 49 ký tự (dưới min 50)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_021: Status 400 - description 49 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -1541,7 +1585,7 @@
           }
         },
         {
-          "name": "TC_021 - BVA - Create — description 50 ký tự (tại min) → 201",
+          "name": "TC_022: BVA - Create — description 50 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -1557,9 +1601,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - description 50 ký tự (tại min)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_022: Status 201 - description 50 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -1599,7 +1641,7 @@
           }
         },
         {
-          "name": "TC_022 - BVA - Create — description 51 ký tự (trên min 1) → 201",
+          "name": "TC_023: BVA - Create — description 51 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -1615,9 +1657,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - description 51 ký tự (trên min 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_023: Status 201 - description 51 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -1657,7 +1697,7 @@
           }
         },
         {
-          "name": "TC_023 - BVA - Create — description 99 ký tự (dưới max 1) → 201",
+          "name": "TC_024: BVA - Create — description 99 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -1673,9 +1713,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - description 99 ký tự (dưới max 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_024: Status 201 - description 99 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -1715,7 +1753,63 @@
           }
         },
         {
-          "name": "TC_024 - BVA - Create — description 101 ký tự (trên max) → 400",
+          "name": "TC_025: BVA - Create — description 100 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_desc', 'A'.repeat(100));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_025: Status 201 - description 100 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"{{test_desc}}\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_026: BVA - Create — description 101 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -1731,9 +1825,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - description 101 ký tự (trên max 100)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_026: Status 400 - description 101 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -1768,7 +1860,7 @@
           }
         },
         {
-          "name": "TC_025 - BVA - Create — address 19 ký tự (dưới min) → 400",
+          "name": "TC_027: BVA - Create — address 19 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -1784,9 +1876,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - address 19 ký tự (dưới min 20)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_027: Status 400 - address 19 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -1821,7 +1911,7 @@
           }
         },
         {
-          "name": "TC_026 - BVA - Create — address 20 ký tự (tại min) → 201",
+          "name": "TC_028: BVA - Create — address 20 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -1837,9 +1927,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - address 20 ký tự (tại min)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_028: Status 201 - address 20 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -1879,7 +1967,7 @@
           }
         },
         {
-          "name": "TC_027 - BVA - Create — address 21 ký tự (trên min 1) → 201",
+          "name": "TC_029: BVA - Create — address 21 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -1895,9 +1983,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - address 21 ký tự (trên min 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_029: Status 201 - address 21 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -1937,7 +2023,7 @@
           }
         },
         {
-          "name": "TC_028 - BVA - Create — address 49 ký tự (dưới max 1) → 201",
+          "name": "TC_030: BVA - Create — address 49 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -1953,9 +2039,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - address 49 ký tự (dưới max 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_030: Status 201 - address 49 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -1995,7 +2079,63 @@
           }
         },
         {
-          "name": "TC_029 - BVA - Create — address 51 ký tự (trên max) → 400",
+          "name": "TC_031: BVA - Create — address 50 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_address', 'A'.repeat(50));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_031: Status 201 - address 50 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"{{test_address}}\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_032: BVA - Create — address 51 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -2011,9 +2151,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - address 51 ký tự (trên max 50)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_032: Status 400 - address 51 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -2048,7 +2186,7 @@
           }
         },
         {
-          "name": "TC_030 - BVA - Create — ward 4 ký tự (dưới min) → 400",
+          "name": "TC_033: BVA - Create — ward 4 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -2064,9 +2202,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - ward 4 ký tự (dưới min 5)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_033: Status 400 - ward 4 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -2101,7 +2237,7 @@
           }
         },
         {
-          "name": "TC_031 - BVA - Create — ward 5 ký tự (tại min) → 201",
+          "name": "TC_034: BVA - Create — ward 5 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -2117,9 +2253,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - ward 5 ký tự (tại min)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_034: Status 201 - ward 5 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -2159,7 +2293,7 @@
           }
         },
         {
-          "name": "TC_032 - BVA - Create — ward 6 ký tự (trên min 1) → 201",
+          "name": "TC_035: BVA - Create — ward 6 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -2175,9 +2309,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - ward 6 ký tự (trên min 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_035: Status 201 - ward 6 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -2217,7 +2349,7 @@
           }
         },
         {
-          "name": "TC_033 - BVA - Create — ward 19 ký tự (dưới max 1) → 201",
+          "name": "TC_036: BVA - Create — ward 19 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -2233,9 +2365,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - ward 19 ký tự (dưới max 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_036: Status 201 - ward 19 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -2275,7 +2405,63 @@
           }
         },
         {
-          "name": "TC_034 - BVA - Create — ward 21 ký tự (trên max) → 400",
+          "name": "TC_037: BVA - Create — ward 20 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_ward', 'A'.repeat(20));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_037: Status 201 - ward 20 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"{{test_ward}}\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_038: BVA - Create — ward 21 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -2291,9 +2477,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - ward 21 ký tự (trên max 20)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_038: Status 400 - ward 21 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -2328,7 +2512,7 @@
           }
         },
         {
-          "name": "TC_035 - BVA - Create — district 4 ký tự (dưới min) → 400",
+          "name": "TC_039: BVA - Create — district 4 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -2344,9 +2528,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - district 4 ký tự (dưới min 5)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_039: Status 400 - district 4 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -2381,7 +2563,7 @@
           }
         },
         {
-          "name": "TC_036 - BVA - Create — district 5 ký tự (tại min) → 201",
+          "name": "TC_040: BVA - Create — district 5 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -2397,9 +2579,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - district 5 ký tự (tại min)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_040: Status 201 - district 5 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -2439,7 +2619,7 @@
           }
         },
         {
-          "name": "TC_037 - BVA - Create — district 6 ký tự (trên min 1) → 201",
+          "name": "TC_041: BVA - Create — district 6 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -2455,9 +2635,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - district 6 ký tự (trên min 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_041: Status 201 - district 6 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -2497,7 +2675,7 @@
           }
         },
         {
-          "name": "TC_038 - BVA - Create — district 19 ký tự (dưới max 1) → 201",
+          "name": "TC_042: BVA - Create — district 19 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -2513,9 +2691,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - district 19 ký tự (dưới max 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_042: Status 201 - district 19 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -2555,7 +2731,63 @@
           }
         },
         {
-          "name": "TC_039 - BVA - Create — district 21 ký tự (trên max) → 400",
+          "name": "TC_043: BVA - Create — district 20 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_district', 'A'.repeat(20));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_043: Status 201 - district 20 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"{{test_district}}\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_044: BVA - Create — district 21 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -2571,9 +2803,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - district 21 ký tự (trên max 20)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_044: Status 400 - district 21 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -2608,7 +2838,7 @@
           }
         },
         {
-          "name": "TC_040 - BVA - Create — city 4 ký tự (dưới min) → 400",
+          "name": "TC_045: BVA - Create — city 4 ký tự → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -2624,9 +2854,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - city 4 ký tự (dưới min 5)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_045: Status 400 - city 4 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -2661,7 +2889,7 @@
           }
         },
         {
-          "name": "TC_041 - BVA - Create — city 5 ký tự (tại min) → 201",
+          "name": "TC_046: BVA - Create — city 5 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -2677,9 +2905,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - city 5 ký tự (tại min)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_046: Status 201 - city 5 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -2719,7 +2945,7 @@
           }
         },
         {
-          "name": "TC_042 - BVA - Create — city 6 ký tự (trên min 1) → 201",
+          "name": "TC_047: BVA - Create — city 6 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -2735,9 +2961,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - city 6 ký tự (trên min 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_047: Status 201 - city 6 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -2777,7 +3001,7 @@
           }
         },
         {
-          "name": "TC_043 - BVA - Create — city 19 ký tự (dưới max 1) → 201",
+          "name": "TC_048: BVA - Create — city 19 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
@@ -2793,9 +3017,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 201 - city 19 ký tự (dưới max 1)', () => {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
+                  "pm.test('TC_048: Status 201 - city 19 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
                   "",
                   "const json = pm.response.json();",
                   "const propertyId = json.data.id;",
@@ -2835,14 +3057,14 @@
           }
         },
         {
-          "name": "TC_044 - BVA - Create — city 21 ký tự (trên max) → 400",
+          "name": "TC_049: BVA - Create — city 20 ký tự → 201",
           "event": [
             {
               "listen": "prerequest",
               "script": {
                 "exec": [
                   "pm.variables.set('token', pm.environment.get('auth_token_a'));",
-                  "pm.variables.set('test_city', 'A'.repeat(21));"
+                  "pm.variables.set('test_city', 'A'.repeat(20));"
                 ],
                 "type": "text/javascript"
               }
@@ -2851,9 +3073,12 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - city 21 ký tự (trên max 20)', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_049: Status 201 - city 20 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
                 ],
                 "type": "text/javascript"
               }
@@ -2888,7 +3113,58 @@
           }
         },
         {
-          "name": "TC_045 - BVA - Create — amenityCodes rỗng → 400",
+          "name": "TC_050: BVA - Create — city 21 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_city', 'A'.repeat(21));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_050: Status 400 - city 21 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"{{test_city}}\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_051: BVA - Create — amenityCodes rỗng [] → 400",
           "event": [
             {
               "listen": "prerequest",
@@ -2903,9 +3179,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status 400 - amenityCodes rỗng', () => {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
+                  "pm.test('TC_051: Status 400 - amenityCodes rỗng', () => {\n  pm.response.to.have.status(400);\n});"
                 ],
                 "type": "text/javascript"
               }
@@ -2945,7 +3219,7 @@
       "name": "DT",
       "item": [
         {
-          "name": "TC_046 - DT - Create với tenant token",
+          "name": "TC_052 - DT - Create với tenant token",
           "event": [
             {
               "listen": "prerequest",
@@ -2997,7 +3271,7 @@
           }
         },
         {
-          "name": "TC_047 - DT - Create không token",
+          "name": "TC_053 - DT - Create không token",
           "event": [
             {
               "listen": "test",
@@ -3036,7 +3310,7 @@
           }
         },
         {
-          "name": "TC_048 - DT - Get property của landlord khác",
+          "name": "TC_054 - DT - Get property của landlord khác",
           "event": [
             {
               "listen": "prerequest",
@@ -3082,7 +3356,7 @@
           }
         },
         {
-          "name": "TC_049 - DT - Update property của landlord khác",
+          "name": "TC_055 - DT - Update property của landlord khác",
           "event": [
             {
               "listen": "prerequest",
@@ -3136,7 +3410,7 @@
           }
         },
         {
-          "name": "TC_050 - DT - Delete property của landlord khác",
+          "name": "TC_056 - DT - Delete property của landlord khác",
           "event": [
             {
               "listen": "prerequest",
