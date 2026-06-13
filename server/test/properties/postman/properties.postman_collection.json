@@ -1,0 +1,3677 @@
+{
+  "info": {
+    "name": "Properties API Tests",
+    "description": "Postman collection for Properties module test automation. Based on server/testing/properties.md\n\n## Validation Rules\n- name: min 10, max 50\n- description: min 50, max 100\n- address: min 20, max 50\n- city: min 5, max 20\n- ward: min 5, max 20\n- district: min 5, max 20\n\n## Usage\n1. Import this collection into Postman\n2. Select environment with {{base_url}}, {{test_password}}, etc.\n3. Update {{base_url}} if needed\n4. Run requests in order or use Collection Runner\n\n## Cleanup\nBefore running, ensure supabase_project_ref and service_role_key are set in your environment for cleanup.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Setup",
+      "item": [
+        {
+          "name": "Register Landlord A (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `landlord-a-${Date.now()}@test.com`;",
+                  "pm.environment.set('registered_email_a', email);",
+                  "pm.variables.set('email', email);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Register Landlord A - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const userId = json.data.id;",
+                  "pm.test('Response has data.id', () => {",
+                  "  pm.expect(userId).to.be.a('string');",
+                  "});",
+                  "pm.test('Role is landlord', () => {",
+                  "  pm.expect(json.data.role).to.eql('landlord');",
+                  "});",
+                  "const existingIds = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', existingIds ? existingIds + ',' + userId : userId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Landlord A\",\n  \"phone\": \"091{{$timestamp}}\",\n  \"identity_number\": \"123456789012\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/landlord",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "landlord"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Register Landlord B (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `landlord-b-${Date.now()}@test.com`;",
+                  "pm.environment.set('registered_email_b', email);",
+                  "pm.variables.set('email', email);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Register Landlord B - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const userId = json.data.id;",
+                  "pm.test('Response has data.id', () => {",
+                  "  pm.expect(userId).to.be.a('string');",
+                  "});",
+                  "pm.test('Role is landlord', () => {",
+                  "  pm.expect(json.data.role).to.eql('landlord');",
+                  "});",
+                  "const existingIds = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', existingIds ? existingIds + ',' + userId : userId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Landlord B\",\n  \"phone\": \"091{{$timestamp}}\",\n  \"identity_number\": \"123456789013\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/landlord",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "landlord"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Register Tenant (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `tenant-${Date.now()}@test.com`;",
+                  "pm.environment.set('registered_tenant_email', email);",
+                  "pm.variables.set('email', email);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Register Tenant - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const userId = json.data.id;",
+                  "pm.test('Response has data.id', () => {",
+                  "  pm.expect(userId).to.be.a('string');",
+                  "});",
+                  "pm.test('Role is tenant', () => {",
+                  "  pm.expect(json.data.role).to.eql('tenant');",
+                  "});",
+                  "const existingIds = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', existingIds ? existingIds + ',' + userId : userId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Tenant User\",\n  \"phone\": \"091{{$timestamp}}\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login Landlord A (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_email_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login Landlord A - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has token', () => {",
+                  "  pm.expect(json.data).to.have.property('token');",
+                  "  pm.expect(json.data.token).to.be.a('string');",
+                  "});",
+                  "pm.test('Response has user info', () => {",
+                  "  pm.expect(json.data).to.have.property('user');",
+                  "});",
+                  "",
+                  "pm.environment.set('auth_token_a', json.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login Landlord B (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_email_b'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login Landlord B - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has token', () => {",
+                  "  pm.expect(json.data).to.have.property('token');",
+                  "  pm.expect(json.data.token).to.be.a('string');",
+                  "});",
+                  "",
+                  "pm.environment.set('auth_token_b', json.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login Tenant (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_tenant_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login Tenant - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has token', () => {",
+                  "  pm.expect(json.data).to.have.property('token');",
+                  "  pm.expect(json.data.token).to.be.a('string');",
+                  "});",
+                  "",
+                  "pm.environment.set('auth_token_tenant', json.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Initial Property (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Create initial property - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "pm.test('Response has data.id', () => {",
+                  "  pm.expect(propertyId).to.be.a('string');",
+                  "});",
+                  "pm.test('Response has data.name', () => {",
+                  "  pm.expect(json.data).to.have.property('name');",
+                  "});",
+                  "",
+                  "pm.environment.set('property_id', propertyId);",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nha tro Hoa Phuong\",\n  \"address\": \"12 Nguyen Trai, Quan 3\",\n  \"ward\": \"Phuong 5\",\n  \"district\": \"Quan 3\",\n  \"city\": \"TP Ho Chi Minh\",\n  \"description\": \"Nha tro gan truong hoc, moi truong sach se, an ninh dam bao, thich hop cho sinh vien.\",\n  \"amenityCodes\": [\"WIFI\", \"AIR_CONDITIONER\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "EP",
+      "item": [
+        {
+          "name": "TC_01: EP - Create property thành công",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - create property thành công', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "pm.test('Response has data.name', () => {",
+                  "  pm.expect(json.data).to.have.property('name');",
+                  "});",
+                  "pm.test('Response has data.id', () => {",
+                  "  pm.expect(propertyId).to.be.a('string');",
+                  "});",
+                  "",
+                  "pm.environment.set('property_id', propertyId);",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nha tro Hoa Phuong\",\n  \"address\": \"12 Nguyen Trai, Quan 3\",\n  \"ward\": \"Phuong 5\",\n  \"district\": \"Quan 3\",\n  \"city\": \"TP Ho Chi Minh\",\n  \"description\": \"Nha tro gan truong hoc, moi truong sach se, an ninh dam bao, thich hop cho sinh vien.\",\n  \"amenityCodes\": [\"WIFI\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_02: EP - Create thiếu name",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - thiếu name', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address\": \"12 Nguyen Trai, Quan 3\",\n  \"ward\": \"Phuong 5\",\n  \"district\": \"Quan 3\",\n  \"city\": \"TP Ho Chi Minh\",\n  \"description\": \"Nha tro gan truong hoc, moi truong sach se, an ninh dam bao, thich hop cho sinh vien.\",\n  \"amenityCodes\": [\"WIFI\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_03: EP - Create amenityCodes không hợp lệ",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - amenityCodes không hợp lệ', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nha tro Test ABC\",\n  \"address\": \"12 Nguyen Trai, Quan 3\",\n  \"ward\": \"Phuong 5\",\n  \"district\": \"Quan 3\",\n  \"city\": \"TP Ho Chi Minh\",\n  \"description\": \"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\n  \"amenityCodes\": [\"INVALID\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_04: EP - Get all properties",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 - get all properties', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test('Response data is array', () => {",
+                  "  pm.expect(json.data).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_05: EP - Get property by ID",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('pid', pm.environment.get('property_id'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 - get property by ID', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test('data.id matches property_id', () => {",
+                  "  pm.expect(json.data.id).to.eql(pm.environment.get('property_id'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{pid}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{pid}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_06: EP - Get property không tồn tại",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404 - property không tồn tại', () => {",
+                  "  pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_07: EP - Update property thành công",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('pid', pm.environment.get('property_id'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 - update property thành công', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Property Name\",\n  \"description\": \"Cap nhat mo ta moi cho nha tro, dam bao day du thong tin hon.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{pid}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{pid}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_08: EP - Update property không tồn tại",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404 - update property không tồn tại', () => {",
+                  "  pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nha tro Update Test\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_09: EP - Delete property thành công",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const token = pm.environment.get('auth_token_a');",
+                  "pm.variables.set('token', token);",
+                  "",
+                  "const createUrl = pm.environment.get('base_url') + '/api/properties';",
+                  "pm.sendRequest({",
+                  "  url: createUrl,",
+                  "  method: 'POST',",
+                  "  header: {",
+                  "    'Content-Type': 'application/json',",
+                  "    'Authorization': 'Bearer ' + token",
+                  "  },",
+                  "  body: {",
+                  "    mode: 'raw',",
+                  "    raw: JSON.stringify({",
+                  "      name: 'Temp Property Delete',",
+                  "      address: '123 Temp Street, Ward 5',",
+                  "      ward: 'Phuong Tam',",
+                  "      district: 'Quan Tam',",
+                  "      city: 'TP Ho Chi Minh',",
+                  "      description: 'Nha tro tam thoi de test chuc nang xoa, dam bao du lieu hop le.',",
+                  "      amenityCodes: ['WIFI']",
+                  "    })",
+                  "  }",
+                  "}, function (err, res) {",
+                  "  if (err) {",
+                  "    console.error('Failed to create temp property:', err.message);",
+                  "    return;",
+                  "  }",
+                  "  const json = res.json();",
+                  "  const tempId = json.data && json.data.id;",
+                  "  if (tempId) {",
+                  "    pm.variables.set('temp_prop_id', tempId);",
+                  "    console.log('Temp property created: ' + tempId);",
+                  "  } else {",
+                  "    console.error('No id in create response:', JSON.stringify(json));",
+                  "  }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 - delete property thành công', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{temp_prop_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{temp_prop_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_10: EP - Delete property không tồn tại",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404 - delete property không tồn tại', () => {",
+                  "  pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_11: EP - Create — amenityCodes nhiều giá trị không hợp lệ → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - nhiều amenity không hợp lệ', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nha tro Test ABC\",\n  \"address\": \"12 Nguyen Trai, Quan 3\",\n  \"ward\": \"Phuong 5\",\n  \"district\": \"Quan 3\",\n  \"city\": \"TP Ho Chi Minh\",\n  \"description\": \"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\n  \"amenityCodes\": [\"FAKE1\", \"FAKE2\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_12: EP - Update — amenityCodes không hợp lệ → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('pid', pm.environment.get('property_id'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - update amenity không hợp lệ', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amenityCodes\": [\"INVALID\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{pid}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{pid}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_13: EP - Update — amenityCodes hợp lệ → 200",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('pid', pm.environment.get('property_id'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 - update amenityCodes hợp lệ', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amenityCodes\": [\"WIFI\", \"BED\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{pid}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{pid}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_14: EP - Update với partial fields",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('pid', pm.environment.get('property_id'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 - partial update thành công', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Partial Update Name\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{pid}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{pid}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "BVA",
+      "item": [
+        {
+          "name": "TC_015: BVA - Create — name 9 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_name', 'A'.repeat(9));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_015: Status 400 - name 9 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"{{test_name}}\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_016: BVA - Create — name 10 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_name', 'A'.repeat(10));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_016: Status 201 - name 10 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"{{test_name}}\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_017: BVA - Create — name 11 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_name', 'A'.repeat(11));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_017: Status 201 - name 11 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"{{test_name}}\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_018: BVA - Create — name 49 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_name', 'A'.repeat(49));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_018: Status 201 - name 49 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"{{test_name}}\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_019: BVA - Create — name 50 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_name', 'A'.repeat(50));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_019: Status 201 - name 50 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"{{test_name}}\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_020: BVA - Create — name 51 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_name', 'A'.repeat(51));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_020: Status 400 - name 51 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"{{test_name}}\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_021: BVA - Create — description 49 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_desc', 'A'.repeat(49));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_021: Status 400 - description 49 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"{{test_desc}}\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_022: BVA - Create — description 50 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_desc', 'A'.repeat(50));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_022: Status 201 - description 50 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"{{test_desc}}\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_023: BVA - Create — description 51 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_desc', 'A'.repeat(51));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_023: Status 201 - description 51 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"{{test_desc}}\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_024: BVA - Create — description 99 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_desc', 'A'.repeat(99));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_024: Status 201 - description 99 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"{{test_desc}}\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_025: BVA - Create — description 100 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_desc', 'A'.repeat(100));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_025: Status 201 - description 100 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"{{test_desc}}\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_026: BVA - Create — description 101 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_desc', 'A'.repeat(101));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_026: Status 400 - description 101 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"{{test_desc}}\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_027: BVA - Create — address 19 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_address', 'A'.repeat(19));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_027: Status 400 - address 19 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"{{test_address}}\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_028: BVA - Create — address 20 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_address', 'A'.repeat(20));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_028: Status 201 - address 20 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"{{test_address}}\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_029: BVA - Create — address 21 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_address', 'A'.repeat(21));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_029: Status 201 - address 21 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"{{test_address}}\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_030: BVA - Create — address 49 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_address', 'A'.repeat(49));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_030: Status 201 - address 49 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"{{test_address}}\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_031: BVA - Create — address 50 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_address', 'A'.repeat(50));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_031: Status 201 - address 50 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"{{test_address}}\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_032: BVA - Create — address 51 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_address', 'A'.repeat(51));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_032: Status 400 - address 51 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"{{test_address}}\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_033: BVA - Create — ward 4 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_ward', 'A'.repeat(4));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_033: Status 400 - ward 4 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"{{test_ward}}\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_034: BVA - Create — ward 5 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_ward', 'A'.repeat(5));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_034: Status 201 - ward 5 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"{{test_ward}}\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_035: BVA - Create — ward 6 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_ward', 'A'.repeat(6));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_035: Status 201 - ward 6 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"{{test_ward}}\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_036: BVA - Create — ward 19 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_ward', 'A'.repeat(19));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_036: Status 201 - ward 19 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"{{test_ward}}\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_037: BVA - Create — ward 20 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_ward', 'A'.repeat(20));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_037: Status 201 - ward 20 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"{{test_ward}}\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_038: BVA - Create — ward 21 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_ward', 'A'.repeat(21));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_038: Status 400 - ward 21 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"{{test_ward}}\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_039: BVA - Create — district 4 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_district', 'A'.repeat(4));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_039: Status 400 - district 4 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"{{test_district}}\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_040: BVA - Create — district 5 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_district', 'A'.repeat(5));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_040: Status 201 - district 5 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"{{test_district}}\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_041: BVA - Create — district 6 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_district', 'A'.repeat(6));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_041: Status 201 - district 6 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"{{test_district}}\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_042: BVA - Create — district 19 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_district', 'A'.repeat(19));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_042: Status 201 - district 19 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"{{test_district}}\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_043: BVA - Create — district 20 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_district', 'A'.repeat(20));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_043: Status 201 - district 20 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"{{test_district}}\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_044: BVA - Create — district 21 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_district', 'A'.repeat(21));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_044: Status 400 - district 21 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"{{test_district}}\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_045: BVA - Create — city 4 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_city', 'A'.repeat(4));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_045: Status 400 - city 4 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"{{test_city}}\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_046: BVA - Create — city 5 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_city', 'A'.repeat(5));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_046: Status 201 - city 5 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"{{test_city}}\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_047: BVA - Create — city 6 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_city', 'A'.repeat(6));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_047: Status 201 - city 6 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"{{test_city}}\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_048: BVA - Create — city 19 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_city', 'A'.repeat(19));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_048: Status 201 - city 19 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"{{test_city}}\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_049: BVA - Create — city 20 ký tự → 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_city', 'A'.repeat(20));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_049: Status 201 - city 20 ký tự', () => {\n  pm.response.to.have.status(201);\n});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const propertyId = json.data.id;",
+                  "const existingIds = pm.environment.get('created_property_ids');",
+                  "pm.environment.set('created_property_ids', existingIds ? existingIds + ',' + propertyId : propertyId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"{{test_city}}\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_050: BVA - Create — city 21 ký tự → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));",
+                  "pm.variables.set('test_city', 'A'.repeat(21));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_050: Status 400 - city 21 ký tự', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"{{test_city}}\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[\"WIFI\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_051: BVA - Create — amenityCodes rỗng [] → 400",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_a'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_051: Status 400 - amenityCodes rỗng', () => {\n  pm.response.to.have.status(400);\n});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Nha tro Test\",\"address\":\"12 Nguyen Trai, Quan 3\",\"ward\":\"Phuong 5\",\"district\":\"Quan 3\",\"city\":\"TP Ho Chi Minh\",\"description\":\"Khu tro an ninh, gan truong hoc, moi truong sach se, yen tinh.\",\"amenityCodes\":[]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "DT",
+      "item": [
+        {
+          "name": "TC_052 - DT - Create với tenant token",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_tenant'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 403 - tenant không được create property', () => {",
+                  "  pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nha tro Hoa Phuong\",\n  \"address\": \"12 Nguyen Trai, Quan 3\",\n  \"ward\": \"Phuong 5\",\n  \"district\": \"Quan 3\",\n  \"city\": \"TP Ho Chi Minh\",\n  \"description\": \"Nha tro gan truong hoc, moi truong sach se, an ninh dam bao, thich hop cho sinh vien.\",\n  \"amenityCodes\": [\"WIFI\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_053 - DT - Create không token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - không token', () => {",
+                  "  pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nha tro Hoa Phuong\",\n  \"address\": \"12 Nguyen Trai, Quan 3\",\n  \"ward\": \"Phuong 5\",\n  \"district\": \"Quan 3\",\n  \"city\": \"TP Ho Chi Minh\",\n  \"description\": \"Nha tro gan truong hoc, moi truong sach se, an ninh dam bao, thich hop cho sinh vien.\",\n  \"amenityCodes\": [\"WIFI\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_054 - DT - Get property của landlord khác",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_b'));",
+                  "pm.variables.set('pid', pm.environment.get('property_id'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404 - get property của landlord khác', () => {",
+                  "  pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{pid}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{pid}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_055 - DT - Update property của landlord khác",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_b'));",
+                  "pm.variables.set('pid', pm.environment.get('property_id'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404 - update property của landlord khác', () => {",
+                  "  pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nha tro Bi Hack\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{pid}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{pid}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_056 - DT - Delete property của landlord khác",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('token', pm.environment.get('auth_token_b'));",
+                  "pm.variables.set('pid', pm.environment.get('property_id'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404 - delete property của landlord khác', () => {",
+                  "  pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{pid}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{pid}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cleanup",
+      "item": [
+        {
+          "name": "Cleanup: Delete all test properties",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const projectRef = pm.environment.get('supabase_project_ref');",
+                  "const serviceRoleKey = pm.environment.get('service_role_key');",
+                  "const ids = pm.environment.get('created_property_ids');",
+                  "",
+                  "if (!ids) {",
+                  "  console.log('Không có property nào cần cleanup.');",
+                  "  return;",
+                  "}",
+                  "",
+                  "if (!projectRef || !serviceRoleKey) {",
+                  "  console.warn('Cần set supabase_project_ref và service_role_key trong environment.');",
+                  "  return;",
+                  "}",
+                  "",
+                  "const baseUrl = projectRef.replace(/\\/$/, '');",
+                  "const propertyIds = ids.split(',').filter(id => id);",
+                  "const deletedIds = [];",
+                  "const failedIds = [];",
+                  "let completed = 0;",
+                  "",
+                  "propertyIds.forEach((propertyId, index) => {",
+                  "  const deleteUrl = baseUrl + '/rest/v1/properties?id=eq.' + encodeURIComponent(propertyId);",
+                  "  pm.sendRequest({",
+                  "    url: deleteUrl,",
+                  "    method: 'DELETE',",
+                  "    header: {",
+                  "      'apikey': serviceRoleKey,",
+                  "      'Authorization': 'Bearer ' + serviceRoleKey,",
+                  "      'Prefer': 'return=minimal'",
+                  "    }",
+                  "  }, function (err, res) {",
+                  "    completed++;",
+                  "    if (err || res.code >= 400) {",
+                  "      failedIds.push(propertyId);",
+                  "      console.warn('Xóa property thất bại: ' + propertyId + ' - ' + (err ? err.message : res.code));",
+                  "    } else {",
+                  "      deletedIds.push(propertyId);",
+                  "      console.log('Đã xóa property: ' + propertyId);",
+                  "    }",
+                  "",
+                  "    if (completed === propertyIds.length) {",
+                  "      const summary = 'Cleanup: ' + deletedIds.length + '/' + propertyIds.length + ' properties deleted' + (failedIds.length ? ', failed: ' + failedIds.length : '');",
+                  "      pm.test(summary, () => {",
+                  "        pm.expect(deletedIds.length).to.eql(propertyIds.length);",
+                  "      });",
+                  "      pm.environment.set('created_property_ids', '');",
+                  "      console.log(summary);",
+                  "    }",
+                  "  });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cleanup: Delete all test users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const projectRef = pm.environment.get('supabase_project_ref');",
+                  "const serviceRoleKey = pm.environment.get('service_role_key');",
+                  "const ids = pm.environment.get('created_user_ids');",
+                  "",
+                  "if (!ids) {",
+                  "  console.log('Không có user nào cần cleanup.');",
+                  "  return;",
+                  "}",
+                  "",
+                  "if (!projectRef || !serviceRoleKey) {",
+                  "  console.warn('Cần set supabase_project_ref và service_role_key trong environment.');",
+                  "  return;",
+                  "}",
+                  "",
+                  "const baseUrl = projectRef.replace(/\\/$/, '');",
+                  "const userIds = ids.split(',').filter(id => id);",
+                  "const deletedIds = [];",
+                  "const failedIds = [];",
+                  "let completed = 0;",
+                  "",
+                  "userIds.forEach((userId, index) => {",
+                  "  const deleteUrl = baseUrl + '/auth/v1/admin/users/' + encodeURIComponent(userId);",
+                  "  pm.sendRequest({",
+                  "    url: deleteUrl,",
+                  "    method: 'DELETE',",
+                  "    header: {",
+                  "      'apikey': serviceRoleKey,",
+                  "      'Authorization': 'Bearer ' + serviceRoleKey",
+                  "    }",
+                  "  }, function (err, res) {",
+                  "    completed++;",
+                  "    if (err || res.code >= 400) {",
+                  "      failedIds.push(userId);",
+                  "      console.warn('Xóa user thất bại: ' + userId + ' - ' + (err ? err.message : res.code));",
+                  "    } else {",
+                  "      deletedIds.push(userId);",
+                  "      console.log('Đã xóa user: ' + userId);",
+                  "    }",
+                  "",
+                  "    if (completed === userIds.length) {",
+                  "      const summary = 'Cleanup: ' + deletedIds.length + '/' + userIds.length + ' users deleted' + (failedIds.length ? ', failed: ' + failedIds.length : '');",
+                  "      pm.test(summary, () => {",
+                  "        pm.expect(deletedIds.length).to.eql(userIds.length);",
+                  "      });",
+                  "      pm.environment.set('created_user_ids', '');",
+                  "      console.log(summary);",
+                  "    }",
+                  "  });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          }
+        }
+      ],
+      "description": "Xóa tất cả test properties và users đã tạo trong session.\n\nSet 2 biến trong environment (Current Value):\n- `supabase_project_ref`: Ví dụ `https://xyzabc.supabase.co`\n- `service_role_key`: Service role key từ Supabase Dashboard → Settings → API\n\nChạy request, cleanup sẽ loop qua từng ID và gọi DELETE qua Supabase Admin API / REST API."
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "test_password",
+      "value": "Test@1234",
+      "type": "string"
+    },
+    {
+      "key": "auth_token_a",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "auth_token_b",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "auth_token_tenant",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "property_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "created_property_ids",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "registered_email_a",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "registered_email_b",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "registered_tenant_email",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "created_user_ids",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

@@ -1,0 +1,1955 @@
+{
+  "info": {
+    "name": "Rooms API Tests",
+    "description": "Postman collection cho module Rooms — đồng bộ 1-1 với Rooms_TestCases.xlsx (TC_001 → TC_037).\n\n## Usage\n1. Import collection này vào Postman\n2. Import file environment rooms.postman_environment.json\n3. Chọn environment \"Rooms API - Local\"\n4. Chạy folder **Setup** trước để lấy token và tạo property\n5. Chạy EP → BVA → DT theo thứ tự\n6. Chạy **Cleanup** sau khi hoàn tất\n\n## Lưu ý\n- TC_001 sẽ tự lưu `room_id` vào environment cho các TC tiếp theo\n- TC_020 (DELETE) phải chạy SAU các TC dùng `room_id`\n- Các TC BVA POST tạo ra phòng phụ, Cleanup sẽ xóa theo property",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Setup",
+      "description": "Tạo tài khoản landlord + tenant, đăng nhập lấy token, tạo property để dùng trong các test.",
+      "item": [
+        {
+          "name": "Setup 1 — Register Landlord",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `landlord-${Date.now()}@rooms-test.com`;",
+                  "pm.environment.set('landlord_email', email);",
+                  "pm.variables.set('email', email);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Setup: Register landlord - status 201', () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.test('Setup: Role is landlord', () => pm.expect(j.data.role).to.eql('landlord'));",
+                  "pm.environment.set('_landlord_uid', j.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/landlord",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "landlord"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Tran Thi B\",\n  \"phone\": \"098{{$timestamp}}\",\n  \"identity_number\": \"123456789012\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Setup 2 — Register Tenant",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `tenant-${Date.now()}@rooms-test.com`;",
+                  "pm.environment.set('tenant_email', email);",
+                  "pm.variables.set('email', email);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Setup: Register tenant - status 201', () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.test('Setup: Role is tenant', () => pm.expect(j.data.role).to.eql('tenant'));",
+                  "pm.environment.set('_tenant_uid', j.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"091{{$timestamp}}\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Setup 3 — Login Landlord",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('landlord_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Setup: Login landlord - status 201', () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.test('Setup: Has token', () => pm.expect(j.data).to.have.property('token'));",
+                  "pm.environment.set('landlord_token', j.data.token);",
+                  "pm.environment.set('any_token', j.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Setup 4 — Login Tenant",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('tenant_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Setup: Login tenant - status 201', () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.environment.set('tenant_token', j.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Setup 5 — Create Property",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Setup: Create property - status 201', () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.test('Setup: Property has id', () => pm.expect(j.data.id).to.be.a('string'));",
+                  "pm.environment.set('property_id', j.data.id);",
+                  "console.log('property_id =', j.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nha Tro Test Rooms\",\n  \"address\": \"123 Duong ABC\",\n  \"ward\": \"Phuong 1\",\n  \"district\": \"Quan 1\",\n  \"city\": \"Ho Chi Minh\",\n  \"description\": \"Nha tro dung de test rooms module\"\n,\n  \"amenityCodes\": [\"WIFI\", \"AIR_CONDITIONER\"]\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "EP",
+      "description": "Phân vùng tương đương — TC_001 đến TC_023",
+      "item": [
+        {
+          "name": "TC_001: EP - Tạo phòng đầy đủ hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_001: Status 201 - tạo phòng hợp lệ', () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.test('TC_001: statusCode = 201', () => pm.expect(j.statusCode).to.eql(201));",
+                  "pm.test('TC_001: data.id tồn tại', () => pm.expect(j.data.id).to.be.a('string'));",
+                  "pm.test('TC_001: data.title = Phong 101', () => pm.expect(j.data.title).to.eql('Phong 101'));",
+                  "pm.test('TC_001: data.monthly_rent = 3000000', () => pm.expect(j.data.monthly_rent).to.eql(3000000));",
+                  "pm.environment.set('room_id', j.data.id);",
+                  "console.log('room_id =', j.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Phong 101\",\n  \"area_sqm\": 25,\n  \"monthly_rent\": 3000000,\n  \"deposit_amount\": 6000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000,\n  \"has_furniture\": true,\n  \"description\": \"Phong sang thoang mat\",\n  \"included_amenity_codes\": [\"AC\", \"BED\"],\n  \"addon_amenities\": [{\"code\": \"TV\", \"monthly_price\": 50000}],\n  \"parking_fees\": {\"motorbike\": 150000, \"car\": 1000000},\n  \"images\": [{\"url\": \"https://storage.example.com/rooms/img.jpg\", \"sortOrder\": 0}]\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_002: EP - title rỗng → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_002: Status 400 - title rỗng', () => pm.response.to.have.status(400));",
+                  "const j = pm.response.json();",
+                  "pm.test('TC_002: statusCode = 400', () => pm.expect(j.statusCode).to.eql(400));",
+                  "pm.test('TC_002: có message lỗi', () => pm.expect(j).to.have.property('message'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"area_sqm\": 25,\n  \"monthly_rent\": 3000000,\n  \"deposit_amount\": 6000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_003: EP - area_sqm hợp lệ (25) → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_003: Status 201 - area_sqm hợp lệ', () => pm.response.to.have.status(201));",
+                  "pm.test('TC_003: data.area_sqm = 25', () => pm.expect(pm.response.json().data.area_sqm).to.eql(25));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Phong EP003\",\n  \"area_sqm\": 25,\n  \"monthly_rent\": 3000000,\n  \"deposit_amount\": 6000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_004: EP - area_sqm = 0 → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_004: Status 400 - area_sqm = 0', () => pm.response.to.have.status(400));",
+                  "pm.test('TC_004: có message lỗi', () => pm.expect(pm.response.json()).to.have.property('message'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Phong EP004\",\n  \"area_sqm\": 0,\n  \"monthly_rent\": 3000000,\n  \"deposit_amount\": 6000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_005: EP - monthly_rent hợp lệ (3000000) → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_005: Status 201 - monthly_rent hợp lệ', () => pm.response.to.have.status(201));",
+                  "pm.test('TC_005: data.monthly_rent = 3000000', () => pm.expect(pm.response.json().data.monthly_rent).to.eql(3000000));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Phong EP005\",\n  \"area_sqm\": 25,\n  \"monthly_rent\": 3000000,\n  \"deposit_amount\": 6000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_006: EP - monthly_rent âm (-1000000) → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_006: Status 400 - monthly_rent âm', () => pm.response.to.have.status(400));",
+                  "pm.test('TC_006: có message lỗi', () => pm.expect(pm.response.json()).to.have.property('message'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Phong EP006\",\n  \"area_sqm\": 25,\n  \"monthly_rent\": -1000000,\n  \"deposit_amount\": 6000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_007: EP - deposit_amount hợp lệ (6000000) → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_007: Status 201 - deposit_amount hợp lệ', () => pm.response.to.have.status(201));",
+                  "pm.test('TC_007: data.deposit_amount = 6000000', () => pm.expect(pm.response.json().data.deposit_amount).to.eql(6000000));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Phong EP007\",\n  \"area_sqm\": 25,\n  \"monthly_rent\": 3000000,\n  \"deposit_amount\": 6000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_008: EP - PATCH status = AVAILABLE → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_008: Status 200 - status AVAILABLE', () => pm.response.to.have.status(200));",
+                  "pm.test('TC_008: data.status = AVAILABLE', () => pm.expect(pm.response.json().data.status).to.eql('AVAILABLE'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rooms/{{room_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "{{room_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"AVAILABLE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_009: EP - PATCH status = OCCUPIED → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_009: Status 200 - status OCCUPIED', () => pm.response.to.have.status(200));",
+                  "pm.test('TC_009: data.status = OCCUPIED', () => pm.expect(pm.response.json().data.status).to.eql('OCCUPIED'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rooms/{{room_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "{{room_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"OCCUPIED\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_010: EP - PATCH status = MAINTENANCE → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_010: Status 200 - status MAINTENANCE', () => pm.response.to.have.status(200));",
+                  "pm.test('TC_010: data.status = MAINTENANCE', () => pm.expect(pm.response.json().data.status).to.eql('MAINTENANCE'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rooms/{{room_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "{{room_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"MAINTENANCE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_011: EP - PATCH status không hợp lệ → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_011: Status 400 - status không hợp lệ', () => pm.response.to.have.status(400));",
+                  "pm.test('TC_011: có message lỗi', () => pm.expect(pm.response.json()).to.have.property('message'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rooms/{{room_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "{{room_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"INVALID_STATUS\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_012: EP - GET browse/rooms không filter → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_012: Status 200 - browse không filter', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('TC_012: statusCode = 200', () => pm.expect(j.statusCode).to.eql(200));",
+                  "pm.test('TC_012: data là array', () => pm.expect(j.data).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{any_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/browse/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "browse",
+                "rooms"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_013: EP - browse/rooms?minRent=2000000 → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_013: Status 200 - filter minRent', () => pm.response.to.have.status(200));",
+                  "const rooms = pm.response.json().data;",
+                  "pm.test('TC_013: data là array', () => pm.expect(rooms).to.be.an('array'));",
+                  "if (rooms.length > 0) {",
+                  "  pm.test('TC_013: tất cả phòng có monthly_rent >= 2000000', () => {",
+                  "    rooms.forEach(r => pm.expect(r.monthly_rent).to.be.at.least(2000000));",
+                  "  });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{any_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/browse/rooms?minRent=2000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "browse",
+                "rooms"
+              ],
+              "query": [
+                {
+                  "key": "minRent",
+                  "value": "2000000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_014: EP - browse/rooms?maxRent=5000000 → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_014: Status 200 - filter maxRent', () => pm.response.to.have.status(200));",
+                  "const rooms = pm.response.json().data;",
+                  "pm.test('TC_014: data là array', () => pm.expect(rooms).to.be.an('array'));",
+                  "if (rooms.length > 0) {",
+                  "  pm.test('TC_014: tất cả phòng có monthly_rent <= 5000000', () => {",
+                  "    rooms.forEach(r => pm.expect(r.monthly_rent).to.be.at.most(5000000));",
+                  "  });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{any_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/browse/rooms?maxRent=5000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "browse",
+                "rooms"
+              ],
+              "query": [
+                {
+                  "key": "maxRent",
+                  "value": "5000000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_015: EP - GET properties/:propId/rooms → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_015: Status 200 - GET rooms by property', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('TC_015: data là array', () => pm.expect(j.data).to.be.an('array'));",
+                  "pm.test('TC_015: có ít nhất 1 phòng', () => pm.expect(j.data.length).to.be.at.least(1));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_016: EP - GET rooms/:id hợp lệ → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_016: Status 200 - GET room by id', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('TC_016: data.id là string', () => pm.expect(j.data.id).to.be.a('string'));",
+                  "pm.test('TC_016: data.title tồn tại', () => pm.expect(j.data).to.have.property('title'));",
+                  "pm.test('TC_016: data.monthly_rent tồn tại', () => pm.expect(j.data).to.have.property('monthly_rent'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/rooms/{{room_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "{{room_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_017: EP - GET rooms/:id không tồn tại → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_017: Status 404 - room không tồn tại', () => pm.response.to.have.status(404));",
+                  "pm.test('TC_017: statusCode = 404', () => pm.expect(pm.response.json().statusCode).to.eql(404));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/rooms/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_018: EP - POST room với property không tồn tại → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_018: Status 404 - property không tồn tại', () => pm.response.to.have.status(404));",
+                  "pm.test('TC_018: statusCode = 404', () => pm.expect(pm.response.json().statusCode).to.eql(404));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/00000000-0000-0000-0000-000000000000/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "00000000-0000-0000-0000-000000000000",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Phong EP018\",\n  \"area_sqm\": 25,\n  \"monthly_rent\": 3000000,\n  \"deposit_amount\": 6000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_019: EP - PATCH room title → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_019: Status 200 - update title', () => pm.response.to.have.status(200));",
+                  "pm.test('TC_019: data.title đã cập nhật', () => pm.expect(pm.response.json().data.title).to.eql('Phong 101 Updated'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rooms/{{room_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "{{room_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Phong 101 Updated\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_020: EP - DELETE room thành công → 200",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Reset room_id sau khi xóa để Cleanup không cố xóa lại",
+                  "pm.environment.set('_deleted_room_id', pm.environment.get('room_id'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_020: Status 200 - DELETE room', () => pm.response.to.have.status(200));",
+                  "pm.test('TC_020: statusCode = 200', () => pm.expect(pm.response.json().statusCode).to.eql(200));",
+                  "pm.environment.set('room_id', '');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rooms/{{room_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "{{room_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_021: EP - DELETE room không tồn tại → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_021: Status 404 - DELETE room không tồn tại', () => pm.response.to.have.status(404));",
+                  "pm.test('TC_021: statusCode = 404', () => pm.expect(pm.response.json().statusCode).to.eql(404));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rooms/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_022: EP - GET browse/rooms/:id phòng trống → 200",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Tạo phòng AVAILABLE mới vì TC_020 đã xóa room_id cũ",
+                  "const token = pm.environment.get('landlord_token');",
+                  "const propId = pm.environment.get('property_id');",
+                  "const baseUrl = pm.environment.get('base_url');",
+                  "pm.sendRequest({",
+                  "  url: `${baseUrl}/api/properties/${propId}/rooms`,",
+                  "  method: 'POST',",
+                  "  header: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },",
+                  "  body: { mode: 'raw', raw: JSON.stringify({ title: 'Phong Browse Test', area_sqm: 20, monthly_rent: 3000000, deposit_amount: 5000000, electricity_rate_per_kwh: 3500, water_rate_per_m3: 15000 }) }",
+                  "}, (err, res) => {",
+                  "  if (!err && res.code === 201) {",
+                  "    const id = res.json().data.id;",
+                  "    pm.environment.set('room_id', id);",
+                  "    console.log('Tạo room mới cho browse test, id =', id);",
+                  "  }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_022: Status 200 - browse room detail', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('TC_022: data.id tồn tại', () => pm.expect(j.data.id).to.be.a('string'));",
+                  "pm.test('TC_022: data.status tồn tại', () => pm.expect(j.data).to.have.property('status'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{any_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/browse/rooms/{{room_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "browse",
+                "rooms",
+                "{{room_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_023: EP - GET browse/rooms/:id không tồn tại → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_023: Status 404 - browse room không tồn tại', () => pm.response.to.have.status(404));",
+                  "pm.test('TC_023: statusCode = 404', () => pm.expect(pm.response.json().statusCode).to.eql(404));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{any_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/browse/rooms/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "browse",
+                "rooms",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "BVA",
+      "description": "Phân tích giá trị biên — TC_024 đến TC_032",
+      "item": [
+        {
+          "name": "TC_024: BVA - monthly_rent = -2000000 (biên dưới - 2) → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_024: Status 400 - monthly_rent = -2000000', () => pm.response.to.have.status(400));",
+                  "pm.test('TC_024: có message lỗi', () => pm.expect(pm.response.json()).to.have.property('message'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Room BVA024\",\n  \"area_sqm\": 20,\n  \"monthly_rent\": -2000000,\n  \"deposit_amount\": 2000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_025: BVA - monthly_rent = -1000000 (biên dưới - 1) → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_025: Status 400 - monthly_rent = -1000000', () => pm.response.to.have.status(400));",
+                  "pm.test('TC_025: có message lỗi', () => pm.expect(pm.response.json()).to.have.property('message'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Room BVA025\",\n  \"area_sqm\": 20,\n  \"monthly_rent\": -1000000,\n  \"deposit_amount\": 2000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_026: BVA - monthly_rent = 0 (đúng biên) → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_026: Status 400 - monthly_rent = 0', () => pm.response.to.have.status(400));",
+                  "pm.test('TC_026: có message lỗi', () => pm.expect(pm.response.json()).to.have.property('message'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Room BVA026\",\n  \"area_sqm\": 20,\n  \"monthly_rent\": 0,\n  \"deposit_amount\": 2000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_027: BVA - monthly_rent = 1 (biên hợp lệ tối thiểu) → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_027: Status 201 - monthly_rent = 1', () => pm.response.to.have.status(201));",
+                  "pm.test('TC_027: data.monthly_rent = 1', () => pm.expect(pm.response.json().data.monthly_rent).to.eql(1));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Room BVA027\",\n  \"area_sqm\": 20,\n  \"monthly_rent\": 1,\n  \"deposit_amount\": 2000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_028: BVA - monthly_rent = 1000000 (lớp hợp lệ) → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_028: Status 201 - monthly_rent = 1000000', () => pm.response.to.have.status(201));",
+                  "pm.test('TC_028: data.monthly_rent = 1000000', () => pm.expect(pm.response.json().data.monthly_rent).to.eql(1000000));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Room BVA028\",\n  \"area_sqm\": 20,\n  \"monthly_rent\": 1000000,\n  \"deposit_amount\": 2000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_029: BVA - area_sqm = -1 (biên dưới - 1) → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_029: Status 400 - area_sqm = -1', () => pm.response.to.have.status(400));",
+                  "pm.test('TC_029: có message lỗi', () => pm.expect(pm.response.json()).to.have.property('message'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Room BVA029\",\n  \"area_sqm\": -1,\n  \"monthly_rent\": 1000000,\n  \"deposit_amount\": 2000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_030: BVA - area_sqm = 0 (đúng biên) → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_030: Status 400 - area_sqm = 0', () => pm.response.to.have.status(400));",
+                  "pm.test('TC_030: có message lỗi', () => pm.expect(pm.response.json()).to.have.property('message'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Room BVA030\",\n  \"area_sqm\": 0,\n  \"monthly_rent\": 1000000,\n  \"deposit_amount\": 2000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_031: BVA - area_sqm = 1 (biên hợp lệ tối thiểu) → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_031: Status 201 - area_sqm = 1', () => pm.response.to.have.status(201));",
+                  "pm.test('TC_031: data.area_sqm = 1', () => pm.expect(pm.response.json().data.area_sqm).to.eql(1));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Room BVA031\",\n  \"area_sqm\": 1,\n  \"monthly_rent\": 1000000,\n  \"deposit_amount\": 2000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_032: BVA - browse filter minRent=2000000 & maxRent=5000000 → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_032: Status 200 - filter cả 2 biên', () => pm.response.to.have.status(200));",
+                  "const rooms = pm.response.json().data;",
+                  "pm.test('TC_032: data là array', () => pm.expect(rooms).to.be.an('array'));",
+                  "if (rooms.length > 0) {",
+                  "  pm.test('TC_032: tất cả phòng trong khoảng [2tr; 5tr]', () => {",
+                  "    rooms.forEach(r => {",
+                  "      pm.expect(r.monthly_rent).to.be.at.least(2000000);",
+                  "      pm.expect(r.monthly_rent).to.be.at.most(5000000);",
+                  "    });",
+                  "  });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{any_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/browse/rooms?minRent=2000000&maxRent=5000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "browse",
+                "rooms"
+              ],
+              "query": [
+                {
+                  "key": "minRent",
+                  "value": "2000000"
+                },
+                {
+                  "key": "maxRent",
+                  "value": "5000000"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "DT",
+      "description": "Bảng quyết định — TC_033 đến TC_037",
+      "item": [
+        {
+          "name": "TC_033: DT - Browse detail: Room tồn tại + token hợp lệ → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_033: Status 200 - room tồn tại + token hợp lệ', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('TC_033: statusCode = 200', () => pm.expect(j.statusCode).to.eql(200));",
+                  "pm.test('TC_033: data.id tồn tại', () => pm.expect(j.data.id).to.be.a('string'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{any_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/browse/rooms/{{room_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "browse",
+                "rooms",
+                "{{room_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_034: DT - Browse detail: Room không tồn tại + token hợp lệ → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_034: Status 404 - room không tồn tại', () => pm.response.to.have.status(404));",
+                  "pm.test('TC_034: statusCode = 404', () => pm.expect(pm.response.json().statusCode).to.eql(404));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{any_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/browse/rooms/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "browse",
+                "rooms",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_035: DT - Browse detail: Room tồn tại + không có token → 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_035: Status 401 - không có token', () => pm.response.to.have.status(401));",
+                  "pm.test('TC_035: statusCode = 401', () => pm.expect(pm.response.json().statusCode).to.eql(401));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/browse/rooms/{{room_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "browse",
+                "rooms",
+                "{{room_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_036: DT - POST room với tenant token → 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_036: Status 403 - tenant bị từ chối tạo phòng', () => pm.response.to.have.status(403));",
+                  "pm.test('TC_036: statusCode = 403', () => pm.expect(pm.response.json().statusCode).to.eql(403));",
+                  "pm.test('TC_036: error = Forbidden', () => pm.expect(pm.response.json().error).to.include('Forbidden'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tenant_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}",
+                "rooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Phong DT036\",\n  \"area_sqm\": 25,\n  \"monthly_rent\": 3000000,\n  \"deposit_amount\": 6000000,\n  \"electricity_rate_per_kwh\": 3500,\n  \"water_rate_per_m3\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_037: DT - GET browse/rooms không có token → 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_037: Status 401 - browse list không có token', () => pm.response.to.have.status(401));",
+                  "pm.test('TC_037: statusCode = 401', () => pm.expect(pm.response.json().statusCode).to.eql(401));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/browse/rooms",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "browse",
+                "rooms"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cleanup",
+      "description": "Xóa property (cascade xóa tất cả rooms) và users đã tạo trong session.\n\nSet 2 biến trong environment (Current Value):\n- `supabase_project_ref`: Ví dụ `https://xyzabc.supabase.co`\n- `service_role_key`: Service role key từ Supabase Dashboard → Settings → API\n\nNếu chưa set 2 biến trên, chạy SQL thủ công:\n```sql\nDELETE FROM auth.users\nWHERE email LIKE 'landlord-%@rooms-test.com'\n   OR email LIKE 'tenant-%@rooms-test.com';\n```",
+      "item": [
+        {
+          "name": "Cleanup 1 — Delete Property (cascade rooms)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cleanup: Delete property - status 200', () => pm.response.to.have.status(200));",
+                  "pm.environment.set('property_id', '');",
+                  "pm.environment.set('room_id', '');",
+                  "console.log('Property và tất cả rooms đã được xóa.');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{landlord_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/properties/{{property_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{property_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cleanup 2 — Delete Test Users (Supabase Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const projectRef = pm.vault.get('supabase_project_ref');",
+                  "const serviceRoleKey = pm.vault.get('service_role_key');",
+                  "const uids = [",
+                  "  pm.environment.get('_landlord_uid'),",
+                  "  pm.environment.get('_tenant_uid')",
+                  "].filter(Boolean);",
+                  "",
+                  "if (!projectRef || !serviceRoleKey) {",
+                  "  console.warn('Chưa set supabase_project_ref / service_role_key. Xóa thủ công bằng SQL.');",
+                  "  pm.test('Cleanup: Cần set biến Supabase để tự động xóa users', () => pm.expect(true).to.be.true);",
+                  "  return;",
+                  "}",
+                  "",
+                  "const base = projectRef.replace(/\\/$/, '');",
+                  "let done = 0;",
+                  "const deleted = [], failed = [];",
+                  "",
+                  "uids.forEach(uid => {",
+                  "  pm.sendRequest({",
+                  "    url: `${base}/auth/v1/admin/users/${encodeURIComponent(uid)}`,",
+                  "    method: 'DELETE',",
+                  "    header: { 'apikey': serviceRoleKey, 'Authorization': `Bearer ${serviceRoleKey}` }",
+                  "  }, (err, res) => {",
+                  "    done++;",
+                  "    if (err || res.code >= 400) { failed.push(uid); console.warn('Xóa thất bại:', uid); }",
+                  "    else { deleted.push(uid); console.log('Đã xóa user:', uid); }",
+                  "    if (done === uids.length) {",
+                  "      const msg = `Cleanup: ${deleted.length}/${uids.length} users deleted` + (failed.length ? `, failed: ${failed.length}` : '');",
+                  "      pm.test(msg, () => pm.expect(deleted.length).to.eql(uids.length));",
+                  "      pm.environment.set('landlord_token', '');",
+                  "      pm.environment.set('tenant_token', '');",
+                  "    }",
+                  "  });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

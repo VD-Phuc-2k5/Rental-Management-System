@@ -1,0 +1,2404 @@
+﻿{
+  "info": {
+    "name": "Auth API Tests",
+    "description": "Postman collection for Auth module test automation. Based on server/testing/auth.md\n\n## Usage\n1. Import this collection into Postman\n2. Import the environment file (auth.postman_environment.json)\n3. Select environment \"Auth API - Local\"\n4. Update {{base_url}} if needed\n5. Run requests in order or use Collection Runner with auth-test-data.json\n\n## OTP Handling\nRequests in \"Password Reset Flow\" folder set {{otp}} automatically via test endpoint.\nIf your server doesn't have GET /api/test/otp, manually set {{otp}} from Redis before running confirm-otp.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Setup",
+      "item": [
+        {
+          "name": "Register Tenant (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `tenant-${Date.now()}@test.com`;",
+                  "pm.environment.set('registered_email', email);",
+                  "pm.variables.set('email', email);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Register tenant - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const userId = json.data.id;",
+                  "pm.test('Response has data.id', () => {",
+                  "  pm.expect(userId).to.be.a('string');",
+                  "});",
+                  "pm.test('Response has data.email', () => {",
+                  "  pm.expect(json.data).to.have.property('email');",
+                  "});",
+                  "pm.test('Role is tenant', () => {",
+                  "  pm.expect(json.data.role).to.eql('tenant');",
+                  "});",
+                  "const existingIds = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', existingIds ? existingIds + ',' + userId : userId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Register Landlord (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `landlord-${Date.now()}@test.com`;",
+                  "pm.environment.set('registered_landlord_email', email);",
+                  "pm.variables.set('email', email);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Register landlord - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const userId = json.data.id;",
+                  "pm.test('Response has data.id', () => {",
+                  "  pm.expect(userId).to.be.a('string');",
+                  "});",
+                  "pm.test('Role is landlord', () => {",
+                  "  pm.expect(json.data.role).to.eql('landlord');",
+                  "});",
+                  "const existingIds = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', existingIds ? existingIds + ',' + userId : userId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Tran Thi B\",\n  \"phone\": \"{{phone}}\",\n  \"identity_number\": \"123456789012\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/landlord",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "landlord"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login Tenant (Setup)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login - status 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has token', () => {",
+                  "  pm.expect(json.data).to.have.property('token');",
+                  "  pm.expect(json.data.token).to.be.a('string');",
+                  "});",
+                  "pm.test('Response has user info', () => {",
+                  "  pm.expect(json.data).to.have.property('user');",
+                  "  pm.expect(json.data.user).to.have.property('role');",
+                  "});",
+                  "",
+                  "pm.environment.set('auth_token', json.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "EP",
+      "item": [
+        {
+          "name": "TC_001: EP - Register/user - Đăng ký hợp lệ",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', `ep001-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_001: Status 201 - đăng ký hợp lệ', () => { pm.response.to.have.status(201); });",
+                  "const j = pm.response.json();",
+                  "pm.test('Has data.id', () => { pm.expect(j.data).to.have.property('id'); });",
+                  "pm.test('Has data.email', () => { pm.expect(j.data).to.have.property('email'); });",
+                  "pm.test('Role is tenant', () => { pm.expect(j.data.role).to.eql('tenant'); });",
+                  "const ids = pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', ids ? ids+','+j.data.id : j.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_002: EP - Register/user - Email sai format",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_002: Status 400', () => { pm.response.to.have.status(400); });",
+                  "pm.test('Has message', () => { pm.expect(pm.response.json()).to.have.property('message'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"invalid\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_003: EP - Register/user - Email rỗng",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_003: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_004: EP - Register/user - Password thiếu ký tự đặc biệt",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`ep004-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_004: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ep004-ts@test.com\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Aa111111\",\n  \"confirm_password\": \"Aa111111\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_005: EP - Register/user - Password thiếu chữ hoa",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`ep005-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_005: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"test@1111\",\n  \"confirm_password\": \"test@1111\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_006: EP - Register/user - Password thiếu chữ thường",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`ep006-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_006: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"TEST@1111\",\n  \"confirm_password\": \"TEST@1111\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_007: EP - Register/user - Password thiếu số",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`ep007-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_007: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@Test\",\n  \"confirm_password\": \"Test@Test\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_008: EP - Register/user - Phone chứa chữ cái",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`ep008-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_008: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"abc123\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_009: EP - Register/user - fullName rỗng",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`ep009-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_009: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_010: EP - Register/user - accepted_terms false",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`ep010-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_010: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_011: EP - Register/user - Phone optional",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`ep011-${Date.now()}@test.com`);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_011: Status 201 - phone optional', () => { pm.response.to.have.status(201); });",
+                  "const j=pm.response.json(); const ids=pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', ids?ids+','+j.data.id:j.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_012: EP - Register/landlord - identity_number optional",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`ep012-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_012: Status 201 - landlord no identity_number', () => { pm.response.to.have.status(201); });",
+                  "pm.test('Role is landlord', () => { pm.expect(pm.response.json().data.role).to.eql('landlord'); });",
+                  "const j=pm.response.json(); const ids=pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', ids?ids+','+j.data.id:j.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/landlord",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "landlord"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Tran Thi B\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_013: EP - Login - Thành công",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_013: Status 201', () => { pm.response.to.have.status(201); });",
+                  "const j=pm.response.json();",
+                  "pm.test('Has token', () => { pm.expect(j.data).to.have.property('token'); });",
+                  "pm.test('Has user info', () => { pm.expect(j.data).to.have.property('user'); });",
+                  "pm.environment.set('auth_token', j.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"Test@1234\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_014: EP - Login - Email không tồn tại",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_014: Status 401', () => { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"wrong@test.com\",\n  \"password\": \"Test@1234\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_015: EP - Login - Password sai",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_015: Status 401', () => { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"WrongPass@1\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_016: EP - Login - Email rỗng",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_016: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"password\": \"Test@1234\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_017: EP - Forgot Password - Email tồn tại",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = `reset-${Date.now()}@test.com`;",
+                  "pm.environment.set('otp_email', email);",
+                  "pm.variables.set('email', email);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_017: Status 201', () => { pm.response.to.have.status(201); });",
+                  "const otpEmail = pm.environment.get('otp_email');",
+                  "pm.sendRequest({ url: pm.environment.get('base_url')+'/api/test/otp?email='+encodeURIComponent(otpEmail), method:'GET' }, (err,res)=>{ if(!err&&res.code===200){ const j=res.json(); if(j.otp){ pm.environment.set('otp',j.otp); console.log('OTP: '+j.otp); } } });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_018: EP - Forgot Password - Email không tồn tại",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`nonexistent-${Date.now()}@test.com`); pm.request.body.raw = JSON.stringify({email: pm.variables.get('email')});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_018: Status 201 (security - no email enumeration)', () => { pm.response.to.have.status(201); });",
+                  "pm.test('Has message', () => { pm.expect(pm.response.json().data.message).to.be.a('string'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nonexistent-ts@test.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_019: EP - Confirm OTP - OTP hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_019: Status 201', () => { pm.response.to.have.status(201); });",
+                  "pm.test('OTP message', () => { pm.expect(pm.response.json().data.message).to.include('OTP'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/confirm-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "confirm-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"{{otp}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_020: EP - Reset Password - Hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_020: Status 201', () => { pm.response.to.have.status(201); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"{{otp}}\",\n  \"newPassword\": \"NewPass@123\",\n  \"confirmPassword\": \"NewPass@123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_021: EP - Reset Password - OTP sai",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('otp_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_021: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"000000\",\n  \"newPassword\": \"NewPass@123\",\n  \"confirmPassword\": \"NewPass@123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_022: EP - Login - Password cũ sau reset",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('otp_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_022: Status 401 - old password rejected', () => { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"Test@1234\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_023: EP - Login - Password mới sau reset",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('otp_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_023: Status 201 - new password works', () => { pm.response.to.have.status(201); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"NewPass@123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_024: EP - Public endpoint - Không cần token",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const ids = pm.environment.get('created_user_ids');",
+                  "if(ids){ const list=ids.split(',').filter(id=>id); if(list.length>0){ pm.variables.set('user_id',list[Math.floor(Math.random()*list.length)]); } }"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_024: Status 200 - public endpoint', () => { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_025: EP - Protected endpoint - Không có token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_025: Status 401', () => { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_026: EP - Protected endpoint - Token rỗng",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_026: Status 401 - empty token', () => { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer "
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_027: EP - Protected endpoint - Token giả mạo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_027: Status 401 - fake token', () => { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer fake"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC_028: EP - Reset Password OTP bypass isVerified (Security)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Security test: should return 400 if OTP re-validation required, 201 if server allows bypass (bug)",
+                  "pm.test('TC_028: OTP bypass check (expect 400)', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"000000\",\n  \"newPassword\": \"NewPass@123\",\n  \"confirmPassword\": \"NewPass@123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "BVA",
+      "item": [
+        {
+          "name": "TC_029: BVA - Password 7 ký tự (min-1)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`bva001-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_029: Status 400 - 7 chars password', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Te@1234\",\n  \"confirm_password\": \"Te@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_030: BVA - Password 8 ký tự (biên dưới chính xác)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`bva002-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_030: Status 201 - 8 chars password', () => { pm.response.to.have.status(201); });",
+                  "const j=pm.response.json(); const ids=pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', ids?ids+','+j.data.id:j.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@123\",\n  \"confirm_password\": \"Test@123\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_031: BVA - Password 9 ký tự (min+1)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`bva003-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_031: Status 201 - 9 chars password', () => { pm.response.to.have.status(201); });",
+                  "const j=pm.response.json(); const ids=pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', ids?ids+','+j.data.id:j.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_032: BVA - Confirm OTP - 5 ký tự (min-1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_032: Status 400 - OTP 5 chars', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/confirm-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "confirm-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"12345\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_033: BVA - Confirm OTP - 6 ký tự sai giá trị",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_033: Status 400 - OTP 6 chars wrong value', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/confirm-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "confirm-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"000000\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_034: BVA - Confirm OTP - 6 ký tự đúng giá trị",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_034: Status 201 - OTP correct', () => { pm.response.to.have.status(201); });",
+                  "pm.test('isVerified set', () => { pm.expect(pm.response.json().data.message).to.be.a('string'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/confirm-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "confirm-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"{{otp}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_035: BVA - Confirm OTP - 7 ký tự (max+1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_035: Status 400 - OTP 7 chars', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/confirm-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "confirm-otp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"1234567\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "DT",
+      "item": [
+        {
+          "name": "TC_036: DT - Register - Tất cả điều kiện hợp lệ",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`dt001-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_036: Status 201', () => { pm.response.to.have.status(201); });",
+                  "const j=pm.response.json(); const ids=pm.environment.get('created_user_ids');",
+                  "pm.environment.set('created_user_ids', ids?ids+','+j.data.id:j.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_037: DT - Register - Email không hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_037: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"bademail\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_038: DT - Register - Password không đủ điều kiện",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`dt003-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_038: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Aa111111\",\n  \"confirm_password\": \"Aa111111\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_039: DT - Register - confirm_password không khớp",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`dt004-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_039: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@9999\",\n  \"accepted_terms\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_040: DT - Register - accepted_terms false",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email',`dt005-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_040: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_041: DT - Login - Email tồn tại + Password đúng",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_041: Status 201', () => { pm.response.to.have.status(201); });",
+                  "pm.test('Has token', () => { pm.expect(pm.response.json().data).to.have.property('token'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"Test@1234\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_042: DT - Login - Email đúng + Password sai",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set('email', pm.environment.get('registered_email'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_042: Status 401', () => { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"Wrong@999\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_043: DT - Login - Email không tồn tại",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_043: Status 401', () => { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nobody@test.com\",\n  \"password\": \"Test@1234\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_044: DT - Reset Flow - OTP đúng + Password hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_044: Status 201', () => { pm.response.to.have.status(201); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"{{otp}}\",\n  \"newPassword\": \"NewPass@123\",\n  \"confirmPassword\": \"NewPass@123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_045: DT - Reset Flow - OTP sai + Password hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_045: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"999999\",\n  \"newPassword\": \"NewPass@123\",\n  \"confirmPassword\": \"NewPass@123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_046: DT - Reset Flow - OTP đúng + Password yếu",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_046: Status 400', () => { pm.response.to.have.status(400); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otp_email}}\",\n  \"otp\": \"{{otp}}\",\n  \"newPassword\": \"weak\",\n  \"confirmPassword\": \"weak\"\n}"
+            }
+          }
+        },
+        {
+          "name": "TC_047: DT - Access Control - Token hợp lệ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC_047: Status 200 - valid token', () => { pm.response.to.have.status(200); });",
+                  "pm.test('Has user data', () => { pm.expect(pm.response.json()).to.have.property('data'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cleanup",
+      "item": [
+        {
+          "name": "Cleanup: Delete all test users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const projectRef = pm.environment.get('supabase_project_ref');",
+                  "const serviceRoleKey = pm.environment.get('service_role_key');",
+                  "const ids = pm.environment.get('created_user_ids');",
+                  "",
+                  "if (!ids) {",
+                  "  console.log('Không có user nào cần cleanup.');",
+                  "  return;",
+                  "}",
+                  "",
+                  "if (!projectRef || !serviceRoleKey) {",
+                  "  console.warn('Cần set supabase_project_ref và service_role_key trong environment.');",
+                  "  return;",
+                  "}",
+                  "",
+                  "const baseUrl = projectRef.replace(/\\/$/, '');",
+                  "const userIds = ids.split(',').filter(id => id);",
+                  "const deletedIds = [];",
+                  "const failedIds = [];",
+                  "let completed = 0;",
+                  "",
+                  "userIds.forEach((userId, index) => {",
+                  "  const deleteUrl = baseUrl + '/auth/v1/admin/users/' + encodeURIComponent(userId);",
+                  "  pm.sendRequest({",
+                  "    url: deleteUrl,",
+                  "    method: 'DELETE',",
+                  "    header: {",
+                  "      'apikey': serviceRoleKey,",
+                  "      'Authorization': 'Bearer ' + serviceRoleKey",
+                  "    }",
+                  "  }, function (err, res) {",
+                  "    completed++;",
+                  "    if (err || res.code >= 400) {",
+                  "      failedIds.push(userId);",
+                  "      console.warn('Xóa thất bại: ' + userId + ' - ' + (err ? err.message : res.code));",
+                  "    } else {",
+                  "      deletedIds.push(userId);",
+                  "      console.log('Đã xóa: ' + userId);",
+                  "    }",
+                  "",
+                  "    if (completed === userIds.length) {",
+                  "      const summary = 'Cleanup: ' + deletedIds.length + '/' + userIds.length + ' users deleted' + (failedIds.length ? ', failed: ' + failedIds.length : '');",
+                  "      pm.test(summary, () => {",
+                  "        pm.expect(deletedIds.length).to.eql(userIds.length);",
+                  "      });",
+                  "      pm.environment.set('created_user_ids', '');",
+                  "      console.log(summary);",
+                  "    }",
+                  "  });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          }
+        }
+      ],
+      "description": "Xóa tất cả test users đã tạo trong session.\n\nSet 2 biến trong environment (Current Value):\n- `supabase_project_ref`: Ví dụ `https://xyzabc.supabase.co`\n- `service_role_key`: Service role key từ Supabase Dashboard → Settings → API\n\nChạy request, nó sẽ loop qua từng user ID và gọi DELETE qua Supabase Admin API.\n\nNếu chưa set 2 biến trên, có thể chạy SQL script thủ công:\n```sql\nDELETE FROM auth.users WHERE email LIKE 'tenant-%@test.com' OR email LIKE 'ep%@test.com' OR email LIKE 'reset-%@test.com' OR email LIKE 'landlord-%@test.com' OR email LIKE 'bva-%@test.com';\n```"
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "test_password",
+      "value": "Test@1234",
+      "type": "string"
+    },
+    {
+      "key": "registered_email",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "registered_landlord_email",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "otp",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "otp_email",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

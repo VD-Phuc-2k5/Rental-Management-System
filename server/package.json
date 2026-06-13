@@ -21,7 +21,13 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:auth": "jest --config ./test/jest-auth.json test/auth/unit-tests",
+    "test:auth:cov": "jest --config ./test/jest-auth.json --coverage test/auth/unit-tests",
+    "test:properties": "jest --config ./test/jest-properties.json test/properties/unit-tests",
+    "test:properties:cov": "jest --config ./test/jest-properties.json --coverage test/properties/unit-tests",
+    "test:rooms": "jest --config ./test/jest-rooms.json test/room/unit-tests",
+    "test:rooms:cov": "jest --config ./test/jest-rooms.json --coverage test/room/unit-tests"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
