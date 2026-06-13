@@ -17,7 +17,7 @@
               "script": {
                 "exec": [
                   "const email = `landlord-${Date.now()}@rooms-test.com`;",
-                  "pm.collectionVariables.set('landlord_email', email);",
+                  "pm.environment.set('landlord_email', email);",
                   "pm.variables.set('email', email);"
                 ],
                 "type": "text/javascript"
@@ -30,7 +30,7 @@
                   "pm.test('Setup: Register landlord - status 201', () => pm.response.to.have.status(201));",
                   "const j = pm.response.json();",
                   "pm.test('Setup: Role is landlord', () => pm.expect(j.data.role).to.eql('landlord'));",
-                  "pm.collectionVariables.set('_landlord_uid', j.data.id);"
+                  "pm.environment.set('_landlord_uid', j.data.id);"
                 ],
                 "type": "text/javascript"
               }
@@ -70,7 +70,7 @@
               "script": {
                 "exec": [
                   "const email = `tenant-${Date.now()}@rooms-test.com`;",
-                  "pm.collectionVariables.set('tenant_email', email);",
+                  "pm.environment.set('tenant_email', email);",
                   "pm.variables.set('email', email);"
                 ],
                 "type": "text/javascript"
@@ -83,7 +83,7 @@
                   "pm.test('Setup: Register tenant - status 201', () => pm.response.to.have.status(201));",
                   "const j = pm.response.json();",
                   "pm.test('Setup: Role is tenant', () => pm.expect(j.data.role).to.eql('tenant'));",
-                  "pm.collectionVariables.set('_tenant_uid', j.data.id);"
+                  "pm.environment.set('_tenant_uid', j.data.id);"
                 ],
                 "type": "text/javascript"
               }
@@ -122,7 +122,7 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email', pm.collectionVariables.get('landlord_email'));"
+                  "pm.variables.set('email', pm.environment.get('landlord_email'));"
                 ],
                 "type": "text/javascript"
               }
@@ -134,8 +134,8 @@
                   "pm.test('Setup: Login landlord - status 201', () => pm.response.to.have.status(201));",
                   "const j = pm.response.json();",
                   "pm.test('Setup: Has token', () => pm.expect(j.data).to.have.property('token'));",
-                  "pm.collectionVariables.set('landlord_token', j.data.token);",
-                  "pm.collectionVariables.set('any_token', j.data.token);"
+                  "pm.environment.set('landlord_token', j.data.token);",
+                  "pm.environment.set('any_token', j.data.token);"
                 ],
                 "type": "text/javascript"
               }
@@ -173,7 +173,7 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email', pm.collectionVariables.get('tenant_email'));"
+                  "pm.variables.set('email', pm.environment.get('tenant_email'));"
                 ],
                 "type": "text/javascript"
               }
@@ -184,7 +184,7 @@
                 "exec": [
                   "pm.test('Setup: Login tenant - status 201', () => pm.response.to.have.status(201));",
                   "const j = pm.response.json();",
-                  "pm.collectionVariables.set('tenant_token', j.data.token);"
+                  "pm.environment.set('tenant_token', j.data.token);"
                 ],
                 "type": "text/javascript"
               }
@@ -225,7 +225,7 @@
                   "pm.test('Setup: Create property - status 201', () => pm.response.to.have.status(201));",
                   "const j = pm.response.json();",
                   "pm.test('Setup: Property has id', () => pm.expect(j.data.id).to.be.a('string'));",
-                  "pm.collectionVariables.set('property_id', j.data.id);",
+                  "pm.environment.set('property_id', j.data.id);",
                   "console.log('property_id =', j.data.id);"
                 ],
                 "type": "text/javascript"
@@ -256,7 +256,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Nha Tro Test Rooms\",\n  \"address\": \"123 Duong ABC\",\n  \"ward\": \"Phuong 1\",\n  \"district\": \"Quan 1\",\n  \"city\": \"Ho Chi Minh\",\n  \"description\": \"Nha tro dung de test rooms module\"\n}"
+              "raw": "{\n  \"name\": \"Nha Tro Test Rooms\",\n  \"address\": \"123 Duong ABC\",\n  \"ward\": \"Phuong 1\",\n  \"district\": \"Quan 1\",\n  \"city\": \"Ho Chi Minh\",\n  \"description\": \"Nha tro dung de test rooms module\"\n,\n  \"amenityCodes\": [\"WIFI\", \"AIR_CONDITIONER\"]\n}"
             }
           }
         }
@@ -279,7 +279,7 @@
                   "pm.test('TC_001: data.id tồn tại', () => pm.expect(j.data.id).to.be.a('string'));",
                   "pm.test('TC_001: data.title = Phong 101', () => pm.expect(j.data.title).to.eql('Phong 101'));",
                   "pm.test('TC_001: data.monthly_rent = 3000000', () => pm.expect(j.data.monthly_rent).to.eql(3000000));",
-                  "pm.collectionVariables.set('room_id', j.data.id);",
+                  "pm.environment.set('room_id', j.data.id);",
                   "console.log('room_id =', j.data.id);"
                 ],
                 "type": "text/javascript"
@@ -1076,7 +1076,7 @@
               "script": {
                 "exec": [
                   "// Reset room_id sau khi xóa để Cleanup không cố xóa lại",
-                  "pm.collectionVariables.set('_deleted_room_id', pm.collectionVariables.get('room_id'));"
+                  "pm.environment.set('_deleted_room_id', pm.environment.get('room_id'));"
                 ],
                 "type": "text/javascript"
               }
@@ -1087,7 +1087,7 @@
                 "exec": [
                   "pm.test('TC_020: Status 200 - DELETE room', () => pm.response.to.have.status(200));",
                   "pm.test('TC_020: statusCode = 200', () => pm.expect(pm.response.json().statusCode).to.eql(200));",
-                  "pm.collectionVariables.set('room_id', '');"
+                  "pm.environment.set('room_id', '');"
                 ],
                 "type": "text/javascript"
               }
@@ -1157,9 +1157,9 @@
               "script": {
                 "exec": [
                   "// Tạo phòng AVAILABLE mới vì TC_020 đã xóa room_id cũ",
-                  "const token = pm.collectionVariables.get('landlord_token');",
-                  "const propId = pm.collectionVariables.get('property_id');",
-                  "const baseUrl = pm.collectionVariables.get('base_url');",
+                  "const token = pm.environment.get('landlord_token');",
+                  "const propId = pm.environment.get('property_id');",
+                  "const baseUrl = pm.environment.get('base_url');",
                   "pm.sendRequest({",
                   "  url: `${baseUrl}/api/properties/${propId}/rooms`,",
                   "  method: 'POST',",
@@ -1168,7 +1168,7 @@
                   "}, (err, res) => {",
                   "  if (!err && res.code === 201) {",
                   "    const id = res.json().data.id;",
-                  "    pm.collectionVariables.set('room_id', id);",
+                  "    pm.environment.set('room_id', id);",
                   "    console.log('Tạo room mới cho browse test, id =', id);",
                   "  }",
                   "});"
@@ -1859,8 +1859,8 @@
               "script": {
                 "exec": [
                   "pm.test('Cleanup: Delete property - status 200', () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set('property_id', '');",
-                  "pm.collectionVariables.set('room_id', '');",
+                  "pm.environment.set('property_id', '');",
+                  "pm.environment.set('room_id', '');",
                   "console.log('Property và tất cả rooms đã được xóa.');"
                 ],
                 "type": "text/javascript"
@@ -1895,11 +1895,11 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "const projectRef = pm.collectionVariables.get('supabase_project_ref') || pm.environment.get('supabase_project_ref');",
-                  "const serviceRoleKey = pm.collectionVariables.get('service_role_key') || pm.environment.get('service_role_key');",
+                  "const projectRef = pm.vault.get('supabase_project_ref');",
+                  "const serviceRoleKey = pm.vault.get('service_role_key');",
                   "const uids = [",
-                  "  pm.collectionVariables.get('_landlord_uid'),",
-                  "  pm.collectionVariables.get('_tenant_uid')",
+                  "  pm.environment.get('_landlord_uid'),",
+                  "  pm.environment.get('_tenant_uid')",
                   "].filter(Boolean);",
                   "",
                   "if (!projectRef || !serviceRoleKey) {",
@@ -1924,8 +1924,8 @@
                   "    if (done === uids.length) {",
                   "      const msg = `Cleanup: ${deleted.length}/${uids.length} users deleted` + (failed.length ? `, failed: ${failed.length}` : '');",
                   "      pm.test(msg, () => pm.expect(deleted.length).to.eql(uids.length));",
-                  "      pm.collectionVariables.set('landlord_token', '');",
-                  "      pm.collectionVariables.set('tenant_token', '');",
+                  "      pm.environment.set('landlord_token', '');",
+                  "      pm.environment.set('tenant_token', '');",
                   "    }",
                   "  });",
                   "});"
