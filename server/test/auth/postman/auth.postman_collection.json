@@ -306,7 +306,7 @@
           }
         },
         {
-          "name": "TC05: Register - Password thiếu ký tự đặc biệt",
+          "name": "TC04: Register - Password thiếu ký tự đặc biệt",
           "event": [
             {
               "listen": "test",
@@ -340,7 +340,7 @@
           }
         },
         {
-          "name": "TC06: Register - Password thiếu chữ hoa",
+          "name": "TC05: Register - Password thiếu chữ hoa",
           "event": [
             {
               "listen": "test",
@@ -374,7 +374,7 @@
           }
         },
         {
-          "name": "TC07: Register - Password thiếu chữ thường",
+          "name": "TC06: Register - Password thiếu chữ thường",
           "event": [
             {
               "listen": "test",
@@ -408,7 +408,7 @@
           }
         },
         {
-          "name": "TC08: Register - Password thiếu số",
+          "name": "TC07: Register - Password thiếu số",
           "event": [
             {
               "listen": "test",
@@ -442,7 +442,7 @@
           }
         },
         {
-          "name": "TC11: Register - Phone có chứa chữ",
+          "name": "TC08: Register - Phone có chứa chữ",
           "event": [
             {
               "listen": "test",
@@ -476,7 +476,7 @@
           }
         },
         {
-          "name": "TC14: Register - fullName rỗng",
+          "name": "TC09: Register - fullName rỗng",
           "event": [
             {
               "listen": "test",
@@ -510,7 +510,7 @@
           }
         },
         {
-          "name": "TC16: Register - accepted_terms = false",
+          "name": "TC10: Register - accepted_terms = false",
           "event": [
             {
               "listen": "test",
@@ -544,7 +544,7 @@
           }
         },
         {
-          "name": "TC12: Register - Không gửi phone (optional)",
+          "name": "TC11: Register - Không gửi phone (optional)",
           "event": [
             {
               "listen": "prerequest",
@@ -590,7 +590,7 @@
           }
         },
         {
-          "name": "TC18: Register - Không gửi identity_number (optional)",
+          "name": "TC12: Register - Không gửi identity_number (optional)",
           "event": [
             {
               "listen": "prerequest",
@@ -641,7 +641,7 @@
       "name": "Login",
       "item": [
         {
-          "name": "TC48: Login - Thành công",
+          "name": "TC13: Login - Thành công",
           "event": [
             {
               "listen": "prerequest",
@@ -692,7 +692,7 @@
           }
         },
         {
-          "name": "TC49: Login - Email sai",
+          "name": "TC14: Login - Email sai",
           "event": [
             {
               "listen": "test",
@@ -726,7 +726,7 @@
           }
         },
         {
-          "name": "TC50: Login - Password sai",
+          "name": "TC15: Login - Password sai",
           "event": [
             {
               "listen": "prerequest",
@@ -769,7 +769,7 @@
           }
         },
         {
-          "name": "TC51: Login - Email rỗng",
+          "name": "TC16: Login - Email rỗng",
           "event": [
             {
               "listen": "test",
@@ -808,7 +808,7 @@
       "name": "Password Reset Flow",
       "item": [
         {
-          "name": "TC53: Forgot Password - Email tồn tại",
+          "name": "TC17: Forgot Password - Email tồn tại",
           "event": [
             {
               "listen": "prerequest",
@@ -872,7 +872,7 @@
           }
         },
         {
-          "name": "TC54: Forgot Password - Email không tồn tại",
+          "name": "TC18: Forgot Password - Email không tồn tại",
           "event": [
             {
               "listen": "test",
@@ -911,7 +911,7 @@
           }
         },
         {
-          "name": "TC60: Confirm OTP - Hợp lệ",
+          "name": "TC19: Confirm OTP - Hợp lệ",
           "event": [
             {
               "listen": "test",
@@ -950,7 +950,7 @@
           }
         },
         {
-          "name": "TC57: Confirm OTP - OTP 5 chars (min-1)",
+          "name": "TC20: Confirm OTP - OTP 5 chars (min-1)",
           "event": [
             {
               "listen": "test",
@@ -984,7 +984,7 @@
           }
         },
         {
-          "name": "TC59: Confirm OTP - OTP 7 chars (max+1)",
+          "name": "TC21: Confirm OTP - OTP 7 chars (max+1)",
           "event": [
             {
               "listen": "test",
@@ -1018,7 +1018,7 @@
           }
         },
         {
-          "name": "TC65: Reset Password - Hợp lệ",
+          "name": "TC22: Reset Password - Hợp lệ",
           "event": [
             {
               "listen": "test",
@@ -1052,7 +1052,7 @@
           }
         },
         {
-          "name": "TC67: Reset Password - OTP sai",
+          "name": "TC23: Reset Password - OTP sai",
           "event": [
             {
               "listen": "prerequest",
@@ -1095,7 +1095,7 @@
           }
         },
         {
-          "name": "TC71: Login với password cũ sau reset",
+          "name": "TC24: Login với password cũ sau reset",
           "event": [
             {
               "listen": "prerequest",
@@ -1138,7 +1138,7 @@
           }
         },
         {
-          "name": "TC72: Login với password mới sau reset",
+          "name": "TC25: Login với password mới sau reset",
           "event": [
             {
               "listen": "prerequest",
@@ -1181,7 +1181,7 @@
           }
         },
         {
-          "name": "TC69: OTP bypass khi isVerified=true",
+          "name": "TC26: OTP bypass khi isVerified=true",
           "event": [
             {
               "listen": "test",
@@ -1220,7 +1220,7 @@
       "name": "Access Control",
       "item": [
         {
-          "name": "TC73: Public endpoint - Không cần token",
+          "name": "TC27: Public endpoint - Không cần token",
           "event": [
             {
               "listen": "prerequest",
@@ -1261,7 +1261,7 @@
           }
         },
         {
-          "name": "TC74: Protected endpoint - Không token",
+          "name": "TC28: Protected endpoint - Không token",
           "event": [
             {
               "listen": "test",
@@ -1286,7 +1286,7 @@
           }
         },
         {
-          "name": "TC75: Protected endpoint - Token rỗng",
+          "name": "TC29: Protected endpoint - Token rỗng",
           "event": [
             {
               "listen": "test",
@@ -1316,7 +1316,7 @@
           }
         },
         {
-          "name": "TC76: Protected endpoint - Token fake",
+          "name": "TC30: Protected endpoint - Token fake",
           "event": [
             {
               "listen": "test",
