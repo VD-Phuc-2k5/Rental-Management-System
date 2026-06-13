@@ -17,7 +17,8 @@
                 "exec": [
                   "const email = `tenant-${Date.now()}@test.com`;",
                   "pm.environment.set('registered_email', email);",
-                  "pm.variables.set('email', email);"
+                  "pm.variables.set('email', email);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -58,7 +59,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"091{{$timestamp}}\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register/user",
@@ -83,7 +84,8 @@
                 "exec": [
                   "const email = `landlord-${Date.now()}@test.com`;",
                   "pm.environment.set('registered_landlord_email', email);",
-                  "pm.variables.set('email', email);"
+                  "pm.variables.set('email', email);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -121,7 +123,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Tran Thi B\",\n  \"phone\": \"098{{$timestamp}}\",\n  \"identity_number\": \"123456789012\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Tran Thi B\",\n  \"phone\": \"{{phone}}\",\n  \"identity_number\": \"123456789012\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"accepted_terms\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register/landlord",
@@ -210,7 +212,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email', `ep001-${Date.now()}@test.com`);"
+                  "pm.variables.set('email', `ep001-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -253,7 +256,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -343,7 +346,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`ep004-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`ep004-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -380,7 +384,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"ep004-ts@test.com\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Aa111111\",\n  \"confirm_password\": \"Aa111111\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"ep004-ts@test.com\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Aa111111\",\n  \"confirm_password\": \"Aa111111\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -391,7 +395,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`ep005-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`ep005-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -428,7 +433,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"test@1111\",\n  \"confirm_password\": \"test@1111\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"test@1111\",\n  \"confirm_password\": \"test@1111\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -439,7 +444,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`ep006-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`ep006-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -476,7 +482,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"TEST@1111\",\n  \"confirm_password\": \"TEST@1111\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"TEST@1111\",\n  \"confirm_password\": \"TEST@1111\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -487,7 +493,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`ep007-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`ep007-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -524,7 +531,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@Test\",\n  \"confirm_password\": \"Test@Test\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@Test\",\n  \"confirm_password\": \"Test@Test\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -535,7 +542,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`ep008-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`ep008-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -583,7 +591,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`ep009-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`ep009-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -620,7 +629,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -631,7 +640,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`ep010-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`ep010-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -668,7 +678,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": false\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": false\n}"
             }
           }
         },
@@ -729,7 +739,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`ep012-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`ep012-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -769,7 +780,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Tran Thi B\",\n  \"phone\": \"0981234567\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Tran Thi B\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -1448,7 +1459,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`bva001-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`bva001-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -1485,7 +1497,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Te@1234\",\n  \"confirm_password\": \"Te@1234\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Te@1234\",\n  \"confirm_password\": \"Te@1234\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -1496,7 +1508,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`bva002-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`bva002-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -1535,7 +1548,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@123\",\n  \"confirm_password\": \"Test@123\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@123\",\n  \"confirm_password\": \"Test@123\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -1546,7 +1559,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`bva003-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`bva003-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -1585,7 +1599,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -1754,7 +1768,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`dt001-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`dt001-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -1793,7 +1808,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -1843,7 +1858,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`dt003-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`dt003-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -1880,7 +1896,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Aa111111\",\n  \"confirm_password\": \"Aa111111\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Aa111111\",\n  \"confirm_password\": \"Aa111111\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -1891,7 +1907,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`dt004-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`dt004-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -1928,7 +1945,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@9999\",\n  \"accepted_terms\": true\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@9999\",\n  \"accepted_terms\": true\n}"
             }
           }
         },
@@ -1939,7 +1956,8 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.variables.set('email',`dt005-${Date.now()}@test.com`);"
+                  "pm.variables.set('email',`dt005-${Date.now()}@test.com`);",
+                  "pm.variables.set('phone', '09' + (Date.now() % 100000000));"
                 ],
                 "type": "text/javascript"
               }
@@ -1976,7 +1994,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"0912345678\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": false\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"fullName\": \"Nguyen Van A\",\n  \"phone\": \"{{phone}}\",\n  \"password\": \"Test@1234\",\n  \"confirm_password\": \"Test@1234\",\n  \"accepted_terms\": false\n}"
             }
           }
         },
