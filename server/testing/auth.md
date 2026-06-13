@@ -1,4 +1,4 @@
-# Auth Module — Test Plan
+﻿# Auth Module — Test Plan
 
 **Endpoints:** `/api/auth/*`
 
@@ -8,68 +8,76 @@
 
 ### 1.1 Register — Email
 
-| Lớp | Mô tả | Giá trị đại diện | Kết quả |
-|-----|-------|-----------------|:-------:|
-| EP-01 | Email đúng format | `tenant@gmail.com` | Hợp lệ |
-| EP-02 | Email sai format (thiếu @) | `invalid` | Không hợp lệ |
-| EP-03 | Email rỗng | `""` | Không hợp lệ |
+> Payload gốc hợp lệ cho register: `{email: "tenant123@gmail.com", fullName: "Nguyen Van A", phone: "0912345678", password: "Test@1234", confirm_password: "Test@1234", accepted_terms: true}`
+
+| ID | Mô tả | Giá trị đại diện | Kết quả |
+|----|-------|-----------------|:-------:|
+| TC01 | Email đúng format | `{...validTenant, email: "tenant123@gmail.com"}` | Hợp lệ |
+| TC02 | Email sai format (thiếu @) | `{...validTenant, email: "tenantgmail.com"}` | Không hợp lệ |
+| TC03 | Email rỗng | `{...validTenant, email: ""}` | Không hợp lệ |
 
 ### 1.2 Register — Password
 
-| Lớp | Mô tả | Giá trị đại diện | Kết quả |
-|-----|-------|-----------------|:-------:|
-| EP-04 | Đủ hoa/thường/số/đặc biệt, 8-72 ký tự | `Test@1234` | Hợp lệ |
-| EP-05 | Thiếu ký tự đặc biệt | `Aa111111` | Không hợp lệ |
-| EP-06 | Thiếu chữ hoa | `test@1111` | Không hợp lệ |
-| EP-07 | Thiếu chữ thường | `TEST@1111` | Không hợp lệ |
-| EP-08 | Thiếu số | `Test@Test` | Không hợp lệ |
-| EP-09 | Không gửi password | `undefined` | Không hợp lệ |
+| ID | Mô tả | Giá trị đại diện | Kết quả |
+|----|-------|-----------------|:-------:|
+| TC04 | Thiếu ký tự đặc biệt | `{...validTenant, password: "Aa111111", confirm_password: "Aa111111"}` | Không hợp lệ |
+| TC05 | Thiếu chữ hoa | `{...validTenant, password: "test@1111", confirm_password: "test@1111"}` | Không hợp lệ |
+| TC06 | Thiếu chữ thường | `{...validTenant, password: "TEST@1111", confirm_password: "TEST@1111"}` | Không hợp lệ |
+| TC07 | Thiếu số | `{...validTenant, password: "Test@Test", confirm_password: "Test@Test"}` | Không hợp lệ |
+| TC08 | Không gửi password | `{...validTenant, password: undefined, confirm_password: undefined}` | Không hợp lệ |
 
 ### 1.3 Register — Phone
 
-| Lớp | Mô tả | Giá trị đại diện | Kết quả |
-|-----|-------|-----------------|:-------:|
-| EP-10 | 10 chữ số | `0912345678` | Hợp lệ |
-| EP-11 | Có chứa chữ | `abc123` | Không hợp lệ |
-| EP-12 | Không gửi phone | `undefined` | Hợp lệ (optional) |
+| ID | Mô tả | Giá trị đại diện | Kết quả |
+|----|-------|-----------------|:-------:|
+| TC09 | Có chứa chữ | `{...validTenant, phone: "abc123"}` | Không hợp lệ |
+| TC10 | Không gửi phone | `{...validTenant, phone: undefined}` | Hợp lệ (optional) |
 
 ### 1.4 Register — fullName
 
-| Lớp | Mô tả | Giá trị đại diện | Kết quả |
-|-----|-------|-----------------|:-------:|
-| EP-13 | 2-100 ký tự, không khoảng trắng đầu | `Nguyen Van A` | Hợp lệ |
-| EP-14 | Rỗng | `""` | Không hợp lệ |
+| ID | Mô tả | Giá trị đại diện | Kết quả |
+|----|-------|-----------------|:-------:|
+| TC11 | Rỗng | `{...validTenant, fullName: ""}` | Không hợp lệ |
 
 ### 1.5 Register — accepted_terms
 
-| Lớp | Mô tả | Giá trị đại diện | Kết quả |
-|-----|-------|-----------------|:-------:|
-| EP-15 | `true` | `true` | Hợp lệ |
-| EP-16 | `false` | `false` | Không hợp lệ |
+| ID | Mô tả | Giá trị đại diện | Kết quả |
+|----|-------|-----------------|:-------:|
+| TC12 | `false` | `{...validTenant, accepted_terms: false}` | Không hợp lệ |
 
 ### 1.6 Register — identity_number
 
-| Lớp | Mô tả | Giá trị đại diện | Kết quả |
-|-----|-------|-----------------|:-------:|
-| EP-17 | 12 số | `"123456789012"` | Hợp lệ |
-| EP-18 | Không gửi identity_number | `undefined` | Hợp lệ (optional) |
+| ID | Mô tả | Giá trị đại diện | Kết quả |
+|----|-------|-----------------|:-------:|
+| TC13 | Không gửi identity_number | `{...validTenant, identity_number: undefined}` | Hợp lệ (optional) |
 
 ### 1.7 Register — Business Logic (service layer)
 
-| Lớp | Mô tả | Giá trị đại diện | Kết quả |
-|-----|-------|-----------------|:-------:|
-| EP-19 | Phone không được gửi → bỏ qua check | `phone: undefined` | Service bỏ qua check phone |
-| EP-20 | Identity không được gửi → bỏ qua check | `identity_number: undefined` | Service bỏ qua check identity |
-| EP-21 | BadRequestException từ create → re-throw | userRepository throws BadRequestException | **400** |
+| ID | Mô tả | Giá trị đại diện | Kết quả |
+|----|-------|-----------------|:-------:|
+| TC14 | Phone không được gửi → bỏ qua check | `phone: undefined` | Service bỏ qua check phone |
+| TC15 | Identity không được gửi → bỏ qua check | `identity_number: undefined` | Service bỏ qua check identity |
+| TC16 | BadRequestException từ create → re-throw | userRepository throws BadRequestException | **400** |
 
 ### 1.8 Login
 
-| Lớp | Mô tả | Giá trị đại diện | Kết quả |
-|-----|-------|-----------------|:-------:|
-| EP-22 | Email + password đúng | `{ tenant đã đăng ký }` | Thành công |
-| EP-23 | Email sai | `wrong@gmail.com` | Thất bại |
-| EP-24 | Password sai | password sai | Thất bại |
-| EP-25 | Email rỗng | `{ email: "" }` | Không hợp lệ |
+> Payload hợp lệ: `{email: "tenant123@gmail.com", password: "Test@1234"}`
+
+| ID | Mô tả | Giá trị đại diện | Kết quả |
+|----|-------|-----------------|:-------:|
+| TC17 | Email + password đúng | `{email: "tenant123@gmail.com", password: "Test@1234"}` | Thành công |
+| TC18 | Email sai | `{email: "wrong@gmail.com", password: "Test@1234"}` | Thất bại |
+| TC19 | Password sai | `{email: "tenant123@gmail.com", password: "wrongpass"}` | Thất bại |
+| TC20 | Email rỗng | `{email: "", password: "Test@1234"}` | Không hợp lệ |
+
+### 1.9 Forgot Password
+
+> Payload: `{email: "..."}`
+
+| ID | Mô tả | Giá trị đại diện | Kết quả |
+|----|-------|-----------------|:-------:|
+| TC21 | Email tồn tại | `{email: "tenant123@gmail.com"}` | **201** (gửi OTP) |
+| TC22 | Email không tồn tại | `{email: "nonexistent@gmail.com"}` | **201** (bảo mật) |
 
 ---
 
@@ -79,83 +87,46 @@
 
 | ID | Giá trị | Độ dài | Loại biên | Kết quả |
 |:--:|:-------:|:------:|:---------:|:-------:|
-| BVA-01 | `A1@bcde` | 7 | biên(min) - 1 | **400** |
-| BVA-02 | `A1@bcdef` | 8 | biên(min) | **201** |
-| BVA-03 | `A1@bcdefg` | 9 | biên(min) + 1 | **201** |
-| BVA-04 | `A1@` + `a`*68 | 71 | biên(max) - 1 | **201** |
-| BVA-05 | `A1@` + `a`*69 | 72 | biên(max) | **201** |
-| BVA-06 | `A1@` + `a`*70 | 73 | biên(max) + 1 | **400** |
-
-**e2e Test Cases:**
-
-| ID | Test Case | Input | Expected Status |
-|:--:|----------|-------|:---------------:|
-| AUTH-012 | Password 7 chars (biên(min) - 1) | `{...valid, password: "A1@bcde"}` | **400** |
-| AUTH-013 | Password 8 chars (biên(min)) | `{...valid, password: "A1@bcdef"}` | **201** |
-| AUTH-053 | Password 9 chars (biên(min) + 1) | `{...valid, password: "A1@bcdefg"}` | **201** |
-| AUTH-054 | Password 71 chars (biên(max) - 1) | `{...valid, password: "A1@"+"a"*68}` | **201** |
-| AUTH-014 | Password 72 chars (biên(max)) | `{...valid, password: "A1@"+"a"*69}` | **201** |
-| AUTH-015 | Password 73 chars (biên(max) + 1) | `{...valid, password: "A1@"+"a"*70}` | **400** |
+| TC23 | `A1@bcde` | 7 | biên(min) - 1 | **400** |
+| TC24 | `A1@bcdef` | 8 | biên(min) | **201** |
+| TC25 | `A1@bcdefg` | 9 | biên(min) + 1 | **201** |
+| TC26 | `A1@` + `a`*68 | 71 | biên(max) - 1 | **201** |
+| TC27 | `A1@` + `a`*69 | 72 | biên(max) | **201** |
+| TC28 | `A1@` + `a`*70 | 73 | biên(max) + 1 | **400** |
 
 ### 2.2 Phone length (10 chữ số)
 
 | ID | Giá trị | Độ dài | Loại biên | Kết quả |
 |:--:|:-------:|:------:|:---------:|:-------:|
-| BVA-07 | `012345678` | 9 | biên(min) - 1 | **400** |
-| BVA-08 | `0123456789` | 10 | biên | **201** |
-| BVA-09 | `01234567890` | 11 | biên(max) + 1 | **400** |
-
-**e2e Test Cases:**
-
-| ID | Test Case | Input | Expected Status |
-|:--:|----------|-------|:---------------:|
-| AUTH-016 | Phone 9 chars (biên(min) - 1) | `{...valid, phone: "012345678"}` | **400** |
-| AUTH-017 | Phone 10 chars (biên) | `{...valid, phone: "0123456789"}` | **201** |
-| AUTH-055 | Phone 11 chars (biên(max) + 1) | `{...valid, phone: "01234567890"}` | **400** |
+| TC29 | `012345678` | 9 | biên(min) - 1 | **400** |
+| TC30 | `0123456789` | 10 | biên | **201** |
+| TC31 | `01234567890` | 11 | biên(max) + 1 | **400** |
 
 ### 2.3 fullName length (`@MinLength(2) @MaxLength(100)`)
 
 | ID | Giá trị | Độ dài | Loại biên | Kết quả |
 |:--:|:-------:|:------:|:---------:|:-------:|
-| BVA-12 | `"A"` | 1 | biên(min) - 1 | **400** |
-| BVA-13 | `"An"` | 2 | biên(min) | **201** |
-| BVA-14 | `"A"*99` | 99 | biên(max) - 1 | **201** |
-| BVA-15 | `"A"*100` | 100 | biên(max) | **201** |
-| BVA-16 | `"A"*101` | 101 | biên(max) + 1 | **400** |
-
-**e2e Test Cases:**
-
-| ID | Test Case | Input | Expected Status |
-|:--:|----------|-------|:---------------:|
-| AUTH-020 | fullName 1 char (biên(min) - 1) | `{...valid, fullName: "A"}` | **400** |
-| AUTH-056 | fullName 2 chars (biên(min)) | `{...valid, fullName: "An"}` | **201** |
-| AUTH-057 | fullName 99 chars (biên(max) - 1) | `{...valid, fullName: "A"*99}` | **201** |
-| AUTH-021 | fullName 100 chars (biên(max)) | `{...valid, fullName: "A"*100}` | **201** |
-| AUTH-022 | fullName 101 chars (biên(max) + 1) | `{...valid, fullName: "A"*101}` | **400** |
+| TC32 | `"A"` | 1 | biên(min) - 1 | **400** |
+| TC33 | `"An"` | 2 | biên(min) | **201** |
+| TC34 | `"A"*99` | 99 | biên(max) - 1 | **201** |
+| TC35 | `"A"*100` | 100 | biên(max) | **201** |
+| TC36 | `"A"*101` | 101 | biên(max) + 1 | **400** |
 
 ### 2.4 identity_number length (`@Length(12, 12)`)
 
 | ID | Giá trị | Độ dài | Loại biên | Kết quả |
 |:--:|:-------:|:------:|:---------:|:-------:|
-| BVA-18 | `"1"*11` | 11 | biên(min) - 1 | **400** |
-| BVA-19 | `"1"*12` | 12 | biên | **201** |
-| BVA-20 | `"1"*13` | 13 | biên(max) + 1 | **400** |
-
-**e2e Test Cases:**
-
-| ID | Test Case | Input | Expected Status |
-|:--:|----------|-------|:---------------:|
-| AUTH-023 | identity_number 11 chars (biên(min) - 1) | `{...validLandlord, identity_number: "1"*11}` | **400** |
-| AUTH-024 | identity_number 12 chars (biên) | `{...validLandlord}` | **201** |
-| AUTH-025 | identity_number 13 chars (biên(max) + 1) | `{...validLandlord, identity_number: "1"*13}` | **400** |
+| TC37 | `"1"*11` | 11 | biên(min) - 1 | **400** |
+| TC38 | `"1"*12` | 12 | biên | **201** |
+| TC39 | `"1"*13` | 13 | biên(max) + 1 | **400** |
 
 ### 2.5 OTP length (`@Length(6, 6)`)
 
 | ID | Test Case | Input | Expected Status |
 |:--:|----------|-------|:---------------:|
-| AUTH-036 | OTP 5 chars (biên(min) - 1) | `{ email, otp: "12345" }` | **400** |
-| AUTH-058 | OTP 6 chars (biên) | `{ email, otp: "123456" }` with valid Redis | **201** |
-| AUTH-059 | OTP 7 chars (biên(max) + 1) | `{ email, otp: "1234567" }` | **400** |
+| TC40 | OTP 5 chars (biên(min) - 1) | `{ email, otp: "12345" }` | **400** |
+| TC41 | OTP 6 chars (biên) | `{ email, otp: "123456" }` with valid Redis | **201** |
+| TC42 | OTP 7 chars (biên(max) + 1) | `{ email, otp: "1234567" }` | **400** |
 
 ---
 
@@ -171,16 +142,16 @@
 | Endpoint public? | N | N | N | Y/N | Y/N | Y |
 | **Kết quả** | **200/201** | **403** | **401/403** | **401** | **401** | **200** |
 
-**e2e Test Cases:**
+**Test Cases:**
 
 | ID | Test Case | Token | Endpoint | Expected Status |
 |:--:|----------|:-----:|:--------:|:---------------:|
-| AUTH-047 | Public endpoint không cần auth | — | GET /api/users/:id | **200** |
-| AUTH-048 | Protected endpoint không token | — | GET /api/profile | **401** |
-| AUTH-049 | Empty Bearer token | `"Bearer "` | GET /api/profile | **401** |
-| AUTH-050 | Fake Bearer token | `"Bearer fake"` | GET /api/profile | **401** |
-| AUTH-051 | RolesGuard cho phép đúng role | valid token | GET /api/test-roles/tenant | **200** |
-| AUTH-052 | RolesGuard từ chối sai role | valid token | GET /api/test-roles/admin | **403** |
+| TC43 | Public endpoint không cần auth | — | GET /api/users/:id | **200** |
+| TC44 | Protected endpoint không token | — | GET /api/profile | **401** |
+| TC45 | Empty Bearer token | `"Bearer "` | GET /api/profile | **401** |
+| TC46 | Fake Bearer token | `"Bearer fake"` | GET /api/profile | **401** |
+| TC47 | RolesGuard cho phép đúng role | valid token | GET /api/test-roles/tenant | **200** |
+| TC48 | RolesGuard từ chối sai role | valid token | GET /api/test-roles/admin | **403** |
 
 ### 3.2 Reset Password Flow — forgot-password
 
@@ -191,6 +162,13 @@
 | AuthOperationError? | N | N | N | Y |
 | **Kết quả** | **201** (gửi email) | **201** (không gửi email) | **500** | **400** |
 
+**Test Cases:**
+
+| ID | Test Case | Steps / Payload | Expected Status |
+|:--:|----------|----------------|:---------------:|
+| TC49 | Forgot password - Email tồn tại | `POST /api/auth/forgot-password` với `{email: "tenant123@gmail.com"}` → OTP được set trong Redis | **201** |
+| TC50 | Forgot password - Email không tồn tại | `POST /api/auth/forgot-password` với `{email: "nonexistent@gmail.com"}` → không gửi email (bảo mật) | **201** |
+
 ### 3.3 Reset Password Flow — Verify OTP
 
 | Điều kiện | Rule 1 | Rule 2 | Rule 3 |
@@ -198,6 +176,12 @@
 | OTP trong Redis? | Y | N | Y |
 | OTP đúng? | Y | - | N |
 | **Kết quả** | **201** (đánh dấu verified) | **400** | **400** |
+
+**Test Cases:**
+
+| ID | Test Case | Steps / Payload | Expected Status |
+|:--:|----------|----------------|:---------------:|
+| TC51 | Confirm OTP - OTP hợp lệ | `POST /api/auth/confirm-otp` với `{email, otp: "123456"}` (OTP đúng trong Redis) | **201** |
 
 ### 3.4 Reset Password Flow — reset-password
 
@@ -213,13 +197,15 @@
 
 > ⚠ **Lưu ý bảo mật (Rule 4):** Nếu OTP đã được verify qua endpoint `/auth/confirm-otp`, thì ở bước reset-password, OTP có thể sai nhưng vẫn cho qua vì `isVerified=true`. Đây là behavior hiện tại: một trong hai điều kiện (OTP đúng OR đã verify) là đủ. Cần cân nhắc: nếu attacker có quyền truy cập vào Redis, họ có thể tự set `isVerified=true`.
 
-**e2e Test Cases — Password Reset Lifecycle:**
+**Test Cases — Password Reset Lifecycle:**
 
 | ID | Test Case | Steps | Expected Status |
 |:--:|----------|-------|:---------------:|
-| AUTH-041 | Old password fails after reset | reset-password → login with cũ | **401** |
-| AUTH-042 | New password succeeds after reset | login với mới | **201** |
-| AUTH-043 | OTP bypass khi isVerified=true | reset-password với OTP sai + isVerified=true | **201** |
+| TC52 | Old password fails after reset | reset-password → login with cũ | **401** |
+| TC53 | New password succeeds after reset | login với mới | **201** |
+| TC54 | OTP bypass khi isVerified=true | reset-password với OTP sai + isVerified=true | **201** |
+| TC55 | Reset password - Hợp lệ | `POST /api/auth/reset-password` với `{email, otp: "123456", newPassword: "NewPass@123", confirmPassword: "NewPass@123"}` (OTP đúng) | **201** |
+| TC56 | Reset password - OTP sai | `POST /api/auth/reset-password` với `{email, otp: "000000", newPassword: "NewPass@123", confirmPassword: "NewPass@123"}` (OTP sai, chưa verify) | **400** |
 
 ---
 
